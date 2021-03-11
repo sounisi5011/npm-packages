@@ -11,9 +11,8 @@ async function main() {
   const workspaceArray = getWorkspaces(cwd);
   const output = workspaceArray
     .map(workspaceData => ({
-      'package-name': workspaceData.name,
-      'path-absolute': workspaceData.path,
       'path-git-relative': path.relative(gitRootPath, workspaceData.path) || '.',
+      'package-name': workspaceData.name,
       'version': workspaceData.packageJson.version,
       'is-private': workspaceData.packageJson.private || false,
     }));
