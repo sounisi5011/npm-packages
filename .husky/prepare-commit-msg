@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Do not run commitizen on CI
+# see: https://typicode.github.io/husky/#/?id=disable-hooks-in-ci
+[ -n "$CI" ] && exit 0
+
+exec < /dev/tty && ./node_modules/.bin/git-cz --hook || true
