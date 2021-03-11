@@ -1,0 +1,24 @@
+name: Release
+on: push
+jobs:
+  submodules-finder:
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.interrogate.outputs.result }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: interrogate
+        uses: ./actions/workspace-submodules
+  foo:
+    runs-on: ubuntu-latest
+    needs: submodules-finder
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{fromJson(needs.submodules-finder.outputs.result)}}
+    steps:
+      - run: |
+          echo 'package-name: ${{ matrix.package-name }}'
+          echo 'version: ${{ matrix.version }}'
+          echo 'is-private: ${{ matrix.is-private }}'
+          echo 'path-git-relative: ${{ matrix.path-git-relative }}'
