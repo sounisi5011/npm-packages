@@ -1,0 +1,31 @@
+{
+  "extends": ["config:js-lib", ":semanticCommits"],
+  "packageRules": [
+    {
+      "packageNames": ["eslint"],
+      "packagePatterns": [
+        "^@typescript-eslint/",
+        "^eslint-config-",
+        "^eslint-plugin-"
+      ],
+      "groupName": "eslint packages",
+      "groupSlug": "eslint-packages"
+    },
+    {
+      "packageNames": ["commitizen", "cz-conventional-changelog"],
+      "groupName": "commitizen packages",
+      "groupSlug": "commitizen-packages"
+    },
+    {
+      "packageNames": [
+        "husky",
+        "lint-staged",
+        "prettier",
+        "prettier-package-json",
+        "sort-package-json"
+      ],
+      "groupName": "code formatter packages",
+      "groupSlug": "code-formatter-packages"
+    }
+  ]
+}
