@@ -19,7 +19,7 @@
     "fmt:xs": "run-s fmt:xs:eslint",
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
     "lint": "run-p lint:*",
-    "lint:eslint": "eslint ./",
+    "lint:eslint": "eslint --cache ./",
     "prepare": "husky install"
   },
   "devDependencies": {
