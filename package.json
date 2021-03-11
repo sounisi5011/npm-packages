@@ -11,6 +11,7 @@
   "license": "MIT",
   "author": "sounisi5011",
   "scripts": {
+    "build": "pnpm recursive run build",
     "fmt": "run-p fmt:*",
     "fmt:config": "prettier --write '**/*.{json,yaml,yml}' '!**/{package.json,pnpm-lock.yaml}'",
     "fmt:pkg": "run-s fmt:pkg:prettier fmt:pkg:sort",
