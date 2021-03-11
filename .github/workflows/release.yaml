@@ -1,5 +1,10 @@
 name: Release
-on: push
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - "**"
 jobs:
   submodules-finder:
     runs-on: ubuntu-latest
@@ -9,7 +14,7 @@ jobs:
       - uses: actions/checkout@v2
       - id: interrogate
         uses: ./actions/workspace-submodules
-  foo:
+  release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder
     strategy:
@@ -17,8 +22,35 @@ jobs:
       matrix:
         include: ${{fromJson(needs.submodules-finder.outputs.result)}}
     steps:
-      - run: |
-          echo 'package-name: ${{ matrix.package-name }}'
-          echo 'version: ${{ matrix.version }}'
-          echo 'is-private: ${{ matrix.is-private }}'
-          echo 'path-git-relative: ${{ matrix.path-git-relative }}'
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          release-type: node
+          package-name: ${{ matrix.package-name }}
+          path: ${{ matrix.path-git-relative }}
+          monorepo-tags: true
+      - uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-12-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-12-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release.outputs.release_created }}
+      - name: publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          npm i -g pnpm
+          pnpm install
+          cd '${{ matrix.path-git-relative }}'
+          pnpm publish --access=public
+        if: ${{ steps.release.outputs.release_created }}
