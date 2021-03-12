@@ -34,7 +34,7 @@ overrides:
     rules:
       dprint/dprint:
         - error
-        - config:
+        - config: &dprint-config
             indentWidth: 2
             quoteStyle: preferSingle
             singleBodyPosition: sameLine
@@ -43,3 +43,48 @@ overrides:
             constructorType.spaceAfterNewKeyword: true
             taggedTemplate.spaceBeforeLiteral: false
             typeAssertion.spaceBeforeExpression: false
+  - files: "*.ts"
+    extends:
+      - plugin:node/recommended-module
+      - plugin:@typescript-eslint/recommended
+      - plugin:import/typescript
+      - standard-with-typescript
+      - plugin:dprint/recommended
+    parserOptions:
+      sourceType: module
+      project:
+        - ./{packages,actions}/*{,/tests{,/helpers}}/tsconfig.json
+    settings:
+      node:
+        # see https://github.com/mysticatea/eslint-plugin-node/blob/v11.1.0/docs/rules/shebang.md
+        convertPath:
+          src/**/*.ts:
+            - ^src/(.+?)\.ts$
+            - dist/$1.js
+    rules:
+      dprint/dprint:
+        - error
+        - config:
+            <<: *dprint-config
+            indentWidth: 4
+      # TypeScript checks the import statement path.
+      # Therefore, there is no need to verify the file path imported by ESLint.
+      node/no-missing-import: off
+      # The "node/no-unpublished-import" rule does not support "import type ... from '...'" statements.
+      # This causes an error when importing a type definition file that is not published.
+      node/no-unpublished-import: off
+      # I don't want to use "nodeify" package.
+      promise/no-callback-in-promise: off
+      # The "@typescript-eslint/strict-boolean-expressions" rule is very strict and stressful.
+      "@typescript-eslint/strict-boolean-expressions": off
+  - files: "*.d.ts"
+    rules:
+      # The "no-redeclare" rule does not support namespace and function declarations of the same name.
+      # example:
+      #   declare function foo(): void;
+      #   declare namespace foo { ... } // ESLint: error 'foo' is already defined
+      # In addition, as of 2020/06/11, there is no alternative to the "no-redeclare" rule in "@typescript-eslint"
+      no-redeclare: off
+      # The "@ts-expect-error" comment is not allowed in TypeScript 3.8 or earlier.
+      # If someone forks a type definition created in this project, the type definition will not be available in older versions of TypeScript.
+      "@typescript-eslint/prefer-ts-expect-error": off

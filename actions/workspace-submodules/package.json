@@ -12,7 +12,8 @@
   "author": "sounisi5011",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.js --minify --out ./dist/"
+    "build": "ncc build src/index.ts --minify --out ./dist/",
+    "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@actions/core": "^1.2.6",
@@ -20,6 +21,7 @@
     "workspace-tools": "^0.12.3"
   },
   "devDependencies": {
+    "@types/node": "*",
     "@vercel/ncc": "0.27.0"
   }
 }
