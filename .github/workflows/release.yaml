@@ -1,0 +1,71 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - "**"
+jobs:
+  submodules-finder:
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.interrogate.outputs.result }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: interrogate
+        uses: ./actions/workspace-submodules
+  release-please:
+    runs-on: ubuntu-latest
+    needs: submodules-finder
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{fromJson(needs.submodules-finder.outputs.result)}}
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          release-type: node
+          package-name: ${{ matrix.package-name }}
+          path: ${{ matrix.path-git-relative }}
+          monorepo-tags: true
+      - uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-12.x-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release.outputs.release_created }}
+      - name: publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          npm i -g pnpm
+          pnpm install
+          cd '${{ matrix.path-git-relative }}'
+          if [ -x ./publish.sh ]; then
+            GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            matrix_package_name='${{ matrix.package-name }}'
+            outputs_upload_url='${{ steps.release.outputs.upload_url }}'
+            outputs_html_url='${{ steps.release.outputs.html_url }}'
+            outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            outputs_major='${{ steps.release.outputs.major }}'
+            outputs_minor='${{ steps.release.outputs.minor }}'
+            outputs_patch='${{ steps.release.outputs.patch }}'
+            outputs_sha='${{ steps.release.outputs.sha }}'
+            outputs_pr='${{ steps.release.outputs.pr }}'
+            source ./publish.sh
+          else
+            pnpm publish --access=public
+          fi
+        shell: bash
+        if: ${{ steps.release.outputs.release_created }}

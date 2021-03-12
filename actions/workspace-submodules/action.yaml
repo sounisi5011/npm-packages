@@ -1,0 +1,9 @@
+name: Find Workspace Submodules
+author: sounisi5011
+description: Get the path and package name of a node submodules in npm/yarn/pnpm workspaces
+outputs:
+  result:
+    description: JSON string of an array that includes the path and package name pairs of each submodule
+runs:
+  using: node12
+  main: dist/index.js

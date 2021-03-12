@@ -1,0 +1,30 @@
+{
+  "name": "workspace-submodules",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/workspace-submodules#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sounisi5011/npm-packages/tree/main/actions/workspace-submodules"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.ts --minify --out ./dist/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "find-git-root": "^1.0.4",
+    "workspace-tools": "^0.12.3"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@vercel/ncc": "0.27.0"
+  }
+}
