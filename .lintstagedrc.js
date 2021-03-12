@@ -75,7 +75,7 @@ module.exports = {
     if (filenames.some(filename => startsWith(filename, 'actions'))) {
       commands.push(
         'pnpm recursive run build --filter ./actions/',
-        'git add ./actions/',
+        'git add ./actions/*/dist/**',
       );
     }
 
