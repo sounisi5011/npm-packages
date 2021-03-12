@@ -37,7 +37,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run lint
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -71,11 +71,11 @@ jobs:
         run: npm i -g pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm test
+      - run: pnpm run test:unit-test
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI
-    needs: [lint, test]
+    needs: [lint, unit-test]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
