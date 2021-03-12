@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-util-has-own-property"
+    "url": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-utils/has-own-property"
   },
   "license": "MIT",
   "author": "sounisi5011",
