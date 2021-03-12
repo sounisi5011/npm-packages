@@ -1,0 +1,25 @@
+{
+  "name": "@sounisi5011/ts-type-util-has-own-property",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [
+    "hasOwnProperty",
+    "hasProperty",
+    "property",
+    "ts",
+    "types",
+    "typescript",
+    "util",
+    "utility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-util-has-own-property"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "types": "./index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
