@@ -13,7 +13,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts --minify --out ./dist/",
-    "lint:tsc": "tsc --noEmit"
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "jest"
   },
   "dependencies": {
     "@actions/core": "^1.2.6",

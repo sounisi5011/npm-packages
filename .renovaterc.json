@@ -26,6 +26,11 @@
       ],
       "groupName": "code formatter packages",
       "groupSlug": "code-formatter-packages"
+    },
+    {
+      "packageNames": ["jest", "@types/jest", "ts-jest"],
+      "groupName": "test packages",
+      "groupSlug": "tester-packages"
     }
   ]
 }
