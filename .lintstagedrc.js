@@ -2,14 +2,6 @@
 const path = require('path');
 
 /**
- * @param {function(string): boolean} func
- * @returns {function(string): boolean}
- */
-function negate(func) {
-  return filename => !func(filename);
-}
-
-/**
  * @param {string} fullPath
  * @param {string} searchPath
  * @returns {boolean}
@@ -48,9 +40,7 @@ module.exports = {
     /** @type {string[]} */
     const commands = [];
 
-    const prettierTargetFiles = filenames
-      .filter(extFilter('json', 'yaml', 'yml'))
-      .filter(negate(baseFilter('pnpm-lock.yaml')));
+    const prettierTargetFiles = filenames.filter(extFilter('json', 'yaml', 'yml'));
     if (prettierTargetFiles.length >= 1) {
       commands.push(
         `prettier --write ${prettierTargetFiles.join(' ')}`,

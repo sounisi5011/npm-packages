@@ -13,7 +13,7 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "fmt": "run-p fmt:*",
-    "fmt:config": "prettier --write '**/*.{json,yaml,yml}' '!**/{package.json,pnpm-lock.yaml}'",
+    "fmt:config": "prettier --write '**/*.{json,yaml,yml}' '!**/package.json'",
     "fmt:pkg": "run-s fmt:pkg:prettier fmt:pkg:sort",
     "fmt:pkg:prettier": "prettier-package-json --write ./package.json",
     "fmt:pkg:sort": "sort-package-json '**/package.json' '!**/node_modules'",
