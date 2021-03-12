@@ -52,5 +52,20 @@ jobs:
           npm i -g pnpm
           pnpm install
           cd '${{ matrix.path-git-relative }}'
-          pnpm publish --access=public
+          if [ -x ./publish.sh ]; then
+            GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            matrix_package_name='${{ matrix.package-name }}'
+            outputs_upload_url='${{ steps.release.outputs.upload_url }}'
+            outputs_html_url='${{ steps.release.outputs.html_url }}'
+            outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            outputs_major='${{ steps.release.outputs.major }}'
+            outputs_minor='${{ steps.release.outputs.minor }}'
+            outputs_patch='${{ steps.release.outputs.patch }}'
+            outputs_sha='${{ steps.release.outputs.sha }}'
+            outputs_pr='${{ steps.release.outputs.pr }}'
+            source ./publish.sh
+          else
+            pnpm publish --access=public
+          fi
+        shell: bash
         if: ${{ steps.release.outputs.release_created }}
