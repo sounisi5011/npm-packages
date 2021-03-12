@@ -71,7 +71,7 @@ jobs:
         run: npm i -g pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run test:unit-test
+      - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI

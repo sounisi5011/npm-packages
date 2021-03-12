@@ -52,7 +52,7 @@ $ pnpm run lint
 #### Test
 
 ```sh
-$ pnpm run test:unit-test
+$ pnpm run test-only
 ```
 
 #### Format

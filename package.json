@@ -24,7 +24,8 @@
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "pnpm recursive run lint:tsc --filter '*'",
     "prepare": "husky install",
-    "test": "run-s lint test:unit-test",
+    "test": "run-s lint test-only",
+    "test-only": "run-s test:unit-test",
     "test:unit-test": "pnpm recursive test --filter '*'"
   },
   "devDependencies": {
