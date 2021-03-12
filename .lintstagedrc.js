@@ -10,6 +10,20 @@ function negate(func) {
 }
 
 /**
+ * @param {string} fullPath
+ * @param {string} searchPath
+ * @returns {boolean}
+ */
+function startsWith(fullPath, searchPath) {
+  return fullPath.startsWith(
+    (
+      path.resolve(searchPath)
+        .replace(new RegExp(`\\${path.sep}+$`), '')
+    ) + path.sep,
+  );
+}
+
+/**
  * @param {string} basename
  * @returns {function(string): boolean}
  */
@@ -55,6 +69,13 @@ module.exports = {
     if (tsOrJsFiles.length >= 1) {
       commands.push(
         `eslint --fix ${tsOrJsFiles.join(' ')}`,
+      );
+    }
+
+    if (filenames.some(filename => startsWith(filename, 'actions'))) {
+      commands.push(
+        'pnpm recursive run build --filter ./actions/',
+        'git add ./actions/',
       );
     }
 
