@@ -11,7 +11,7 @@
   "license": "MIT",
   "author": "sounisi5011",
   "scripts": {
-    "build": "pnpm recursive run build",
+    "build": "pnpm recursive run build --filter '*'",
     "fmt": "run-p fmt:*",
     "fmt:config": "prettier --write '**/*.{json,yaml,yml}' '!**/package.json'",
     "fmt:pkg": "run-s fmt:pkg:prettier fmt:pkg:sort",
@@ -22,7 +22,7 @@
     "preinstall": "npx only-allow pnpm",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --cache ./",
-    "lint:tsc": "pnpm recursive run lint:tsc",
+    "lint:tsc": "pnpm recursive run lint:tsc --filter '*'",
     "prepare": "husky install",
     "test": "run-s lint test:unit-test",
     "test:unit-test": "pnpm recursive test --filter '*'"
