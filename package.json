@@ -19,6 +19,7 @@
     "fmt:pkg:sort": "sort-package-json '**/package.json' '!**/node_modules'",
     "fmt:xs": "run-s fmt:xs:eslint",
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
+    "preinstall": "npx only-allow pnpm",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "pnpm recursive run lint:tsc",
