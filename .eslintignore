@@ -2,3 +2,5 @@
 coverage/
 node_modules/
 dist/
+/packages/ts-type-utils/**/*.js
+/packages/ts-type-utils/**/*.d.ts

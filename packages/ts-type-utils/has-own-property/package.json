@@ -1,0 +1,39 @@
+{
+  "name": "@sounisi5011/ts-type-util-has-own-property",
+  "version": "0.0.0",
+  "description": "Fix the type definition of the `Object.prototype.hasOwnProperty()` method",
+  "keywords": [
+    "hasOwnProperty",
+    "hasProperty",
+    "property",
+    "ts",
+    "types",
+    "typescript",
+    "util",
+    "utility"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-utils/has-own-property#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/ts-type-utils/has-own-property"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "types": "./index.d.ts",
+  "files": [
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p ./tsconfig.build.json",
+    "lint:tsc": "tsc --noEmit",
+    "test": "run-s build test:tsd",
+    "test:tsd": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "0.14.0"
+  }
+}

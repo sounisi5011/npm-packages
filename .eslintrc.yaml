@@ -15,6 +15,7 @@ rules:
     - devDependencies:
         - "*"
         - ".*"
+        - "**/*.test-d.ts"
         - "**/tests/**"
   import/order:
     - error
@@ -53,7 +54,7 @@ overrides:
     parserOptions:
       sourceType: module
       project:
-        - ./{packages,actions}/*{,/tests{,/helpers}}/tsconfig.json
+        - ./{packages{,/ts-type-utils},actions}/*{,/tests{,/helpers}}/tsconfig.json
     settings:
       node:
         # see https://github.com/mysticatea/eslint-plugin-node/blob/v11.1.0/docs/rules/shebang.md
