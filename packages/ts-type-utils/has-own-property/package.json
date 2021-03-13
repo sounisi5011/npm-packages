@@ -20,7 +20,11 @@
   "author": "sounisi5011",
   "types": "./index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p ./tsconfig.build.json",
+    "test": "run-s build test:tsd",
+    "test:tsd": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "0.14.0"
   }
 }
