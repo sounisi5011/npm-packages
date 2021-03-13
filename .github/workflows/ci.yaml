@@ -70,7 +70,22 @@ jobs:
       - name: Install pnpm
         run: npm i -g pnpm
       - name: Install Dependencies
-        run: pnpm install
+        shell: bash
+        # In Node.js 14.0.0, the "pnpm install" command may fail. Therefore, if it fails, retry 10 times
+        run: |
+          for i in {1..10} ; do
+            if [ ${i} -ne 1 ]; then
+              sleep 1
+              echo
+              echo '[!]' retry for the "${i}th" time
+            fi
+
+            echo '>' pnpm install
+            if pnpm install; then
+              exit $?
+            fi
+          done
+          exit 1
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
