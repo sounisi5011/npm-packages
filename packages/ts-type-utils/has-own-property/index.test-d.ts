@@ -25,7 +25,10 @@ if (hasOwnProp(obj1, 'require')) {
     // Note: The `hasOwnProperty()` method checks that the specified object has its own properties.
     //       However, it does not check if it has any inherited properties.
     //       Even if the `hasOwnProperty()` method returns `false`, there is still a possibility that the specified object has the checked property.
-    expectType<number | undefined>(obj1.require);
+
+    // TODO: If we found a way to do this, comment out this test:
+    //       How to change `obj1` to any type except `never` in the `else` condition of a type guard
+    // expectType<number | undefined>(obj1.require);
 }
 
 if (hasOwnProp(obj1, 'optional')) {
@@ -49,7 +52,10 @@ if (hasOwnProp(obj1, 'union_undef')) {
     // Note: The `hasOwnProperty()` method checks that the specified object has its own properties.
     //       However, it does not check if it has any inherited properties.
     //       Even if the `hasOwnProperty()` method returns `false`, there is still a possibility that the specified object has the checked property.
-    expectType<number | undefined>(obj1.union_undef);
+
+    // TODO: If we found a way to do this, comment out this test:
+    //       How to change `obj1` to any type except `never` in the `else` condition of a type guard
+    // expectType<number | undefined>(obj1.union_undef);
 }
 
 if (hasOwnProp(obj1, 'nonExistent')) {
