@@ -47,7 +47,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - name: publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           npm i -g pnpm
           pnpm install
