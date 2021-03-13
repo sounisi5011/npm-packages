@@ -78,6 +78,8 @@ jobs:
               sleep 1
               echo
               echo '[!]' retry for the "${i}th" time
+              echo '>' rm -rf ~/.pnpm-store
+              rm -rf ~/.pnpm-store
             fi
 
             echo '>' pnpm install
