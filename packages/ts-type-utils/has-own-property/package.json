@@ -1,7 +1,7 @@
 {
   "name": "@sounisi5011/ts-type-util-has-own-property",
   "version": "0.0.0",
-  "description": "",
+  "description": "Fix the type definition of the `Object.prototype.hasOwnProperty()` method",
   "keywords": [
     "hasOwnProperty",
     "hasProperty",
@@ -12,6 +12,7 @@
     "util",
     "utility"
   ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-utils/has-own-property#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-utils/has-own-property"
