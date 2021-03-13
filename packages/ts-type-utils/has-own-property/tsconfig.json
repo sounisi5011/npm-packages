@@ -5,6 +5,8 @@
 
     /* Basic Options */
     "declarationMap": false,
-    "sourceMap": false
+
+    /* Advanced Options */
+    "emitDeclarationOnly": true
   }
 }
