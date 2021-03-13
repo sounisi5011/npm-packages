@@ -52,6 +52,7 @@ jobs:
           npm i -g pnpm
           pnpm install
           cd '${{ matrix.path-git-relative }}'
+          pnpm run build --if-present
           if [ -x ./publish.sh ]; then
             GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             matrix_package_name='${{ matrix.package-name }}'
