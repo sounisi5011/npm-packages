@@ -81,8 +81,8 @@ jobs:
               echo
               echo '[!]' retry for the second time
 
-              echo '>' rm -rf ~/.pnpm-store ./node_modules
-              rm -rf ~/.pnpm-store ./node_modules
+              echo '>' rm -rf ~/.pnpm-store
+              rm -rf ~/.pnpm-store
 
               echo '>' npm i -g pnpm@5.7.0
               npm i -g pnpm@5.7.0
