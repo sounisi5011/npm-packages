@@ -21,6 +21,7 @@
   "types": "./index.d.ts",
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
+    "lint:tsc": "tsc --noEmit",
     "test": "run-s build test:tsd",
     "test:tsd": "tsd"
   },
