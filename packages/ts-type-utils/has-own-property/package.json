@@ -19,6 +19,9 @@
   "license": "MIT",
   "author": "sounisi5011",
   "types": "./index.d.ts",
+  "files": [
+    "index.d.ts"
+  ],
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
     "lint:tsc": "tsc --noEmit",
