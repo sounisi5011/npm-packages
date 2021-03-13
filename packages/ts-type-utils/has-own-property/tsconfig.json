@@ -1,12 +1,3 @@
 {
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
-    /* Basic Options */
-    "declarationMap": false,
-
-    /* Advanced Options */
-    "emitDeclarationOnly": true
-  }
+  "extends": "../tsconfig.base.dts-only.json"
 }
