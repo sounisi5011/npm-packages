@@ -44,10 +44,9 @@ jobs:
       matrix:
         node-version:
           - 10.x
-          - 12.0.0
           - 12.x
-          - 14.0.0
           - 14.x
+          - 15.x
     steps:
       - uses: actions/checkout@v2
       - name: Git Setting
@@ -70,26 +69,7 @@ jobs:
       - name: Install pnpm
         run: npm i -g pnpm
       - name: Install Dependencies
-        shell: bash
-        # In Node.js 14.0.0, the "pnpm install" command may fail.
-        # It may not fail with pnpm version 5.7.0.
-        # see https://github.com/pnpm/pnpm/issues/3007#issuecomment-759985980
-        run: |
-          for i in {1..2} ; do
-            if [ ${i} -ne 1 ]; then
-              echo
-              echo '[!]' retry for the second time
-
-              echo '>' npm i -g pnpm@5.7.0
-              npm i -g pnpm@5.7.0
-            fi
-
-            echo '>' pnpm install
-            if pnpm install; then
-              exit $?
-            fi
-          done
-          exit 1
+        run: pnpm install
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
