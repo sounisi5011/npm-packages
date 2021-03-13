@@ -75,7 +75,7 @@ jobs:
         run: |
           for i in {1..10} ; do
             if [ ${i} -ne 1 ]; then
-              sleep 1
+              sleep 5
               echo
               echo '[!]' retry for the "${i}th" time
               echo '>' rm -rf ~/.pnpm-store
