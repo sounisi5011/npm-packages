@@ -52,11 +52,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
+          readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
           npm i -g pnpm
           pnpm install
           cd '${{ matrix.path-git-relative }}'
           pnpm run build --if-present
-          if [ -x ./publish.sh ]; then
+          if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
             GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             matrix_package_name='${{ matrix.package-name }}'
             outputs_upload_url='${{ steps.release.outputs.upload_url }}'
@@ -67,7 +68,8 @@ jobs:
             outputs_patch='${{ steps.release.outputs.patch }}'
             outputs_sha='${{ steps.release.outputs.sha }}'
             outputs_pr='${{ steps.release.outputs.pr }}'
-            source ./publish.sh
+            echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
+            source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
           else
             pnpm publish --access=public
           fi
