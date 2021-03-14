@@ -4,7 +4,7 @@ import { getPackageDataList, PackageData } from '../src/main';
 describe('getPackageDataList()', () => {
     it('package data should be included', async () => {
         const packageData: PackageData = {
-            'path-git-relative': 'actions/workspace-submodules',
+            'path-git-relative': 'actions/monorepo-workspace-submodules-finder-action',
             'package-name': pkg.name,
             'version': pkg.version ?? null,
             'is-private': pkg.private ?? false,

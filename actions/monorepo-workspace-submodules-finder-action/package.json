@@ -1,15 +1,15 @@
 {
-  "name": "workspace-submodules",
+  "name": "monorepo-monorepo-workspace-submodules-finder-action-finder-action",
   "version": "0.0.0",
   "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
-  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/workspace-submodules#readme",
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/monorepo-workspace-submodules-finder-action#readme",
   "bugs": {
     "url": "https://github.com/sounisi5011/npm-packages/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sounisi5011/npm-packages.git",
-    "directory": "actions/workspace-submodules"
+    "directory": "actions/monorepo-workspace-submodules-finder-action"
   },
   "license": "MIT",
   "author": "sounisi5011",
