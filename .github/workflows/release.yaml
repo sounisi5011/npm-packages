@@ -34,6 +34,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12.x
+          registry-url: https://registry.npmjs.org
+          # Note: The `registry-url` option is required.
+          #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.release_created }}
       - name: Cache .pnpm-store
         uses: actions/cache@v2
@@ -47,7 +50,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - name: publish
         env:
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           npm i -g pnpm
           pnpm install
