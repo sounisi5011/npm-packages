@@ -19,6 +19,12 @@ jobs:
           - 12.x
     steps:
       - uses: actions/checkout@v2
+      - id: submodules-finder
+        uses: sounisi5011/npm-packages/actions/monorepo-workspace-submodules-finder@monorepo-workspace-submodules-finder-action-v1
+      - run: |
+          import json
+          print(json.dumps(json.loads('${{ steps.submodules-finder.outputs.result }}'), indent=4))
+        shell: python
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
