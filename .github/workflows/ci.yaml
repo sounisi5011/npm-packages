@@ -37,6 +37,8 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run lint
+      - name: test check npm logged in
+        run: npm whoami
   unit-test:
     runs-on: ubuntu-latest
     strategy:
