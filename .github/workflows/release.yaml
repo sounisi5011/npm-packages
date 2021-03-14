@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: interrogate
-        uses: ./actions/workspace-submodules
+        uses: ./actions/monorepo-workspace-submodules-finder
   release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder
