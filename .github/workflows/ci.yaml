@@ -23,6 +23,20 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: test check npm logged in 01
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        shell: bash
+        run: |
+          echo '>' npm whoami
+          if npm whoami &>/dev/null; then
+            :
+          else
+            #echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' >> ./.npmrc
+            echo
+            echo '[!]' retry npm whoami
+            npm whoami &>/dev/null
+          fi
       - name: Cache .pnpm-store
         uses: actions/cache@v2
         with:
@@ -37,19 +51,19 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run lint
-      - name: test check npm logged in
+      - name: test check npm logged in 02
         env:
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         shell: bash
         run: |
           echo '>' npm whoami
-          if npm whoami; then
+          if npm whoami &>/dev/null; then
             :
           else
-            echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+            echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' >> ./.npmrc
             echo
             echo '[!]' retry npm whoami
-            npm whoami
+            npm whoami &>/dev/null
           fi
   unit-test:
     runs-on: ubuntu-latest
