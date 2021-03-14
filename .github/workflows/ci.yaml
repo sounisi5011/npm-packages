@@ -32,7 +32,7 @@ jobs:
           if npm whoami &>/dev/null; then
             :
           else
-            #echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' >> ./.npmrc
+            echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' >> ./.npmrc
             echo
             echo '[!]' retry npm whoami
             npm whoami &>/dev/null
