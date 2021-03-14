@@ -1,5 +1,5 @@
 {
-  "name": "monorepo-monorepo-workspace-submodules-finder-action-finder-action",
+  "name": "monorepo-workspace-submodules-finder-action",
   "version": "0.0.0",
   "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/monorepo-workspace-submodules-finder-action#readme",
