@@ -6,7 +6,7 @@ import { getPackageDataList, PackageData } from '../src/main';
 describe('getPackageDataList()', () => {
     it('package data should be included', async () => {
         const packageData: PackageData = {
-            'path-git-relative': 'actions/monorepo-workspace-submodules-finder-action',
+            'path-git-relative': 'actions/monorepo-workspace-submodules-finder',
             'package-name': pkg.name,
             'version': pkg.version ?? null,
             // eslint-disable-next-line jest/no-if

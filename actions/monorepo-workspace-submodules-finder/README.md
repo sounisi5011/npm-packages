@@ -25,7 +25,7 @@ The content is as follows:
     "is-private": false
   },
   {
-    "path-git-relative": "actions/monorepo-workspace-submodules-finder-action",
+    "path-git-relative": "actions/monorepo-workspace-submodules-finder",
     "package-name": "monorepo-workspace-submodules-finder-action",
     "version": "1.0.0",
     "is-private": false
@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: interrogate
-        uses: sounisi5011/npm-packages/actions/monorepo-workspace-submodules-finder-action@monorepo-workspace-submodules-finder-action-v1
+        uses: sounisi5011/npm-packages/actions/monorepo-workspace-submodules-finder@monorepo-workspace-submodules-finder-action-v1
   job-for-each-submodule:
     runs-on: ubuntu-latest
     needs: submodules-finder
