@@ -42,9 +42,15 @@ jobs:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         shell: bash
         run: |
-          npm whoami || true
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ./.npmrc
-          npm whoami
+          echo '>' npm whoami
+          if npm whoami; then
+            :
+          else
+            echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+            echo
+            echo '[!]' retry npm whoami
+            npm whoami
+          fi
   unit-test:
     runs-on: ubuntu-latest
     strategy:
