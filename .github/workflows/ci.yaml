@@ -39,8 +39,12 @@ jobs:
       - run: pnpm run lint
       - name: test check npm logged in
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        run: npm whoami
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+        shell: bash
+        run: |
+          npm whoami || true
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ./.npmrc
+          npm whoami
   unit-test:
     runs-on: ubuntu-latest
     strategy:
