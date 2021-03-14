@@ -50,10 +50,12 @@ importers:
       find-git-root: 1.0.4
       workspace-tools: 0.12.3
     devDependencies:
+      '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 14.14.33
       '@vercel/ncc': 0.27.0
     specifiers:
       '@actions/core': ^1.2.6
+      '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
       '@vercel/ncc': 0.27.0
       find-git-root: ^1.0.4
