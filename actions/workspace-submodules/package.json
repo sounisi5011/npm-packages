@@ -1,7 +1,6 @@
 {
   "name": "workspace-submodules",
   "version": "0.0.0",
-  "private": true,
   "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/workspace-submodules#readme",
   "repository": {
