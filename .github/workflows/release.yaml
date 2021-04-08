@@ -53,7 +53,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
-          npm i -g pnpm
+          npm i -g pnpm@6
           pnpm install
           cd '${{ matrix.path-git-relative }}'
           pnpm run build --if-present
