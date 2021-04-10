@@ -6,7 +6,9 @@ const isArray = Array.isArray as isReadonlyArray;
 
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- //
 
-const data1: string | readonly string[] = [];
+declare const gen: <T>() => T;
+
+const data1 = gen<string | readonly string[]>();
 
 if (isArray(data1)) {
     expectType<readonly string[]>(data1);
@@ -20,7 +22,7 @@ if ((Array.isArray as isReadonlyArray)(data1)) {
     expectType<string>(data1);
 }
 
-const data2: string | string[] = [];
+const data2 = gen<string | string[]>();
 
 if (isArray(data2)) {
     expectType<string[]>(data2);
@@ -34,7 +36,7 @@ if ((Array.isArray as isReadonlyArray)(data2)) {
     expectType<string>(data2);
 }
 
-const data3: boolean | string[] | readonly number[] = [];
+const data3 = gen<boolean | string[] | readonly number[]>();
 
 if (isArray(data3)) {
     expectType<string[] | readonly number[]>(data3);
