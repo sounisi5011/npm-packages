@@ -40,12 +40,7 @@ module.exports = {
     /** @type {string[]} */
     const commands = [];
 
-    const prettierTargetFiles = filenames.filter(extFilter('json', 'yaml', 'yml'));
-    if (prettierTargetFiles.length >= 1) {
-      commands.push(
-        `prettier --write ${prettierTargetFiles.join(' ')}`,
-      );
-    }
+    commands.push(`prettier --write ${filenames.join(' ')}`);
 
     const pkgFiles = filenames.filter(baseFilter('package.json'));
     if (pkgFiles.length >= 1) {
