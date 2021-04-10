@@ -13,7 +13,11 @@
   "scripts": {
     "build": "pnpm recursive run build --filter '*'",
     "fmt": "run-p fmt:*",
-    "fmt-check": "prettier --check .",
+    "fmt-check": "run-p fmt-check:*",
+    "fmt-check:pkg": "run-p fmt-check:pkg:*",
+    "fmt-check:pkg:prettier": "globby-exec prettier-package-json --list-different '{{**/package.json}}'",
+    "fmt-check:pkg:sort": "globby-exec sort-package-json --check '{{**/package.json}}'",
+    "fmt-check:prettier": "prettier --check .",
     "fmt:config": "prettier --write .",
     "fmt:pkg": "run-s fmt:pkg:prettier fmt:pkg:sort",
     "fmt:pkg:prettier": "prettier-package-json --write ./package.json",
@@ -30,6 +34,7 @@
     "test:unit-test": "pnpm recursive test --filter '*'"
   },
   "devDependencies": {
+    "@sounisi5011/scripts--globby-exec": "workspace:^0.0.0",
     "@types/jest": "26.0.20",
     "@typescript-eslint/eslint-plugin": "4.17.0",
     "commitizen": "4.2.3",

@@ -1,6 +1,7 @@
 importers:
   .:
     devDependencies:
+      '@sounisi5011/scripts--globby-exec': link:scripts/globby-exec
       '@types/jest': 26.0.20
       '@typescript-eslint/eslint-plugin': 4.17.0_eslint@7.22.0+typescript@4.2.3
       commitizen: 4.2.3
@@ -23,6 +24,7 @@ importers:
       ts-jest: 26.5.3_jest@26.6.3+typescript@4.2.3
       typescript: 4.2.3
     specifiers:
+      '@sounisi5011/scripts--globby-exec': workspace:^0.0.0
       '@types/jest': 26.0.20
       '@typescript-eslint/eslint-plugin': 4.17.0
       commitizen: 4.2.3
@@ -70,6 +72,13 @@ importers:
       tsd: 0.14.0
     specifiers:
       tsd: 0.14.0
+  scripts/globby-exec:
+    dependencies:
+      cross-spawn: 7.0.3
+      globby: 11.0.3
+    specifiers:
+      cross-spawn: ^7.0.3
+      globby: ^11.0.3
 lockfileVersion: 5.2
 packages:
   /@actions/core/1.2.6:
@@ -1853,7 +1862,6 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-    dev: true
     engines:
       node: '>= 8'
     resolution:
@@ -3045,6 +3053,19 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-2ZThXDvvV8fYFRVIxnrMQBipZQDr7MxKAmQK1vujaj9/7eF0efG7BPUKJ7jP7G5SLF37xKDXvO4S/KKLj/Z0og==
+  /globby/11.0.3:
+    dependencies:
+      array-union: 2.1.0
+      dir-glob: 3.0.1
+      fast-glob: 3.2.5
+      ignore: 5.1.8
+      merge2: 1.4.1
+      slash: 3.0.0
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-ffdmosjA807y7+lA1NM0jELARVmYul/715xiILEjo3hBLPTcirgQNnXECn5g3mtR8TOLCVbkfua1Hpen25/Xcg==
   /got/9.6.0:
     dependencies:
       '@sindresorhus/is': 0.14.0
@@ -3610,7 +3631,6 @@ packages:
     resolution:
       integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
   /isexe/2.0.0:
-    dev: true
     resolution:
       integrity: sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
   /isobject/2.1.0:
@@ -5076,7 +5096,6 @@ packages:
     resolution:
       integrity: sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
   /path-key/3.1.1:
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -5728,7 +5747,6 @@ packages:
   /shebang-command/2.0.0:
     dependencies:
       shebang-regex: 3.0.0
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -5740,7 +5758,6 @@ packages:
     resolution:
       integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
   /shebang-regex/3.0.0:
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -6652,7 +6669,6 @@ packages:
   /which/2.0.2:
     dependencies:
       isexe: 2.0.0
-    dev: true
     engines:
       node: '>= 8'
     hasBin: true
