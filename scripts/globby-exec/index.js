@@ -4,40 +4,89 @@
 const spawn = require('cross-spawn');
 const globby = require('globby');
 
-async function main() {
-  const [, , ...commandArgs] = process.argv;
-  const subCommandIndex = commandArgs.findIndex(arg => !/^-/.test(arg));
-  const globbyArgs = new Set(subCommandIndex >= 0 ? commandArgs.slice(0, subCommandIndex) : commandArgs);
-  const subCommand = commandArgs[subCommandIndex];
-  const subCommandArgs = subCommandIndex >= 0 ? commandArgs.slice(subCommandIndex + 1) : [];
+/**
+ * @param {readonly string[]} args
+ */
+function parseCommandArgs(args) {
+  const subCommandIndex = args.findIndex(arg => !/^-/.test(arg));
+  if (subCommandIndex >= 0) {
+    return {
+      globbyArgsSet: new Set(args.slice(0, subCommandIndex)),
+      subCommand: args[subCommandIndex],
+      subCommandArgs: args.slice(subCommandIndex + 1),
+    };
+  } else {
+    return {
+      globbyArgsSet: new Set(args),
+      subCommand: undefined,
+      subCommandArgs: [],
+    };
+  }
+}
 
+/**
+ * @param {Set<string>} globbyArgsSet
+ */
+function getGlobbyOptions(globbyArgsSet) {
   /** @type {globby.GlobbyOptions} */
   const globbyOptions = {
-    absolute: globbyArgs.has('--absolute'),
-    dot: globbyArgs.has('--dot'),
-    gitignore: !globbyArgs.has('--no-gitignore'),
+    absolute: globbyArgsSet.has('--absolute'),
+    dot: globbyArgsSet.has('--dot'),
+    gitignore: !globbyArgsSet.has('--no-gitignore'),
   };
   if (globbyOptions.gitignore) {
     globbyOptions.ignore = (Array.isArray(globbyOptions.ignore) ? globbyOptions.ignore : []).concat('**/.git/**');
   }
+  return globbyOptions;
+}
 
-  if (!subCommand) {
-    throw new Error('The command to be executed was not specified.');
-  }
-
-  const globReplacedArgs = (await Promise.all(subCommandArgs.map(async arg => {
+/**
+ * @param {globby.GlobbyOptions} globbyOptions
+ * @returns {(arg: string) => Promise<string[]>}
+ */
+function replaceGlob(globbyOptions) {
+  return async arg => {
     const match = /^\{\{([\s\S]+)\}\}$/.exec(arg);
     if (!match) return [arg];
     const [, pattern] = match;
     return await globby(pattern, globbyOptions);
-  }))).reduce((args, arg) => [...args, ...arg], []);
-  const child = spawn(subCommand, globReplacedArgs, { stdio: 'inherit' });
+  };
+}
+
+/**
+ * @template T
+ * @param {T[][]} array
+ * @returns {T[]}
+ */
+function flatArray(array) {
+  return array.reduce((args, arg) => [...args, ...arg], []);
+}
+
+/**
+ * @param {string} command
+ * @param {readonly string[]} args
+ * @param {import('child_process').SpawnOptions} options
+ * @returns {Promise<void}
+ */
+async function spawnAsync(command, args, options) {
+  const child = spawn(command, args, options);
   return new Promise(resolve => {
     child.on('close', exitCode => {
       process.exitCode = exitCode;
       resolve();
     });
   });
+}
+
+async function main() {
+  const [, , ...commandArgs] = process.argv;
+  const { globbyArgsSet, subCommand, subCommandArgs } = parseCommandArgs(commandArgs);
+
+  if (!subCommand) throw new Error('The command to be executed was not specified.');
+
+  const globbyOptions = getGlobbyOptions(globbyArgsSet);
+  const globReplacedArgs = flatArray(await Promise.all(subCommandArgs.map(replaceGlob(globbyOptions))));
+  await spawnAsync(subCommand, globReplacedArgs, { stdio: 'inherit' });
 }
 
 (async () => {
