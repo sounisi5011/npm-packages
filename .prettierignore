@@ -1,4 +1,11 @@
+*
+!*/
+!*.json
+!*.yaml
+!*.yml
+
 coverage/
 node_modules/
 dist/
+package.json
 pnpm-lock.yaml
