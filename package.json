@@ -13,6 +13,7 @@
   "scripts": {
     "build": "pnpm recursive run build --filter '*'",
     "fmt": "run-p fmt:*",
+    "fmt-check": "prettier --check .",
     "fmt:config": "prettier --write .",
     "fmt:pkg": "run-s fmt:pkg:prettier fmt:pkg:sort",
     "fmt:pkg:prettier": "prettier-package-json --write ./package.json",
@@ -24,7 +25,7 @@
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "pnpm recursive run lint:tsc --filter '*'",
     "prepare": "husky install",
-    "test": "run-s lint test-only",
+    "test": "run-s lint test-only fmt-check",
     "test-only": "run-s test:unit-test",
     "test:unit-test": "pnpm recursive test --filter '*'"
   },
