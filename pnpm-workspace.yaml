@@ -2,3 +2,4 @@ packages:
   - packages/*
   - packages/ts-type-utils/*
   - actions/*
+  - scripts/*

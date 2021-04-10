@@ -29,6 +29,6 @@
   "devDependencies": {
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/node": "*",
-    "@vercel/ncc": "0.27.0"
+    "@vercel/ncc": "0.28.2"
   }
 }
