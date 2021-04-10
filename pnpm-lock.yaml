@@ -65,6 +65,11 @@ importers:
       tsd: 0.14.0
     specifiers:
       tsd: 0.14.0
+  packages/ts-type-utils/is-readonly-array:
+    devDependencies:
+      tsd: 0.14.0
+    specifiers:
+      tsd: 0.14.0
 lockfileVersion: 5.2
 packages:
   /@actions/core/1.2.6:

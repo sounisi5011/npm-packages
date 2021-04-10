@@ -1,0 +1,41 @@
+{
+  "name": "@sounisi5011/ts-type-util-is-readonly-array",
+  "version": "0.0.0",
+  "description": "Fix the type definition of `Array.isArray()` method to accept readonly arrays",
+  "keywords": [
+    "ReadonlyArray",
+    "array",
+    "isArray",
+    "isReadonlyArray",
+    "readonly",
+    "ts",
+    "types",
+    "typescript",
+    "util",
+    "utility"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-type-utils/is-readonly-array#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/ts-type-utils/is-readonly-array"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "types": "./index.d.ts",
+  "files": [
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p ./tsconfig.build.json",
+    "lint:tsc": "tsc --noEmit",
+    "test": "run-s build test:tsd",
+    "test:tsd": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "0.14.0"
+  }
+}
