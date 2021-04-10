@@ -45,8 +45,7 @@ module.exports = {
     const pkgFiles = filenames.filter(baseFilter('package.json'));
     if (pkgFiles.length >= 1) {
       commands.push(
-        `prettier-package-json --write ${pkgFiles.join(' ')}`,
-        `sort-package-json ${pkgFiles.join(' ')}`,
+        `node ./scripts/format-package-json.js --write ${pkgFiles.join(' ')}`,
       );
     }
 

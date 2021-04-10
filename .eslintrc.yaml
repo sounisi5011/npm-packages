@@ -107,3 +107,12 @@ overrides:
       jest/prefer-todo: error
       jest/require-top-level-describe: error
       jest/valid-title: error
+  - files: scripts/*.js
+    rules:
+      import/no-extraneous-dependencies:
+        - error
+        - devDependencies: true
+      node/no-unpublished-require: off
+      node/no-unsupported-features/node-builtins:
+        - error
+        - version: 12.x
