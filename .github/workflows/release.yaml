@@ -38,6 +38,16 @@ jobs:
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.release_created }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-12.x-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release.outputs.release_created }}
       - uses: ./actions/setup-pnpm
         if: ${{ steps.release.outputs.release_created }}
       - name: publish

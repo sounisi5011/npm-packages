@@ -10,14 +10,5 @@ runs:
       run: |
         node_version="$(node --version)"
         echo "::set-output name=node-version::${node_version#v}"
-    - name: Cache .pnpm-store
-      uses: actions/cache@v2
-      with:
-        path: ~/.pnpm-store
-        key: ${{ runner.os }}-node-${{ steps.get-node-version.outputs.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-node-${{ steps.get-node-version.outputs.node-version }}-
-          ${{ runner.os }}-node-
-          ${{ runner.os }}-
     - name: Install pnpm v5
       run: npm i -g pnpm@5
