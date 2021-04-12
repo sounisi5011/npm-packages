@@ -50,7 +50,7 @@ importers:
     dependencies:
       '@actions/core': 1.2.6
       find-git-root: 1.0.4
-      workspace-tools: 0.12.3
+      workspace-tools: 0.13.0
     devDependencies:
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 14.14.33
@@ -61,7 +61,7 @@ importers:
       '@types/node': '*'
       '@vercel/ncc': 0.28.2
       find-git-root: ^1.0.4
-      workspace-tools: ^0.12.3
+      workspace-tools: ^0.13.0
   packages/ts-type-utils/has-own-property:
     devDependencies:
       tsd: 0.14.0
@@ -3097,6 +3097,7 @@ packages:
       ignore: 5.1.8
       merge2: 1.4.1
       slash: 3.0.0
+    dev: true
     engines:
       node: '>=10'
     resolution:
@@ -6733,7 +6734,7 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
-  /workspace-tools/0.12.3:
+  /workspace-tools/0.13.0:
     dependencies:
       '@pnpm/lockfile-file': 3.2.1_@pnpm+logger@3.2.3
       '@pnpm/logger': 3.2.3
@@ -6742,13 +6743,13 @@ packages:
       find-yarn-workspace-root: 1.2.1
       fs-extra: 9.1.0
       git-url-parse: 11.4.4
-      globby: 11.0.2
+      globby: 11.0.3
       jju: 1.4.0
       multimatch: 4.0.0
       read-yaml-file: 2.1.0
     dev: false
     resolution:
-      integrity: sha512-Toq4VI4GJw5naWxgXNU5/mmuu6PeiCRRZDkVOoeJacqQ6r0zRGWVBxE4YXQp2SADTKdC1ATwqsE+6bcJTZUmpA==
+      integrity: sha512-z59TI9juILMp5NkdNbP3AGDz2ytgB+D1LlPImQfZJP4O9PWWkcyAmXviUPjhed4oKPF7YtZFH8Iv7pdLvzNvfA==
   /wrap-ansi/6.2.0:
     dependencies:
       ansi-styles: 4.3.0
