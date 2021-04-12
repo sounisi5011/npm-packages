@@ -1,0 +1,12 @@
+{
+  "name": "@sounisi5011/scripts--globby-exec",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "globby-exec": "index.js"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.3",
+    "globby": "^11.0.3"
+  }
+}

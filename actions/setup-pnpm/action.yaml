@@ -1,0 +1,15 @@
+name: Setup pnpm environment
+author: sounisi5011
+description: Install and set up pnpm, the version of pnpm will be automatically detected from the `engines` field in the `package.json` file in the project root
+runs:
+  using: composite
+  steps:
+    - id: get-pnpm-data
+      shell: bash
+      run: node ${{ github.action_path }}/get-pnpm-data.js
+    - shell: bash
+      run: |
+        echo '::group::$' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+                          npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+        echo '::endgroup::'
+        echo Installed pnpm version: $(pnpm --version)
