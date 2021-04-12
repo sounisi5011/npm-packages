@@ -11,3 +11,4 @@ runs:
       run: |
         echo '>' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
                  npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+        echo Installed pnpm version: $(pnpm --version)
