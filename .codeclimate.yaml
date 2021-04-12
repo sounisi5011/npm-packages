@@ -1,0 +1,22 @@
+# https://docs.codeclimate.com/docs/advanced-configuration
+
+version: 2 # required to adjust maintainability checks
+
+exclude_patterns:
+  # Test files for tsd ( https://www.npmjs.com/package/tsd )
+  - "**/*.test-d.ts"
+  # default exclude patterns
+  # see https://docs.codeclimate.com/docs/excluding-files-and-folders#section-auto-generated-file-and-folder-exclusions
+  - "config/"
+  - "db/"
+  - "dist/"
+  - "features/"
+  - "**/node_modules/"
+  - "script/"
+  - "**/spec/"
+  - "**/test/"
+  - "**/tests/"
+  - "Tests/"
+  - "**/vendor/"
+  - "**/*_test.go"
+  - "**/*.d.ts"
