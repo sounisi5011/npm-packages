@@ -63,6 +63,34 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run fmt-check
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 12.x
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: Install pnpm v5
+        run: npm i -g pnpm@5
+      - name: Install Dependencies
+        run: pnpm install
+      - run: pnpm run build
+      - name: Check changes
+        run: git diff --name-only --exit-code
   unit-test:
     runs-on: ubuntu-latest
     strategy:
@@ -100,7 +128,7 @@ jobs:
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI
-    needs: [lint, format, unit-test]
+    needs: [lint, format, build, unit-test]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
