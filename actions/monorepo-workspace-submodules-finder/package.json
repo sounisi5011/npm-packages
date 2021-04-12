@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "find-git-root": "^1.0.4",
-    "workspace-tools": "^0.13.0"
+    "workspace-tools": "^0.12.3"
   },
   "devDependencies": {
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
