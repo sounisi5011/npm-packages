@@ -1,0 +1,69 @@
+{
+  "name": "@sounisi5011/file-encryptor",
+  "version": "0.0.0",
+  "description": "Convert files and data into encrypted binary data",
+  "keywords": [
+    "AES",
+    "AES-256",
+    "AES-256-GCM",
+    "AES-GCM",
+    "AES256GCM",
+    "AESGCM",
+    "Argon2",
+    "Argon2d",
+    "ChaCha20",
+    "ChaCha20-Poly1305",
+    "NodeJS",
+    "Poly1305",
+    "binary",
+    "buffer",
+    "cipheriv",
+    "crypto",
+    "data",
+    "decrypt",
+    "decryption",
+    "encrypt",
+    "encryption",
+    "file",
+    "gcm",
+    "password",
+    "protect",
+    "secure",
+    "security",
+    "stream",
+    "transform",
+    "util",
+    "utility"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/file-encryptor#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/file-encryptor"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "directories": {
+    "lib": "./src/",
+    "test": "./tests/"
+  },
+  "files": [
+    "./dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "12.x || 14.x || 15.x"
+  },
+  "runkitExampleFilename": "./runkit.js"
+}

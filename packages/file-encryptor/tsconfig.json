@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "incremental": false, // If the `incremental` option is `true`, the build by `@vercel/ncc@0.27.0` will fail
+    "declaration": false,
+    "declarationMap": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": false, // If the `composite` option is `true`, the `incremental` option cannot be `false`
+
+    /* Module Resolution Options */
+    "types": ["node"]
+  },
+  "include": ["./src/**/*"]
+}
