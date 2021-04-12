@@ -11,4 +11,5 @@ runs:
         node_version="$(node --version)"
         echo "::set-output name=node-version::${node_version#v}"
     - name: Install pnpm v5
+      shell: bash
       run: npm i -g pnpm@5
