@@ -11,7 +11,7 @@ importers:
       eslint-config-standard-with-typescript: 20.0.0_131db8732cc6333201210c4b1fd2b7b2
       eslint-plugin-dprint: 0.4.0_eslint@7.24.0+typescript@4.2.4
       eslint-plugin-import: 2.22.1_eslint@7.24.0
-      eslint-plugin-jest: 24.3.4_53c23ebd1e4a7a813a71449c0eb059df
+      eslint-plugin-jest: 24.3.5_53c23ebd1e4a7a813a71449c0eb059df
       eslint-plugin-node: 11.1.0_eslint@7.24.0
       eslint-plugin-promise: 5.1.0_eslint@7.24.0
       husky: 6.0.0
@@ -34,7 +34,7 @@ importers:
       eslint-config-standard-with-typescript: 20.0.0
       eslint-plugin-dprint: 0.4.0
       eslint-plugin-import: 2.22.1
-      eslint-plugin-jest: 24.3.4
+      eslint-plugin-jest: 24.3.5
       eslint-plugin-node: 11.1.0
       eslint-plugin-promise: 5.1.0
       husky: 6.0.0
@@ -917,23 +917,6 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-DewqIgscDzmAfd5nOGe4zm6Bl7PKtMG2Ad0KG8CUZAHlXfAKTF9Ol5PXhiMh39yRL2ChRH1cuuUGOcVyyrhQIw==
-  /@typescript-eslint/experimental-utils/4.17.0_eslint@7.24.0+typescript@4.2.4:
-    dependencies:
-      '@types/json-schema': 7.0.7
-      '@typescript-eslint/scope-manager': 4.17.0
-      '@typescript-eslint/types': 4.17.0
-      '@typescript-eslint/typescript-estree': 4.17.0_typescript@4.2.4
-      eslint: 7.24.0
-      eslint-scope: 5.1.1
-      eslint-utils: 2.1.0
-    dev: true
-    engines:
-      node: ^10.12.0 || >=12.0.0
-    peerDependencies:
-      eslint: '*'
-      typescript: '*'
-    resolution:
-      integrity: sha512-ZR2NIUbnIBj+LGqCFGQ9yk2EBQrpVVFOh9/Kd0Lm6gLpSAcCuLLe5lUCibKGCqyH9HPwYC0GIJce2O1i8VYmWA==
   /@typescript-eslint/experimental-utils/4.21.0_eslint@7.24.0+typescript@4.2.4:
     dependencies:
       '@types/json-schema': 7.0.7
@@ -2410,10 +2393,10 @@ packages:
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0
     resolution:
       integrity: sha512-8K7JjINHOpH64ozkAhpT3sd+FswIZTfMZTjdx052pnWrgRCVfp8op9tbjpAk3DdUeI/Ba4C8OjdC0r90erHEOw==
-  /eslint-plugin-jest/24.3.4_53c23ebd1e4a7a813a71449c0eb059df:
+  /eslint-plugin-jest/24.3.5_53c23ebd1e4a7a813a71449c0eb059df:
     dependencies:
       '@typescript-eslint/eslint-plugin': 4.21.0_eslint@7.24.0+typescript@4.2.4
-      '@typescript-eslint/experimental-utils': 4.17.0_eslint@7.24.0+typescript@4.2.4
+      '@typescript-eslint/experimental-utils': 4.21.0_eslint@7.24.0+typescript@4.2.4
       eslint: 7.24.0
     dev: true
     engines:
@@ -2426,7 +2409,7 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
     resolution:
-      integrity: sha512-3n5oY1+fictanuFkTWPwSlehugBTAgwLnYLFsCllzE3Pl1BwywHl5fL0HFxmMjoQY8xhUDk8uAWc3S4JOHGh3A==
+      integrity: sha512-XG4rtxYDuJykuqhsOqokYIR84/C8pRihRtEpVskYLbIIKGwPNW2ySxdctuVzETZE+MbF/e7wmsnbNVpzM0rDug==
   /eslint-plugin-node/11.1.0_eslint@7.24.0:
     dependencies:
       eslint: 7.24.0
