@@ -128,7 +128,7 @@ jobs:
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI
-    needs: [lint, format, unit-test]
+    needs: [lint, format, build, unit-test]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
