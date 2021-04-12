@@ -9,6 +9,7 @@ runs:
       run: node ${{ github.action_path }}/get-pnpm-data.js
     - shell: bash
       run: |
-        echo '>' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
-                 npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+        echo '::group::>' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+                          npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+        echo '::endgroup::'
         echo Installed pnpm version: $(pnpm --version)
