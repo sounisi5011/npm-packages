@@ -4,12 +4,10 @@ description: Install and set up pnpm, the version of pnpm will be automatically 
 runs:
   using: composite
   steps:
-    - name: Detect pnpm version
-      id: get-pnpm-data
+    - id: get-pnpm-data
       shell: bash
       run: node ${{ github.action_path }}/get-pnpm-data.js
-    - name: Install pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
-      shell: bash
+    - shell: bash
       run: |
         echo '>' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
                  npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
