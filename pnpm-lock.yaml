@@ -62,6 +62,13 @@ importers:
       '@vercel/ncc': 0.28.2
       find-git-root: ^1.0.4
       workspace-tools: ^0.13.0
+  packages/file-encryptor:
+    specifiers: {}
+  packages/file-encryptor/examples:
+    dependencies:
+      '@sounisi5011/file-encryptor': link:..
+    specifiers:
+      '@sounisi5011/file-encryptor': file:..
   packages/ts-type-utils/has-own-property:
     devDependencies:
       tsd: 0.14.0

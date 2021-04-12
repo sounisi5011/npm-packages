@@ -3,3 +3,4 @@ packages:
   - packages/ts-type-utils/*
   - actions/*
   - scripts/*
+  - "**/examples"
