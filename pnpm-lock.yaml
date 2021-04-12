@@ -63,7 +63,25 @@ importers:
       find-git-root: ^1.0.4
       workspace-tools: ^0.13.0
   packages/file-encryptor:
-    specifiers: {}
+    dependencies:
+      argon2-browser: 1.15.4
+      flatbuffers: 1.12.0
+      varint: 6.0.0
+    devDependencies:
+      '@types/argon2-browser': 1.12.0
+      '@types/flatbuffers': 1.10.0
+      '@types/node': 14.14.37
+      '@types/varint': 6.0.0
+      multicodec: 3.0.1
+    specifiers:
+      '@types/argon2-browser': 1.12.0
+      '@types/flatbuffers': 1.10.0
+      '@types/node': '*'
+      '@types/varint': 6.0.0
+      argon2-browser: ^1.15.4
+      flatbuffers: ^1.12.0
+      multicodec: 3.0.1
+      varint: ^6.0.0
   packages/file-encryptor/examples:
     dependencies:
       '@sounisi5011/file-encryptor': link:..
@@ -664,6 +682,10 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
+  /@multiformats/base-x/4.0.1:
+    dev: true
+    resolution:
+      integrity: sha512-eMk0b9ReBbV23xXU693TAIrLyeO5iTgBZGSJfpqriG8UkYvr/hC9u9pyMlAakDNHWmbhMZCDs6KQO0jzKD8OTw==
   /@nodelib/fs.scandir/2.1.4:
     dependencies:
       '@nodelib/fs.stat': 2.0.4
@@ -776,6 +798,10 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
+  /@types/argon2-browser/1.12.0:
+    dev: true
+    resolution:
+      integrity: sha512-ZPpKOoLuyXf+dKUJKcbUAzAajnJ1+ABXqSyHtsjfDaKhdHh19wXNWC3/hpDdzIO8ykiSONnGCWy38juDZVocvg==
   /@types/babel__core/7.1.12:
     dependencies:
       '@babel/parser': 7.13.10
@@ -805,6 +831,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-kSjgDMZONiIfSH1Nxcr5JIRMwUetDki63FSQfpTCz8ogF3Ulqm8+mr5f78dUYs6vMiB6gBusQqfQmBvHZj/lwg==
+  /@types/flatbuffers/1.10.0:
+    dev: true
+    resolution:
+      integrity: sha512-7btbphLrKvo5yl/5CC2OCxUSMx1wV1wvGT1qDXkSt7yi00/YW7E8k6qzXqJHsp+WU0eoG7r6MTQQXI9lIvd0qA==
   /@types/glob/7.1.3:
     dependencies:
       '@types/minimatch': 3.0.3
@@ -858,6 +888,10 @@ packages:
   /@types/node/14.14.33:
     resolution:
       integrity: sha512-oJqcTrgPUF29oUP8AsUqbXGJNuPutsetaa9kTQAQce5Lx5dTYWV02ScBiT/k1BX/Z7pKeqedmvp39Wu4zR7N7g==
+  /@types/node/14.14.37:
+    dev: true
+    resolution:
+      integrity: sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==
   /@types/normalize-package-data/2.4.0:
     dev: true
     resolution:
@@ -874,6 +908,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+  /@types/varint/6.0.0:
+    dependencies:
+      '@types/node': 14.14.37
+    dev: true
+    resolution:
+      integrity: sha512-2jBazyxGl4644tvu3VAez8UA/AtrcEetT9HOeAbqZ/vAcRVL/ZDFQjSS7rkWusU5cyONQVUz+nwwrNZdMva4ow==
   /@types/yargs-parser/20.2.0:
     dev: true
     resolution:
@@ -1255,6 +1295,10 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-mM8522psRCqzV+6LhomX5wgp25YVibjh8Wj23I5RPkPppSVSjyKD2A2mBJmWGa+KN7f2D6LNh9jkBCeyLktzjg==
+  /argon2-browser/1.15.4:
+    dev: false
+    resolution:
+      integrity: sha512-LjT+p+iVYmYIj8scVtnjLVgZUZaOllL5KluXvsd3M4MurckKBf9zuMRcqCT/nw6hCsleBI57QyRnzL2KMiQNjQ==
   /argparse/1.0.10:
     dependencies:
       sprintf-js: 1.0.3
@@ -2839,6 +2883,10 @@ packages:
       node: ^10.12.0 || >=12.0.0
     resolution:
       integrity: sha512-dm9s5Pw7Jc0GvMYbshN6zchCA9RgQlzzEZX3vylR9IqFfS8XciblUXOKfW6SiuJ0e13eDYZoZV5wdrev7P3Nwg==
+  /flatbuffers/1.12.0:
+    dev: false
+    resolution:
+      integrity: sha512-c7CZADjRcl6j0PlvFy0ZqXQ67qSEZfrVPynmnL+2zPc+NtMvrF8Y0QceMo7QqnSPc7+uWjUIAbvCQ5WIKlMVdQ==
   /flatted/3.1.1:
     dev: true
     resolution:
@@ -4697,6 +4745,22 @@ packages:
     dev: true
     resolution:
       integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
+  /multibase/4.0.4:
+    dependencies:
+      '@multiformats/base-x': 4.0.1
+    dev: true
+    engines:
+      node: '>=12.0.0'
+      npm: '>=6.0.0'
+    resolution:
+      integrity: sha512-8/JmrdSGzlw6KTgAJCOqUBSGd1V6186i/X8dDCGy/lbCKrQ+1QB6f3HE+wPr7Tpdj4U3gutaj9jG2rNX6UpiJg==
+  /multicodec/3.0.1:
+    dependencies:
+      uint8arrays: 2.1.4
+      varint: 5.0.2
+    dev: true
+    resolution:
+      integrity: sha512-Y6j3wiPojvkF/z6KFIGt84KdJdP2oILEdzc/3YbD3qQ3EerhqtYlfsZTPPNVoCCxNZZdzIpCKrdYFSav17sIrQ==
   /multimatch/4.0.0:
     dependencies:
       '@types/minimatch': 3.0.3
@@ -6511,6 +6575,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
+  /uint8arrays/2.1.4:
+    dependencies:
+      multibase: 4.0.4
+    dev: true
+    resolution:
+      integrity: sha512-Q/Ys2JhFWpZkw8Hi2Zz7NFpVDH8avK9k2NjYKdOHoOAn5dTtOSNT9xMtaQz5D4kWVPOGKte8CAroEIdTzvF9AA==
   /unbox-primitive/1.0.0:
     dependencies:
       function-bind: 1.1.1
@@ -6636,6 +6706,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==
+  /varint/5.0.2:
+    dev: true
+    resolution:
+      integrity: sha512-lKxKYG6H03yCZUpAGOPOsMcGxd1RHCu1iKvEHYDPmTyq2HueGhD73ssNBqqQWfvYs04G9iUFRvmAVLW20Jw6ow==
+  /varint/6.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==
   /verror/1.10.0:
     dependencies:
       assert-plus: 1.0.0

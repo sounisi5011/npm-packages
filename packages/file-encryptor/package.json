@@ -66,6 +66,18 @@
     "test:examples:index": "node ./examples/index.js",
     "test:jest": "jest"
   },
+  "dependencies": {
+    "argon2-browser": "^1.15.4",
+    "flatbuffers": "^1.12.0",
+    "varint": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/argon2-browser": "1.12.0",
+    "@types/flatbuffers": "1.10.0",
+    "@types/node": "*",
+    "@types/varint": "6.0.0",
+    "multicodec": "3.0.1"
+  },
   "engines": {
     "node": "12.x || 14.x || 15.x"
   },
