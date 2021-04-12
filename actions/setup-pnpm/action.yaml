@@ -10,4 +10,6 @@ runs:
       run: node ${{ github.action_path }}/get-pnpm-data.js
     - name: Install pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
       shell: bash
-      run: npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+      run: |
+        echo '>' npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
+                 npm i -g pnpm@${{ steps.get-pnpm-data.outputs.pnpm-version-range }}
