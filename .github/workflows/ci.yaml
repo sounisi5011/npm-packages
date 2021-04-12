@@ -23,17 +23,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run lint
@@ -49,17 +40,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run fmt-check
@@ -75,17 +57,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run build
@@ -111,17 +84,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run test-only

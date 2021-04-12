@@ -1,0 +1,17 @@
+name: Setup pnpm environment
+author: sounisi5011
+description: Install and set up pnpm, the version of pnpm will be automatically detected from the `engines` field in the `package.json` file in the project root
+runs:
+  using: composite
+  steps:
+    - name: Cache .pnpm-store
+      uses: actions/cache@v2
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-node-${{ matrix.node-version }}-
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
+    - name: Install pnpm v5
+      run: npm i -g pnpm@5
