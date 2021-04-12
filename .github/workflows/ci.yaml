@@ -32,8 +32,8 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run lint
@@ -58,8 +58,8 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run fmt-check
@@ -84,8 +84,8 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run build
@@ -120,8 +120,8 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: Install pnpm v5
-        run: npm i -g pnpm@5
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run test-only
