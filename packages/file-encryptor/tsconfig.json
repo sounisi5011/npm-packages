@@ -4,12 +4,11 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
-    "incremental": false, // If the `incremental` option is `true`, the build by `@vercel/ncc@0.27.0` will fail
-    "declaration": false,
-    "declarationMap": false,
+    // Node.js 12 and above almost supports features up to ES2019
+    // see https://node.green/#ES2019
+    // see https://www.staging-typescript.org/tsconfig#target
+    "target": "ES2019",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": false, // If the `composite` option is `true`, the `incremental` option cannot be `false`
 
     /* Module Resolution Options */
     "types": ["node"]
