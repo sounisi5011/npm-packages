@@ -9,6 +9,9 @@
     // see https://www.staging-typescript.org/tsconfig#target
     "target": "ES2019",
     "outDir": "./dist",
+    // When the `composite` option is `true` and the `rootDir` option is undefined,
+    // files will not be created directly under the `outDir`
+    "rootDir": "./src",
 
     /* Module Resolution Options */
     "types": ["node"]
