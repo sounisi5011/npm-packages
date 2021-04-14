@@ -4,8 +4,9 @@ import type { BaseKeyDerivationOptions, DeriveKeyResult } from '.';
 
 const typeNameList = ['argon2d', 'argon2id'] as const;
 
+export type Argon2Algorithm = (typeof typeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
-    algorithm: (typeof typeNameList)[number];
+    algorithm: Argon2Algorithm;
     iterations?: number;
     memory?: number;
     parallelism?: number;
@@ -19,10 +20,11 @@ export const defaultOptions: NormalizedArgon2Options = {
     parallelism: 1,
 };
 
-export function isArgon2Options<T extends Record<string, unknown>>(options: T): options is T & Argon2Options {
-    const { algorithm } = options;
+export function isArgon2Options<T extends Partial<BaseKeyDerivationOptions>>(
+    options: T,
+): options is T extends Argon2Options ? T : never {
     for (const type of typeNameList) {
-        if (algorithm === type) return true;
+        if (options.algorithm === type) return true;
     }
     return false;
 }
