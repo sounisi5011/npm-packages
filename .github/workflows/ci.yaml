@@ -104,8 +104,8 @@ jobs:
                             cmake -S "${FLATBUFFERS_BUILD_PATH}" -B "${FLATBUFFERS_BUILD_PATH}" -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
           echo '::endgroup::'
 
-          echo '::group::$' cmake --build "${FLATBUFFERS_BUILD_PATH}"
-                            cmake --build "${FLATBUFFERS_BUILD_PATH}"
+          echo '::group::$' cmake --install "${FLATBUFFERS_BUILD_PATH}"
+                            cmake --install "${FLATBUFFERS_BUILD_PATH}"
           echo '::endgroup::'
 
           flatc --version
