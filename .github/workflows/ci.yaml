@@ -105,6 +105,10 @@ jobs:
                             cmake -G  'Unix Makefiles'  -DCMAKE_BUILD_TYPE=Release
           echo '::endgroup::'
 
+          echo '::group::$' sudo make install
+                            sudo make install
+          echo '::endgroup::'
+
           echo '::group::$' git diff --name-only
                             git diff --name-only
           echo '::endgroup::'
@@ -113,8 +117,8 @@ jobs:
                             git clean -xdn
           echo '::endgroup::'
 
-          echo '::group::$' ls -lpa CMakeFiles/*
-                            ls -lpa CMakeFiles/*
+          echo '::group::$' ls -lpa .
+                            ls -lpa .
           echo '::endgroup::'
 
           echo '$' cd ..
