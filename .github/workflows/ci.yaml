@@ -105,8 +105,17 @@ jobs:
                             cmake -G  'Unix Makefiles'
           echo '::endgroup::'
 
-          echo '$' ls -la .
-                   ls -la .
+          echo '::group::$' git diff --name-only
+                            git diff --name-only
+          echo '::endgroup::'
+
+          echo '::group::$' git clean -xdn
+                            git clean -xdn
+          echo '::endgroup::'
+
+          echo '::group::$' ls -lpa .
+                            ls -lpa .
+          echo '::endgroup::'
 
           echo '$' cd ..
                    cd ..
