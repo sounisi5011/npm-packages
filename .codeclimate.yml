@@ -3,8 +3,11 @@
 version: 2 # required to adjust maintainability checks
 
 exclude_patterns:
+  - "scripts/"
   # Test files for tsd ( https://www.npmjs.com/package/tsd )
   - "**/*.test-d.ts"
+  # Generated files by the FlatBuffers compiler
+  - "**/flatbuffers/*_generated.ts"
   # default exclude patterns
   # see https://docs.codeclimate.com/docs/excluding-files-and-folders#section-auto-generated-file-and-folder-exclusions
   - "config/"
