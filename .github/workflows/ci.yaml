@@ -98,6 +98,7 @@ jobs:
           flatc --version
       - run: pnpx run-s build-flatbuffers build
       - name: Check changes
+        if: ${{ always() }}
         run: git diff --name-only --exit-code
   unit-test:
     runs-on: ubuntu-latest
