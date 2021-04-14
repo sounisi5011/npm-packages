@@ -62,6 +62,9 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build-flatbuffers": "run-s build-flatbuffers:{flatc,fix}",
+    "build-flatbuffers:fix": "globby-exec fix-flatbuffers-generated-ts '{{src/**/flatbuffers/*_generated.ts}}'",
+    "build-flatbuffers:flatc": "globby-exec flatc --ts -o ./src/header/flatbuffers/ '{{src/header/flatbuffers/*.fbs}}'",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
@@ -76,6 +79,7 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
+    "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
     "@types/flatbuffers": "1.10.0",

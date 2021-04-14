@@ -1,4 +1,5 @@
 !.*
+**/flatbuffers/*_generated.ts
 coverage/
 node_modules/
 dist/

@@ -32,6 +32,14 @@ function extFilter(...extList) {
   return filename => extList.includes(path.extname(filename));
 }
 
+/**
+ * @param {function(string): boolean} fn
+ * @returns {function(string): boolean}
+ */
+function not(fn) {
+  return filename => !fn(filename);
+}
+
 module.exports = {
   /**
    * @param {string[]} filenames
@@ -40,7 +48,12 @@ module.exports = {
     /** @type {string[]} */
     const commands = [];
 
-    commands.push(`prettier --write ${filenames.join(' ')}`);
+    const prettierTargetFiles = filenames.filter(not(extFilter('fbs')));
+    if (prettierTargetFiles.length >= 1) {
+      commands.push(
+        `prettier --write ${prettierTargetFiles.join(' ')}`,
+      );
+    }
 
     const pkgFiles = filenames.filter(baseFilter('package.json'));
     if (pkgFiles.length >= 1) {
@@ -53,6 +66,19 @@ module.exports = {
     if (tsOrJsFiles.length >= 1) {
       commands.push(
         `eslint --fix ${tsOrJsFiles.join(' ')}`,
+      );
+    }
+
+    const flatbuffersFiles = filenames.filter(extFilter('fbs'));
+    if (flatbuffersFiles.length >= 1) {
+      const generatedTsFiles = flatbuffersFiles.map(flatbuffersFile =>
+        flatbuffersFile.replace(/\.fbs$/, '_generated.ts')
+      );
+      commands.push(
+        ...flatbuffersFiles
+          .map(flatbuffersFile => `flatc --ts -o ${path.dirname(flatbuffersFile)} ${flatbuffersFile}`),
+        `fix-flatbuffers-generated-ts ${generatedTsFiles.join(' ')}`,
+        `git add ${generatedTsFiles.join(' ')}`,
       );
     }
 

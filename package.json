@@ -12,6 +12,7 @@
   "author": "sounisi5011",
   "scripts": {
     "build": "pnpm recursive run build --filter '*'",
+    "build-flatbuffers": "pnpm recursive run build-flatbuffers --filter '*'",
     "fmt": "run-p fmt:*",
     "fmt-check": "run-p fmt-check:*",
     "fmt-check:pkg": "globby-exec node ./scripts/format-package-json.js --check '{{**/package.json}}'",
@@ -30,6 +31,7 @@
     "test:unit-test": "pnpm recursive test --filter '*'"
   },
   "devDependencies": {
+    "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--globby-exec": "workspace:^0.0.0",
     "@types/jest": "26.0.22",
     "@typescript-eslint/eslint-plugin": "4.21.0",
