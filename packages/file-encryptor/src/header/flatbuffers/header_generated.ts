@@ -22,8 +22,9 @@ export enum CryptAlgorithm{
  * @enum {number}
  */
 export enum CompressAlgorithm{
-  Gzip= 0,
-  Brotli= 1
+  None= 0,
+  Gzip= 1,
+  Brotli= 2
 };
 
 /**
@@ -310,7 +311,7 @@ cryptAuthTagArray():Uint8Array|null {
  */
 compressAlgorithm():CompressAlgorithm {
   var offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : CompressAlgorithm.Gzip;
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : CompressAlgorithm.None;
 };
 
 /**
@@ -444,7 +445,7 @@ static startCryptAuthTagVector(builder:flatbuffers.Builder, numElems:number) {
  * @param CompressAlgorithm compressAlgorithm
  */
 static addCompressAlgorithm(builder:flatbuffers.Builder, compressAlgorithm:CompressAlgorithm) {
-  builder.addFieldInt8(7, compressAlgorithm, CompressAlgorithm.Gzip);
+  builder.addFieldInt8(7, compressAlgorithm, CompressAlgorithm.None);
 };
 
 /**

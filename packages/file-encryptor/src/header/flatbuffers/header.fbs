@@ -23,8 +23,9 @@ enum CryptAlgorithm:uint8 {
 }
 
 enum CompressAlgorithm:uint8 {
-  Gzip = 0,
-  Brotli = 1
+  None = 0,
+  Gzip = 1,
+  Brotli = 2
 }
 
 union KeyOptions { Argon2Options }
@@ -36,7 +37,7 @@ table Header {
   key_options:KeyOptions (required);
   crypt_nonce:[ubyte] (required);
   crypt_auth_tag:[ubyte] (required);
-  compress_algorithm:CompressAlgorithm = Gzip;
+  compress_algorithm:CompressAlgorithm = None;
 }
 
 root_type Header;
