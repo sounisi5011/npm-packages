@@ -70,7 +70,7 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     if (cidFromData !== CID) {
         throw new Error(
             `Invalid identifier detected.`
-                + number2hex` The identifier must be 0x${CID}, encoded as unsigned varint.`
+                + number2hex` The identifier must be ${CID}, encoded as unsigned varint.`
                 + number2hex` Received ${cidFromData}`,
         );
     }
