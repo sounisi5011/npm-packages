@@ -88,17 +88,29 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v6
-        with:
-          setupOnly: true
-      - name: Install flatbuffers
+      - name: Build flatbuffers
         shell: bash
         # https://google.github.io/flatbuffers/flatbuffers_guide_building.html
         run: |
-          echo '::group::$' $VCPKG_ROOT/vcpkg install flatbuffers
-                            $VCPKG_ROOT/vcpkg install flatbuffers
+          readonly FLATBUFFERS_BUILD_PATH='./.flatbuffers'
+
+          echo '::group::$' git clone --depth 1 https://github.com/google/flatbuffers.git -b v1.12.0 "${FLATBUFFERS_BUILD_PATH}"
+                            git clone --depth 1 https://github.com/google/flatbuffers.git -b v1.12.0 "${FLATBUFFERS_BUILD_PATH}"
           echo '::endgroup::'
+
+          echo '$' cd "${FLATBUFFERS_BUILD_PATH}"
+                   cd "${FLATBUFFERS_BUILD_PATH}"
+
+          echo '::group::$' cmake -G '"Unix Makefiles"'
+                            cmake -G  'Unix Makefiles'
+          echo '::endgroup::'
+
+          echo '$' ls -la .
+                   ls -la .
+
+          echo '$' cd ..
+                   cd ..
+
           flatc --version
       - run: pnpx run-s build build-flatbuffers
       - name: Check changes
