@@ -98,21 +98,15 @@ jobs:
                             git clone --depth 1 https://github.com/google/flatbuffers.git -b v1.12.0 "${FLATBUFFERS_BUILD_PATH}"
           echo '::endgroup::'
 
-          echo '$' cd "${FLATBUFFERS_BUILD_PATH}"
-                   cd "${FLATBUFFERS_BUILD_PATH}"
-
           # Note: Disable the build of commands other than flatc
           # https://github.com/google/flatbuffers/blob/v1.12.0/CMakeLists.txt#L9-L40
-          echo '::group::$' cmake -G '"Unix Makefiles"' -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
-                            cmake -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
+          echo '::group::$' cmake -S "${FLATBUFFERS_BUILD_PATH}" -G '"Unix Makefiles"' -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
+                            cmake -S "${FLATBUFFERS_BUILD_PATH}" -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
           echo '::endgroup::'
 
-          echo '::group::$' sudo make install
-                            sudo make install
+          echo '::group::$' cmake --build "${FLATBUFFERS_BUILD_PATH}"
+                            cmake --build "${FLATBUFFERS_BUILD_PATH}"
           echo '::endgroup::'
-
-          echo '$' cd ..
-                   cd ..
 
           flatc --version
       - run: pnpx run-s build build-flatbuffers
