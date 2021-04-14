@@ -101,8 +101,8 @@ jobs:
           echo '$' cd "${FLATBUFFERS_BUILD_PATH}"
                    cd "${FLATBUFFERS_BUILD_PATH}"
 
-          echo '::group::$' cmake -G '"Unix Makefiles"'
-                            cmake -G  'Unix Makefiles'
+          echo '::group::$' cmake -G '"Unix Makefiles"' -DCMAKE_BUILD_TYPE=Release
+                            cmake -G  'Unix Makefiles'  -DCMAKE_BUILD_TYPE=Release
           echo '::endgroup::'
 
           echo '::group::$' git diff --name-only
