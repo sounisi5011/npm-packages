@@ -113,8 +113,8 @@ jobs:
                             git clean -xdn
           echo '::endgroup::'
 
-          echo '::group::$' ls -lpa .
-                            ls -lpa .
+          echo '::group::$' ls -lpa CMakeFiles/
+                            ls -lpa CMakeFiles/
           echo '::endgroup::'
 
           echo '$' cd ..
