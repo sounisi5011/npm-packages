@@ -62,7 +62,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build-flatbuffers": "run-s build-flatbuffers:{flatc,fix}",
+    "build-flatbuffers": "run-s build-flatbuffers:flatc build-flatbuffers:fix",
     "build-flatbuffers:fix": "globby-exec fix-flatbuffers-generated-ts '{{src/**/flatbuffers/*_generated.ts}}'",
     "build-flatbuffers:flatc": "globby-exec flatc --ts -o ./src/header/flatbuffers/ '{{src/header/flatbuffers/*.fbs}}'",
     "lint:tsc": "run-p lint:tsc:*",
