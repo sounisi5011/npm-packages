@@ -100,8 +100,8 @@ jobs:
 
           # Note: Disable the build of commands other than flatc
           # https://github.com/google/flatbuffers/blob/v1.12.0/CMakeLists.txt#L9-L40
-          echo '::group::$' cmake -S "${FLATBUFFERS_BUILD_PATH}" -G '"Unix Makefiles"' -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
-                            cmake -S "${FLATBUFFERS_BUILD_PATH}" -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
+          echo '::group::$' cmake -S "${FLATBUFFERS_BUILD_PATH}" -B "${FLATBUFFERS_BUILD_PATH}" -G '"Unix Makefiles"' -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
+                            cmake -S "${FLATBUFFERS_BUILD_PATH}" -B "${FLATBUFFERS_BUILD_PATH}" -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
           echo '::endgroup::'
 
           echo '::group::$' cmake --build "${FLATBUFFERS_BUILD_PATH}"
