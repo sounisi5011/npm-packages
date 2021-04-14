@@ -107,8 +107,8 @@ jobs:
                             cmake -G  'Unix Makefiles'  -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATLIB=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF
           echo '::endgroup::'
 
-          echo '::group::$' sudo make install
-                            sudo make install
+          echo '::group::$' sudo make
+                            sudo make
           echo '::endgroup::'
 
           echo '::group::$' git diff --name-only
