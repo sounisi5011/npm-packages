@@ -96,7 +96,7 @@ jobs:
                             sudo apt-get install -y flatbuffers-compiler
           echo '::endgroup::'
           flatc --version
-      - run: pnpx run-s build-flatbuffers build
+      - run: pnpx run-s build build-flatbuffers
       - name: Check changes
         if: ${{ always() }}
         run: git diff --exit-code
