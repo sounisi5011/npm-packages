@@ -88,12 +88,18 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - name: Install flatbuffers
+      - name: Setup vcpkg
         uses: lukka/run-vcpkg@v6
         with:
-          vcpkgArguments: flatbuffers
-      - name: Print flatbuffers version
-        run: flatc --version
+          setupOnly: true
+      - name: Install flatbuffers
+        shell: bash
+        # https://google.github.io/flatbuffers/flatbuffers_guide_building.html
+        run: |
+          echo '::group::$' $VCPKG_ROOT/vcpkg install flatbuffers
+                            $VCPKG_ROOT/vcpkg install flatbuffers
+          echo '::endgroup::'
+          flatc --version
       - run: pnpx run-s build build-flatbuffers
       - name: Check changes
         if: ${{ always() }}
