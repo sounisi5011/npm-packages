@@ -111,18 +111,6 @@ jobs:
                             sudo make install
           echo '::endgroup::'
 
-          echo '::group::$' git diff --name-only
-                            git diff --name-only
-          echo '::endgroup::'
-
-          echo '::group::$' git clean -xdn
-                            git clean -xdn
-          echo '::endgroup::'
-
-          echo '::group::$' ls -lpa .
-                            ls -lpa .
-          echo '::endgroup::'
-
           echo '$' cd ..
                    cd ..
 
