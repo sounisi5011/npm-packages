@@ -89,9 +89,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - name: Install flatbuffers
+        shell: bash
         # https://stackoverflow.com/a/64741470/4907315
         run: |
-          sudo apt install -y flatbuffers-compiler
+          echo '::group::$' sudo apt-get install -y flatbuffers-compiler
+                            sudo apt-get install -y flatbuffers-compiler
+          echo '::endgroup::'
           flatc --version
       - run: pnpx run-p build build-flatbuffers
       - name: Check changes
