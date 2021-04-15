@@ -40,17 +40,15 @@ export async function deriveKey(
     keyLengthBytes: number,
     options?: Readonly<KeyDerivationOptions>,
 ): Promise<DeriveKeyResult<NormalizedKeyDerivationOptions>> {
-    if (options && isArgon2Options(options)) {
-        return await deriveArgon2Key(password, salt, keyLengthBytes, options);
-    } else if (!options || !options.algorithm) {
-        return await defaultDeriveKey(password, salt, keyLengthBytes, options);
-    }
+    if (options && isArgon2Options(options)) return await deriveArgon2Key(password, salt, keyLengthBytes, options);
+    if (!options || !options.algorithm) return await defaultDeriveKey(password, salt, keyLengthBytes, options);
+
     if (options && hasOwnProp(options, 'algorithm')) {
         // @ts-expect-error Property 'algorithm' does not exist on type 'never'.
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new TypeError(`Unknown KDF (Key Derivation Function) algorithm was received: ${options.algorithm}`);
-    } else {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        throw new TypeError(`Unknown deriveKey options was received: ${options}`);
     }
+
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new TypeError(`Unknown deriveKey options was received: ${options}`);
 }

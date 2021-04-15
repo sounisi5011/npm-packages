@@ -4,8 +4,8 @@ import type { EncryptOptions, Encryptor } from '.';
 
 // TODO: Rewrite the process to be a true streaming process that can handle huge files.
 
-export class EncryptorTransform extends Transform {
-    constructor(encryptor: Encryptor, options: EncryptOptions) {
+abstract class WaitAllDataTransform extends Transform {
+    constructor() {
         const chunkList: Buffer[] = [];
         super({
             transform: (chunk, _encoding, callback) => {
@@ -19,37 +19,42 @@ export class EncryptorTransform extends Transform {
             flush: async callback => {
                 (async () => {
                     const inputData = Buffer.concat(chunkList);
-                    const encryptedData = await encryptor.encrypt(inputData, options);
-                    this.push(encryptedData);
+                    const transformedData = await this.transformAllData(inputData);
+                    this.push(transformedData);
                 })()
                     .then(() => callback())
                     .catch(callback);
             },
         });
     }
+
+    abstract transformAllData(data: Buffer): Promise<unknown>;
 }
 
-export class DecryptorTransform extends Transform {
+export class EncryptorTransform extends WaitAllDataTransform {
+    private readonly encryptor: Encryptor;
+    private readonly options: EncryptOptions;
+
+    constructor(encryptor: Encryptor, options: EncryptOptions) {
+        super();
+        this.encryptor = encryptor;
+        this.options = options;
+    }
+
+    async transformAllData(data: Buffer): Promise<Buffer> {
+        return await this.encryptor.encrypt(data, this.options);
+    }
+}
+
+export class DecryptorTransform extends WaitAllDataTransform {
+    private readonly encryptor: Encryptor;
+
     constructor(encryptor: Encryptor) {
-        const chunkList: Buffer[] = [];
-        super({
-            transform: (chunk, _encoding, callback) => {
-                try {
-                    chunkList.push(Buffer.from(chunk));
-                } catch (error) {
-                    callback(error);
-                }
-                callback();
-            },
-            flush: callback => {
-                (async () => {
-                    const inputData = Buffer.concat(chunkList);
-                    const encryptedData = await encryptor.decrypt(inputData);
-                    this.push(encryptedData);
-                })()
-                    .then(() => callback())
-                    .catch(callback);
-            },
-        });
+        super();
+        this.encryptor = encryptor;
+    }
+
+    async transformAllData(data: Buffer): Promise<Buffer> {
+        return await this.encryptor.decrypt(data);
     }
 }
