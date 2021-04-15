@@ -4,6 +4,8 @@ version: 2 # required to adjust maintainability checks
 
 exclude_patterns:
   - "scripts/"
+  # Jest configuration file ( https://jestjs.io/ )
+  - "**/jest.config.js"
   # Test files for tsd ( https://www.npmjs.com/package/tsd )
   - "**/*.test-d.ts"
   # Generated files by the FlatBuffers compiler
