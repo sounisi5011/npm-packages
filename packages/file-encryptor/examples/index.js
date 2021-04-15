@@ -1,9 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const stream = require('stream');
+const util = require('util');
 
 const { Encryptor } = require('@sounisi5011/file-encryptor');
 
 const fsPromises = fs.promises;
+const waitStreamFinished = util.promisify(stream.finished);
 
 const password = '123456';
 const encryptor = new Encryptor(password, {
@@ -38,19 +41,23 @@ const encryptor = new Encryptor(password, {
     const encryptedDataFilepath = `${cleartextFilepath}.enc`;
     const decryptedDataFilepath = `${encryptedDataFilepath}.dec.txt`;
 
-    fs.createReadStream(cleartextFilepath)
-      .pipe(encryptor.encryptStream({
-        // If the file to be encrypted is a text file, you can also compress the data.
-        // Binary file (e.g. images, videos, etc.) can also be compressed,
-        // but the effect of compression is often small and is not recommended.
-        compress: 'gzip',
-      }))
-      .pipe(fs.createWriteStream(encryptedDataFilepath));
+    await waitStreamFinished(
+      fs.createReadStream(cleartextFilepath)
+        .pipe(encryptor.encryptStream({
+          // If the file to be encrypted is a text file, you can also compress the data.
+          // Binary file (e.g. images, videos, etc.) can also be compressed,
+          // but the effect of compression is often small and is not recommended.
+          compress: 'gzip',
+        }))
+        .pipe(fs.createWriteStream(encryptedDataFilepath)),
+    );
     console.log('Encrypted File Data:', await fsPromises.readFile(encryptedDataFilepath));
 
-    fs.createReadStream(encryptedDataFilepath)
-      .pipe(encryptor.decryptStream())
-      .pipe(fs.createWriteStream(decryptedDataFilepath));
+    await waitStreamFinished(
+      fs.createReadStream(encryptedDataFilepath)
+        .pipe(encryptor.decryptStream())
+        .pipe(fs.createWriteStream(decryptedDataFilepath)),
+    );
     console.log('Decrypted File String:', await fsPromises.readFile(decryptedDataFilepath, 'utf8'));
   }
 })();
