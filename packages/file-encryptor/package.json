@@ -85,6 +85,8 @@
     "@types/flatbuffers": "1.10.0",
     "@types/node": "*",
     "@types/varint": "6.0.0",
+    "combinate": "1.1.3",
+    "jest-extended": "0.11.5",
     "multicodec": "3.0.1"
   },
   "engines": {
