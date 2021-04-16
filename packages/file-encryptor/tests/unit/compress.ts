@@ -66,34 +66,42 @@ describe('decompress()', () => {
 
     describe('decompress with options', () => {
         describe('gzip', () => {
-            const table = optGen<zlib.ZlibOptions>({
-                flush: [undefined, 0, 1, 2, 3, 4, 5],
-                finishFlush: [undefined, 0, 1, 2, 3, 4, 5],
+            const flushConstantsMap = {
+                record: zlib.constants,
+                /**
+                 * @see https://github.com/nodejs/node/blob/v15.14.0/lib/zlib.js#L81-L82
+                 */
+                names: ['Z_NO_FLUSH', 'Z_BLOCK', 'Z_PARTIAL_FLUSH', 'Z_SYNC_FLUSH', 'Z_FULL_FLUSH', 'Z_FINISH'],
+            };
+            it.each(optGen<zlib.ZlibOptions>({
                 chunkSize: [undefined, 2 ** 6, 2 ** 10, 2 ** 14, 2 ** 20],
                 windowBits: [undefined, 9, 10, 11, 12, 13, 14, 15],
                 level: [undefined, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 memLevel: [undefined, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 strategy: [undefined, 0, 1, 2, 3, 4],
-                dictionary: [undefined],
-                info: [undefined, true, false],
-                maxOutputLength: [undefined],
-            }, {
-                flush: {
-                    record: zlib.constants,
-                    /**
-                     * @see https://github.com/nodejs/node/blob/v15.14.0/lib/zlib.js#L81-L82
-                     */
-                    names: ['Z_NO_FLUSH', 'Z_BLOCK', 'Z_PARTIAL_FLUSH', 'Z_SYNC_FLUSH', 'Z_FULL_FLUSH', 'Z_FINISH'],
-                },
-                finishFlush: {
-                    record: zlib.constants,
-                    /**
-                     * @see https://github.com/nodejs/node/blob/v15.14.0/lib/zlib.js#L81-L82
-                     */
-                    names: ['Z_NO_FLUSH', 'Z_BLOCK', 'Z_PARTIAL_FLUSH', 'Z_SYNC_FLUSH', 'Z_FULL_FLUSH', 'Z_FINISH'],
-                },
+            }))('{ %s }', async (_, options) => {
+                const data = Buffer.from('Hello World!'.repeat(20));
+
+                const { data: compressedData } = await compress(data, { ...options, algorithm: 'gzip' });
+                const decompressedData = await decompress(compressedData, 'gzip');
+                expect(decompressedData.equals(data)).toBeTrue();
             });
-            it.each(table)('{ %s }', async (_, options) => {
+            it.each(optGen<zlib.ZlibOptions>({
+                flush: [undefined, 0, 1, 2, 3, 4, 5],
+                finishFlush: [undefined, 0, 1, 2, 3, 4, 5],
+            }, {
+                flush: flushConstantsMap,
+                finishFlush: flushConstantsMap,
+            }))('{ %s }', async (_, options) => {
+                const data = Buffer.from('Hello World!'.repeat(20));
+
+                const { data: compressedData } = await compress(data, { ...options, algorithm: 'gzip' });
+                const decompressedData = await decompress(compressedData, 'gzip');
+                expect(decompressedData.equals(data)).toBeTrue();
+            });
+            it.each(optGen<zlib.ZlibOptions>({
+                info: [true, false],
+            }))('{ %s }', async (_, options) => {
                 const data = Buffer.from('Hello World!'.repeat(20));
 
                 const { data: compressedData } = await compress(data, { ...options, algorithm: 'gzip' });

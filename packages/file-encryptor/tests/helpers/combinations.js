@@ -4,7 +4,7 @@ const combinate = require('combinate').default;
 
 /**
  * @template T
- * @param {{ [P in keyof T]-?: T[P][] }} combinations
+ * @param {{ [P in keyof T]: T[P][] }} combinations
  * @param {{ [P in keyof T]?: { record: Record<string, T[P]>, names: readonly string[] } }} enumMap
  * @returns {[string, T][]}
  */
