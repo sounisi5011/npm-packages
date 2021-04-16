@@ -7,7 +7,7 @@ const gunzipAsync = promisify(gunzip);
 const brotliCompressAsync = promisify(brotliCompress);
 const brotliDecompressAsync = promisify(brotliDecompress);
 
-export interface CompressGzipOptions extends zlib.ZlibOptions {
+export interface CompressGzipOptions extends Omit<zlib.ZlibOptions, 'info'> {
     algorithm: 'gzip';
 }
 
@@ -26,9 +26,15 @@ export async function compress(
     const normalizedOptions = typeof options === 'string' ? { algorithm: options } : options;
     if (normalizedOptions.algorithm === 'gzip') {
         const { algorithm, ...zlibOptions } = normalizedOptions;
+        const normalizedZlibOptions: zlib.ZlibOptions = {
+            ...zlibOptions,
+            // The "info" option is always disabled.
+            // Because the return value will not be a Buffer object.
+            info: false,
+        };
         return {
             algorithm,
-            data: await gzipAsync(data, zlibOptions),
+            data: await gzipAsync(data, normalizedZlibOptions),
         };
     } else if (normalizedOptions.algorithm === 'brotli') {
         const { algorithm, ...brotliOptions } = normalizedOptions;
