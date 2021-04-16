@@ -5,7 +5,11 @@
  */
 const fixedFieldByteLength = 7;
 
-const minByteLength = fixedFieldByteLength + 2;
+const minCreateByteLength = fixedFieldByteLength + 2;
+const minUpdateByteLength = fixedFieldByteLength + 1;
+const maxByteLength = fixedFieldByteLength + 64 / 8;
+
+const MAX_FIXED_FIELD_COUNT = BigInt(2) ** BigInt(fixedFieldByteLength * 8) - BigInt(1);
 
 /**
  * fixedFieldData (7 bytes unixtime) + invocationCount value ((byteLength - 7) bytes)
@@ -13,6 +17,7 @@ const minByteLength = fixedFieldByteLength + 2;
 export class Nonce {
     private fixedFieldData: bigint;
     private invocationCount: bigint;
+    private readonly nonceByteView = new DataView(new ArrayBuffer(maxByteLength));
 
     constructor() {
         this.fixedFieldData = BigInt(Date.now());
@@ -20,23 +25,20 @@ export class Nonce {
     }
 
     create(byteLength: number): Buffer {
-        if (byteLength < minByteLength) {
-            throw new TypeError(
-                `The value of "byteLength" argument is too short. It must be >= ${minByteLength}. Received ${byteLength}`,
-            );
-        }
+        this.validateLength('byteLength', byteLength, minCreateByteLength, maxByteLength);
+        this.incrementFixedField(byteLength);
 
-        const buffer = new ArrayBuffer(fixedFieldByteLength + 64 / 8);
-        const view = new DataView(buffer);
+        const view = this.nonceByteView;
 
         view.setBigUint64(0, this.fixedFieldData, true);
         view.setBigUint64(fixedFieldByteLength, this.invocationCount, true);
         this.invocationCount += BigInt(1);
 
-        return Buffer.from(buffer, 0, byteLength);
+        return Buffer.from(view.buffer.slice(0, byteLength));
     }
 
     updateInvocation(prevNonce: Uint8Array): this {
+        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
         const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
         if (this.fixedFieldData < fixedFieldData) {
             this.fixedFieldData = fixedFieldData;
@@ -47,24 +49,50 @@ export class Nonce {
         return this;
     }
 
-    private parseNonceBytes(nonceBytes: Uint8Array): { fixedFieldData: bigint; invocationCount: bigint } {
-        const invocationFieldByteLength = nonceBytes.byteLength - fixedFieldByteLength;
-        if (invocationFieldByteLength < 1) {
-            throw new TypeError(
-                `The value of "nonceBytes" argument has too short byte length.`
-                    + ` It must be >= ${fixedFieldByteLength + 1}. Received ${nonceBytes.byteLength}`,
+    private validateLength(argName: string, value: number | Uint8Array, minLength: number, maxLength: number): void {
+        const [shortMsg, longMsg, length] = typeof value === 'number'
+            ? ['is too short', 'is too long', value]
+            : ['has too short byte length', 'has too long byte length', value.byteLength];
+        if (length < minLength) {
+            throw new RangeError(
+                `The value of "${argName}" argument ${shortMsg}.`
+                    + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
             );
         }
+        if (length > maxLength) {
+            throw new RangeError(
+                `The value of "${argName}" argument ${longMsg}.`
+                    + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
+            );
+        }
+    }
 
-        const view = new DataView(nonceBytes.buffer, nonceBytes.byteOffset);
+    private incrementFixedField(nonceByteLength: number): void {
+        const invocationFieldByteLength = nonceByteLength - fixedFieldByteLength;
+        const maxInvocationCount = BigInt(2) ** BigInt(invocationFieldByteLength * 8);
+        if (this.invocationCount < maxInvocationCount) return;
+        if (MAX_FIXED_FIELD_COUNT <= this.fixedFieldData) {
+            if (nonceByteLength < maxByteLength) {
+                throw new Error(
+                    `Unable to create nonce. All bits are overflowing. Please increase the nonce bytes from current value. Received ${nonceByteLength}`,
+                );
+            } else {
+                throw new Error(`Unable to create nonce. All bits are overflowing.`);
+            }
+        }
+        this.fixedFieldData += BigInt(1);
+        this.invocationCount = BigInt(0);
+    }
+
+    private parseNonceBytes(nonceBytes: Uint8Array): { fixedFieldData: bigint; invocationCount: bigint } {
+        const view = this.nonceByteView;
+        for (let offset = 0; offset < view.byteLength; offset++) view.setUint8(offset, nonceBytes[offset] ?? 0);
+
         const fixedFieldData = BigInt.asUintN(
             fixedFieldByteLength * 8,
             view.getBigUint64(0, true),
         );
-        const invocationCount = BigInt.asUintN(
-            invocationFieldByteLength * 8,
-            view.getBigUint64(fixedFieldByteLength, true),
-        );
+        const invocationCount = view.getBigUint64(fixedFieldByteLength, true);
 
         return { fixedFieldData, invocationCount };
     }
