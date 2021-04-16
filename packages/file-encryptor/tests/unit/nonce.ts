@@ -288,7 +288,7 @@ describe('class Nonce', () => {
         );
         expect(() => nonceState.create(15)).toThrowWithMessage(
             Error,
-            `Unable to create nonce. All bits are overflowing`,
+            `Unable to create nonce. All bits are overflowing.`,
         );
     });
 });
