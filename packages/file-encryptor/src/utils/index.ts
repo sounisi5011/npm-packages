@@ -1,10 +1,6 @@
 import { inspect } from 'util';
 
-import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
-
 import type { objectEntries } from './type';
-
-export const hasOwnProp = Object.prototype.hasOwnProperty.call as hasOwnProperty;
 
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
     const findEntry = (Object.entries as objectEntries)(rec).find(([, val]) => val === value);

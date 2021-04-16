@@ -1,4 +1,5 @@
-import { hasOwnProp } from '../utils';
+import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
+
 import type { OverrideProp } from '../utils/type';
 import {
     Argon2Options,
@@ -43,7 +44,7 @@ export async function deriveKey(
     if (options && isArgon2Options(options)) return await deriveArgon2Key(password, salt, keyLengthBytes, options);
     if (!options || !options.algorithm) return await defaultDeriveKey(password, salt, keyLengthBytes, options);
 
-    if (options && hasOwnProp(options, 'algorithm')) {
+    if (options && (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')) {
         // @ts-expect-error Property 'algorithm' does not exist on type 'never'.
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new TypeError(`Unknown KDF (Key Derivation Function) algorithm was received: ${options.algorithm}`);
