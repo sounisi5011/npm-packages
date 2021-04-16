@@ -83,7 +83,14 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     if (headerByteLength < 1) throw new Error(`Invalid header byte length received: ${headerByteLength}`);
     const ciphertextStartOffset = headerStartOffset + headerByteLength;
 
-    const fbsBuf = new flatbuffers.ByteBuffer(data.subarray(headerStartOffset, ciphertextStartOffset));
+    const headerBytes = data.subarray(headerStartOffset, ciphertextStartOffset);
+    if (headerBytes.byteLength !== headerByteLength) {
+        throw new Error(
+            `Could not read header table. ${headerByteLength} byte length header is required. Received data: ${headerBytes.byteLength} bytes`,
+        );
+    }
+
+    const fbsBuf = new flatbuffers.ByteBuffer(headerBytes);
     const fbsHeader = Header.getRootAsHeader(fbsBuf);
     const headerData = parseFbsHeaderTable(fbsHeader);
 
