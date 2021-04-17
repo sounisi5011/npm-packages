@@ -68,7 +68,7 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "run-p test:*",
+    "test": "run-if-supported-node run-p test:*",
     "test:examples": "run-s build test:examples:*",
     "test:examples:index": "node ./examples/index.js",
     "test:jest": "jest"
@@ -80,6 +80,7 @@
   },
   "devDependencies": {
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
+    "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
     "@types/flatbuffers": "1.10.0",
