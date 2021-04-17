@@ -2,6 +2,14 @@ import { inspect } from 'util';
 
 import type { objectEntries } from './type';
 
+function isString(value: unknown): value is string {
+    return typeof value === 'string';
+}
+
+function isObject(value: unknown): value is Record<PropertyKey, unknown> {
+    return typeof value === 'object' && value !== null;
+}
+
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
     const findEntry = (Object.entries as objectEntries)(rec).find(([, val]) => val === value);
     return findEntry ? findEntry[0] : null;
@@ -24,4 +32,36 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
 
 export function printObject(value: unknown): string {
     return inspect(value, { breakLength: Infinity });
+}
+
+/**
+ * The Node.js built-in function throws a pseudo Error object that does not extend the Error object.
+ * Their stack trace is incomplete and errors are difficult to trace.
+ * For example, the results of {@link https://jestjs.io/ Jest} do not show where the error occurred.
+ * This function will fix the stack trace of the pseudo Error object to the proper one.
+ */
+export async function fixNodePrimordialsErrorStackTrace(oldError: unknown): Promise<never> {
+    /* eslint-disable @typescript-eslint/no-throw-literal, @typescript-eslint/dot-notation */
+    if (!(isObject(oldError) && !(oldError instanceof Error))) throw oldError;
+    const oldErrorStackTrace = oldError['stack'];
+
+    if (!(isString(oldError['message']) && isString(oldErrorStackTrace))) throw oldError;
+    const newError = new Error();
+    const newErrorStackTrace = newError.stack;
+
+    if (!isString(newErrorStackTrace)) throw oldError;
+    const newErrorStackTraceLastLine = newErrorStackTrace.replace(/^(?:(?!\n[^\n]+$).)+/s, '');
+
+    if (oldErrorStackTrace.includes(newErrorStackTraceLastLine)) throw oldError;
+    Object.defineProperties(
+        newError,
+        Object.getOwnPropertyDescriptors(oldError),
+    );
+    newError.stack = oldErrorStackTrace
+        + newErrorStackTrace.replace(
+            new RegExp(String.raw`^Error: [^\n]*(?:\n *at ${fixNodePrimordialsErrorStackTrace.name}\b[^\n]*)?`),
+            '',
+        );
+    throw newError;
+    /* eslint-enable */
 }

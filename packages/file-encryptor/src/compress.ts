@@ -2,6 +2,8 @@ import { promisify } from 'util';
 import { brotliCompress, brotliDecompress, gunzip, gzip } from 'zlib';
 import type * as zlib from 'zlib';
 
+import { fixNodePrimordialsErrorStackTrace } from './utils';
+
 const gzipAsync = promisify(gzip);
 const gunzipAsync = promisify(gunzip);
 const brotliCompressAsync = promisify(brotliCompress);
@@ -34,13 +36,13 @@ export async function compress(
         };
         return {
             algorithm,
-            data: await gzipAsync(data, normalizedZlibOptions),
+            data: await gzipAsync(data, normalizedZlibOptions).catch(fixNodePrimordialsErrorStackTrace),
         };
     } else if (normalizedOptions.algorithm === 'brotli') {
         const { algorithm, ...brotliOptions } = normalizedOptions;
         return {
             algorithm,
-            data: await brotliCompressAsync(data, brotliOptions),
+            data: await brotliCompressAsync(data, brotliOptions).catch(fixNodePrimordialsErrorStackTrace),
         };
     }
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -49,9 +51,9 @@ export async function compress(
 
 export async function decompress(data: zlib.InputType, algorithm: CompressAlgorithmName): Promise<Buffer> {
     if (algorithm === 'gzip') {
-        return await gunzipAsync(data);
+        return await gunzipAsync(data).catch(fixNodePrimordialsErrorStackTrace);
     } else if (algorithm === 'brotli') {
-        return await brotliDecompressAsync(data);
+        return await brotliDecompressAsync(data).catch(fixNodePrimordialsErrorStackTrace);
     }
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new TypeError(`Unknown compress algorithm was received: ${algorithm}`);
