@@ -1,0 +1,12 @@
+{
+  "name": "@sounisi5011/scripts--run-if-supported-node",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "run-if-supported-node": "index.js"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.3",
+    "semver": "^7.3.5"
+  }
+}
