@@ -16,7 +16,7 @@ abstract class WaitAllDataTransform extends Transform {
                 }
                 callback();
             },
-            flush: async callback => {
+            flush: callback => {
                 (async () => {
                     const inputData = Buffer.concat(chunkList);
                     const transformedData = await this.transformAllData(inputData);
