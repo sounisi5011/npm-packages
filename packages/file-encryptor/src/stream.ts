@@ -1,6 +1,6 @@
 import { Transform } from 'stream';
 
-import type { EncryptOptions, Encryptor } from '.';
+import { decrypt, encrypt, EncryptOptions } from '.';
 
 // TODO: Rewrite the process to be a true streaming process that can handle huge files.
 
@@ -32,29 +32,29 @@ abstract class WaitAllDataTransform extends Transform {
 }
 
 export class EncryptorTransform extends WaitAllDataTransform {
-    private readonly encryptor: Encryptor;
+    private readonly password: string | Buffer;
     private readonly options: EncryptOptions;
 
-    constructor(encryptor: Encryptor, options: EncryptOptions) {
+    constructor(password: string | Buffer, options: EncryptOptions) {
         super();
-        this.encryptor = encryptor;
+        this.password = password;
         this.options = options;
     }
 
     async transformAllData(data: Buffer): Promise<Buffer> {
-        return await this.encryptor.encrypt(data, this.options);
+        return await encrypt(data, this.password, this.options);
     }
 }
 
 export class DecryptorTransform extends WaitAllDataTransform {
-    private readonly encryptor: Encryptor;
+    private readonly password: string | Buffer;
 
-    constructor(encryptor: Encryptor) {
+    constructor(password: string | Buffer) {
         super();
-        this.encryptor = encryptor;
+        this.password = password;
     }
 
     async transformAllData(data: Buffer): Promise<Buffer> {
-        return await this.encryptor.decrypt(data);
+        return await decrypt(data, this.password);
     }
 }

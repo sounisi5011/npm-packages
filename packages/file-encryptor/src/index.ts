@@ -1,147 +1,138 @@
 import { randomBytes } from 'crypto';
 
-import { CryptAlgorithm, cryptAlgorithmMap, CryptAlgorithmName, defaultCryptAlgorithmName } from './cipher';
+import { cryptAlgorithmMap, CryptAlgorithmName, defaultCryptAlgorithmName } from './cipher';
 import { compress, CompressOptionsWithString, decompress } from './compress';
 import { createHeader, parseHeader } from './header';
 import { deriveKey, KeyDerivationOptions, SALT_LENGTH_BYTES } from './key-derivation-function';
 import { Nonce } from './nonce';
 import { DecryptorTransform, EncryptorTransform } from './stream';
 
-export interface EncryptorOptions {
+export interface EncryptOptions {
     algorithm?: CryptAlgorithmName;
     keyDerivation?: KeyDerivationOptions;
-}
-
-export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
 export { CompressOptionsWithString, CryptAlgorithmName, KeyDerivationOptions };
 
-export class Encryptor {
-    private readonly password: string | Buffer;
-    private readonly algorithm: CryptAlgorithm;
-    private readonly keyDerivationOptions: KeyDerivationOptions | undefined;
-    private readonly nonce = new Nonce();
+const nonceState = new Nonce();
 
-    constructor(password: string | Buffer, options: EncryptorOptions = {}) {
-        const algorithm = cryptAlgorithmMap.get(options.algorithm ?? defaultCryptAlgorithmName);
-        if (!algorithm) {
-            throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
-        }
-        this.password = password;
-        this.algorithm = algorithm;
-        this.keyDerivationOptions = options.keyDerivation;
+export async function encrypt(
+    cleartext: string | Buffer,
+    password: string | Buffer,
+    options: EncryptOptions = {},
+): Promise<Buffer> {
+    const algorithm = cryptAlgorithmMap.get(options.algorithm ?? defaultCryptAlgorithmName);
+    if (!algorithm) {
+        throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
     }
 
-    async encrypt(cleartext: string | Buffer, options: EncryptOptions = {}): Promise<Buffer> {
-        /**
+    /**
          * Compress cleartext
          */
-        const { algorithm: compressAlgorithmName, data: compressedCleartext } = options.compress
-            ? await compress(cleartext, options.compress)
-            : { algorithm: undefined, data: cleartext };
+    const { algorithm: compressAlgorithmName, data: compressedCleartext } = options.compress
+        ? await compress(cleartext, options.compress)
+        : { algorithm: undefined, data: cleartext };
 
-        /**
-         * Generate key
-         */
-        const salt = randomBytes(SALT_LENGTH_BYTES);
-        const keyLength = this.algorithm.keyLength;
-        const { key, normalizedOptions: normalizedKeyDerivationOptions } = await deriveKey(
-            this.password,
-            salt,
-            keyLength,
-            this.keyDerivationOptions,
-        );
+    /**
+      * Generate key
+      */
+    const salt = randomBytes(SALT_LENGTH_BYTES);
+    const keyLength = algorithm.keyLength;
+    const { key, normalizedOptions: normalizedKeyDerivationOptions } = await deriveKey(
+        password,
+        salt,
+        keyLength,
+        options.keyDerivation,
+    );
 
-        /**
-         * Generate nonce (also known as an IV / Initialization Vector)
-         */
-        const nonce = this.nonce.create(this.algorithm.nonceLength);
+    /**
+      * Generate nonce (also known as an IV / Initialization Vector)
+      */
+    const nonce = nonceState.create(algorithm.nonceLength);
 
-        /**
-         * Encrypt cleartext
-         */
-        const cipher = this.algorithm.createCipher(key, nonce);
-        const ciphertextPart1 = cipher.update(compressedCleartext);
-        const ciphertextPart2 = cipher.final();
+    /**
+      * Encrypt cleartext
+      */
+    const cipher = algorithm.createCipher(key, nonce);
+    const ciphertextPart1 = cipher.update(compressedCleartext);
+    const ciphertextPart2 = cipher.final();
 
-        /**
-         * Get authentication tag
-         */
-        const authTag = cipher.getAuthTag();
+    /**
+      * Get authentication tag
+      */
+    const authTag = cipher.getAuthTag();
 
-        /**
-         * Generate header data
-         * The data contained in the header will be used for decryption.
-         */
-        const headerData = createHeader({
-            algorithmName: this.algorithm.name,
-            salt,
-            keyLength,
-            keyDerivationOptions: normalizedKeyDerivationOptions,
-            nonce,
-            authTag,
-            compressAlgorithmName,
-        });
+    /**
+      * Generate header data
+      * The data contained in the header will be used for decryption.
+      */
+    const headerData = createHeader({
+        algorithmName: algorithm.name,
+        salt,
+        keyLength,
+        keyDerivationOptions: normalizedKeyDerivationOptions,
+        nonce,
+        authTag,
+        compressAlgorithmName,
+    });
 
-        /**
-         * Merge header and ciphertext
-         */
-        const encryptedData = Buffer.concat([
-            headerData,
-            ciphertextPart1,
-            ciphertextPart2,
-        ]);
-        return encryptedData;
+    /**
+      * Merge header and ciphertext
+      */
+    const encryptedData = Buffer.concat([
+        headerData,
+        ciphertextPart1,
+        ciphertextPart2,
+    ]);
+    return encryptedData;
+}
+
+export async function decrypt(encryptedData: Buffer, password: string | Buffer): Promise<Buffer> {
+    /**
+     * Verify the structure of encrypted data & read the headers contained in the encrypted data
+     */
+    const [data, ciphertext] = parseHeader(encryptedData);
+
+    const algorithm = cryptAlgorithmMap.get(data.algorithmName);
+    if (!algorithm) {
+        throw new TypeError(`Unknown algorithm was received: ${data.algorithmName}`);
     }
 
-    async decrypt(encryptedData: Buffer): Promise<Buffer> {
-        /**
-         * Verify the structure of encrypted data & read the headers contained in the encrypted data
-         */
-        const [data, ciphertext] = parseHeader(encryptedData);
+    /**
+     * Update the invocation part in the nonce
+     */
+    nonceState.updateInvocation(data.nonce);
 
-        const algorithm = cryptAlgorithmMap.get(data.algorithmName);
-        if (!algorithm) {
-            throw new TypeError(`Unknown algorithm was received: ${data.algorithmName}`);
-        }
+    /**
+     * Generate key
+     */
+    const { key } = await deriveKey(password, data.salt, data.keyLength, data.keyDerivationOptions);
 
-        /**
-         * Update the invocation part in the nonce
-         */
-        this.nonce.updateInvocation(data.nonce);
+    /**
+     * Decrypt ciphertext
+     */
+    const decipher = algorithm.createDecipher(key, data.nonce);
+    decipher.setAuthTag(data.authTag);
+    const compressedCleartext = Buffer.concat([
+        decipher.update(ciphertext),
+        decipher.final(),
+    ]);
 
-        /**
-         * Generate key
-         */
-        const { key } = await deriveKey(this.password, data.salt, data.keyLength, data.keyDerivationOptions);
+    /**
+     * Decompress cleartext
+     */
+    const cleartext = data.compressAlgorithmName
+        ? await decompress(compressedCleartext, data.compressAlgorithmName)
+        : compressedCleartext;
 
-        /**
-         * Decrypt ciphertext
-         */
-        const decipher = algorithm.createDecipher(key, data.nonce);
-        decipher.setAuthTag(data.authTag);
-        const compressedCleartext = Buffer.concat([
-            decipher.update(ciphertext),
-            decipher.final(),
-        ]);
+    return cleartext;
+}
 
-        /**
-         * Decompress cleartext
-         */
-        const cleartext = data.compressAlgorithmName
-            ? await decompress(compressedCleartext, data.compressAlgorithmName)
-            : compressedCleartext;
+export function encryptStream(password: string | Buffer, options: EncryptOptions = {}): EncryptorTransform {
+    return new EncryptorTransform(password, options);
+}
 
-        return cleartext;
-    }
-
-    encryptStream(options: EncryptOptions = {}): EncryptorTransform {
-        return new EncryptorTransform(this, options);
-    }
-
-    decryptStream(): DecryptorTransform {
-        return new DecryptorTransform(this);
-    }
+export function decryptStream(password: string | Buffer): DecryptorTransform {
+    return new DecryptorTransform(password);
 }
