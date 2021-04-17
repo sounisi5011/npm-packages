@@ -54,11 +54,13 @@ importers:
       find-git-root: 1.0.4
       workspace-tools: 0.13.0
     devDependencies:
+      '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 14.14.33
       '@vercel/ncc': 0.28.2
     specifiers:
       '@actions/core': ^1.2.6
+      '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
       '@vercel/ncc': 0.28.2
@@ -116,6 +118,13 @@ importers:
     specifiers:
       cross-spawn: ^7.0.3
       globby: ^11.0.3
+  scripts/run-if-supported-node:
+    dependencies:
+      cross-spawn: 7.0.3
+      semver: 7.3.5
+    specifiers:
+      cross-spawn: ^7.0.3
+      semver: ^7.3.5
 lockfileVersion: 5.2
 packages:
   /@actions/core/1.2.6:
@@ -6018,6 +6027,15 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-tCfb2WLjqFAtXn4KEdxIhalnRtoKFN7nAwj0B3ZXCbQloV2tq5eDbcTmT68JJD3nRJq24/XgxtQKFIpQdtvmVw==
+  /semver/7.3.5:
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
+    engines:
+      node: '>=10'
+    hasBin: true
+    resolution:
+      integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
   /set-blocking/2.0.0:
     dev: true
     resolution:
