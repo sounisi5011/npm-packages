@@ -9,7 +9,10 @@ const gunzipAsync = promisify(gunzip);
 const brotliCompressAsync = promisify(brotliCompress);
 const brotliDecompressAsync = promisify(brotliDecompress);
 
-export interface CompressGzipOptions extends Omit<zlib.ZlibOptions, 'info'> {
+const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info'] as const;
+type ZlibDisallowOptionName = (typeof zlibDisallowOptionNameList)[number];
+
+export interface CompressGzipOptions extends Omit<zlib.ZlibOptions, ZlibDisallowOptionName> {
     algorithm: 'gzip';
 }
 
@@ -28,15 +31,15 @@ export async function compress(
     const normalizedOptions = typeof options === 'string' ? { algorithm: options } : options;
     if (normalizedOptions.algorithm === 'gzip') {
         const { algorithm, ...zlibOptions } = normalizedOptions;
-        const normalizedZlibOptions: zlib.ZlibOptions = {
-            ...zlibOptions,
-            // The "info" option is always disabled.
-            // Because the return value will not be a Buffer object.
-            info: false,
-        };
+
+        const disallowOptionList = zlibDisallowOptionNameList.filter(optName => optName in zlibOptions);
+        if (disallowOptionList.length > 0) {
+            throw new Error(`The following compress options are not allowed: ${disallowOptionList.join(', ')}`);
+        }
+
         return {
             algorithm,
-            data: await gzipAsync(data, normalizedZlibOptions).catch(fixNodePrimordialsErrorStackTrace),
+            data: await gzipAsync(data, zlibOptions).catch(fixNodePrimordialsErrorStackTrace),
         };
     } else if (normalizedOptions.algorithm === 'brotli') {
         const { algorithm, ...brotliOptions } = normalizedOptions;
