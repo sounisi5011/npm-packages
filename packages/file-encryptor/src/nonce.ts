@@ -53,15 +53,12 @@ export class Nonce {
         const [shortMsg, longMsg, length] = typeof value === 'number'
             ? ['is too short', 'is too long', value]
             : ['has too short byte length', 'has too long byte length', value.byteLength];
-        if (length < minLength) {
+        let shortOrLongMsg = '';
+        if (length < minLength) shortOrLongMsg = shortMsg;
+        if (length > maxLength) shortOrLongMsg = longMsg;
+        if (shortOrLongMsg) {
             throw new RangeError(
-                `The value of "${argName}" argument ${shortMsg}.`
-                    + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
-            );
-        }
-        if (length > maxLength) {
-            throw new RangeError(
-                `The value of "${argName}" argument ${longMsg}.`
+                `The value of "${argName}" argument ${shortOrLongMsg}.`
                     + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
             );
         }

@@ -60,7 +60,7 @@ export function createHeader(data: HeaderData): Buffer {
     ]);
 }
 
-export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
+function validateCID(data: Uint8Array): { headerLengthOffset: number } {
     const { value: cidFromData, endOffset: headerLengthOffset } = readVarint(
         data,
         () => {
@@ -74,13 +74,25 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
                 + number2hex` Received ${cidFromData}`,
         );
     }
+    return { headerLengthOffset };
+}
 
+function validateHeaderLength(
+    { data, headerLengthOffset }: { data: Uint8Array; headerLengthOffset: number },
+): { headerByteLength: number; headerStartOffset: number } {
     const { value: headerByteLength, endOffset: headerStartOffset } = readVarint(data, () => {
         throw new Error(
             `Could not decode header size. The byte length of the header encoded as unsigned varint is required.`,
         );
     }, headerLengthOffset);
     if (headerByteLength < 1) throw new Error(`Invalid header byte length received: ${headerByteLength}`);
+    return { headerByteLength, headerStartOffset };
+}
+
+export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
+    const { headerLengthOffset } = validateCID(data);
+
+    const { headerByteLength, headerStartOffset } = validateHeaderLength({ data, headerLengthOffset });
     const ciphertextStartOffset = headerStartOffset + headerByteLength;
 
     const headerBytes = data.subarray(headerStartOffset, ciphertextStartOffset);
