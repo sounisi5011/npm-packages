@@ -1,4 +1,5 @@
 import { Transform } from 'stream';
+import type * as stream from 'stream';
 
 import { decrypt, encrypt, EncryptOptions } from '.';
 
@@ -31,7 +32,7 @@ abstract class WaitAllDataTransform extends Transform {
     abstract transformAllData(data: Buffer): Promise<unknown>;
 }
 
-export class EncryptorTransform extends WaitAllDataTransform {
+export class EncryptorTransform extends Transform {
     private readonly password: string | Buffer;
     private readonly options: EncryptOptions;
 
@@ -41,8 +42,10 @@ export class EncryptorTransform extends WaitAllDataTransform {
         this.options = options;
     }
 
-    async transformAllData(data: Buffer): Promise<Buffer> {
-        return await encrypt(data, this.password, this.options);
+    _transform(chunk: Buffer, _encoding: BufferEncoding, callback: stream.TransformCallback): void {
+        encrypt(chunk, this.password, this.options)
+            .then(encryptedData => callback(null, encryptedData))
+            .catch(error => callback(error));
     }
 }
 
