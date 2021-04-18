@@ -75,6 +75,7 @@ export async function encrypt(
         nonce,
         authTag,
         compressAlgorithmName,
+        ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
     });
 
     /**

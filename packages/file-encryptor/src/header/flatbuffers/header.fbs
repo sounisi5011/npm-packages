@@ -38,6 +38,7 @@ table Header {
   crypt_nonce:[ubyte] (required);
   crypt_auth_tag:[ubyte] (required);
   compress_algorithm:CompressAlgorithm = None;
+  ciphertext_length:uint32;
 }
 
 root_type Header;

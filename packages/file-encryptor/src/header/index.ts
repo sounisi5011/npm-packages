@@ -16,6 +16,7 @@ export interface HeaderData {
     nonce: Uint8Array;
     authTag: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
+    ciphertextLength: number;
 }
 
 export interface HeaderDataWithEncryptedDataOffset extends HeaderData {
@@ -106,7 +107,8 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     const fbsHeader = Header.getRootAsHeader(fbsBuf);
     const headerData = parseFbsHeaderTable(fbsHeader);
 
-    const ciphertext = data.subarray(ciphertextStartOffset);
+    const ciphertextEndOffset = ciphertextStartOffset + headerData.ciphertextLength;
+    const ciphertext = data.subarray(ciphertextStartOffset, ciphertextEndOffset);
 
     return [headerData, ciphertext];
 }
