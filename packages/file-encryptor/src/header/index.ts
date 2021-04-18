@@ -16,11 +16,10 @@ export interface HeaderData {
     nonce: Uint8Array;
     authTag: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
-    ciphertextLength: number;
 }
 
-export interface HeaderDataWithEncryptedDataOffset extends HeaderData {
-    ciphertextStartOffset: number;
+export interface HeaderDataWithCiphertextLength extends HeaderData {
+    ciphertextLength: number;
 }
 
 function readVarint<T>(
@@ -46,9 +45,11 @@ function readVarint<T>(
  */
 const CID = 0x305011;
 
-export function createHeader(data: HeaderData): Buffer {
+export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
+    const { ciphertextLength, ...fbsData } = data;
+
     const fbsBuilder = new flatbuffers.Builder();
-    const fbsHeaderOffset = createFbsHeaderTable(fbsBuilder, data);
+    const fbsHeaderOffset = createFbsHeaderTable(fbsBuilder, fbsData);
     fbsBuilder.finish(fbsHeaderOffset);
     const headerDataTable = fbsBuilder.asUint8Array();
 
@@ -58,6 +59,7 @@ export function createHeader(data: HeaderData): Buffer {
             ...varintEncode(headerDataTable.byteLength),
         ]),
         headerDataTable,
+        Buffer.from(varintEncode(ciphertextLength)),
     ]);
 }
 
@@ -78,37 +80,50 @@ function validateCID(data: Uint8Array): { headerLengthOffset: number } {
     return { headerLengthOffset };
 }
 
-function validateHeaderLength(
-    { data, headerLengthOffset }: { data: Uint8Array; headerLengthOffset: number },
-): { headerByteLength: number; headerStartOffset: number } {
-    const { value: headerByteLength, endOffset: headerStartOffset } = readVarint(data, () => {
+function parseLengthPrefixedData(
+    fullData: Uint8Array,
+    { name, longname, startOffset }: { name: string; longname?: string; startOffset: number },
+): { byteLength: number; startOffset: number; endOffset: number; data: Uint8Array } {
+    const { value: subDataByteLength, endOffset: subDataStartOffset } = readVarint(fullData, () => {
         throw new Error(
-            `Could not decode header size. The byte length of the header encoded as unsigned varint is required.`,
+            `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
         );
-    }, headerLengthOffset);
-    if (headerByteLength < 1) throw new Error(`Invalid header byte length received: ${headerByteLength}`);
-    return { headerByteLength, headerStartOffset };
+    }, startOffset);
+    if (subDataByteLength < 1) throw new Error(`Invalid ${name} byte length received: ${subDataByteLength}`);
+    const subDataEndOffset = subDataStartOffset + subDataByteLength;
+    const subDataBytes = fullData.subarray(subDataStartOffset, subDataEndOffset);
+    if (subDataBytes.byteLength !== subDataByteLength) {
+        throw new Error(
+            `Could not read ${longname ?? name}.`
+                + ` ${subDataByteLength} byte length ${name} is required.`
+                + ` Received data: ${subDataBytes.byteLength} bytes`,
+        );
+    }
+    return {
+        byteLength: subDataByteLength,
+        startOffset: subDataStartOffset,
+        endOffset: subDataEndOffset,
+        data: subDataBytes,
+    };
 }
 
 export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     const { headerLengthOffset } = validateCID(data);
 
-    const { headerByteLength, headerStartOffset } = validateHeaderLength({ data, headerLengthOffset });
-    const ciphertextStartOffset = headerStartOffset + headerByteLength;
+    const { endOffset: ciphertextLengthStartOffset, data: headerBytes } = parseLengthPrefixedData(data, {
+        name: 'header',
+        longname: 'header table',
+        startOffset: headerLengthOffset,
+    });
 
-    const headerBytes = data.subarray(headerStartOffset, ciphertextStartOffset);
-    if (headerBytes.byteLength !== headerByteLength) {
-        throw new Error(
-            `Could not read header table. ${headerByteLength} byte length header is required. Received data: ${headerBytes.byteLength} bytes`,
-        );
-    }
+    const { data: ciphertext } = parseLengthPrefixedData(data, {
+        name: 'ciphertext',
+        startOffset: ciphertextLengthStartOffset,
+    });
 
     const fbsBuf = new flatbuffers.ByteBuffer(headerBytes);
     const fbsHeader = Header.getRootAsHeader(fbsBuf);
     const headerData = parseFbsHeaderTable(fbsHeader);
-
-    const ciphertextEndOffset = ciphertextStartOffset + headerData.ciphertextLength;
-    const ciphertext = data.subarray(ciphertextStartOffset, ciphertextEndOffset);
 
     return [headerData, ciphertext];
 }

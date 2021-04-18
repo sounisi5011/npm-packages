@@ -315,18 +315,10 @@ compressAlgorithm():CompressAlgorithm {
 };
 
 /**
- * @returns number
- */
-ciphertextLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
-};
-
-/**
  * @param flatbuffers.Builder builder
  */
 static startHeader(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(8);
 };
 
 /**
@@ -458,14 +450,6 @@ static addCompressAlgorithm(builder:flatbuffers.Builder, compressAlgorithm:Compr
 
 /**
  * @param flatbuffers.Builder builder
- * @param number ciphertextLength
- */
-static addCiphertextLength(builder:flatbuffers.Builder, ciphertextLength:number) {
-  builder.addFieldInt32(8, ciphertextLength, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
 static endHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -493,7 +477,7 @@ static finishSizePrefixedHeaderBuffer(builder:flatbuffers.Builder, offset:flatbu
   builder.finish(offset, undefined, true);
 };
 
-static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, keySaltOffset:flatbuffers.Offset, keyLength:number, keyOptionsType:KeyOptions, keyOptionsOffset:flatbuffers.Offset, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset, compressAlgorithm:CompressAlgorithm, ciphertextLength:number):flatbuffers.Offset {
+static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, keySaltOffset:flatbuffers.Offset, keyLength:number, keyOptionsType:KeyOptions, keyOptionsOffset:flatbuffers.Offset, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset, compressAlgorithm:CompressAlgorithm):flatbuffers.Offset {
   Header.startHeader(builder);
   Header.addCryptAlgorithm(builder, cryptAlgorithm);
   Header.addKeySalt(builder, keySaltOffset);
@@ -503,7 +487,6 @@ static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, 
   Header.addCryptNonce(builder, cryptNonceOffset);
   Header.addCryptAuthTag(builder, cryptAuthTagOffset);
   Header.addCompressAlgorithm(builder, compressAlgorithm);
-  Header.addCiphertextLength(builder, ciphertextLength);
   return Header.endHeader(builder);
 }
 }

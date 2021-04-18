@@ -3,10 +3,10 @@ import * as crypto from 'crypto';
 import * as multicodec from 'multicodec';
 import * as varint from 'varint';
 
-import { createHeader, HeaderData, parseHeader } from '../../src/header';
+import { createHeader, HeaderDataWithCiphertextLength, parseHeader } from '../../src/header';
 import { padStartArray } from '../helpers';
 
-const dummyHeaderData: HeaderData = {
+const dummyHeaderData: HeaderDataWithCiphertextLength = {
     algorithmName: 'aes-256-gcm',
     salt: new Uint8Array(),
     keyLength: 0,
@@ -23,6 +23,7 @@ const dummyHeaderData: HeaderData = {
 };
 
 const cidByte = Buffer.from(varint.encode(0x305011));
+const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
 
 describe('createHeader()', () => {
     describe('multicodec compliant', () => {
@@ -49,16 +50,20 @@ describe('createHeader()', () => {
         });
         it('correct length', () => {
             const headerData = createHeader(dummyHeaderData);
-            const headerStartOffset = 0 + cidByte.byteLength;
+            const headerLenStartOffset = 0 + cidByte.byteLength;
             {
-                const headerLength = varint.decode(headerData, headerStartOffset);
+                const headerLength = varint.decode(headerData, headerLenStartOffset);
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBe(cidByte.byteLength + headerLengthVarintBytes + headerLength);
+                expect(headerData.byteLength).toBe(
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByte.byteLength,
+                );
             }
             {
-                const headerLength = varint.decode(headerData.subarray(headerStartOffset));
+                const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBe(cidByte.byteLength + headerLengthVarintBytes + headerLength);
+                expect(headerData.byteLength).toBe(
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByte.byteLength,
+                );
             }
         });
     });

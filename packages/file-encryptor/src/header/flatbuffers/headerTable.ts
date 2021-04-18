@@ -122,7 +122,6 @@ export function createFbsHeaderTable(builder: flatbuffers.Builder, data: HeaderD
         cryptNonceOffset,
         cryptAuthTagOffset,
         compressAlgorithmName2CompressAlgorithm(data.compressAlgorithmName),
-        data.ciphertextLength,
     );
     return offset;
 }
@@ -147,7 +146,6 @@ export function parseFbsHeaderTable(header: Header): HeaderData {
         nonce: cryptNonce,
         authTag: cryptAuthTag,
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(header.compressAlgorithm()),
-        ciphertextLength: header.ciphertextLength(),
     };
     return headerData;
 }
