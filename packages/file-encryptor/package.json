@@ -79,6 +79,7 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
+    "@akiroz/size-chunker-stream": "0.0.1",
     "@jorgeferrero/stream-to-buffer": "2.0.6",
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",

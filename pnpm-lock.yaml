@@ -72,6 +72,7 @@ importers:
       flatbuffers: 1.12.0
       varint: 6.0.0
     devDependencies:
+      '@akiroz/size-chunker-stream': 0.0.1
       '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:../../scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
@@ -86,6 +87,7 @@ importers:
       noop-stream: 0.1.0
       random-bytes-readable-stream: 2.1.0
     specifiers:
+      '@akiroz/size-chunker-stream': 0.0.1
       '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
@@ -139,6 +141,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ZQYitnqiyBc3D+k7LsgSBmMDVkOVidaagDG7j3fOym77jNunWRuYx7VSHa9GNfFZh+zh61xsCjRj4JxMZlDqTA==
+  /@akiroz/size-chunker-stream/0.0.1:
+    dev: true
+    resolution:
+      integrity: sha512-iDfwBsg8gdmuVXg0k7tHSEurodRhiIKgkLmNDCM2Zx0y/Vm+iqzb4GzVThAptgyTFUlDdW2fv+kcXX6KgEiIAg==
   /@babel/code-frame/7.12.11:
     dependencies:
       '@babel/highlight': 7.13.10
