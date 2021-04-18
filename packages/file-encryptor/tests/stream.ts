@@ -48,6 +48,14 @@ describe('decryptStream()', () => {
             );
             expect(decryptedData).toStrictEqual(cleartext);
         });
+        it('full data [torn]', async () => {
+            const encryptedData = await encrypt(cleartext, password);
+            const decryptedData = await streamToBuffer(
+                createStreamFromBuffer(encryptedData, 2)
+                    .pipe(decryptStream(password)),
+            );
+            expect(decryptedData).toStrictEqual(cleartext);
+        });
         it('single chunk', async () => {
             const decryptedData = await streamToBuffer(
                 createStreamFromBuffer(cleartext)
@@ -56,10 +64,32 @@ describe('decryptStream()', () => {
             );
             expect(decryptedData).toStrictEqual(cleartext);
         });
+        it('single chunk [torn]', async () => {
+            const encryptedData = await streamToBuffer(
+                createStreamFromBuffer(cleartext)
+                    .pipe(encryptStream(password)),
+            );
+            const decryptedData = await streamToBuffer(
+                createStreamFromBuffer(encryptedData, 2)
+                    .pipe(decryptStream(password)),
+            );
+            expect(decryptedData).toStrictEqual(cleartext);
+        });
         it('multi chunk', async () => {
             const decryptedData = await streamToBuffer(
                 createStreamFromBuffer(cleartext, 2)
                     .pipe(encryptStream(password))
+                    .pipe(decryptStream(password)),
+            );
+            expect(decryptedData).toStrictEqual(cleartext);
+        });
+        it('multi chunk [torn]', async () => {
+            const encryptedData = await streamToBuffer(
+                createStreamFromBuffer(cleartext, 2)
+                    .pipe(encryptStream(password)),
+            );
+            const decryptedData = await streamToBuffer(
+                createStreamFromBuffer(encryptedData, 2)
                     .pipe(decryptStream(password)),
             );
             expect(decryptedData).toStrictEqual(cleartext);
