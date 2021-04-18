@@ -5,16 +5,24 @@ import type { CryptAlgorithmName } from '../cipher';
 import type { CompressAlgorithmName } from '../compress';
 import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
 import { number2hex } from '../utils';
-import { Header } from './flatbuffers/header_generated';
+import { Header, SimpleHeader } from './flatbuffers/header_generated';
 import { createFbsHeaderTable, parseFbsHeaderTable } from './flatbuffers/headerTable';
+import { createFbsSimpleHeaderTable, parseFbsSimpleHeaderTable } from './flatbuffers/simpleHeaderTable';
 
-export interface HeaderData {
+export interface SimpleHeaderData {
+    nonce: Uint8Array;
+    authTag: Uint8Array;
+}
+
+export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
+    ciphertextLength: number;
+}
+
+export interface HeaderData extends SimpleHeaderData {
     algorithmName: CryptAlgorithmName;
     salt: Uint8Array;
     keyLength: number;
     keyDerivationOptions: NormalizedKeyDerivationOptions;
-    nonce: Uint8Array;
-    authTag: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
 }
 
@@ -126,4 +134,38 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     const headerData = parseFbsHeaderTable(fbsHeader);
 
     return [headerData, ciphertext];
+}
+
+export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Buffer {
+    const { ciphertextLength, ...fbsData } = data;
+
+    const fbsBuilder = new flatbuffers.Builder();
+    const fbsSimpleHeaderOffset = createFbsSimpleHeaderTable(fbsBuilder, fbsData);
+    fbsBuilder.finish(fbsSimpleHeaderOffset);
+    const simpleHeaderDataTable = fbsBuilder.asUint8Array();
+
+    return Buffer.concat([
+        Buffer.from(varintEncode(simpleHeaderDataTable.byteLength)),
+        simpleHeaderDataTable,
+        Buffer.from(varintEncode(ciphertextLength)),
+    ]);
+}
+
+export function parseSimpleHeader(data: Uint8Array): [SimpleHeaderData, Uint8Array] {
+    const { endOffset: ciphertextLengthStartOffset, data: simpleHeaderBytes } = parseLengthPrefixedData(data, {
+        name: 'simple header',
+        longname: 'simple header table',
+        startOffset: 0,
+    });
+
+    const { data: ciphertext } = parseLengthPrefixedData(data, {
+        name: 'ciphertext',
+        startOffset: ciphertextLengthStartOffset,
+    });
+
+    const fbsBuf = new flatbuffers.ByteBuffer(simpleHeaderBytes);
+    const fbsSimpleHeader = SimpleHeader.getRootAsSimpleHeader(fbsBuf);
+    const simpleHeaderData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
+
+    return [simpleHeaderData, ciphertext];
 }

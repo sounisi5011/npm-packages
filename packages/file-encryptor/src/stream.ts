@@ -1,7 +1,10 @@
 import { Transform } from 'stream';
 import type * as stream from 'stream';
+import { callbackify } from 'util';
 
-import { decrypt, encrypt, EncryptOptions } from '.';
+import { decrypt } from '.';
+import type { CryptAlgorithm } from './cipher';
+import { encryptFirstChunk, EncryptOptions, encryptSubsequentChunk } from './encrypt';
 
 // TODO: Rewrite the process to be a true streaming process that can handle huge files.
 
@@ -35,6 +38,7 @@ abstract class WaitAllDataTransform extends Transform {
 export class EncryptorTransform extends Transform {
     private readonly password: string | Buffer;
     private readonly options: EncryptOptions;
+    private encryptData: { algorithm: CryptAlgorithm; key: Uint8Array } | undefined;
 
     constructor(password: string | Buffer, options: EncryptOptions) {
         super();
@@ -43,9 +47,20 @@ export class EncryptorTransform extends Transform {
     }
 
     _transform(chunk: Buffer, _encoding: BufferEncoding, callback: stream.TransformCallback): void {
-        encrypt(chunk, this.password, this.options)
-            .then(encryptedData => callback(null, encryptedData))
-            .catch(error => callback(error));
+        const encryptData = this.encryptData;
+        callbackify(async (): Promise<Buffer> => {
+            if (encryptData) {
+                const { encryptedData } = await encryptSubsequentChunk(
+                    chunk,
+                    { algorithm: encryptData.algorithm, key: encryptData.key, compress: this.options.compress },
+                );
+                return encryptedData;
+            } else {
+                const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, this.password, this.options);
+                this.encryptData = { algorithm, key };
+                return encryptedData;
+            }
+        })(callback);
     }
 }
 

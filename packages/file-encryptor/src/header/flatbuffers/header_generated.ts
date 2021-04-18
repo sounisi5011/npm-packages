@@ -490,3 +490,173 @@ static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, 
   return Header.endHeader(builder);
 }
 }
+/**
+ * @constructor
+ */
+export class SimpleHeader {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns SimpleHeader
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):SimpleHeader {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param SimpleHeader= obj
+ * @returns SimpleHeader
+ */
+static getRootAsSimpleHeader(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
+  return (obj || new SimpleHeader()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param SimpleHeader= obj
+ * @returns SimpleHeader
+ */
+static getSizePrefixedRootAsSimpleHeader(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SimpleHeader()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @returns number
+ */
+cryptNonce(index: number):number|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+};
+
+/**
+ * @returns number
+ */
+cryptNonceLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+cryptNonceArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @returns number
+ */
+cryptAuthTag(index: number):number|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+};
+
+/**
+ * @returns number
+ */
+cryptAuthTagLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+cryptAuthTagArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startSimpleHeader(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset cryptNonceOffset
+ */
+static addCryptNonce(builder:flatbuffers.Builder, cryptNonceOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, cryptNonceOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<number> data
+ * @returns flatbuffers.Offset
+ */
+static createCryptNonceVector(builder:flatbuffers.Builder, data:number[] | Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startCryptNonceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset cryptAuthTagOffset
+ */
+static addCryptAuthTag(builder:flatbuffers.Builder, cryptAuthTagOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, cryptAuthTagOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<number> data
+ * @returns flatbuffers.Offset
+ */
+static createCryptAuthTagVector(builder:flatbuffers.Builder, data:number[] | Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startCryptAuthTagVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endSimpleHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // crypt_nonce
+  builder.requiredField(offset, 6); // crypt_auth_tag
+  return offset;
+};
+
+static createSimpleHeader(builder:flatbuffers.Builder, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset):flatbuffers.Offset {
+  SimpleHeader.startSimpleHeader(builder);
+  SimpleHeader.addCryptNonce(builder, cryptNonceOffset);
+  SimpleHeader.addCryptAuthTag(builder, cryptAuthTagOffset);
+  return SimpleHeader.endSimpleHeader(builder);
+}
+}

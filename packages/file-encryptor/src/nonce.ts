@@ -94,3 +94,5 @@ export class Nonce {
         return { fixedFieldData, invocationCount };
     }
 }
+
+export const nonceState = new Nonce();

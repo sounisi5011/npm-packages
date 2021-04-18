@@ -40,4 +40,9 @@ table Header {
   compress_algorithm:CompressAlgorithm = None;
 }
 
+table SimpleHeader {
+  crypt_nonce:[ubyte] (required);
+  crypt_auth_tag:[ubyte] (required);
+}
+
 root_type Header;
