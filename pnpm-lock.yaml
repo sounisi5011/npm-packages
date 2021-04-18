@@ -72,6 +72,7 @@ importers:
       flatbuffers: 1.12.0
       varint: 6.0.0
     devDependencies:
+      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:../../scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
@@ -85,6 +86,7 @@ importers:
       noop-stream: 0.1.0
       random-bytes-readable-stream: 2.1.0
     specifiers:
+      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
@@ -749,6 +751,10 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
+  /@jorgeferrero/stream-to-buffer/2.0.6:
+    dev: true
+    resolution:
+      integrity: sha512-G7jiBkMwDdYADntdV/qzl9H4Lkch0RyektqXl5+KhktduP4/rE1RaTz0wKZFdC2dKo3S0JaxoUUC3uDeXmI7EQ==
   /@multiformats/base-x/4.0.1:
     dev: true
     resolution:
