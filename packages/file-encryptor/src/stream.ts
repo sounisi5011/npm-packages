@@ -2,38 +2,9 @@ import { Transform } from 'stream';
 import type * as stream from 'stream';
 import { callbackify } from 'util';
 
-import { decrypt } from '.';
 import type { CryptAlgorithm } from './cipher';
+import { decryptFirstChunk, decryptSubsequentChunk } from './decrypt';
 import { encryptFirstChunk, EncryptOptions, encryptSubsequentChunk } from './encrypt';
-
-// TODO: Rewrite the process to be a true streaming process that can handle huge files.
-
-abstract class WaitAllDataTransform extends Transform {
-    constructor() {
-        const chunkList: Buffer[] = [];
-        super({
-            transform: (chunk, _encoding, callback) => {
-                try {
-                    chunkList.push(Buffer.from(chunk));
-                } catch (error) {
-                    callback(error);
-                }
-                callback();
-            },
-            flush: callback => {
-                (async () => {
-                    const inputData = Buffer.concat(chunkList);
-                    const transformedData = await this.transformAllData(inputData);
-                    this.push(transformedData);
-                })()
-                    .then(() => callback())
-                    .catch(callback);
-            },
-        });
-    }
-
-    abstract transformAllData(data: Buffer): Promise<unknown>;
-}
 
 export class EncryptorTransform extends Transform {
     private readonly password: string | Buffer;
@@ -64,15 +35,31 @@ export class EncryptorTransform extends Transform {
     }
 }
 
-export class DecryptorTransform extends WaitAllDataTransform {
+export class DecryptorTransform extends Transform {
     private readonly password: string | Buffer;
+    private decryptorMetadata: Parameters<typeof decryptSubsequentChunk>[1] | undefined;
 
     constructor(password: string | Buffer) {
         super();
         this.password = password;
     }
 
-    async transformAllData(data: Buffer): Promise<Buffer> {
-        return await decrypt(data, this.password);
+    _transform(chunk: Buffer, _encoding: BufferEncoding, callback: stream.TransformCallback): void {
+        callbackify(async (): Promise<Buffer> => {
+            if (this.decryptorMetadata) {
+                const { cleartext } = await decryptSubsequentChunk(
+                    chunk,
+                    this.decryptorMetadata,
+                );
+                return cleartext;
+            } else {
+                const { cleartext, algorithm, key, compressAlgorithmName } = await decryptFirstChunk(
+                    chunk,
+                    this.password,
+                );
+                this.decryptorMetadata = { algorithm, key, compressAlgorithmName };
+                return cleartext;
+            }
+        })(callback);
     }
 }
