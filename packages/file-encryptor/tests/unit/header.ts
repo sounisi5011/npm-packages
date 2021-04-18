@@ -19,6 +19,7 @@ const dummyHeaderData: HeaderData = {
     nonce: new Uint8Array(),
     authTag: new Uint8Array(),
     compressAlgorithmName: 'gzip',
+    ciphertextLength: 0,
 };
 
 const cidByte = Buffer.from(varint.encode(0x305011));
