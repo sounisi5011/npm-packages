@@ -30,7 +30,7 @@ export function createFbsArgon2OptionsTable(
     builder: flatbuffers.Builder,
     options: NormalizedArgon2Options,
 ): flatbuffers.Offset {
-    return Argon2Options.createArgon2Options(
+    return Argon2Options.create(
         builder,
         algorithm2Argon2Type(options.algorithm),
         options.iterations,

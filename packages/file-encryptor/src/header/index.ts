@@ -134,7 +134,7 @@ export function parseHeader(data: Uint8Array): {
     });
 
     const fbsBuf = new flatbuffers.ByteBuffer(headerBytes);
-    const fbsHeader = Header.getRootAsHeader(fbsBuf);
+    const fbsHeader = Header.getRoot(fbsBuf);
     const headerData = parseFbsHeaderTable(fbsHeader);
 
     return {
@@ -176,7 +176,7 @@ export function parseSimpleHeader(data: Uint8Array): {
     });
 
     const fbsBuf = new flatbuffers.ByteBuffer(simpleHeaderBytes);
-    const fbsSimpleHeader = SimpleHeader.getRootAsSimpleHeader(fbsBuf);
+    const fbsSimpleHeader = SimpleHeader.getRoot(fbsBuf);
     const simpleHeaderData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
 
     return {

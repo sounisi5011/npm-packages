@@ -112,7 +112,7 @@ export function createFbsHeaderTable(builder: flatbuffers.Builder, data: HeaderD
     /**
       * Create Header table
       */
-    const offset = Header.createHeader(
+    const offset = Header.create(
         builder,
         algorithmName2cryptAlgorithm(data.algorithmName),
         keySaltOffset,

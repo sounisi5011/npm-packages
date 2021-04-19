@@ -58,7 +58,7 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Argon2Options {
  * @param Argon2Options= obj
  * @returns Argon2Options
  */
-static getRootAsArgon2Options(bb:flatbuffers.ByteBuffer, obj?:Argon2Options):Argon2Options {
+static getRoot(bb:flatbuffers.ByteBuffer, obj?:Argon2Options):Argon2Options {
   return (obj || new Argon2Options()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
@@ -67,7 +67,7 @@ static getRootAsArgon2Options(bb:flatbuffers.ByteBuffer, obj?:Argon2Options):Arg
  * @param Argon2Options= obj
  * @returns Argon2Options
  */
-static getSizePrefixedRootAsArgon2Options(bb:flatbuffers.ByteBuffer, obj?:Argon2Options):Argon2Options {
+static getSizePrefixedRoot(bb:flatbuffers.ByteBuffer, obj?:Argon2Options):Argon2Options {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
   return (obj || new Argon2Options()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
@@ -107,7 +107,7 @@ parallelism():number {
 /**
  * @param flatbuffers.Builder builder
  */
-static startArgon2Options(builder:flatbuffers.Builder) {
+static start(builder:flatbuffers.Builder) {
   builder.startObject(4);
 };
 
@@ -147,18 +147,18 @@ static addParallelism(builder:flatbuffers.Builder, parallelism:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endArgon2Options(builder:flatbuffers.Builder):flatbuffers.Offset {
+static end(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
 
-static createArgon2Options(builder:flatbuffers.Builder, type:Argon2Type, timeIterations:number, memoryKib:number, parallelism:number):flatbuffers.Offset {
-  Argon2Options.startArgon2Options(builder);
+static create(builder:flatbuffers.Builder, type:Argon2Type, timeIterations:number, memoryKib:number, parallelism:number):flatbuffers.Offset {
+  Argon2Options.start(builder);
   Argon2Options.addType(builder, type);
   Argon2Options.addTimeIterations(builder, timeIterations);
   Argon2Options.addMemoryKib(builder, memoryKib);
   Argon2Options.addParallelism(builder, parallelism);
-  return Argon2Options.endArgon2Options(builder);
+  return Argon2Options.end(builder);
 }
 }
 /**
@@ -184,7 +184,7 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Header {
  * @param Header= obj
  * @returns Header
  */
-static getRootAsHeader(bb:flatbuffers.ByteBuffer, obj?:Header):Header {
+static getRoot(bb:flatbuffers.ByteBuffer, obj?:Header):Header {
   return (obj || new Header()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
@@ -193,7 +193,7 @@ static getRootAsHeader(bb:flatbuffers.ByteBuffer, obj?:Header):Header {
  * @param Header= obj
  * @returns Header
  */
-static getSizePrefixedRootAsHeader(bb:flatbuffers.ByteBuffer, obj?:Header):Header {
+static getSizePrefixedRoot(bb:flatbuffers.ByteBuffer, obj?:Header):Header {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
   return (obj || new Header()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
@@ -317,7 +317,7 @@ compressAlgorithm():CompressAlgorithm {
 /**
  * @param flatbuffers.Builder builder
  */
-static startHeader(builder:flatbuffers.Builder) {
+static start(builder:flatbuffers.Builder) {
   builder.startObject(8);
 };
 
@@ -452,7 +452,7 @@ static addCompressAlgorithm(builder:flatbuffers.Builder, compressAlgorithm:Compr
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
+static end(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   builder.requiredField(offset, 6); // key_salt
   builder.requiredField(offset, 12); // key_options
@@ -465,7 +465,7 @@ static endHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
  * @param flatbuffers.Builder builder
  * @param flatbuffers.Offset offset
  */
-static finishHeaderBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+static finishBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
   builder.finish(offset);
 };
 
@@ -473,12 +473,12 @@ static finishHeaderBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset
  * @param flatbuffers.Builder builder
  * @param flatbuffers.Offset offset
  */
-static finishSizePrefixedHeaderBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
+static finishSizePrefixedBuffer(builder:flatbuffers.Builder, offset:flatbuffers.Offset) {
   builder.finish(offset, undefined, true);
 };
 
-static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, keySaltOffset:flatbuffers.Offset, keyLength:number, keyOptionsType:KeyOptions, keyOptionsOffset:flatbuffers.Offset, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset, compressAlgorithm:CompressAlgorithm):flatbuffers.Offset {
-  Header.startHeader(builder);
+static create(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, keySaltOffset:flatbuffers.Offset, keyLength:number, keyOptionsType:KeyOptions, keyOptionsOffset:flatbuffers.Offset, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset, compressAlgorithm:CompressAlgorithm):flatbuffers.Offset {
+  Header.start(builder);
   Header.addCryptAlgorithm(builder, cryptAlgorithm);
   Header.addKeySalt(builder, keySaltOffset);
   Header.addKeyLength(builder, keyLength);
@@ -487,7 +487,7 @@ static createHeader(builder:flatbuffers.Builder, cryptAlgorithm:CryptAlgorithm, 
   Header.addCryptNonce(builder, cryptNonceOffset);
   Header.addCryptAuthTag(builder, cryptAuthTagOffset);
   Header.addCompressAlgorithm(builder, compressAlgorithm);
-  return Header.endHeader(builder);
+  return Header.end(builder);
 }
 }
 /**
@@ -513,7 +513,7 @@ __init(i:number, bb:flatbuffers.ByteBuffer):SimpleHeader {
  * @param SimpleHeader= obj
  * @returns SimpleHeader
  */
-static getRootAsSimpleHeader(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
+static getRoot(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
   return (obj || new SimpleHeader()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
@@ -522,7 +522,7 @@ static getRootAsSimpleHeader(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):Simpl
  * @param SimpleHeader= obj
  * @returns SimpleHeader
  */
-static getSizePrefixedRootAsSimpleHeader(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
+static getSizePrefixedRoot(bb:flatbuffers.ByteBuffer, obj?:SimpleHeader):SimpleHeader {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
   return (obj || new SimpleHeader()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
@@ -580,7 +580,7 @@ cryptAuthTagArray():Uint8Array|null {
 /**
  * @param flatbuffers.Builder builder
  */
-static startSimpleHeader(builder:flatbuffers.Builder) {
+static start(builder:flatbuffers.Builder) {
   builder.startObject(2);
 };
 
@@ -646,17 +646,17 @@ static startCryptAuthTagVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endSimpleHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
+static end(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   builder.requiredField(offset, 4); // crypt_nonce
   builder.requiredField(offset, 6); // crypt_auth_tag
   return offset;
 };
 
-static createSimpleHeader(builder:flatbuffers.Builder, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset):flatbuffers.Offset {
-  SimpleHeader.startSimpleHeader(builder);
+static create(builder:flatbuffers.Builder, cryptNonceOffset:flatbuffers.Offset, cryptAuthTagOffset:flatbuffers.Offset):flatbuffers.Offset {
+  SimpleHeader.start(builder);
   SimpleHeader.addCryptNonce(builder, cryptNonceOffset);
   SimpleHeader.addCryptAuthTag(builder, cryptAuthTagOffset);
-  return SimpleHeader.endSimpleHeader(builder);
+  return SimpleHeader.end(builder);
 }
 }

@@ -17,7 +17,7 @@ export function createFbsSimpleHeaderTable(builder: flatbuffers.Builder, data: S
     /**
      * Create SimpleHeader table
      */
-    const offset = SimpleHeader.createSimpleHeader(
+    const offset = SimpleHeader.create(
         builder,
         cryptNonceOffset,
         cryptAuthTagOffset,
