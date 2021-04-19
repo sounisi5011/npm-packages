@@ -6,6 +6,7 @@ import { nonceState } from './nonce';
 
 export interface DecryptedData {
     cleartext: Buffer;
+    readByteLength: number;
 }
 
 export interface DecryptedFirstData extends DecryptedData {
@@ -21,7 +22,7 @@ export async function decryptFirstChunk(
     /**
      * Verify the structure of encrypted data & read the headers contained in the encrypted data
      */
-    const [data, ciphertext] = parseHeader(encryptedData);
+    const { header: data, ciphertext, readByteLength } = parseHeader(encryptedData);
 
     const algorithm = cryptAlgorithmMap.get(data.algorithmName);
     if (!algorithm) {
@@ -60,6 +61,7 @@ export async function decryptFirstChunk(
         algorithm,
         key,
         compressAlgorithmName: data.compressAlgorithmName,
+        readByteLength,
     };
 }
 
@@ -74,7 +76,7 @@ export async function decryptSubsequentChunk(
     /**
      * Verify the structure of encrypted data & read the headers contained in the encrypted data
      */
-    const [data, ciphertext] = parseSimpleHeader(encryptedData);
+    const { header: data, ciphertext, readByteLength } = parseSimpleHeader(encryptedData);
 
     /**
      * Update the invocation part in the nonce
@@ -98,5 +100,5 @@ export async function decryptSubsequentChunk(
         ? await decompress(compressedCleartext, options.compressAlgorithmName)
         : compressedCleartext;
 
-    return { cleartext };
+    return { cleartext, readByteLength };
 }

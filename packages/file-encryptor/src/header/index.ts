@@ -115,7 +115,11 @@ function parseLengthPrefixedData(
     };
 }
 
-export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
+export function parseHeader(data: Uint8Array): {
+    header: HeaderData;
+    ciphertext: Uint8Array;
+    readByteLength: number;
+} {
     const { headerLengthOffset } = validateCID(data);
 
     const { endOffset: ciphertextLengthStartOffset, data: headerBytes } = parseLengthPrefixedData(data, {
@@ -124,7 +128,7 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
         startOffset: headerLengthOffset,
     });
 
-    const { data: ciphertext } = parseLengthPrefixedData(data, {
+    const { endOffset: readByteLength, data: ciphertext } = parseLengthPrefixedData(data, {
         name: 'ciphertext',
         startOffset: ciphertextLengthStartOffset,
     });
@@ -133,7 +137,11 @@ export function parseHeader(data: Uint8Array): [HeaderData, Uint8Array] {
     const fbsHeader = Header.getRootAsHeader(fbsBuf);
     const headerData = parseFbsHeaderTable(fbsHeader);
 
-    return [headerData, ciphertext];
+    return {
+        header: headerData,
+        ciphertext,
+        readByteLength,
+    };
 }
 
 export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Buffer {
@@ -151,14 +159,18 @@ export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): 
     ]);
 }
 
-export function parseSimpleHeader(data: Uint8Array): [SimpleHeaderData, Uint8Array] {
+export function parseSimpleHeader(data: Uint8Array): {
+    header: SimpleHeaderData;
+    ciphertext: Uint8Array;
+    readByteLength: number;
+} {
     const { endOffset: ciphertextLengthStartOffset, data: simpleHeaderBytes } = parseLengthPrefixedData(data, {
         name: 'simple header',
         longname: 'simple header table',
         startOffset: 0,
     });
 
-    const { data: ciphertext } = parseLengthPrefixedData(data, {
+    const { endOffset: readByteLength, data: ciphertext } = parseLengthPrefixedData(data, {
         name: 'ciphertext',
         startOffset: ciphertextLengthStartOffset,
     });
@@ -167,5 +179,9 @@ export function parseSimpleHeader(data: Uint8Array): [SimpleHeaderData, Uint8Arr
     const fbsSimpleHeader = SimpleHeader.getRootAsSimpleHeader(fbsBuf);
     const simpleHeaderData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
 
-    return [simpleHeaderData, ciphertext];
+    return {
+        header: simpleHeaderData,
+        ciphertext,
+        readByteLength,
+    };
 }
