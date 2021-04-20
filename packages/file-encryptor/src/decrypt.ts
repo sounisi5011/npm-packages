@@ -117,7 +117,7 @@ export async function decryptSubsequentChunk(
 export class DecryptorTransform extends PromisifyTransform {
     private readonly password: string | Buffer;
     private buffer: Buffer = Buffer.alloc(0);
-    private requestByteLength = 0;
+    private needByteLength = 0;
     private decryptorMetadata: DecryptorMetadata | undefined;
     private state:
         | { type: 'cid' }
@@ -146,7 +146,7 @@ export class DecryptorTransform extends PromisifyTransform {
 
     private async processMultiChunk(isFinished: boolean): Promise<void> {
         while (this.buffer.byteLength > 0) {
-            if (!isFinished && this.buffer.byteLength < this.requestByteLength) break;
+            if (!isFinished && this.buffer.byteLength < this.needByteLength) break;
             this.push(await this.processChunk(isFinished));
         }
     }
@@ -155,122 +155,190 @@ export class DecryptorTransform extends PromisifyTransform {
         const state = this.state;
         const buffer = this.buffer;
 
-        let nextState: typeof state;
-        let nextOffset: number;
-        let cleartext: Buffer | undefined;
-
-        if (state.type === 'cid') {
-            const result = validateCID({ data: buffer, throwIfLowData: isFinished });
-            if (result.error) {
-                this.requestByteLength = result.error.needByteLength;
-                return;
+        let result:
+            | {
+                nextState: DecryptorTransform['state'];
+                nextOffset: number;
+                needByteLength?: number;
+                cleartext?: Buffer;
             }
-            nextState = { type: 'headerLen' };
-            nextOffset = result.endOffset;
-        } else if (state.type === 'headerLen') {
-            const result = (this.decryptorMetadata ? parseSimpleHeaderLength : parseHeaderLength)({
-                data: buffer,
-                throwIfLowData: isFinished,
-            });
-            if (result.error) {
-                this.requestByteLength = result.error.needByteLength;
-                return;
-            }
-            nextState = { type: 'header', headerByteLength: result.headerByteLength };
-            this.requestByteLength = nextState.headerByteLength;
-            nextOffset = result.endOffset;
-        } else if (state.type === 'header') {
-            let headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
-            if (this.decryptorMetadata) {
-                const result = parseSimpleHeaderData({
-                    data: buffer,
-                    headerByteLength: state.headerByteLength,
-                });
-                headerData = { ...this.decryptorMetadata, ...result.headerData };
-                nextOffset = result.endOffset;
-            } else {
-                const result = parseHeaderData({
-                    data: buffer,
-                    headerByteLength: state.headerByteLength,
-                });
-                headerData = result.headerData;
-                nextOffset = result.endOffset;
-            }
-            nextState = { type: 'ciphertextLen', headerData };
-            this.requestByteLength = 0;
-        } else if (state.type === 'ciphertextLen') {
-            const result = parseCiphertextLength({ data: buffer, throwIfLowData: isFinished });
-            if (result.error) {
-                this.requestByteLength = result.error.needByteLength;
-                return;
-            }
-            nextState = {
-                type: 'ciphertext',
-                ciphertextByteLength: result.ciphertextByteLength,
-                headerData: state.headerData,
+            | {
+                needByteLength: number;
             };
-            this.requestByteLength = nextState.ciphertextByteLength;
-            nextOffset = result.endOffset;
+        if (state.type === 'cid') {
+            result = this.processCID({ buffer, isFinished });
+        } else if (state.type === 'headerLen') {
+            result = this.processHeaderLength({ buffer, isFinished });
+        } else if (state.type === 'header') {
+            result = this.processHeader({ ...state, buffer });
+        } else if (state.type === 'ciphertextLen') {
+            result = this.processCiphertextLength({ buffer, headerData: state.headerData, isFinished });
         } else {
-            const result = parseCiphertextData({
-                data: buffer,
-                ciphertextByteLength: state.ciphertextByteLength,
-            });
-            const ciphertext = result.ciphertextDataBytes;
-            nextState = { type: 'headerLen' };
-            this.requestByteLength = 0;
-            nextOffset = result.endOffset;
-
-            const data = state.headerData;
-            let algorithm: CryptAlgorithm;
-            let key: Uint8Array;
-            if ('algorithmName' in data) {
-                const cryptAlgorithm = cryptAlgorithmMap.get(data.algorithmName);
-                if (!cryptAlgorithm) {
-                    throw new TypeError(`Unknown algorithm was received: ${data.algorithmName}`);
-                }
-                algorithm = cryptAlgorithm;
-
-                /**
-                 * Generate key
-                 */
-                key = (await deriveKey(this.password, data.salt, data.keyLength, data.keyDerivationOptions)).key;
-
-                this.decryptorMetadata = {
-                    algorithm,
-                    key,
-                    compressAlgorithmName: data.compressAlgorithmName,
-                };
-            } else {
-                algorithm = data.algorithm;
-                key = data.key;
-            }
-
-            /**
-             * Update the invocation part in the nonce
-             */
-            nonceState.updateInvocation(data.nonce);
-
-            /**
-             * Decrypt ciphertext
-             */
-            const decipher = algorithm.createDecipher(key, data.nonce);
-            decipher.setAuthTag(data.authTag);
-            const compressedCleartext = Buffer.concat([
-                decipher.update(ciphertext),
-                decipher.final(),
-            ]);
-
-            /**
-             * Decompress cleartext
-             */
-            cleartext = data.compressAlgorithmName
-                ? await decompress(compressedCleartext, data.compressAlgorithmName)
-                : compressedCleartext;
+            result = await this.processCiphertext({ ...state, buffer });
         }
 
-        this.state = nextState;
-        this.buffer = buffer.subarray(nextOffset);
-        return cleartext;
+        if ('nextState' in result) {
+            this.state = result.nextState;
+            this.buffer = buffer.subarray(result.nextOffset);
+        }
+        this.needByteLength = result.needByteLength ?? 0;
+        return 'cleartext' in result ? result.cleartext : undefined;
+    }
+
+    private processCID({ buffer, isFinished }: { buffer: Buffer; isFinished: boolean }):
+        | { nextState: DecryptorTransform['state']; nextOffset: number }
+        | { needByteLength: number }
+    {
+        const result = validateCID({ data: buffer, throwIfLowData: isFinished });
+        if (result.error) return result.error;
+        return {
+            nextState: { type: 'headerLen' },
+            nextOffset: result.endOffset,
+        };
+    }
+
+    private processHeaderLength({ buffer, isFinished }: { buffer: Buffer; isFinished: boolean }):
+        | { nextState: DecryptorTransform['state']; nextOffset: number; needByteLength: number }
+        | { needByteLength: number }
+    {
+        const result = (this.decryptorMetadata ? parseSimpleHeaderLength : parseHeaderLength)({
+            data: buffer,
+            throwIfLowData: isFinished,
+        });
+        if (result.error) return result.error;
+        return {
+            nextState: { type: 'header', headerByteLength: result.headerByteLength },
+            nextOffset: result.endOffset,
+            needByteLength: result.headerByteLength,
+        };
+    }
+
+    private processHeader({ buffer, headerByteLength }: { buffer: Buffer; headerByteLength: number }): {
+        nextState: DecryptorTransform['state'];
+        nextOffset: number;
+    } {
+        const decryptorMetadata = this.decryptorMetadata;
+        let headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
+        let nextOffset: number;
+        if (decryptorMetadata) {
+            const result = parseSimpleHeaderData({
+                data: buffer,
+                headerByteLength,
+            });
+            headerData = { ...decryptorMetadata, ...result.headerData };
+            nextOffset = result.endOffset;
+        } else {
+            const result = parseHeaderData({
+                data: buffer,
+                headerByteLength,
+            });
+            headerData = result.headerData;
+            nextOffset = result.endOffset;
+        }
+        return {
+            nextState: { type: 'ciphertextLen', headerData },
+            nextOffset,
+        };
+    }
+
+    private processCiphertextLength(
+        { buffer, headerData, isFinished }: {
+            buffer: Buffer;
+            headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
+            isFinished: boolean;
+        },
+    ):
+        | { nextState: DecryptorTransform['state']; nextOffset: number; needByteLength: number }
+        | { needByteLength: number }
+    {
+        const result = parseCiphertextLength({ data: buffer, throwIfLowData: isFinished });
+        if (result.error) return result.error;
+        return {
+            nextState: {
+                type: 'ciphertext',
+                ciphertextByteLength: result.ciphertextByteLength,
+                headerData,
+            },
+            nextOffset: result.endOffset,
+            needByteLength: result.ciphertextByteLength,
+        };
+    }
+
+    private async processCiphertext(
+        { buffer, ciphertextByteLength, headerData }: {
+            buffer: Buffer;
+            ciphertextByteLength: number;
+            headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
+        },
+    ): Promise<{ nextState: DecryptorTransform['state']; nextOffset: number; cleartext: Buffer }> {
+        const result = parseCiphertextData({
+            data: buffer,
+            ciphertextByteLength,
+        });
+        const ciphertext = result.ciphertextDataBytes;
+
+        const { algorithm, key } = await this.getAlgorithmAndKey(headerData);
+
+        /**
+         * Update the invocation part in the nonce
+         */
+        nonceState.updateInvocation(headerData.nonce);
+
+        /**
+         * Decrypt ciphertext
+         */
+        const decipher = algorithm.createDecipher(key, headerData.nonce);
+        decipher.setAuthTag(headerData.authTag);
+        const compressedCleartext = Buffer.concat([
+            decipher.update(ciphertext),
+            decipher.final(),
+        ]);
+
+        /**
+         * Decompress cleartext
+         */
+        const cleartext = headerData.compressAlgorithmName
+            ? await decompress(compressedCleartext, headerData.compressAlgorithmName)
+            : compressedCleartext;
+
+        return {
+            nextState: { type: 'headerLen' },
+            nextOffset: result.endOffset,
+            cleartext,
+        };
+    }
+
+    private async getAlgorithmAndKey(
+        headerData: HeaderData | SimpleHeaderData & DecryptorMetadata,
+    ): Promise<{ algorithm: CryptAlgorithm; key: Uint8Array }> {
+        if ('algorithmName' in headerData) {
+            const algorithm = cryptAlgorithmMap.get(headerData.algorithmName);
+            if (!algorithm) {
+                throw new TypeError(`Unknown algorithm was received: ${headerData.algorithmName}`);
+            }
+
+            /**
+             * Generate key
+             */
+            const { key } = await deriveKey(
+                this.password,
+                headerData.salt,
+                headerData.keyLength,
+                headerData.keyDerivationOptions,
+            );
+
+            this.decryptorMetadata = {
+                algorithm,
+                key,
+                compressAlgorithmName: headerData.compressAlgorithmName,
+            };
+
+            return { algorithm, key };
+        } else {
+            return {
+                algorithm: headerData.algorithm,
+                key: headerData.key,
+            };
+        }
     }
 }
