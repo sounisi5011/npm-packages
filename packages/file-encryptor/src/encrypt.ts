@@ -5,6 +5,7 @@ import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { deriveKey, KeyDerivationOptions, SALT_LENGTH_BYTES } from './key-derivation-function';
 import { nonceState } from './nonce';
+import { PromisifyTransform } from './utils/stream';
 
 export interface EncryptOptions {
     algorithm?: CryptAlgorithmName;
@@ -143,4 +144,31 @@ export async function encryptSubsequentChunk(
         ciphertextPart2,
     ]);
     return { encryptedData };
+}
+
+export class EncryptorTransform extends PromisifyTransform {
+    private readonly password: string | Buffer;
+    private readonly options: EncryptOptions;
+    private encryptData: { algorithm: CryptAlgorithm; key: Uint8Array } | undefined;
+
+    constructor(password: string | Buffer, options: EncryptOptions) {
+        super();
+        this.password = password;
+        this.options = options;
+    }
+
+    async transform(chunk: Buffer): Promise<Buffer> {
+        const encryptData = this.encryptData;
+        if (encryptData) {
+            const { encryptedData } = await encryptSubsequentChunk(
+                chunk,
+                { algorithm: encryptData.algorithm, key: encryptData.key, compress: this.options.compress },
+            );
+            return encryptedData;
+        } else {
+            const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, this.password, this.options);
+            this.encryptData = { algorithm, key };
+            return encryptedData;
+        }
+    }
 }

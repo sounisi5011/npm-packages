@@ -1,9 +1,8 @@
 import type { CryptAlgorithmName } from './cipher';
 import type { CompressOptionsWithString } from './compress';
-import { decryptFirstChunk } from './decrypt';
-import { encryptFirstChunk, EncryptOptions } from './encrypt';
+import { decryptFirstChunk, DecryptorTransform } from './decrypt';
+import { encryptFirstChunk, EncryptOptions, EncryptorTransform } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
-import { DecryptorTransform, EncryptorTransform } from './stream';
 
 export { CompressOptionsWithString, CryptAlgorithmName, EncryptOptions, KeyDerivationOptions };
 
