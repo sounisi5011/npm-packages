@@ -1,6 +1,6 @@
 import type { flatbuffers } from 'flatbuffers';
 
-import type { SimpleHeaderData } from '..';
+import type { SimpleHeaderData } from '../create';
 import { SimpleHeader } from './header_generated';
 
 export function createFbsSimpleHeaderTable(builder: flatbuffers.Builder, data: SimpleHeaderData): flatbuffers.Offset {

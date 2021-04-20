@@ -1,9 +1,9 @@
 import type { flatbuffers } from 'flatbuffers';
 
-import type { HeaderData } from '..';
 import { isArgon2Options } from '../../key-derivation-function/argon2';
 import { getPropFromValue, printObject } from '../../utils';
 import { assertType } from '../../utils/type';
+import type { HeaderData } from '../create';
 import { createFbsArgon2OptionsTable, parseFbsArgon2OptionsTable } from './argon2OptionsTable';
 import { Argon2Options, CompressAlgorithm, CryptAlgorithm, Header, KeyOptions } from './header_generated';
 
