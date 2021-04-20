@@ -155,16 +155,12 @@ export class DecryptorTransform extends PromisifyTransform {
         const state = this.state;
         const buffer = this.buffer;
 
-        let result:
-            | {
-                nextState: DecryptorTransform['state'];
-                nextOffset: number;
-                needByteLength?: number;
-                cleartext?: Buffer;
-            }
-            | {
-                needByteLength: number;
-            };
+        let result: {
+            nextState: DecryptorTransform['state'];
+            nextOffset: number;
+            needByteLength?: number;
+            cleartext?: Buffer;
+        } | { needByteLength: number };
         if (state.type === 'cid') {
             result = this.processCID({ buffer, isFinished });
         } else if (state.type === 'headerLen') {
