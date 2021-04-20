@@ -113,6 +113,29 @@ function validateDataLength(
     return { targetDataBytes, endOffset };
 }
 
+function createHeaderDataParser<T>(
+    { name, longname, genHeaderData }: {
+        name: string;
+        longname: string;
+        genHeaderData: (fbsBuf: flatbuffers.ByteBuffer) => T;
+    },
+): (opts: { data: Uint8Array; headerByteLength: number; offset?: number }) => { headerData: T; endOffset: number } {
+    return ({ data, headerByteLength, offset = 0 }) => {
+        const { targetDataBytes: headerDataBytes, endOffset } = validateDataLength({
+            data,
+            dataByteLength: headerByteLength,
+            offset,
+            name,
+            longname,
+        });
+
+        const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
+        const headerData = genHeaderData(fbsBuf);
+
+        return { headerData, endOffset };
+    };
+}
+
 /**
  * @see https://github.com/multiformats/multicodec/blob/909e183da65818ecd1e672904980e53711da8780/README.md#private-use-area
  */
@@ -151,41 +174,17 @@ export const parseHeaderLength = parseDataLength({ name: 'header' });
 
 export const parseSimpleHeaderLength = parseDataLength({ name: 'simple header' });
 
-export function parseHeaderData(
-    { data, headerByteLength, offset = 0 }: { data: Uint8Array; headerByteLength: number; offset?: number },
-): { headerData: HeaderData; endOffset: number } {
-    const { targetDataBytes: headerDataBytes, endOffset } = validateDataLength({
-        data,
-        dataByteLength: headerByteLength,
-        offset,
-        name: 'header',
-        longname: 'header table',
-    });
+export const parseHeaderData = createHeaderDataParser({
+    name: 'header',
+    longname: 'header table',
+    genHeaderData: fbsBuf => parseFbsHeaderTable(Header.getRoot(fbsBuf)),
+});
 
-    const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
-    const fbsHeader = Header.getRoot(fbsBuf);
-    const headerData = parseFbsHeaderTable(fbsHeader);
-
-    return { headerData, endOffset };
-}
-
-export function parseSimpleHeaderData(
-    { data, headerByteLength, offset = 0 }: { data: Uint8Array; headerByteLength: number; offset?: number },
-): { headerData: SimpleHeaderData; endOffset: number } {
-    const { targetDataBytes: headerDataBytes, endOffset } = validateDataLength({
-        data,
-        dataByteLength: headerByteLength,
-        offset,
-        name: 'simple header',
-        longname: 'simple header table',
-    });
-
-    const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
-    const fbsSimpleHeader = SimpleHeader.getRoot(fbsBuf);
-    const headerData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
-
-    return { headerData, endOffset };
-}
+export const parseSimpleHeaderData = createHeaderDataParser({
+    name: 'simple header',
+    longname: 'simple header table',
+    genHeaderData: fbsBuf => parseFbsSimpleHeaderTable(SimpleHeader.getRoot(fbsBuf)),
+});
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext' });
 
