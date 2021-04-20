@@ -28,15 +28,15 @@ export async function encryptFirstChunk(
     }
 
     /**
-         * Compress cleartext
-         */
+     * Compress cleartext
+     */
     const { algorithm: compressAlgorithmName, data: compressedCleartext } = options.compress
         ? await compress(cleartext, options.compress)
         : { algorithm: undefined, data: cleartext };
 
     /**
-      * Generate key
-      */
+     * Generate key
+     */
     const salt = randomBytes(SALT_LENGTH_BYTES);
     const keyLength = algorithm.keyLength;
     const { key, normalizedOptions: normalizedKeyDerivationOptions } = await deriveKey(
@@ -47,26 +47,26 @@ export async function encryptFirstChunk(
     );
 
     /**
-      * Generate nonce (also known as an IV / Initialization Vector)
-      */
+     * Generate nonce (also known as an IV / Initialization Vector)
+     */
     const nonce = nonceState.create(algorithm.nonceLength);
 
     /**
-      * Encrypt cleartext
-      */
+     * Encrypt cleartext
+     */
     const cipher = algorithm.createCipher(key, nonce);
     const ciphertextPart1 = cipher.update(compressedCleartext);
     const ciphertextPart2 = cipher.final();
 
     /**
-      * Get authentication tag
-      */
+     * Get authentication tag
+     */
     const authTag = cipher.getAuthTag();
 
     /**
-      * Generate header data
-      * The data contained in the header will be used for decryption.
-      */
+     * Generate header data
+     * The data contained in the header will be used for decryption.
+     */
     const headerData = createHeader({
         algorithmName: algorithm.name,
         salt,
@@ -79,8 +79,8 @@ export async function encryptFirstChunk(
     });
 
     /**
-      * Merge header and ciphertext
-      */
+     * Merge header and ciphertext
+     */
     const encryptedData = Buffer.concat([
         headerData,
         ciphertextPart1,
