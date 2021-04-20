@@ -2,7 +2,8 @@ import { Transform } from 'stream';
 import type * as stream from 'stream';
 import { callbackify } from 'util';
 
-export type StreamResult = Buffer | null | undefined;
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+export type StreamResult = Buffer | null | undefined | void;
 
 export interface PromisifyTransform {
     // eslint-disable-next-line @typescript-eslint/method-signature-style
