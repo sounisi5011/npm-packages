@@ -14,7 +14,7 @@ import {
     validateCID,
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
-import { padStartArray } from '../helpers';
+import { padStartArray, rangeArray } from '../helpers';
 
 const dummyHeaderData: HeaderDataWithCiphertextLength = {
     algorithmName: 'aes-256-gcm',
@@ -109,6 +109,21 @@ describe('validateCID()', () => {
             ),
         );
     });
+    describe('throwIfLowData=false', () => {
+        it.each(rangeArray(1, 12))('<Buffer 0xFF x %i>', length => {
+            const data = Buffer.from(rangeArray(1, length).fill(0xFF));
+            if (data.byteLength < 9) {
+                expect(validateCID({ data, throwIfLowData: false })).toStrictEqual({
+                    error: { needByteLength: 9 },
+                });
+            } else {
+                expect(() => validateCID({ data, throwIfLowData: false })).toThrowWithMessage(
+                    Error,
+                    `Could not decode identifier. Multicodec compliant identifiers are required.`,
+                );
+            }
+        });
+    });
 });
 
 describe('parseHeaderLength()', () => {
@@ -130,6 +145,21 @@ describe('parseHeaderLength()', () => {
                 Error,
                 `Invalid header byte length received: 0`,
             );
+        });
+    });
+    describe('throwIfLowData=false', () => {
+        it.each(rangeArray(1, 12))('<Buffer 0xFF x %i>', length => {
+            const data = Buffer.from(rangeArray(1, length).fill(0xFF));
+            if (data.byteLength < 9) {
+                expect(parseHeaderLength({ data, throwIfLowData: false })).toStrictEqual({
+                    error: { needByteLength: 9 },
+                });
+            } else {
+                expect(() => parseHeaderLength({ data, throwIfLowData: false })).toThrowWithMessage(
+                    Error,
+                    `Could not decode header size. The byte length of the header encoded as unsigned varint is required.`,
+                );
+            }
         });
     });
 });
