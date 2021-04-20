@@ -1,0 +1,14 @@
+{
+  "crypt_algorithm": 1,
+  "key_salt": [0, 1, 2],
+  "key_length": 96,
+  "key_options_type": "Argon2Options",
+  "key_options": {
+    "type": 0,
+    "time_iterations": 4,
+    "memory_kib": 128,
+    "parallelism": 6
+  },
+  "crypt_nonce": [3, 4],
+  "crypt_auth_tag": [5, 6, 7, 8]
+}

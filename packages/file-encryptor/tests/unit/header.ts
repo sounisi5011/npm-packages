@@ -1,10 +1,13 @@
 import * as crypto from 'crypto';
+import { promises as fsAsync } from 'fs';
+import * as path from 'path';
 
 import * as multicodec from 'multicodec';
 import * as varint from 'varint';
 
 import {
     createHeader,
+    HeaderData,
     HeaderDataWithCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -132,6 +135,100 @@ describe('parseHeaderLength()', () => {
 });
 
 describe('parseHeaderData()', () => {
+    describe('parse FlatBuffer binary', () => {
+        it.each<[string, HeaderData]>([
+            [
+                'header-table.basic.bin',
+                {
+                    algorithmName: 'aes-256-gcm',
+                    salt: new Uint8Array([9, 8, 7]),
+                    keyLength: 32,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2d',
+                        iterations: 3,
+                        memory: 12,
+                        parallelism: 1,
+                    },
+                    nonce: new Uint8Array([4, 5, 6]),
+                    authTag: new Uint8Array([2, 3, 4]),
+                    compressAlgorithmName: undefined,
+                },
+            ],
+            [
+                'header-table.chacha20-poly1305.bin',
+                {
+                    algorithmName: 'chacha20-poly1305',
+                    salt: new Uint8Array([0, 1, 2]),
+                    keyLength: 96,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2d',
+                        iterations: 4,
+                        memory: 128,
+                        parallelism: 6,
+                    },
+                    nonce: new Uint8Array([3, 4]),
+                    authTag: new Uint8Array([5, 6, 7, 8]),
+                    compressAlgorithmName: undefined,
+                },
+            ],
+            [
+                'header-table.argon2id.bin',
+                {
+                    algorithmName: 'aes-256-gcm',
+                    salt: new Uint8Array([]),
+                    keyLength: 666,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2id',
+                        iterations: 1,
+                        memory: 6,
+                        parallelism: 99,
+                    },
+                    nonce: new Uint8Array([255]),
+                    authTag: new Uint8Array([8]),
+                    compressAlgorithmName: undefined,
+                },
+            ],
+            [
+                'header-table.compress-gzip.bin',
+                {
+                    algorithmName: 'aes-256-gcm',
+                    salt: new Uint8Array([9, 8, 7]),
+                    keyLength: 32,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2d',
+                        iterations: 3,
+                        memory: 12,
+                        parallelism: 1,
+                    },
+                    nonce: new Uint8Array([4, 5, 6]),
+                    authTag: new Uint8Array([2, 3, 4]),
+                    compressAlgorithmName: 'gzip',
+                },
+            ],
+            [
+                'header-table.compress-brotli.bin',
+                {
+                    algorithmName: 'aes-256-gcm',
+                    salt: new Uint8Array([9, 8, 7]),
+                    keyLength: 32,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2d',
+                        iterations: 3,
+                        memory: 12,
+                        parallelism: 1,
+                    },
+                    nonce: new Uint8Array([4, 5, 6]),
+                    authTag: new Uint8Array([2, 3, 4]),
+                    compressAlgorithmName: 'brotli',
+                },
+            ],
+        ])('%s', async (filename, expected) => {
+            const filepath = path.resolve(__dirname, 'fixtures', filename);
+            const data = await fsAsync.readFile(filepath);
+            const result = parseHeaderData({ data, headerByteLength: data.byteLength });
+            expect(result.headerData).toStrictEqual(expected);
+        });
+    });
     describe('invalid length bytes', () => {
         it.each([
             [9, 0],
