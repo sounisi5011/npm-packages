@@ -14,13 +14,14 @@ export function validateCID(
 export function validateCID(
     { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
 ): { endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const needByteLength = offset + 9;
     const result = readVarint(
         data,
-        throwIfLowData
+        throwIfLowData || needByteLength <= data.byteLength
             ? () => {
                 throw new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`);
             }
-            : () => ({ needByteLength: offset + 9 }),
+            : () => ({ needByteLength }),
         offset,
     );
     if (result.error) return result;

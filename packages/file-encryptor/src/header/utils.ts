@@ -45,15 +45,16 @@ export function parseDataLength(
     throwIfLowData?: boolean;
 }) => { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
     return ({ data, offset = 0, throwIfLowData = true }) => {
+        const needByteLength = offset + 9;
         const result = readVarint(
             data,
-            throwIfLowData
+            throwIfLowData || needByteLength <= data.byteLength
                 ? () => {
                     throw new Error(
                         `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
                     );
                 }
-                : () => ({ needByteLength: offset + 9 }),
+                : () => ({ needByteLength }),
             offset,
         );
         if (result.error) return result;
