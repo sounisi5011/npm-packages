@@ -30,11 +30,21 @@ export interface HeaderDataWithCiphertextLength extends HeaderData {
     ciphertextLength: number;
 }
 
+function readVarint(
+    buf: Uint8Array,
+    errorCallback: (error: unknown) => never,
+    offset?: number,
+): { value: number; bytes: number; endOffset: number };
+function readVarint<T>(
+    buf: Uint8Array,
+    errorCallback: (error: unknown) => T,
+    offset?: number,
+): { value: number; bytes: number; endOffset: number; error?: undefined } | { error: T };
 function readVarint<T>(
     buf: Uint8Array,
     errorCallback: (error: unknown) => T,
     offset = 0,
-): { value: number; bytes: number; endOffset: number } | T {
+): { value: number; bytes: number; endOffset: number; error?: undefined } | { error: T } {
     try {
         const value = varintDecode(buf, offset);
         const bytes = varintDecode.bytes;
@@ -44,14 +54,183 @@ function readVarint<T>(
             endOffset: offset + bytes,
         };
     } catch (error) {
-        return errorCallback(error);
+        return { error: errorCallback(error) };
     }
+}
+
+function parseDataLength(
+    data: Uint8Array,
+    opts: { name: string; offset?: number; throwIfLowData?: true },
+): { dataByteLength: number; endOffset: number };
+function parseDataLength(
+    data: Uint8Array,
+    opts: { name: string; offset?: number; throwIfLowData?: boolean },
+): { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
+function parseDataLength(
+    data: Uint8Array,
+    { name, offset = 0, throwIfLowData = true }: { name: string; offset?: number; throwIfLowData?: boolean },
+): { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const result = readVarint(
+        data,
+        throwIfLowData
+            ? () => {
+                throw new Error(
+                    `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
+                );
+            }
+            : () => ({ needByteLength: offset + 9 }),
+        offset,
+    );
+    if (result.error) return result;
+    const { value: dataByteLength, endOffset } = result;
+    if (dataByteLength < 1) throw new Error(`Invalid ${name} byte length received: ${dataByteLength}`);
+    return { dataByteLength, endOffset };
+}
+
+function validateDataLength(
+    { data, dataByteLength, offset, name, longname }: {
+        data: Uint8Array;
+        dataByteLength: number;
+        offset: number;
+        name: string;
+        longname?: string;
+    },
+): { targetDataBytes: Uint8Array; endOffset: number } {
+    const endOffset = offset + dataByteLength;
+    const targetDataBytes = data.subarray(offset, endOffset);
+    if (targetDataBytes.byteLength !== dataByteLength) {
+        throw new Error(
+            `Could not read ${longname ?? name}.`
+                + ` ${dataByteLength} byte length ${name} is required.`
+                + ` Received data: ${targetDataBytes.byteLength} bytes`,
+        );
+    }
+    return { targetDataBytes, endOffset };
 }
 
 /**
  * @see https://github.com/multiformats/multicodec/blob/909e183da65818ecd1e672904980e53711da8780/README.md#private-use-area
  */
 export const CID = 0x305011;
+
+export function validateCID(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
+): { endOffset: number };
+export function validateCID(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { endOffset: number; error?: never } | { error: { needByteLength: number } };
+export function validateCID(
+    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const result = readVarint(
+        data,
+        throwIfLowData
+            ? () => {
+                throw new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`);
+            }
+            : () => ({ needByteLength: offset + 9 }),
+        offset,
+    );
+    if (result.error) return result;
+    if (result.value !== CID) {
+        throw new Error(
+            `Invalid identifier detected.`
+                + number2hex` The identifier must be ${CID}, encoded as unsigned varint.`
+                + number2hex` Received ${result.value}`,
+        );
+    }
+    return { endOffset: result.endOffset };
+}
+
+export function parseHeaderLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
+): { headerByteLength: number; endOffset: number };
+export function parseHeaderLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
+export function parseHeaderLength(
+    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const result = parseDataLength(data, { name: 'header', offset, throwIfLowData });
+    if (result.error) return result;
+    return { headerByteLength: result.dataByteLength, endOffset: result.endOffset };
+}
+
+export function parseSimpleHeaderLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
+): { headerByteLength: number; endOffset: number };
+export function parseSimpleHeaderLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
+export function parseSimpleHeaderLength(
+    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const result = parseDataLength(data, { name: 'simple header', offset, throwIfLowData });
+    if (result.error) return result;
+    return { headerByteLength: result.dataByteLength, endOffset: result.endOffset };
+}
+
+export function parseHeaderData(
+    { data, headerByteLength, offset = 0 }: { data: Uint8Array; headerByteLength: number; offset?: number },
+): { headerData: HeaderData; endOffset: number } {
+    const { targetDataBytes: headerDataBytes, endOffset } = validateDataLength({
+        data,
+        dataByteLength: headerByteLength,
+        offset,
+        name: 'header',
+        longname: 'header table',
+    });
+
+    const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
+    const fbsHeader = Header.getRoot(fbsBuf);
+    const headerData = parseFbsHeaderTable(fbsHeader);
+
+    return { headerData, endOffset };
+}
+
+export function parseSimpleHeaderData(
+    { data, headerByteLength, offset = 0 }: { data: Uint8Array; headerByteLength: number; offset?: number },
+): { headerData: SimpleHeaderData; endOffset: number } {
+    const { targetDataBytes: headerDataBytes, endOffset } = validateDataLength({
+        data,
+        dataByteLength: headerByteLength,
+        offset,
+        name: 'simple header',
+        longname: 'simple header table',
+    });
+
+    const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
+    const fbsSimpleHeader = SimpleHeader.getRoot(fbsBuf);
+    const headerData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
+
+    return { headerData, endOffset };
+}
+
+export function parseCiphertextLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
+): { ciphertextByteLength: number; endOffset: number };
+export function parseCiphertextLength(
+    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { ciphertextByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
+export function parseCiphertextLength(
+    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
+): { ciphertextByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    const result = parseDataLength(data, { name: 'ciphertext', offset, throwIfLowData });
+    if (result.error) return result;
+    return { ciphertextByteLength: result.dataByteLength, endOffset: result.endOffset };
+}
+
+export function parseCiphertextData(
+    { data, ciphertextByteLength, offset = 0 }: { data: Uint8Array; ciphertextByteLength: number; offset?: number },
+): { ciphertextDataBytes: Uint8Array; endOffset: number } {
+    const { targetDataBytes: ciphertextDataBytes, endOffset } = validateDataLength({
+        data,
+        dataByteLength: ciphertextByteLength,
+        offset,
+        name: 'ciphertext',
+    });
+    return { ciphertextDataBytes, endOffset };
+}
 
 export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
     const { ciphertextLength, ...fbsData } = data;
@@ -71,75 +250,25 @@ export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
     ]);
 }
 
-function validateCID(data: Uint8Array): { headerLengthOffset: number } {
-    const { value: cidFromData, endOffset: headerLengthOffset } = readVarint(
-        data,
-        () => {
-            throw new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`);
-        },
-    );
-    if (cidFromData !== CID) {
-        throw new Error(
-            `Invalid identifier detected.`
-                + number2hex` The identifier must be ${CID}, encoded as unsigned varint.`
-                + number2hex` Received ${cidFromData}`,
-        );
-    }
-    return { headerLengthOffset };
-}
-
-function parseLengthPrefixedData(
-    fullData: Uint8Array,
-    { name, longname, startOffset }: { name: string; longname?: string; startOffset: number },
-): { byteLength: number; startOffset: number; endOffset: number; data: Uint8Array } {
-    const { value: subDataByteLength, endOffset: subDataStartOffset } = readVarint(fullData, () => {
-        throw new Error(
-            `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
-        );
-    }, startOffset);
-    if (subDataByteLength < 1) throw new Error(`Invalid ${name} byte length received: ${subDataByteLength}`);
-    const subDataEndOffset = subDataStartOffset + subDataByteLength;
-    const subDataBytes = fullData.subarray(subDataStartOffset, subDataEndOffset);
-    if (subDataBytes.byteLength !== subDataByteLength) {
-        throw new Error(
-            `Could not read ${longname ?? name}.`
-                + ` ${subDataByteLength} byte length ${name} is required.`
-                + ` Received data: ${subDataBytes.byteLength} bytes`,
-        );
-    }
-    return {
-        byteLength: subDataByteLength,
-        startOffset: subDataStartOffset,
-        endOffset: subDataEndOffset,
-        data: subDataBytes,
-    };
-}
-
 export function parseHeader(data: Uint8Array): {
     header: HeaderData;
     ciphertext: Uint8Array;
     readByteLength: number;
 } {
-    const { headerLengthOffset } = validateCID(data);
-
-    const { endOffset: ciphertextLengthStartOffset, data: headerBytes } = parseLengthPrefixedData(data, {
-        name: 'header',
-        longname: 'header table',
-        startOffset: headerLengthOffset,
-    });
-
-    const { endOffset: readByteLength, data: ciphertext } = parseLengthPrefixedData(data, {
-        name: 'ciphertext',
-        startOffset: ciphertextLengthStartOffset,
-    });
-
-    const fbsBuf = new flatbuffers.ByteBuffer(headerBytes);
-    const fbsHeader = Header.getRoot(fbsBuf);
-    const headerData = parseFbsHeaderTable(fbsHeader);
-
+    const { endOffset: headerLengthOffset } = validateCID({ data });
+    const { headerByteLength, endOffset: headerOffset } = parseHeaderLength({ data, offset: headerLengthOffset });
+    const { headerData, endOffset: ciphertextLengthOffset } = parseHeaderData(
+        { data, headerByteLength, offset: headerOffset },
+    );
+    const { ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
+        { data, offset: ciphertextLengthOffset },
+    );
+    const { ciphertextDataBytes, endOffset: readByteLength } = parseCiphertextData(
+        { data, ciphertextByteLength, offset: ciphertextOffset },
+    );
     return {
         header: headerData,
-        ciphertext,
+        ciphertext: ciphertextDataBytes,
         readByteLength,
     };
 }
@@ -164,24 +293,19 @@ export function parseSimpleHeader(data: Uint8Array): {
     ciphertext: Uint8Array;
     readByteLength: number;
 } {
-    const { endOffset: ciphertextLengthStartOffset, data: simpleHeaderBytes } = parseLengthPrefixedData(data, {
-        name: 'simple header',
-        longname: 'simple header table',
-        startOffset: 0,
-    });
-
-    const { endOffset: readByteLength, data: ciphertext } = parseLengthPrefixedData(data, {
-        name: 'ciphertext',
-        startOffset: ciphertextLengthStartOffset,
-    });
-
-    const fbsBuf = new flatbuffers.ByteBuffer(simpleHeaderBytes);
-    const fbsSimpleHeader = SimpleHeader.getRoot(fbsBuf);
-    const simpleHeaderData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
-
+    const { headerByteLength, endOffset: headerOffset } = parseSimpleHeaderLength({ data });
+    const { headerData, endOffset: ciphertextLengthOffset } = parseSimpleHeaderData(
+        { data, headerByteLength, offset: headerOffset },
+    );
+    const { ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
+        { data, offset: ciphertextLengthOffset },
+    );
+    const { ciphertextDataBytes, endOffset: readByteLength } = parseCiphertextData(
+        { data, ciphertextByteLength, offset: ciphertextOffset },
+    );
     return {
-        header: simpleHeaderData,
-        ciphertext,
+        header: headerData,
+        ciphertext: ciphertextDataBytes,
         readByteLength,
     };
 }

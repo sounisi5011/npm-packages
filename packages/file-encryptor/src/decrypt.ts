@@ -1,15 +1,20 @@
-import { flatbuffers } from 'flatbuffers';
-import { decode as varintDecode } from 'varint';
-
 import { CryptAlgorithm, cryptAlgorithmMap } from './cipher';
 import { CompressAlgorithmName, decompress } from './compress';
-import { CID, HeaderData, parseHeader, parseSimpleHeader, SimpleHeaderData } from './header';
-import { Header, SimpleHeader } from './header/flatbuffers/header_generated';
-import { parseFbsHeaderTable } from './header/flatbuffers/headerTable';
-import { parseFbsSimpleHeaderTable } from './header/flatbuffers/simpleHeaderTable';
+import {
+    HeaderData,
+    parseCiphertextData,
+    parseCiphertextLength,
+    parseHeader,
+    parseHeaderData,
+    parseHeaderLength,
+    parseSimpleHeader,
+    parseSimpleHeaderData,
+    parseSimpleHeaderLength,
+    SimpleHeaderData,
+    validateCID,
+} from './header';
 import { deriveKey } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { number2hex } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface DecryptedData {
@@ -155,63 +160,66 @@ export class DecryptorTransform extends PromisifyTransform {
         let cleartext: Buffer | undefined;
 
         if (state.type === 'cid') {
-            const result = this.parseCID({ buffer, isFinished });
-            if ('requestByteLength' in result) {
-                this.requestByteLength = result.requestByteLength;
+            const result = validateCID({ data: buffer, throwIfLowData: isFinished });
+            if (result.error) {
+                this.requestByteLength = result.error.needByteLength;
                 return;
             }
             nextState = { type: 'headerLen' };
-            nextOffset = result.nextOffset;
+            nextOffset = result.endOffset;
         } else if (state.type === 'headerLen') {
-            const result = this.parseHeaderLength({
-                buffer,
-                isFinished,
-                isSubsequentChunk: Boolean(this.decryptorMetadata),
+            const result = (this.decryptorMetadata ? parseSimpleHeaderLength : parseHeaderLength)({
+                data: buffer,
+                throwIfLowData: isFinished,
             });
-            if ('requestByteLength' in result) {
-                this.requestByteLength = result.requestByteLength;
+            if (result.error) {
+                this.requestByteLength = result.error.needByteLength;
                 return;
             }
-            nextState = { type: 'header', headerByteLength: result.byteLength };
-            this.requestByteLength = result.byteLength;
-            nextOffset = result.nextOffset;
+            nextState = { type: 'header', headerByteLength: result.headerByteLength };
+            this.requestByteLength = nextState.headerByteLength;
+            nextOffset = result.endOffset;
         } else if (state.type === 'header') {
             let headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
             if (this.decryptorMetadata) {
-                const result = this.parseSimpleHeader({
-                    buffer,
+                const result = parseSimpleHeaderData({
+                    data: buffer,
                     headerByteLength: state.headerByteLength,
                 });
-                headerData = { ...this.decryptorMetadata, ...result.data };
-                nextOffset = result.nextOffset;
+                headerData = { ...this.decryptorMetadata, ...result.headerData };
+                nextOffset = result.endOffset;
             } else {
-                const result = this.parseHeader({
-                    buffer,
+                const result = parseHeaderData({
+                    data: buffer,
                     headerByteLength: state.headerByteLength,
                 });
-                headerData = result.data;
-                nextOffset = result.nextOffset;
+                headerData = result.headerData;
+                nextOffset = result.endOffset;
             }
             nextState = { type: 'ciphertextLen', headerData };
             this.requestByteLength = 0;
         } else if (state.type === 'ciphertextLen') {
-            const result = this.parseCiphertextLength({ buffer, isFinished });
-            if ('requestByteLength' in result) {
-                this.requestByteLength = result.requestByteLength;
+            const result = parseCiphertextLength({ data: buffer, throwIfLowData: isFinished });
+            if (result.error) {
+                this.requestByteLength = result.error.needByteLength;
                 return;
             }
-            nextState = { type: 'ciphertext', ciphertextByteLength: result.byteLength, headerData: state.headerData };
-            this.requestByteLength = result.byteLength;
-            nextOffset = result.nextOffset;
+            nextState = {
+                type: 'ciphertext',
+                ciphertextByteLength: result.ciphertextByteLength,
+                headerData: state.headerData,
+            };
+            this.requestByteLength = nextState.ciphertextByteLength;
+            nextOffset = result.endOffset;
         } else {
-            const result = this.parseCiphertext({
-                buffer,
+            const result = parseCiphertextData({
+                data: buffer,
                 ciphertextByteLength: state.ciphertextByteLength,
             });
-            const ciphertext = result.data;
+            const ciphertext = result.ciphertextDataBytes;
             nextState = { type: 'headerLen' };
             this.requestByteLength = 0;
-            nextOffset = result.nextOffset;
+            nextOffset = result.endOffset;
 
             const data = state.headerData;
             let algorithm: CryptAlgorithm;
@@ -264,166 +272,5 @@ export class DecryptorTransform extends PromisifyTransform {
         this.state = nextState;
         this.buffer = buffer.subarray(nextOffset);
         return cleartext;
-    }
-
-    private parseCID(opts: {
-        buffer: Buffer;
-        isFinished: boolean;
-        offset?: number;
-    }): { nextOffset: number } | { requestByteLength: number } {
-        const varint = this.parseUnsignedVarint({
-            ...opts,
-            offset: opts.offset ?? 0,
-            decodeError: new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`),
-        });
-        if (!('value' in varint)) return varint;
-        if (varint.value !== CID) {
-            throw new Error(
-                `Invalid identifier detected.`
-                    + number2hex` The identifier must be ${CID}, encoded as unsigned varint.`
-                    + number2hex` Received ${varint.value}`,
-            );
-        }
-        return { nextOffset: varint.nextOffset };
-    }
-
-    private parseHeaderLength(opts: {
-        buffer: Buffer;
-        isFinished: boolean;
-        isSubsequentChunk: boolean;
-        offset?: number;
-    }): { byteLength: number; nextOffset: number } | { requestByteLength: number } {
-        const headerName = opts.isSubsequentChunk ? 'simple header' : 'header';
-        const varint = this.parseUnsignedVarint({
-            ...opts,
-            offset: opts.offset ?? 0,
-            decodeError: new Error(
-                `Could not decode ${headerName} size.`
-                    + ` The byte length of the ${headerName} encoded as unsigned varint is required.`,
-            ),
-        });
-        if (!('value' in varint)) return varint;
-        if (varint.value < 1) {
-            throw new Error(`Invalid ${headerName} byte length received: ${varint.value}`);
-        }
-        return { byteLength: varint.value, nextOffset: varint.nextOffset };
-    }
-
-    private parseHeader(opts: {
-        buffer: Buffer;
-        headerByteLength: number;
-        offset?: number;
-    }): { data: HeaderData; nextOffset: number } {
-        const { buffer, headerByteLength } = opts;
-        const beginOffset = opts.offset ?? 0;
-        const endOffset = beginOffset + headerByteLength;
-        const headerBytes = buffer.subarray(beginOffset, endOffset);
-        if (headerBytes.byteLength !== headerByteLength) {
-            throw new Error(
-                `Could not read header table.`
-                    + ` ${headerByteLength} byte length header is required.`
-                    + ` Received data: ${headerBytes.byteLength} bytes`,
-            );
-        }
-
-        const fbsBuf = new flatbuffers.ByteBuffer(headerBytes);
-        const fbsHeader = Header.getRoot(fbsBuf);
-        const headerData = parseFbsHeaderTable(fbsHeader);
-
-        return {
-            data: headerData,
-            nextOffset: endOffset,
-        };
-    }
-
-    private parseSimpleHeader(opts: {
-        buffer: Buffer;
-        headerByteLength: number;
-        offset?: number;
-    }): { data: SimpleHeaderData; nextOffset: number } {
-        const { buffer, headerByteLength } = opts;
-        const beginOffset = opts.offset ?? 0;
-        const endOffset = beginOffset + headerByteLength;
-        const simpleHeaderBytes = buffer.subarray(beginOffset, endOffset);
-        if (simpleHeaderBytes.byteLength !== headerByteLength) {
-            throw new Error(
-                `Could not read simple header table.`
-                    + ` ${headerByteLength} byte length simple header is required.`
-                    + ` Received data: ${simpleHeaderBytes.byteLength} bytes`,
-            );
-        }
-
-        const fbsBuf = new flatbuffers.ByteBuffer(simpleHeaderBytes);
-        const fbsSimpleHeader = SimpleHeader.getRoot(fbsBuf);
-        const simpleHeaderData = parseFbsSimpleHeaderTable(fbsSimpleHeader);
-
-        return {
-            data: simpleHeaderData,
-            nextOffset: endOffset,
-        };
-    }
-
-    private parseCiphertextLength(opts: {
-        buffer: Buffer;
-        isFinished: boolean;
-        offset?: number;
-    }): { byteLength: number; nextOffset: number } | { requestByteLength: number } {
-        const varint = this.parseUnsignedVarint({
-            ...opts,
-            offset: opts.offset ?? 0,
-            decodeError: new Error(
-                `Could not decode ciphertext size.`
-                    + ` The byte length of the ciphertext encoded as unsigned varint is required.`,
-            ),
-        });
-        if (!('value' in varint)) return varint;
-        if (varint.value < 1) {
-            throw new Error(`Invalid ciphertext byte length received: ${varint.value}`);
-        }
-        return {
-            byteLength: varint.value,
-            nextOffset: varint.nextOffset,
-        };
-    }
-
-    private parseCiphertext(opts: {
-        buffer: Buffer;
-        ciphertextByteLength: number;
-        offset?: number;
-    }): { data: Buffer; nextOffset: number } {
-        const { buffer, ciphertextByteLength } = opts;
-        const beginOffset = opts.offset ?? 0;
-        const endOffset = beginOffset + ciphertextByteLength;
-        const ciphertextBytes = buffer.subarray(beginOffset, endOffset);
-        if (ciphertextBytes.byteLength !== ciphertextByteLength) {
-            throw new Error(
-                `Could not read ciphertext.`
-                    + ` ${ciphertextByteLength} byte length ciphertext is required.`
-                    + ` Received data: ${ciphertextBytes.byteLength} bytes`,
-            );
-        }
-        return {
-            data: ciphertextBytes,
-            nextOffset: endOffset,
-        };
-    }
-
-    private parseUnsignedVarint(opts: {
-        buffer: Buffer;
-        offset: number;
-        isFinished: boolean;
-        decodeError: Error;
-    }): { value: number; nextOffset: number } | { requestByteLength: number } {
-        try {
-            const value = varintDecode(opts.buffer, opts.offset);
-            const nextOffset = opts.offset + varintDecode.bytes;
-            return { value, nextOffset };
-        } catch {
-            if (opts.isFinished) {
-                throw opts.decodeError;
-            } else {
-                return { requestByteLength: 9 };
-            }
-        }
     }
 }
