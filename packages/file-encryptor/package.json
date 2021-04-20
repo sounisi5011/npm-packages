@@ -74,13 +74,13 @@
     "test:jest": "jest"
   },
   "dependencies": {
+    "@jorgeferrero/stream-to-buffer": "^2.0.6",
     "argon2-browser": "^1.15.4",
     "flatbuffers": "^1.12.0",
     "varint": "^6.0.0"
   },
   "devDependencies": {
     "@akiroz/size-chunker-stream": "0.0.1",
-    "@jorgeferrero/stream-to-buffer": "2.0.6",
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",

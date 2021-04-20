@@ -1,6 +1,8 @@
+import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
+
 import type { CryptAlgorithmName } from './cipher';
 import type { CompressOptionsWithString } from './compress';
-import { decryptFirstChunk, DecryptorTransform } from './decrypt';
+import { DecryptorTransform } from './decrypt';
 import { encryptFirstChunk, EncryptOptions, EncryptorTransform } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
 
@@ -15,7 +17,10 @@ export async function encrypt(
 }
 
 export async function decrypt(encryptedData: Buffer, password: string | Buffer): Promise<Buffer> {
-    return (await decryptFirstChunk(encryptedData, password)).cleartext;
+    const stream = new DecryptorTransform(password);
+    const dataPromise = streamToBuffer(stream);
+    stream.end(encryptedData);
+    return await dataPromise;
 }
 
 export function encryptStream(password: string | Buffer, options: EncryptOptions = {}): EncryptorTransform {
