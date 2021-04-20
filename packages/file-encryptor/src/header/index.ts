@@ -58,33 +58,38 @@ function readVarint<T>(
     }
 }
 
+interface ParseDataLengthFn {
+    (opts: { data: Uint8Array; offset?: number; throwIfLowData?: true }): { dataByteLength: number; endOffset: number };
+    (opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean }):
+        | { dataByteLength: number; endOffset: number; error?: never }
+        | { error: { needByteLength: number } };
+}
+
+function parseDataLength(opts: { name: string }): ParseDataLengthFn;
 function parseDataLength(
-    data: Uint8Array,
-    opts: { name: string; offset?: number; throwIfLowData?: true },
-): { dataByteLength: number; endOffset: number };
-function parseDataLength(
-    data: Uint8Array,
-    opts: { name: string; offset?: number; throwIfLowData?: boolean },
-): { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
-function parseDataLength(
-    data: Uint8Array,
-    { name, offset = 0, throwIfLowData = true }: { name: string; offset?: number; throwIfLowData?: boolean },
-): { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
-    const result = readVarint(
-        data,
-        throwIfLowData
-            ? () => {
-                throw new Error(
-                    `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
-                );
-            }
-            : () => ({ needByteLength: offset + 9 }),
-        offset,
-    );
-    if (result.error) return result;
-    const { value: dataByteLength, endOffset } = result;
-    if (dataByteLength < 1) throw new Error(`Invalid ${name} byte length received: ${dataByteLength}`);
-    return { dataByteLength, endOffset };
+    { name }: { name: string },
+): (opts: {
+    data: Uint8Array;
+    offset?: number;
+    throwIfLowData?: boolean;
+}) => { dataByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
+    return ({ data, offset = 0, throwIfLowData = true }) => {
+        const result = readVarint(
+            data,
+            throwIfLowData
+                ? () => {
+                    throw new Error(
+                        `Could not decode ${name} size. The byte length of the ${name} encoded as unsigned varint is required.`,
+                    );
+                }
+                : () => ({ needByteLength: offset + 9 }),
+            offset,
+        );
+        if (result.error) return result;
+        const { value: dataByteLength, endOffset } = result;
+        if (dataByteLength < 1) throw new Error(`Invalid ${name} byte length received: ${dataByteLength}`);
+        return { dataByteLength, endOffset };
+    };
 }
 
 function validateDataLength(
@@ -142,33 +147,9 @@ export function validateCID(
     return { endOffset: result.endOffset };
 }
 
-export function parseHeaderLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
-): { headerByteLength: number; endOffset: number };
-export function parseHeaderLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
-export function parseHeaderLength(
-    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
-    const result = parseDataLength(data, { name: 'header', offset, throwIfLowData });
-    if (result.error) return result;
-    return { headerByteLength: result.dataByteLength, endOffset: result.endOffset };
-}
+export const parseHeaderLength = parseDataLength({ name: 'header' });
 
-export function parseSimpleHeaderLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
-): { headerByteLength: number; endOffset: number };
-export function parseSimpleHeaderLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
-export function parseSimpleHeaderLength(
-    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { headerByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
-    const result = parseDataLength(data, { name: 'simple header', offset, throwIfLowData });
-    if (result.error) return result;
-    return { headerByteLength: result.dataByteLength, endOffset: result.endOffset };
-}
+export const parseSimpleHeaderLength = parseDataLength({ name: 'simple header' });
 
 export function parseHeaderData(
     { data, headerByteLength, offset = 0 }: { data: Uint8Array; headerByteLength: number; offset?: number },
@@ -206,19 +187,7 @@ export function parseSimpleHeaderData(
     return { headerData, endOffset };
 }
 
-export function parseCiphertextLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: true },
-): { ciphertextByteLength: number; endOffset: number };
-export function parseCiphertextLength(
-    opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { ciphertextByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } };
-export function parseCiphertextLength(
-    { data, offset = 0, throwIfLowData = true }: { data: Uint8Array; offset?: number; throwIfLowData?: boolean },
-): { ciphertextByteLength: number; endOffset: number; error?: never } | { error: { needByteLength: number } } {
-    const result = parseDataLength(data, { name: 'ciphertext', offset, throwIfLowData });
-    if (result.error) return result;
-    return { ciphertextByteLength: result.dataByteLength, endOffset: result.endOffset };
-}
+export const parseCiphertextLength = parseDataLength({ name: 'ciphertext' });
 
 export function parseCiphertextData(
     { data, ciphertextByteLength, offset = 0 }: { data: Uint8Array; ciphertextByteLength: number; offset?: number },
@@ -256,11 +225,13 @@ export function parseHeader(data: Uint8Array): {
     readByteLength: number;
 } {
     const { endOffset: headerLengthOffset } = validateCID({ data });
-    const { headerByteLength, endOffset: headerOffset } = parseHeaderLength({ data, offset: headerLengthOffset });
+    const { dataByteLength: headerByteLength, endOffset: headerOffset } = parseHeaderLength(
+        { data, offset: headerLengthOffset },
+    );
     const { headerData, endOffset: ciphertextLengthOffset } = parseHeaderData(
         { data, headerByteLength, offset: headerOffset },
     );
-    const { ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
+    const { dataByteLength: ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
         { data, offset: ciphertextLengthOffset },
     );
     const { ciphertextDataBytes, endOffset: readByteLength } = parseCiphertextData(
@@ -293,11 +264,11 @@ export function parseSimpleHeader(data: Uint8Array): {
     ciphertext: Uint8Array;
     readByteLength: number;
 } {
-    const { headerByteLength, endOffset: headerOffset } = parseSimpleHeaderLength({ data });
+    const { dataByteLength: headerByteLength, endOffset: headerOffset } = parseSimpleHeaderLength({ data });
     const { headerData, endOffset: ciphertextLengthOffset } = parseSimpleHeaderData(
         { data, headerByteLength, offset: headerOffset },
     );
-    const { ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
+    const { dataByteLength: ciphertextByteLength, endOffset: ciphertextOffset } = parseCiphertextLength(
         { data, offset: ciphertextLengthOffset },
     );
     const { ciphertextDataBytes, endOffset: readByteLength } = parseCiphertextData(

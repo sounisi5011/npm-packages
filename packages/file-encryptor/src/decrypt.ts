@@ -203,9 +203,9 @@ export class DecryptorTransform extends PromisifyTransform {
         });
         if (result.error) return result.error;
         return {
-            nextState: { type: 'header', headerByteLength: result.headerByteLength },
+            nextState: { type: 'header', headerByteLength: result.dataByteLength },
             nextOffset: result.endOffset,
-            needByteLength: result.headerByteLength,
+            needByteLength: result.dataByteLength,
         };
     }
 
@@ -252,11 +252,11 @@ export class DecryptorTransform extends PromisifyTransform {
         return {
             nextState: {
                 type: 'ciphertext',
-                ciphertextByteLength: result.ciphertextByteLength,
+                ciphertextByteLength: result.dataByteLength,
                 headerData,
             },
             nextOffset: result.endOffset,
-            needByteLength: result.ciphertextByteLength,
+            needByteLength: result.dataByteLength,
         };
     }
 
