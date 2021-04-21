@@ -1,4 +1,7 @@
-import { encrypt } from '../src';
+import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
+
+import { CryptAlgorithmName, decrypt, encrypt, encryptStream } from '../src';
+import { createStreamFromBuffer } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
 const password = 'dragon';
@@ -77,6 +80,43 @@ describe('encrypt()', () => {
             await expect(resultPromise).rejects.toThrow(TypeError);
             await expect(resultPromise).rejects.toThrow(
                 new TypeError(`Unknown compress algorithm was received: hoge`),
+            );
+        });
+    });
+});
+
+describe('decrypt()', () => {
+    describe('should be decryptable', () => {
+        describe.each<CryptAlgorithmName>([
+            'aes-256-gcm',
+            'chacha20-poly1305',
+        ])('%s', algorithm => {
+            it('single chunk', async () => {
+                const encryptedData = await encrypt(cleartext, password, { algorithm });
+                const decryptedData = await decrypt(encryptedData, password);
+                expect(decryptedData.equals(cleartext)).toBeTrue();
+            });
+            it('multi chunk', async () => {
+                const encryptedData = await streamToBuffer(
+                    createStreamFromBuffer(cleartext, 2)
+                        .pipe(encryptStream(password, { algorithm })),
+                );
+                const decryptedData = await decrypt(encryptedData, password);
+                expect(decryptedData.equals(cleartext)).toBeTrue();
+            });
+        });
+    });
+    describe('wrong password should fail', () => {
+        const password2 = `${password} `;
+        it.each<CryptAlgorithmName>([
+            'aes-256-gcm',
+            'chacha20-poly1305',
+        ])('%s', async algorithm => {
+            const encryptedData = await encrypt(cleartext, password, { algorithm });
+            const resultPromise = decrypt(encryptedData, password2);
+            await expect(resultPromise).rejects.toThrow(Error);
+            await expect(resultPromise).rejects.toThrow(
+                new Error(`Unsupported state or unable to authenticate data`),
             );
         });
     });
