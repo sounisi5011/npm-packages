@@ -97,7 +97,7 @@
     "random-bytes-readable-stream": "2.1.0"
   },
   "engines": {
-    "node": "12.x || 14.x || 15.x"
+    "node": "12.x || 14.x || 15.x || 16.x"
   },
   "runkitExampleFilename": "./examples/index.js"
 }
