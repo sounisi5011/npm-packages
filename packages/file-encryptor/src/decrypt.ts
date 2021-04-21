@@ -186,7 +186,6 @@ export class DecryptorTransform extends PromisifyTransform {
             data: buffer,
             ciphertextByteLength,
         });
-        const ciphertext = result.ciphertextDataBytes;
 
         const { algorithm, key } = await this.getAlgorithmAndKey(headerData);
 
@@ -198,17 +197,13 @@ export class DecryptorTransform extends PromisifyTransform {
         /**
          * Decrypt ciphertext
          */
-        let compressedCleartext: Buffer;
-        try {
-            const decipher = algorithm.createDecipher(key, headerData.nonce);
-            decipher.setAuthTag(headerData.authTag);
-            compressedCleartext = Buffer.concat([
-                decipher.update(ciphertext),
-                decipher.final(),
-            ]);
-        } catch (error) {
-            fixNodePrimordialsErrorInstance(error);
-        }
+        const compressedCleartext = this.decrypt({
+            algorithm,
+            key,
+            nonce: headerData.nonce,
+            authTag: headerData.authTag,
+            ciphertext: result.ciphertextDataBytes,
+        });
 
         /**
          * Decompress cleartext
@@ -255,6 +250,27 @@ export class DecryptorTransform extends PromisifyTransform {
                 algorithm: headerData.algorithm,
                 key: headerData.key,
             };
+        }
+    }
+
+    private decrypt(
+        { algorithm, key, nonce, authTag, ciphertext }: {
+            algorithm: CryptAlgorithm;
+            key: Uint8Array;
+            nonce: Uint8Array;
+            authTag: Uint8Array;
+            ciphertext: Uint8Array;
+        },
+    ): Buffer {
+        try {
+            const decipher = algorithm.createDecipher(key, nonce);
+            decipher.setAuthTag(authTag);
+            return Buffer.concat([
+                decipher.update(ciphertext),
+                decipher.final(),
+            ]);
+        } catch (error) {
+            fixNodePrimordialsErrorInstance(error);
         }
     }
 }
