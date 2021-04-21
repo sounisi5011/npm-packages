@@ -13,6 +13,7 @@ import {
 } from './header';
 import { deriveKey } from './key-derivation-function';
 import { nonceState } from './nonce';
+import { fixNodePrimordialsErrorInstance } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface DecryptedData {
@@ -197,12 +198,17 @@ export class DecryptorTransform extends PromisifyTransform {
         /**
          * Decrypt ciphertext
          */
-        const decipher = algorithm.createDecipher(key, headerData.nonce);
-        decipher.setAuthTag(headerData.authTag);
-        const compressedCleartext = Buffer.concat([
-            decipher.update(ciphertext),
-            decipher.final(),
-        ]);
+        let compressedCleartext: Buffer;
+        try {
+            const decipher = algorithm.createDecipher(key, headerData.nonce);
+            decipher.setAuthTag(headerData.authTag);
+            compressedCleartext = Buffer.concat([
+                decipher.update(ciphertext),
+                decipher.final(),
+            ]);
+        } catch (error) {
+            fixNodePrimordialsErrorInstance(error);
+        }
 
         /**
          * Decompress cleartext

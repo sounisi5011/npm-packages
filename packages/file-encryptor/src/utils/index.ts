@@ -34,6 +34,35 @@ export function printObject(value: unknown): string {
     return inspect(value, { breakLength: Infinity });
 }
 
+function isErrorConstructor(value: unknown): value is ErrorConstructor {
+    /**
+     * @see https://stackoverflow.com/a/14486171/4907315
+     */
+    return typeof value === 'function' && value.prototype instanceof Error;
+}
+
+export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
+    /* eslint-disable @typescript-eslint/dot-notation */
+    if (
+        isObject(oldError)
+        && !(oldError instanceof Error)
+        && typeof oldError['name'] === 'string'
+        && typeof oldError['message'] === 'string'
+    ) {
+        const name = oldError['name'];
+        const detectConstructor = (globalThis as Record<string, unknown>)[name];
+        const ErrorConstructor = isErrorConstructor(detectConstructor) ? detectConstructor : Error;
+        const newError = new ErrorConstructor();
+        Object.defineProperties(
+            newError,
+            Object.getOwnPropertyDescriptors(oldError),
+        );
+        throw newError;
+    }
+    throw oldError;
+    /* eslint-enable */
+}
+
 /**
  * The Node.js built-in function throws a pseudo Error object that does not extend the Error object.
  * Their stack trace is incomplete and errors are difficult to trace.
