@@ -96,7 +96,7 @@ jobs:
       - name: Install Protocol Buffers compiler
         # https://snapcraft.io/protobuf
         run: |
-          sudo snap install protobuf
+          sudo snap install protobuf --classic
           protoc --version
       - run: pnpx run-s build build-*
       - name: Check changes
