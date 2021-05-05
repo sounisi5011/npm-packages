@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+message Argon2Options {
+  enum Argon2Type {
+    Argon2d = 0;
+    Argon2id = 1;
+  }
+
+  Argon2Type type = 1;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
+  uint32 time_iterations = 2;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
+  uint32 memory_kib = 3;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L301
+  uint32 parallelism = 4;
+}
+
+message Header {
+  enum CryptAlgorithm {
+    AES_256_GCM = 0;
+    ChaCha20_Poly1305 = 1;
+  }
+  enum CompressAlgorithm {
+    None = 0;
+    Gzip = 1;
+    Brotli = 2;
+  }
+
+  CryptAlgorithm crypt_algorithm = 1;
+  bytes key_salt = 2;
+  uint32 key_length = 3;
+  oneof key_options {
+    Argon2Options argon2_key_options = 15;
+  }
+  bytes crypt_nonce = 4;
+  bytes crypt_auth_tag = 5;
+  CompressAlgorithm compress_algorithm = 6;
+}
+
+message SimpleHeader {
+  bytes crypt_nonce = 1;
+  bytes crypt_auth_tag = 2;
+}

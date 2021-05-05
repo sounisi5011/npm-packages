@@ -10,6 +10,9 @@ exclude_patterns:
   - "**/*.test-d.ts"
   # Generated files by the FlatBuffers compiler
   - "**/flatbuffers/*_generated.ts"
+  # Generated files by the Protocol Buffers compiler
+  - "**/protocol-buffers/*_pb.js"
+  - "**/protocol-buffers/*_pb.d.ts"
   # default exclude patterns
   # see https://docs.codeclimate.com/docs/excluding-files-and-folders#section-auto-generated-file-and-folder-exclusions
   - "config/"

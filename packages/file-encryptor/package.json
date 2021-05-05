@@ -61,12 +61,15 @@
     "./dist/"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "run-p build:*",
     "build-flatbuffers": "run-p build-flatbuffers:*",
     "build-flatbuffers:src": "run-s build-flatbuffers:src:flatc build-flatbuffers:src:fix",
     "build-flatbuffers:src:fix": "globby-exec fix-flatbuffers-generated-ts '{{src/**/flatbuffers/*_generated.ts}}'",
     "build-flatbuffers:src:flatc": "globby-exec flatc --ts --short-names -o ./src/header/flatbuffers/ '{{src/header/flatbuffers/*.fbs}}'",
     "build-flatbuffers:test": "globby-exec flatc --binary -o ./tests/unit/fixtures/ ./src/header/flatbuffers/header.fbs '{{tests/unit/fixtures/*.json}}'",
+    "build-protobuf": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
+    "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
+    "build:tsc": "tsc",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
@@ -79,6 +82,7 @@
     "@jorgeferrero/stream-to-buffer": "^2.0.6",
     "argon2-browser": "^1.15.4",
     "flatbuffers": "^1.12.0",
+    "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
   },
   "devDependencies": {
@@ -88,9 +92,12 @@
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
     "@types/flatbuffers": "1.10.0",
+    "@types/google-protobuf": "3.15.2",
     "@types/node": "*",
     "@types/varint": "6.0.0",
     "combinate": "1.1.3",
+    "cpy-cli": "3.1.1",
+    "grpc_tools_node_protoc_ts": "5.2.1",
     "jest-extended": "0.11.5",
     "multicodec": "3.0.1",
     "noop-stream": "0.1.0",

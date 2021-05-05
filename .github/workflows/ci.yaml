@@ -93,7 +93,12 @@ jobs:
         run: |
           sudo snap install flatbuffers
           flatc --version
-      - run: pnpx run-s build build-flatbuffers
+      - name: Install Protocol Buffers compiler
+        # https://snapcraft.io/protobuf
+        run: |
+          sudo snap install protobuf
+          protoc --version
+      - run: pnpx run-s build build-*
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
