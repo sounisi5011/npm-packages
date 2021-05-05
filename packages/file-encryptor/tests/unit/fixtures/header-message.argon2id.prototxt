@@ -1,0 +1,12 @@
+crypt_algorithm: AES_256_GCM
+key_salt: ""
+key_length: 666
+argon2_key_options {
+  type: Argon2id
+  time_iterations: 1
+  memory_kib: 6
+  parallelism: 99
+}
+crypt_nonce: "\xFF"
+crypt_auth_tag: "\x08"
+compress_algorithm: None
