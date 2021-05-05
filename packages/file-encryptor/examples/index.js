@@ -71,4 +71,7 @@ const password = '123456';
     );
     console.log('Decrypted File String:', await fsPromises.readFile(decryptedDataFilepath, 'utf8'));
   }
-})();
+})().catch(error => {
+  process.exitCode = 1;
+  process.stderr.write(util.inspect(error) + '\n');
+});
