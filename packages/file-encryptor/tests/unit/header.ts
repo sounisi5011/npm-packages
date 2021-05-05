@@ -11,6 +11,8 @@ import {
     HeaderDataWithCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
+    parseSimpleHeaderData,
+    SimpleHeaderData,
     validateCID,
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
@@ -165,10 +167,10 @@ describe('parseHeaderLength()', () => {
 });
 
 describe('parseHeaderData()', () => {
-    describe('parse FlatBuffer binary', () => {
+    describe('parse Protocol Buffers binary', () => {
         it.each<[string, HeaderData]>([
             [
-                'header-table.basic.bin',
+                'header-message.basic.bin',
                 {
                     algorithmName: 'aes-256-gcm',
                     salt: new Uint8Array([9, 8, 7]),
@@ -185,7 +187,24 @@ describe('parseHeaderData()', () => {
                 },
             ],
             [
-                'header-table.chacha20-poly1305.bin',
+                'header-message.full-length.bin',
+                {
+                    algorithmName: 'chacha20-poly1305',
+                    salt: new Uint8Array([...Array(256 / 8).keys()]),
+                    keyLength: 32,
+                    keyDerivationOptions: {
+                        algorithm: 'argon2d',
+                        iterations: 3,
+                        memory: 12,
+                        parallelism: 1,
+                    },
+                    nonce: new Uint8Array([...Array(96 / 8).keys()]),
+                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                    compressAlgorithmName: 'brotli',
+                },
+            ],
+            [
+                'header-message.chacha20-poly1305.bin',
                 {
                     algorithmName: 'chacha20-poly1305',
                     salt: new Uint8Array([0, 1, 2]),
@@ -202,7 +221,7 @@ describe('parseHeaderData()', () => {
                 },
             ],
             [
-                'header-table.argon2id.bin',
+                'header-message.argon2id.bin',
                 {
                     algorithmName: 'aes-256-gcm',
                     salt: new Uint8Array([]),
@@ -219,7 +238,7 @@ describe('parseHeaderData()', () => {
                 },
             ],
             [
-                'header-table.compress-gzip.bin',
+                'header-message.compress-gzip.bin',
                 {
                     algorithmName: 'aes-256-gcm',
                     salt: new Uint8Array([9, 8, 7]),
@@ -236,7 +255,7 @@ describe('parseHeaderData()', () => {
                 },
             ],
             [
-                'header-table.compress-brotli.bin',
+                'header-message.compress-brotli.bin',
                 {
                     algorithmName: 'aes-256-gcm',
                     salt: new Uint8Array([9, 8, 7]),
@@ -270,7 +289,48 @@ describe('parseHeaderData()', () => {
             const data = crypto.randomBytes(actualLen);
             expect(() => parseHeaderData({ data, headerByteLength: needLen })).toThrowWithMessage(
                 Error,
-                `Could not read header table. ${needLen} byte length header is required. Received data: ${actualLen} bytes`,
+                `Could not read header data. ${needLen} byte length header is required. Received data: ${actualLen} bytes`,
+            );
+        });
+    });
+});
+
+describe('parseSimpleHeaderData()', () => {
+    describe('parse Protocol Buffers binary', () => {
+        it.each<[string, SimpleHeaderData]>([
+            [
+                'simple-header-message.basic.bin',
+                {
+                    nonce: new Uint8Array([1, 2, 3]),
+                    authTag: new Uint8Array([4, 5, 6]),
+                },
+            ],
+            [
+                'simple-header-message.full-length.bin',
+                {
+                    nonce: new Uint8Array([...Array(96 / 8).keys()]),
+                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                },
+            ],
+        ])('%s', async (filename, expected) => {
+            const filepath = path.resolve(__dirname, 'fixtures', filename);
+            const data = await fsAsync.readFile(filepath);
+            const result = parseSimpleHeaderData({ data, headerByteLength: data.byteLength });
+            expect(result.headerData).toStrictEqual(expected);
+        });
+    });
+    describe('invalid length bytes', () => {
+        it.each([
+            [9, 0],
+            [7, 3],
+            [11, 10],
+            [11, 10],
+            [300, 259],
+        ])('need %i bytes / actual %i bytes', (needLen, actualLen) => {
+            const data = crypto.randomBytes(actualLen);
+            expect(() => parseSimpleHeaderData({ data, headerByteLength: needLen })).toThrowWithMessage(
+                Error,
+                `Could not read simple header data. ${needLen} byte length simple header is required. Received data: ${actualLen} bytes`,
             );
         });
     });
