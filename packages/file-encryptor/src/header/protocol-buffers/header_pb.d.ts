@@ -42,6 +42,14 @@ export namespace Argon2Options {
 }
 
 export class Header extends jspb.Message { 
+    getCryptNonce(): Uint8Array | string;
+    getCryptNonce_asU8(): Uint8Array;
+    getCryptNonce_asB64(): string;
+    setCryptNonce(value: Uint8Array | string): Header;
+    getCryptAuthTag(): Uint8Array | string;
+    getCryptAuthTag_asU8(): Uint8Array;
+    getCryptAuthTag_asB64(): string;
+    setCryptAuthTag(value: Uint8Array | string): Header;
     getCryptAlgorithm(): Header.CryptAlgorithm;
     setCryptAlgorithm(value: Header.CryptAlgorithm): Header;
     getKeySalt(): Uint8Array | string;
@@ -55,14 +63,6 @@ export class Header extends jspb.Message {
     clearArgon2KeyOptions(): void;
     getArgon2KeyOptions(): Argon2Options | undefined;
     setArgon2KeyOptions(value?: Argon2Options): Header;
-    getCryptNonce(): Uint8Array | string;
-    getCryptNonce_asU8(): Uint8Array;
-    getCryptNonce_asB64(): string;
-    setCryptNonce(value: Uint8Array | string): Header;
-    getCryptAuthTag(): Uint8Array | string;
-    getCryptAuthTag_asU8(): Uint8Array;
-    getCryptAuthTag_asB64(): string;
-    setCryptAuthTag(value: Uint8Array | string): Header;
     getCompressAlgorithm(): Header.CompressAlgorithm;
     setCompressAlgorithm(value: Header.CompressAlgorithm): Header;
 
@@ -80,12 +80,12 @@ export class Header extends jspb.Message {
 
 export namespace Header {
     export type AsObject = {
+        cryptNonce: Uint8Array | string,
+        cryptAuthTag: Uint8Array | string,
         cryptAlgorithm: Header.CryptAlgorithm,
         keySalt: Uint8Array | string,
         keyLength: number,
         argon2KeyOptions?: Argon2Options.AsObject,
-        cryptNonce: Uint8Array | string,
-        cryptAuthTag: Uint8Array | string,
         compressAlgorithm: Header.CompressAlgorithm,
     }
 
@@ -106,31 +106,4 @@ export namespace Header {
         ARGON2_KEY_OPTIONS = 15,
     }
 
-}
-
-export class SimpleHeader extends jspb.Message { 
-    getCryptNonce(): Uint8Array | string;
-    getCryptNonce_asU8(): Uint8Array;
-    getCryptNonce_asB64(): string;
-    setCryptNonce(value: Uint8Array | string): SimpleHeader;
-    getCryptAuthTag(): Uint8Array | string;
-    getCryptAuthTag_asU8(): Uint8Array;
-    getCryptAuthTag_asB64(): string;
-    setCryptAuthTag(value: Uint8Array | string): SimpleHeader;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): SimpleHeader.AsObject;
-    static toObject(includeInstance: boolean, msg: SimpleHeader): SimpleHeader.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: SimpleHeader, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): SimpleHeader;
-    static deserializeBinaryFromReader(message: SimpleHeader, reader: jspb.BinaryReader): SimpleHeader;
-}
-
-export namespace SimpleHeader {
-    export type AsObject = {
-        cryptNonce: Uint8Array | string,
-        cryptAuthTag: Uint8Array | string,
-    }
 }
