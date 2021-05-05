@@ -35,11 +35,10 @@ const dummyHeaderData: HeaderDataWithCiphertextLength = {
     nonce: new Uint8Array(),
     authTag: new Uint8Array(),
     compressAlgorithmName: 'gzip',
-    ciphertextLength: 0,
+    ciphertextLength: 123456,
 };
 
 const cidByte = Buffer.from(cidByteList);
-const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
 
 describe('createHeader()', () => {
     describe('multicodec compliant', () => {
@@ -67,21 +66,58 @@ describe('createHeader()', () => {
         it('correct length', () => {
             const headerData = createHeader(dummyHeaderData);
             const headerLenStartOffset = 0 + cidByte.byteLength;
+            const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
             {
                 const headerLength = varint.decode(headerData, headerLenStartOffset);
                 const headerLengthVarintBytes = varint.decode.bytes;
                 expect(headerData.byteLength).toBe(
-                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByte.byteLength,
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
             {
                 const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
                 const headerLengthVarintBytes = varint.decode.bytes;
                 expect(headerData.byteLength).toBe(
-                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByte.byteLength,
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
         });
+    });
+    it('ciphertext byte length included', () => {
+        const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
+        const headerData = createHeader(dummyHeaderData);
+        const headerInCiphertextLenBytes = headerData.subarray(
+            headerData.byteLength - ciphertextLengthByte.byteLength,
+            headerData.byteLength,
+        );
+        expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
+    });
+});
+
+describe('createSimpleHeader()', () => {
+    describe('header byte length included', () => {
+        it('can read', () => {
+            const headerData = createSimpleHeader(dummyHeaderData);
+            const headerStartOffset = 0;
+            expect(() => varint.decode(headerData, headerStartOffset)).not.toThrow();
+            expect(() => varint.decode(headerData.subarray(headerStartOffset))).not.toThrow();
+        });
+        it('correct length', () => {
+            const headerData = createSimpleHeader(dummyHeaderData);
+            const headerLength = varint.decode(headerData);
+            const headerLengthVarintBytes = varint.decode.bytes;
+            const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
+            expect(headerData.byteLength).toBe(
+                headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
+            );
+        });
+    });
+    it('ciphertext byte length included', () => {
+        const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
+        const headerData = createSimpleHeader(dummyHeaderData);
+        const headerInCiphertextLenBytes = headerData
+            .subarray(headerData.byteLength - ciphertextLengthByte.byteLength, headerData.byteLength);
+        expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
     });
 });
 
