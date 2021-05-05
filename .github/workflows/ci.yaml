@@ -101,7 +101,7 @@ jobs:
       - run: pnpx run-s build build-*
       - name: Check changes
         if: ${{ always() }}
-        run: git diff --name-only --exit-code
+        run: git diff --exit-code
   unit-test:
     runs-on: ubuntu-latest
     strategy:
