@@ -10,9 +10,12 @@ import {
     createSimpleHeader,
     HeaderData,
     HeaderDataWithCiphertextLength,
+    parseCiphertextData,
+    parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
     parseSimpleHeaderData,
+    parseSimpleHeaderLength,
     SimpleHeaderData,
     validateCID,
 } from '../../src/header';
@@ -368,6 +371,43 @@ describe('parseHeaderData()', () => {
     });
 });
 
+describe('parseSimpleHeaderLength()', () => {
+    describe('invalid simple header byte length', () => {
+        it.each([
+            ['zero length bytes', Buffer.from([])],
+            ['invalid varint', Buffer.from([0xFF])],
+            ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
+        ])('%s', (_, data) => {
+            expect(() => parseSimpleHeaderLength({ data })).toThrowWithMessage(
+                Error,
+                `Could not decode simple header size. The byte length of the simple header encoded as unsigned varint is required.`,
+            );
+        });
+        it('zero length data', () => {
+            const data = Buffer.from([0x00]);
+            expect(() => parseSimpleHeaderLength({ data })).toThrowWithMessage(
+                Error,
+                `Invalid simple header byte length received: 0`,
+            );
+        });
+    });
+    describe('throwIfLowData=false', () => {
+        it.each(rangeArray(1, 12))('<Buffer 0xFF x %i>', length => {
+            const data = Buffer.from(rangeArray(1, length).fill(0xFF));
+            if (data.byteLength < 9) {
+                expect(parseSimpleHeaderLength({ data, throwIfLowData: false })).toStrictEqual({
+                    error: { needByteLength: 9 },
+                });
+            } else {
+                expect(() => parseSimpleHeaderLength({ data, throwIfLowData: false })).toThrowWithMessage(
+                    Error,
+                    `Could not decode simple header size. The byte length of the simple header encoded as unsigned varint is required.`,
+                );
+            }
+        });
+    });
+});
+
 describe('parseSimpleHeaderData()', () => {
     describe('parse generated data by createSimpleHeader()', () => {
         const headerData: SimpleHeaderData = {
@@ -465,6 +505,131 @@ describe('parseSimpleHeaderData()', () => {
             expect(() => parseSimpleHeaderData({ data, headerByteLength: needLen })).toThrowWithMessage(
                 Error,
                 `Could not read simple header data. ${needLen} byte length simple header is required. Received data: ${actualLen} bytes`,
+            );
+        });
+    });
+});
+
+describe('parseCiphertextLength()', () => {
+    describe('invalid ciphertext byte length', () => {
+        it.each([
+            ['zero length bytes', Buffer.from([])],
+            ['invalid varint', Buffer.from([0xFF])],
+            ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
+        ])('%s', (_, data) => {
+            expect(() => parseCiphertextLength({ data })).toThrowWithMessage(
+                Error,
+                `Could not decode ciphertext size. The byte length of the ciphertext encoded as unsigned varint is required.`,
+            );
+        });
+        it('zero length data', () => {
+            const data = Buffer.from([0x00]);
+            expect(() => parseCiphertextLength({ data })).toThrowWithMessage(
+                Error,
+                `Invalid ciphertext byte length received: 0`,
+            );
+        });
+    });
+    describe('throwIfLowData=false', () => {
+        it.each(rangeArray(1, 12))('<Buffer 0xFF x %i>', length => {
+            const data = Buffer.from(rangeArray(1, length).fill(0xFF));
+            if (data.byteLength < 9) {
+                expect(parseCiphertextLength({ data, throwIfLowData: false })).toStrictEqual({
+                    error: { needByteLength: 9 },
+                });
+            } else {
+                expect(() => parseCiphertextLength({ data, throwIfLowData: false })).toThrowWithMessage(
+                    Error,
+                    `Could not decode ciphertext size. The byte length of the ciphertext encoded as unsigned varint is required.`,
+                );
+            }
+        });
+    });
+});
+
+describe('parseCiphertextData()', () => {
+    describe('larger data than needed byte length', () => {
+        const data = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        const ciphertextByteLength = 6;
+        it.each<[string, { offset?: number }, ReturnType<typeof parseCiphertextData>]>([
+            [
+                'offset=undefined',
+                {},
+                { ciphertextDataBytes: data.subarray(0, ciphertextByteLength), endOffset: ciphertextByteLength },
+            ],
+            [
+                'offset=0',
+                { offset: 0 },
+                { ciphertextDataBytes: data.subarray(0, ciphertextByteLength), endOffset: ciphertextByteLength },
+            ],
+            [
+                'offset defined',
+                { offset: 2 },
+                {
+                    ciphertextDataBytes: data.subarray(2, ciphertextByteLength + 2),
+                    endOffset: ciphertextByteLength + 2,
+                },
+            ],
+        ])('%s', (_, opts, expected) => {
+            expect(() => {
+                const result = parseCiphertextData({ data, ciphertextByteLength: 6, ...opts });
+                expect(result).toStrictEqual(expected);
+            }).not.toThrow();
+        });
+    });
+    describe('same size data as needed byte length', () => {
+        const data = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        it.each<[string, { ciphertextByteLength: number; offset?: number }, ReturnType<typeof parseCiphertextData>]>([
+            [
+                'offset=undefined',
+                { ciphertextByteLength: data.byteLength },
+                { ciphertextDataBytes: data, endOffset: data.byteLength },
+            ],
+            [
+                'offset=0',
+                { ciphertextByteLength: data.byteLength, offset: 0 },
+                { ciphertextDataBytes: data, endOffset: data.byteLength },
+            ],
+            [
+                'offset defined',
+                { ciphertextByteLength: data.byteLength - 2, offset: 2 },
+                { ciphertextDataBytes: data.subarray(2, data.byteLength), endOffset: data.byteLength },
+            ],
+        ])('%s', (_, opts, expected) => {
+            expect(() => {
+                const result = parseCiphertextData({ data, ...opts });
+                expect(result).toStrictEqual(expected);
+            }).not.toThrow();
+        });
+    });
+    describe('smaller data than required byte length', () => {
+        const data = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        it.each<[string, { ciphertextByteLength: number; offset?: number }, string]>([
+            [
+                'offset=undefined',
+                { ciphertextByteLength: 99 },
+                `Could not read ciphertext. 99 byte length ciphertext is required. Received data: ${data.byteLength} bytes`,
+            ],
+            [
+                'offset=0',
+                { ciphertextByteLength: 99, offset: 0 },
+                `Could not read ciphertext. 99 byte length ciphertext is required. Received data: ${data.byteLength} bytes`,
+            ],
+            [
+                'offset defined',
+                { ciphertextByteLength: data.byteLength, offset: 1 },
+                `Could not read ciphertext. ${data.byteLength} byte length ciphertext is required.`
+                + ` Received data: ${data.byteLength - 1} bytes`,
+            ],
+            [
+                'offset is greater than data length',
+                { ciphertextByteLength: 2, offset: data.byteLength + 1 },
+                `Could not read ciphertext. 2 byte length ciphertext is required. Received data: 0 bytes`,
+            ],
+        ])('%s', (_, opts, expectedErrorMessage) => {
+            expect(() => parseCiphertextData({ data, ...opts })).toThrowWithMessage(
+                Error,
+                expectedErrorMessage,
             );
         });
     });
