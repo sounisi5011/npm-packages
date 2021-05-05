@@ -7,6 +7,7 @@ import * as varint from 'varint';
 
 import {
     createHeader,
+    createSimpleHeader,
     HeaderData,
     HeaderDataWithCiphertextLength,
     parseHeaderData,
@@ -167,6 +168,78 @@ describe('parseHeaderLength()', () => {
 });
 
 describe('parseHeaderData()', () => {
+    describe('parse generated data by createHeader()', () => {
+        const headerData: HeaderData = {
+            algorithmName: 'chacha20-poly1305',
+            salt: new Uint8Array([0, 1, 2]),
+            keyLength: 6,
+            keyDerivationOptions: {
+                algorithm: 'argon2d',
+                iterations: 2,
+                memory: 12,
+                parallelism: 4,
+            },
+            nonce: new Uint8Array([9, 8, 7]),
+            authTag: new Uint8Array([4, 6, 8]),
+            compressAlgorithmName: 'gzip',
+        };
+        const headerDataBuffer = createHeader({ ...headerData, ciphertextLength: 0 });
+        const headerLengthStartOffset = 0 + cidByte.byteLength;
+        const headerByteLength = varint.decode(headerDataBuffer, headerLengthStartOffset);
+        const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
+
+        it('offset=undefined', () => {
+            const result = parseHeaderData({
+                data: headerDataBuffer.subarray(headerDataStartOffset),
+                headerByteLength,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        it('offset=0', () => {
+            const result = parseHeaderData({
+                data: headerDataBuffer.subarray(headerDataStartOffset),
+                headerByteLength,
+                offset: 0,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        it('offset defined', () => {
+            const result = parseHeaderData({
+                data: headerDataBuffer,
+                headerByteLength,
+                offset: headerDataStartOffset,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        describe('invalid offset defined', () => {
+            it('offset=undefined', () => {
+                expect(() =>
+                    parseHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                    })
+                ).toThrow();
+            });
+            it('offset=0', () => {
+                expect(() =>
+                    parseHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                        offset: 0,
+                    })
+                ).toThrow();
+            });
+            it('offset=+1', () => {
+                expect(() =>
+                    parseHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                        offset: headerDataStartOffset + 1,
+                    })
+                ).toThrow();
+            });
+        });
+    });
     describe('parse Protocol Buffers binary', () => {
         it.each<[string, HeaderData]>([
             [
@@ -296,6 +369,67 @@ describe('parseHeaderData()', () => {
 });
 
 describe('parseSimpleHeaderData()', () => {
+    describe('parse generated data by createSimpleHeader()', () => {
+        const headerData: SimpleHeaderData = {
+            nonce: new Uint8Array([2, 3, 4]),
+            authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+        };
+        const headerDataBuffer = createSimpleHeader({ ...headerData, ciphertextLength: 0 });
+        const headerByteLength = varint.decode(headerDataBuffer);
+        const headerDataStartOffset = varint.decode.bytes;
+
+        it('offset=undefined', () => {
+            const result = parseSimpleHeaderData({
+                data: headerDataBuffer.subarray(headerDataStartOffset),
+                headerByteLength,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        it('offset=0', () => {
+            const result = parseSimpleHeaderData({
+                data: headerDataBuffer.subarray(headerDataStartOffset),
+                headerByteLength,
+                offset: 0,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        it('offset defined', () => {
+            const result = parseSimpleHeaderData({
+                data: headerDataBuffer,
+                headerByteLength,
+                offset: headerDataStartOffset,
+            });
+            expect(result.headerData).toStrictEqual(headerData);
+        });
+        describe('invalid offset defined', () => {
+            it('offset=undefined', () => {
+                expect(() =>
+                    parseSimpleHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                    })
+                ).toThrow();
+            });
+            it('offset=0', () => {
+                expect(() =>
+                    parseSimpleHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                        offset: 0,
+                    })
+                ).toThrow();
+            });
+            it('offset=+1', () => {
+                expect(() =>
+                    parseSimpleHeaderData({
+                        data: headerDataBuffer,
+                        headerByteLength,
+                        offset: headerDataStartOffset + 1,
+                    })
+                ).toThrow();
+            });
+        });
+    });
     describe('parse Protocol Buffers binary', () => {
         it.each<[string, SimpleHeaderData]>([
             [
