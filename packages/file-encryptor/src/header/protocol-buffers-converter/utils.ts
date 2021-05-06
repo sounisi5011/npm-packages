@@ -23,10 +23,6 @@ export function validateBytesField(
     return value;
 }
 
-interface Enum2valueFuncPair<TEnum, TValue> {
-    enum2value: (enumItem: Nullable<TEnum>, exists: boolean, opts: { fieldName: string; dataName: string }) => TValue;
-    value2enum: (value: TValue) => TEnum;
-}
 export function createEnum2value<TValue>(): (
     <TEnumKey extends string, TEnum>(enumRecord: Record<TEnumKey, TEnum>) => (
         <TEnum2 extends TEnum, TValue2 extends TValue>(
@@ -50,7 +46,14 @@ export function createEnum2value<TValue>(): (
                     allMatch: unknown;
                     notAllMatch: 'Invalid: All Enum type values and all value types must be specified';
                 }>,
-        ) => Enum2valueFuncPair<TEnum2, TValue2>
+        ) => {
+            enum2value: (
+                enumItem: Nullable<TEnum2>,
+                exists: boolean,
+                opts: { fieldName: string; dataName: string },
+            ) => TValue2;
+            value2enum: (value: TValue2) => TEnum2;
+        }
     )
 ) {
     return enumRecord =>
@@ -67,9 +70,7 @@ export function createEnum2value<TValue>(): (
                         reportNonDefinedField({ fieldName, dataName });
                     }
                     const value = enum2valueMap.get(enumItem);
-                    if (value) {
-                        return value.data;
-                    }
+                    if (value) return value.data;
                     throw new Error(
                         `The value in the ${fieldName} field in the ${dataName} is unknown.`
                             + ` Received: ${getPropFromValue(enumRecord, enumItem) ?? printObject(enumItem)}`,
