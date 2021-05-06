@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import { CryptAlgorithm, cryptAlgorithmMap, CryptAlgorithmName, defaultCryptAlgorithmName } from './cipher';
 import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
-import { deriveKey, KeyDerivationOptions, SALT_LENGTH_BYTES } from './key-derivation-function';
+import { getKDF, KeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { PromisifyTransform } from './utils/stream';
 
@@ -37,13 +37,13 @@ export async function encryptFirstChunk(
     /**
      * Generate key
      */
-    const salt = randomBytes(SALT_LENGTH_BYTES);
+    const { deriveKey, saltLength } = getKDF(options.keyDerivation);
+    const salt = randomBytes(saltLength);
     const keyLength = algorithm.keyLength;
     const { key, normalizedOptions: normalizedKeyDerivationOptions } = await deriveKey(
         password,
         salt,
         keyLength,
-        options.keyDerivation,
     );
 
     /**

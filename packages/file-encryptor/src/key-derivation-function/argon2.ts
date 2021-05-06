@@ -1,6 +1,6 @@
 import argon2 from 'argon2-browser';
 
-import type { BaseKeyDerivationOptions, DeriveKeyResult } from '.';
+import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 
 const typeNameList = ['argon2d', 'argon2id'] as const;
 
@@ -20,6 +20,15 @@ export const defaultOptions: NormalizedArgon2Options = {
     parallelism: 1,
 };
 
+/**
+ * > 9 Recommended parameters
+ * > 5. Select the salt length. 128 bits is sufficient for all applications, but can be reduced to 64 bits in the case
+ * >    of space constraints.
+ * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
+ * @see https://www.ory.sh/choose-recommended-argon2-parameters-password-hashing/
+ */
+const SALT_LEN = 128 / 8;
+
 export function isArgon2Options<T extends Partial<BaseKeyDerivationOptions>>(
     options: T,
 ): options is T extends Argon2Options ? T : never {
@@ -29,12 +38,7 @@ export function isArgon2Options<T extends Partial<BaseKeyDerivationOptions>>(
     return false;
 }
 
-export async function deriveArgon2Key(
-    password: string | Uint8Array,
-    salt: Uint8Array,
-    keyLengthBytes: number,
-    options: Readonly<Argon2Options>,
-): Promise<DeriveKeyResult<NormalizedArgon2Options>> {
+export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<NormalizedArgon2Options> {
     const normalizedOptions = { ...defaultOptions, ...options };
 
     let type: argon2.ArgonType;
@@ -47,14 +51,19 @@ export async function deriveArgon2Key(
         throw new TypeError(`Invalid Argon2 type received: ${normalizedOptions.algorithm}`);
     }
 
-    const { hash: key } = await argon2.hash({
-        pass: password,
-        salt,
-        time: normalizedOptions.iterations,
-        mem: normalizedOptions.memory,
-        hashLen: keyLengthBytes,
-        parallelism: normalizedOptions.parallelism,
-        type,
-    });
-    return { key, normalizedOptions };
+    return {
+        async deriveKey(password, salt, keyLengthBytes) {
+            const { hash: key } = await argon2.hash({
+                pass: password,
+                salt,
+                time: normalizedOptions.iterations,
+                mem: normalizedOptions.memory,
+                hashLen: keyLengthBytes,
+                parallelism: normalizedOptions.parallelism,
+                type,
+            });
+            return { key, normalizedOptions };
+        },
+        saltLength: SALT_LEN,
+    };
 }

@@ -302,7 +302,7 @@ describe('parseHeaderData()', () => {
                 'header-message.full-length.bin',
                 {
                     algorithmName: 'chacha20-poly1305',
-                    salt: new Uint8Array([...Array(256 / 8).keys()]),
+                    salt: new Uint8Array([...Array(128 / 8).keys()]),
                     keyLength: 32,
                     keyDerivationOptions: {
                         algorithm: 'argon2d',

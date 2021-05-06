@@ -11,7 +11,7 @@ import {
     SimpleHeaderData,
     validateCID,
 } from './header';
-import { deriveKey } from './key-derivation-function';
+import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { fixNodePrimordialsErrorInstance } from './utils';
 import { PromisifyTransform } from './utils/stream';
@@ -231,12 +231,12 @@ export class DecryptorTransform extends PromisifyTransform {
             /**
              * Generate key
              */
-            const { key } = await deriveKey(
-                this.password,
-                headerData.salt,
-                headerData.keyLength,
-                headerData.keyDerivationOptions,
-            );
+            const { key } = await getKDF(headerData.keyDerivationOptions)
+                .deriveKey(
+                    this.password,
+                    headerData.salt,
+                    headerData.keyLength,
+                );
 
             this.decryptorMetadata = {
                 algorithm,
