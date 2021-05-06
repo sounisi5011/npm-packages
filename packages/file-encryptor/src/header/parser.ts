@@ -1,10 +1,8 @@
-import { flatbuffers } from 'flatbuffers';
-
 import { number2hex } from '../utils';
 import { cidNumber } from './content-identifier';
-import { Header, SimpleHeader } from './flatbuffers/header_generated';
-import { parseFbsHeaderTable } from './flatbuffers/headerTable';
-import { parseFbsSimpleHeaderTable } from './flatbuffers/simpleHeaderTable';
+import { parseProtobufHeader } from './protocol-buffers-converter/header';
+import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
+import { Header } from './protocol-buffers/header_pb';
 import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
 
 export function validateCID(
@@ -44,14 +42,13 @@ export const parseSimpleHeaderLength = parseDataLength({ name: 'simple header' }
 export const parseHeaderData = createHeaderDataParser({
     name: 'header',
     longname: 'header data',
-    genHeaderData: headerDataBytes => parseFbsHeaderTable(Header.getRoot(new flatbuffers.ByteBuffer(headerDataBytes))),
+    genHeaderData: headerDataBytes => parseProtobufHeader(Header.deserializeBinary(headerDataBytes)),
 });
 
 export const parseSimpleHeaderData = createHeaderDataParser({
     name: 'simple header',
     longname: 'simple header data',
-    genHeaderData: headerDataBytes =>
-        parseFbsSimpleHeaderTable(SimpleHeader.getRoot(new flatbuffers.ByteBuffer(headerDataBytes))),
+    genHeaderData: headerDataBytes => parseProtobufSimpleHeader(Header.deserializeBinary(headerDataBytes)),
 });
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext' });

@@ -1,12 +1,11 @@
-import { flatbuffers } from 'flatbuffers';
 import { encode as varintEncode } from 'varint';
 
 import type { CryptAlgorithmName } from '../cipher';
 import type { CompressAlgorithmName } from '../compress';
 import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
 import { cidByteList } from './content-identifier';
-import { createFbsHeaderTable } from './flatbuffers/headerTable';
-import { createFbsSimpleHeaderTable } from './flatbuffers/simpleHeaderTable';
+import { createProtobufHeader } from './protocol-buffers-converter/header';
+import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 
 export interface SimpleHeaderData {
     nonce: Uint8Array;
@@ -30,17 +29,11 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
 }
 
 function createHeaderDataBinary(headerData: HeaderData): Uint8Array {
-    const fbsBuilder = new flatbuffers.Builder();
-    const fbsHeaderOffset = createFbsHeaderTable(fbsBuilder, headerData);
-    fbsBuilder.finish(fbsHeaderOffset);
-    return fbsBuilder.asUint8Array();
+    return createProtobufHeader(headerData).serializeBinary();
 }
 
 function createSimpleHeaderDataBinary(headerData: SimpleHeaderData): Uint8Array {
-    const fbsBuilder = new flatbuffers.Builder();
-    const fbsSimpleHeaderOffset = createFbsSimpleHeaderTable(fbsBuilder, headerData);
-    fbsBuilder.finish(fbsSimpleHeaderOffset);
-    return fbsBuilder.asUint8Array();
+    return createProtobufSimpleHeader(headerData).serializeBinary();
 }
 
 export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
