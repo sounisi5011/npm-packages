@@ -25,14 +25,19 @@ export interface GetKDFResult<T extends NormalizedKeyDerivationOptions> {
     saltLength: number;
 }
 
+function defaultGetKDF(
+    options: Readonly<DefaultKeyDerivationOptions> | undefined,
+): GetKDFResult<NormalizedKeyDerivationOptions> {
+    const defaultOptions = defaultValue.options;
+    const normalizedOptions = { ...defaultOptions, ...options, algorithm: defaultOptions.algorithm };
+    return defaultValue.getKDF(normalizedOptions);
+}
+
 export function getKDF(
     options: Readonly<KeyDerivationOptions> | undefined,
 ): GetKDFResult<NormalizedKeyDerivationOptions> {
     if (options && isArgon2Options(options)) return getArgon2KDF(options);
-    if (!options || !options.algorithm) {
-        const normalizedOptions = { ...defaultValue.options, ...options, algorithm: defaultValue.options.algorithm };
-        return defaultValue.getKDF(normalizedOptions);
-    }
+    if (!options || !options.algorithm) return defaultGetKDF(options);
 
     if (options && (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')) {
         // @ts-expect-error Property 'algorithm' does not exist on type 'never'.
