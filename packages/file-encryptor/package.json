@@ -62,11 +62,6 @@
   ],
   "scripts": {
     "build": "run-p build:*",
-    "build-flatbuffers": "run-p build-flatbuffers:*",
-    "build-flatbuffers:src": "run-s build-flatbuffers:src:flatc build-flatbuffers:src:fix",
-    "build-flatbuffers:src:fix": "globby-exec fix-flatbuffers-generated-ts '{{src/**/flatbuffers/*_generated.ts}}'",
-    "build-flatbuffers:src:flatc": "globby-exec flatc --ts --short-names -o ./src/header/flatbuffers/ '{{src/header/flatbuffers/*.fbs}}'",
-    "build-flatbuffers:test": "globby-exec flatc --binary -o ./tests/unit/fixtures/ ./src/header/flatbuffers/header.fbs '{{tests/unit/fixtures/*.json}}'",
     "build-protobuf": "run-p build-protobuf:*",
     "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
     "build-protobuf:test": "glob-exec --foreach 'tests/unit/fixtures/*.prototxt' -- 'protoc --encode=Header --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
@@ -83,16 +78,13 @@
   "dependencies": {
     "@jorgeferrero/stream-to-buffer": "^2.0.6",
     "argon2-browser": "^1.15.4",
-    "flatbuffers": "^1.12.0",
     "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
   },
   "devDependencies": {
-    "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
-    "@types/flatbuffers": "1.10.0",
     "@types/google-protobuf": "3.15.2",
     "@types/node": "*",
     "@types/varint": "6.0.0",
