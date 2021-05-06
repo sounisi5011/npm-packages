@@ -1,4 +1,3 @@
-import { flatbuffers } from 'flatbuffers';
 import { decode as varintDecode } from 'varint';
 
 export function readVarint(
@@ -89,7 +88,7 @@ export function createHeaderDataParser<T>(
     { name, longname, genHeaderData }: {
         name: string;
         longname: string;
-        genHeaderData: (fbsBuf: flatbuffers.ByteBuffer) => T;
+        genHeaderData: (headerDataBytes: Uint8Array) => T;
     },
 ): (opts: { data: Uint8Array; headerByteLength: number; offset?: number }) => { headerData: T; endOffset: number } {
     return ({ data, headerByteLength, offset = 0 }) => {
@@ -101,8 +100,7 @@ export function createHeaderDataParser<T>(
             longname,
         });
 
-        const fbsBuf = new flatbuffers.ByteBuffer(headerDataBytes);
-        const headerData = genHeaderData(fbsBuf);
+        const headerData = genHeaderData(headerDataBytes);
 
         return { headerData, endOffset };
     };
