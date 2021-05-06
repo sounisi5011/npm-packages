@@ -1,8 +1,7 @@
-import SizeChunker from '@akiroz/size-chunker-stream';
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
-import { createCountStream, createStreamFromBuffer } from './helpers/stream';
+import { createChunkerStream, createCountStream, createStreamFromBuffer } from './helpers/stream';
 
 describe('encryptStream()', () => {
     it('single chunk', async () => {
@@ -69,7 +68,7 @@ describe('decryptStream()', () => {
             const decryptedData = await streamToBuffer(
                 createStreamFromBuffer(cleartext)
                     .pipe(encryptStream(password))
-                    .pipe(new SizeChunker({ chunkSize: 2 }))
+                    .pipe(createChunkerStream({ chunkSize: 2 }))
                     .pipe(decryptStream(password)),
             );
             expect(decryptedData).toStrictEqual(cleartext);
@@ -86,7 +85,7 @@ describe('decryptStream()', () => {
             const decryptedData = await streamToBuffer(
                 createStreamFromBuffer(cleartext, 2)
                     .pipe(encryptStream(password))
-                    .pipe(new SizeChunker({ chunkSize: 2 }))
+                    .pipe(createChunkerStream({ chunkSize: 2 }))
                     .pipe(decryptStream(password)),
             );
             expect(decryptedData).toStrictEqual(cleartext);
