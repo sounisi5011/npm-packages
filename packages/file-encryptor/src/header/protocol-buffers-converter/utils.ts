@@ -1,20 +1,32 @@
 import { getPropFromValue, printObject } from '../../utils';
-import type { Cond2, OneOrMoreReadonlyArray } from '../../utils/type';
+import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../utils/type';
 
-export function validateNumberField(value: number, opts: { fieldName: string; dataName: string }): number {
-    if (value < 1) {
-        throw new Error(`${opts.fieldName} field in ${opts.dataName} is not defined or zero value`);
-    }
+function reportNonDefinedField(opts: { fieldName: string; dataName: string }): never {
+    throw new Error(`${opts.fieldName} field in ${opts.dataName} is not defined`);
+}
+
+export function validateNumberField(
+    value: Nullable<number>,
+    exists: boolean,
+    opts: { fieldName: string; dataName: string },
+): number {
+    if (!exists || typeof value !== 'number') reportNonDefinedField(opts);
     return value;
 }
 
-export function validateBytesField(value: Uint8Array, opts: { fieldName: string; dataName: string }): Uint8Array {
-    if (value.byteLength < 1) {
-        throw new Error(`${opts.fieldName} field in ${opts.dataName} is not defined or zero length`);
-    }
+export function validateBytesField(
+    value: Uint8Array,
+    exists: boolean,
+    opts: { fieldName: string; dataName: string },
+): Uint8Array {
+    if (!exists) reportNonDefinedField(opts);
     return value;
 }
 
+interface Enum2valueFuncPair<TEnum, TValue> {
+    enum2value: (enumItem: Nullable<TEnum>, exists: boolean, opts: { fieldName: string; dataName: string }) => TValue;
+    value2enum: (value: TValue) => TEnum;
+}
 export function createEnum2value<TValue>(): (
     <TEnumKey extends string, TEnum>(enumRecord: Record<TEnumKey, TEnum>) => (
         <TEnum2 extends TEnum, TValue2 extends TValue>(
@@ -38,18 +50,7 @@ export function createEnum2value<TValue>(): (
                     allMatch: unknown;
                     notAllMatch: 'Invalid: All Enum type values and all value types must be specified';
                 }>,
-        ) => {
-            enum2value: (enumItem: TEnum, opts: { fieldName: string; dataName: string }) => TValue;
-            value2enum: (value: TValue) => TEnum;
-        }
-    )
-);
-export function createEnum2value<TValue>(): (
-    <TEnumKey extends string, TEnum>(enumRecord: Record<TEnumKey, TEnum>) => (
-        (pair: ReadonlyArray<readonly [TEnum, TValue]>) => {
-            enum2value: (enumItem: TEnum, opts: { fieldName: string; dataName: string }) => TValue;
-            value2enum: (value: TValue) => TEnum;
-        }
+        ) => Enum2valueFuncPair<TEnum2, TValue2>
     )
 ) {
     return enumRecord =>
@@ -57,10 +58,18 @@ export function createEnum2value<TValue>(): (
             const enum2valueMap = new Map(pair.map(([e, v]) => [e, { data: v }]));
             const value2enumMap = new Map(pair.map(([e, v]) => [v, { data: e }]));
 
+            type TEnum2 = (typeof enum2valueMap) extends Map<infer U, unknown> ? U : never;
+            const isEnumType = enum2valueMap.has.bind(enum2valueMap) as (value: unknown) => value is TEnum2;
+
             return {
-                enum2value: (enumItem, { fieldName, dataName }) => {
+                enum2value: (enumItem, exists, { fieldName, dataName }) => {
+                    if (!exists || (!isEnumType(enumItem) && (enumItem === undefined || enumItem === null))) {
+                        reportNonDefinedField({ fieldName, dataName });
+                    }
                     const value = enum2valueMap.get(enumItem);
-                    if (value) return value.data;
+                    if (value) {
+                        return value.data;
+                    }
                     throw new Error(
                         `The value in the ${fieldName} field in the ${dataName} is unknown.`
                             + ` Received: ${getPropFromValue(enumRecord, enumItem) ?? printObject(enumItem)}`,

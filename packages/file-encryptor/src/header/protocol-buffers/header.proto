@@ -6,13 +6,13 @@ message Argon2Options {
     Argon2id = 1;
   }
 
-  Argon2Type type = 1;
+  optional Argon2Type type = 1;
   // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
-  uint32 time_iterations = 2;
+  optional uint32 time_iterations = 2;
   // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
-  uint32 memory_kib = 3;
+  optional uint32 memory_kib = 3;
   // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L301
-  uint32 parallelism = 4;
+  optional uint32 parallelism = 4;
 }
 
 message Header {
@@ -26,18 +26,18 @@ message Header {
     Brotli = 2;
   }
 
-  bytes crypt_nonce = 1;
-  bytes crypt_auth_tag = 2;
-  CryptAlgorithm crypt_algorithm = 3;
-  bytes key_salt = 4;
-  uint32 key_length = 5;
+  optional bytes crypt_nonce = 1;
+  optional bytes crypt_auth_tag = 2;
+  optional CryptAlgorithm crypt_algorithm = 3;
+  optional bytes key_salt = 4;
+  optional uint32 key_length = 5;
   oneof key_options {
     Argon2Options argon2_key_options = 15;
   }
-  CompressAlgorithm compress_algorithm = 6;
+  optional CompressAlgorithm compress_algorithm = 6;
 }
 
 // message SimpleHeader {
-//   bytes crypt_nonce = 1;
-//   bytes crypt_auth_tag = 2;
+//   optional bytes crypt_nonce = 1;
+//   optional bytes crypt_auth_tag = 2;
 // }

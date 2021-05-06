@@ -1,6 +1,8 @@
 import type { NormalizedArgon2Options } from '../../key-derivation-function/argon2';
 import { Argon2Options } from '../protocol-buffers/header_pb';
-import { createEnum2value } from './utils';
+import { createEnum2value, validateNumberField } from './utils';
+
+const dataName = 'Argon2Options data';
 
 const {
     enum2value: argon2Type2algorithm,
@@ -22,10 +24,23 @@ export function parseProtobufArgon2Options(argon2Options: Argon2Options): Normal
     return {
         algorithm: argon2Type2algorithm(
             argon2Options.getType(),
-            { fieldName: 'type', dataName: 'Argon2Options data' },
+            argon2Options.hasType(),
+            { fieldName: 'type', dataName },
         ),
-        iterations: argon2Options.getTimeIterations(),
-        memory: argon2Options.getMemoryKib(),
-        parallelism: argon2Options.getParallelism(),
+        iterations: validateNumberField(
+            argon2Options.getTimeIterations(),
+            argon2Options.hasTimeIterations(),
+            { fieldName: 'time_iterations', dataName },
+        ),
+        memory: validateNumberField(
+            argon2Options.getMemoryKib(),
+            argon2Options.hasMemoryKib(),
+            { fieldName: 'memory_kib', dataName },
+        ),
+        parallelism: validateNumberField(
+            argon2Options.getParallelism(),
+            argon2Options.hasParallelism(),
+            { fieldName: 'parallelism', dataName },
+        ),
     };
 }
