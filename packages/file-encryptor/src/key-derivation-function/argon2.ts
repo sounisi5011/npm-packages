@@ -1,6 +1,7 @@
 import argon2 from 'argon2-browser';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
+import { printObject } from '../utils';
 
 const typeNameList = ['argon2d', 'argon2id'] as const;
 
@@ -48,8 +49,9 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
     } else if (normalizedOptions.algorithm === 'argon2id') {
         type = argon2.ArgonType.Argon2id;
     } else {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        throw new TypeError(`Invalid Argon2 type received: ${normalizedOptions.algorithm}`);
+        throw new TypeError(
+            `Invalid Argon2 type received: ${printObject(normalizedOptions.algorithm, { passThroughString: true })}`,
+        );
     }
 
     return {

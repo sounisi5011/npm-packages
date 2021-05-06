@@ -30,8 +30,8 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
         .join('');
 }
 
-export function printObject(value: unknown): string {
-    return inspect(value, { breakLength: Infinity });
+export function printObject(value: unknown, opts?: { passThroughString?: boolean }): string {
+    return (opts?.passThroughString && typeof value === 'string') ? value : inspect(value, { breakLength: Infinity });
 }
 
 interface CondResult<TArg, TPrevResult> {

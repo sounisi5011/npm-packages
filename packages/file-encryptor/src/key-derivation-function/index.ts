@@ -1,6 +1,6 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import { cond } from '../utils';
+import { cond, printObject } from '../utils';
 import type { OverrideProp } from '../utils/type';
 import { Argon2Options, defaultOptions as defaultArgon2Options, getArgon2KDF, isArgon2Options } from './argon2';
 
@@ -41,13 +41,12 @@ export const getKDF = (
         )
         .default((options: never) => {
             if (options && (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')) {
+                const { algorithm } = options;
                 throw new TypeError(
-                    // @ts-expect-error Property 'algorithm' does not exist on type 'never'.
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    `Unknown KDF (Key Derivation Function) algorithm was received: ${options.algorithm}`,
+                    `Unknown KDF (Key Derivation Function) algorithm was received: ${
+                        printObject(algorithm, { passThroughString: true })
+                    }`,
                 );
             }
-
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new TypeError(`Unknown deriveKey options was received: ${options}`);
+            throw new TypeError(`Unknown deriveKey options was received: ${printObject(options)}`);
         });
