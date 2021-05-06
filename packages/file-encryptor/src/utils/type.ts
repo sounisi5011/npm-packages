@@ -1,9 +1,5 @@
 export type Nullable<T> = T | null | undefined;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GuardType<T extends (value: any) => value is unknown> = T extends (value: any) => value is (infer U) ? U
-    : never;
-
 export type OneOrMoreReadonlyArray<T> = readonly [T, ...T[]];
 
 export function assertType<T>(_: T): void {

@@ -1,5 +1,5 @@
 import { isArgon2Options } from '../../key-derivation-function/argon2';
-import { createConvertFunc, getPropFromValue, printObject } from '../../utils';
+import { cond, getPropFromValue, printObject } from '../../utils';
 import { assertType } from '../../utils/type';
 import type { HeaderData } from '../create';
 import { Header } from '../protocol-buffers/header_pb';
@@ -40,11 +40,11 @@ function getKeyDerivationOptions(
 }
 
 const setKeyDerivationOptions = (header: Header, options: HeaderData['keyDerivationOptions']): Header =>
-    (createConvertFunc<typeof options, Header>()
+    cond(options)
         .case(isArgon2Options, options => header.setArgon2KeyOptions(createProtobufArgon2Options(options)))
-        .finish((options: never) => {
+        .default((options: never) => {
             throw new Error(`Unknown keyDerivationOptions received: ${printObject(options)}`);
-        }))(options);
+        });
 
 const {
     enum2value: compressAlgorithm2CompressAlgorithmName,
