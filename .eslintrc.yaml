@@ -107,6 +107,9 @@ overrides:
       jest/prefer-todo: error
       jest/require-top-level-describe: error
       jest/valid-title: error
+  - files: "**/examples/**"
+    rules:
+      node/no-missing-require: off
   - files:
       - .lintstagedrc.js
       - scripts/*.js
