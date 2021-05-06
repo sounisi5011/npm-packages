@@ -37,14 +37,6 @@ function extFilter(...extList) {
 }
 
 /**
- * @param {function(string): boolean} fn
- * @returns {function(string): boolean}
- */
-function not(fn) {
-  return filename => !fn(filename);
-}
-
-/**
  * @template T
  * @param {readonly T[]} array
  * @returns {T[]}
@@ -70,12 +62,7 @@ module.exports = {
     /** @type {string[]} */
     const commands = [];
 
-    const prettierTargetFiles = filenames.filter(not(extFilter('fbs')));
-    if (prettierTargetFiles.length >= 1) {
-      commands.push(
-        `prettier --write ${prettierTargetFiles.join(' ')}`,
-      );
-    }
+    commands.push(`prettier --write ${filenames.join(' ')}`);
 
     const pkgFiles = filenames.filter(baseFilter('package.json'));
     if (pkgFiles.length >= 1) {
