@@ -29,9 +29,10 @@ export const defaultOptions: NormalizedArgon2Options = {
  */
 const SALT_LEN = 128 / 8;
 
-export function isArgon2Options<T extends Partial<BaseKeyDerivationOptions>>(
+export function isArgon2Options<T extends (Partial<BaseKeyDerivationOptions> | undefined)>(
     options: T,
 ): options is T extends Argon2Options ? T : never {
+    if (options === undefined) return false;
     for (const type of typeNameList) {
         if (options.algorithm === type) return true;
     }

@@ -1,6 +1,6 @@
 import { inspect } from 'util';
 
-import type { objectEntries } from './type';
+import type { GuardType, objectEntries } from './type';
 
 function isString(value: unknown): value is string {
     return typeof value === 'string';
@@ -33,6 +33,42 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
 export function printObject(value: unknown): string {
     return inspect(value, { breakLength: Infinity });
 }
+
+interface CaseProcess<TOrigArg, TExpectedResult, TCurrentArg, TPrevResult> {
+    case: <T extends TCurrentArg, U extends TExpectedResult>(
+        typeGuard: (value: TCurrentArg) => value is T,
+        resultFn: (value: T) => U,
+    ) => CaseProcess<TOrigArg, TExpectedResult, Exclude<TCurrentArg, T>, TPrevResult | U>;
+    finish: <U extends TExpectedResult>(resultFn: (value: TCurrentArg) => U) => (value: TOrigArg) => TPrevResult | U;
+}
+
+function createCaseProcessor<TOrigArg, TExpectedResult, TCurrentArg, TPrevResult>(
+    processFn: (value: TOrigArg) => { result: TPrevResult } | { value: TCurrentArg },
+): CaseProcess<TOrigArg, TExpectedResult, TCurrentArg, TPrevResult> {
+    return {
+        case(typeGuard, resultFn) {
+            type TNextArg = Exclude<TCurrentArg, GuardType<typeof typeGuard>>;
+            type TNextResult = TPrevResult | ReturnType<typeof resultFn>;
+            return createCaseProcessor<TOrigArg, TExpectedResult, TNextArg, TNextResult>(value => {
+                const res = processFn(value);
+                if ('result' in res) return res;
+                return typeGuard(res.value)
+                    ? { result: resultFn(res.value) }
+                    : { value: res.value as TNextArg };
+            });
+        },
+        finish(resultFn) {
+            return value => {
+                const res = processFn(value);
+                return 'result' in res ? res.result : resultFn(res.value);
+            };
+        },
+    };
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
+export const createConvertFunc = <TOrigArg, TExpectedResult>() =>
+    createCaseProcessor<TOrigArg, TExpectedResult, TOrigArg, never>(value => ({ value }));
 
 function isErrorConstructor(value: unknown): value is ErrorConstructor {
     /**
