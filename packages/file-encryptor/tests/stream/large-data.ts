@@ -22,7 +22,9 @@ describe('encryptStream()', () => {
         await Promise.all([
             pipelineAsync(
                 inputStream,
-                encryptStream(password),
+                encryptStream(password, {
+                    algorithm: 'aes-256-gcm',
+                }),
                 decryptStream(password),
                 outputHash,
             ),
