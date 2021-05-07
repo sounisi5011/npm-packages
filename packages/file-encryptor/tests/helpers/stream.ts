@@ -4,6 +4,23 @@ import { promisify } from 'util';
 export const waitStreamFinished = promisify(stream.finished);
 export const pipelineAsync = promisify(stream.pipeline);
 
+export function createFillBytesReadableStream(
+    { size: fullLength, value = 0x00 }: { size: number; value?: string | number | Buffer },
+): stream.Readable {
+    let sendByteLength = 0;
+
+    return new stream.Readable({
+        read(readLength) {
+            if (fullLength <= (sendByteLength + readLength)) readLength = fullLength - sendByteLength;
+
+            this.push(Buffer.alloc(readLength, value));
+            sendByteLength += readLength;
+
+            if (fullLength <= sendByteLength) this.push(null);
+        },
+    });
+}
+
 export function createCountStream(chunkCount: number): stream.Readable {
     const generate = function*(): Generator<Buffer> {
         for (let i = 0; i < chunkCount; i++) {

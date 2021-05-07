@@ -1,9 +1,7 @@
 import * as crypto from 'crypto';
 
-import randomBytesReadableStream from 'random-bytes-readable-stream';
-
 import { decryptStream, encryptStream } from '../../src';
-import { pipelineAsync } from '../helpers/stream';
+import { createFillBytesReadableStream, pipelineAsync } from '../helpers/stream';
 
 const password = '1234';
 
@@ -17,7 +15,7 @@ describe('encryptStream()', () => {
         const threeGiB = 3 * 2 ** 30;
         const inputHash = crypto.createHash('sha1');
         const outputHash = crypto.createHash('sha1');
-        const inputStream = randomBytesReadableStream({ size: threeGiB });
+        const inputStream = createFillBytesReadableStream({ size: threeGiB });
 
         await Promise.all([
             pipelineAsync(

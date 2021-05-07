@@ -87,7 +87,6 @@ importers:
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
       multicodec: 3.0.1
-      random-bytes-readable-stream: 2.1.0
     specifiers:
       '@jorgeferrero/stream-to-buffer': ^2.0.6
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
@@ -104,7 +103,6 @@ importers:
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
       multicodec: 3.0.1
-      random-bytes-readable-stream: 2.1.0
       varint: ^6.0.0
   packages/file-encryptor/examples:
     dependencies:
@@ -5933,12 +5931,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PgIdVpn5y5Yns8vqb8FzBUEYn98V3xcPgawAkkgj0YJ0qDsnHCiNmZYfOGMgOvoB0eWFLpYbhxUR3mxfDIMvpw==
-  /random-bytes-readable-stream/2.1.0:
-    dev: true
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-hykHYieBNu5CjyDTZA983ea2M4aN/gPtnFcch4hJhkyCUres3F4ISn6sEvLRLNWAWguUG06RMAoRyb94xWo7JQ==
   /rc/1.2.8:
     dependencies:
       deep-extend: 0.6.0
