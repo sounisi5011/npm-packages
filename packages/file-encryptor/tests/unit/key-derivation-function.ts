@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto';
 
 import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
 
-describe('deriveKey()', () => {
+describe('getKDF()', () => {
     describe('generate key', () => {
         const { deriveKey, saltLength } = getKDF(undefined);
         const password = 'Hoge Fuga';
