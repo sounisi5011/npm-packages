@@ -2,8 +2,14 @@ import argon2 from 'argon2-browser';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, printObject } from '../utils';
+import type { objectEntries, objectKeys } from '../utils/type';
 
-const typeNameList = ['argon2d', 'argon2id'] as const;
+const argon2TypeRecord = {
+    argon2d: argon2.ArgonType.Argon2d,
+    argon2id: argon2.ArgonType.Argon2id,
+};
+const typeNameList = (Object.keys as objectKeys)(argon2TypeRecord);
+const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
 
 export type Argon2Algorithm = (typeof typeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
@@ -43,12 +49,8 @@ export function isArgon2Options<T extends (Partial<BaseKeyDerivationOptions> | u
 export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<NormalizedArgon2Options> {
     const normalizedOptions = { ...defaultOptions, ...options };
 
-    let type: argon2.ArgonType;
-    if (normalizedOptions.algorithm === 'argon2d') {
-        type = argon2.ArgonType.Argon2d;
-    } else if (normalizedOptions.algorithm === 'argon2id') {
-        type = argon2.ArgonType.Argon2id;
-    } else {
+    const foundType = argon2TypeMap.get(normalizedOptions.algorithm);
+    if (!foundType) {
         throw new TypeError(
             `Invalid Argon2 type received: ${printObject(normalizedOptions.algorithm, { passThroughString: true })}`,
         );
@@ -63,7 +65,7 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
                 mem: normalizedOptions.memory,
                 hashLen: keyLengthBytes,
                 parallelism: normalizedOptions.parallelism,
-                type,
+                type: foundType.type,
             });
             return { key, normalizedOptions };
         },
