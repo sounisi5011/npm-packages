@@ -16,6 +16,7 @@ export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: 
 }
 
 export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
+export function bufferFrom(value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer | string;
 export function bufferFrom(
     value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
     encoding: BufferEncoding,
@@ -23,9 +24,13 @@ export function bufferFrom(
 export function bufferFrom(
     value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
     encoding?: BufferEncoding,
-): Buffer {
+): Buffer | string {
     if (Buffer.isBuffer(value)) return value;
-    if (typeof value === 'string') return Buffer.from(value, encoding);
+    if (typeof value === 'string') {
+        return encoding !== undefined
+            ? Buffer.from(value, encoding)
+            : value;
+    }
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
      */

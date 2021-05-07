@@ -1,7 +1,7 @@
 import argon2 from 'argon2-browser';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
-import { printObject } from '../utils';
+import { bufferFrom, printObject } from '../utils';
 
 const typeNameList = ['argon2d', 'argon2id'] as const;
 
@@ -57,7 +57,7 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
     return {
         async deriveKey(password, salt, keyLengthBytes) {
             const { hash: key } = await argon2.hash({
-                pass: password,
+                pass: bufferFrom(password),
                 salt,
                 time: normalizedOptions.iterations,
                 mem: normalizedOptions.memory,

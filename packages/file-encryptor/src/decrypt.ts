@@ -13,7 +13,7 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { isInputDataType, PasswordDataType } from './types';
+import { InputDataType, isInputDataType } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance, printObject } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
@@ -31,7 +31,7 @@ export interface DecryptorMetadata {
 export type DecryptedFirstData = DecryptedData & DecryptorMetadata;
 
 export class DecryptorTransform extends PromisifyTransform {
-    private readonly password: PasswordDataType;
+    private readonly password: InputDataType;
     private buffer: Buffer = Buffer.alloc(0);
     private needByteLength = 0;
     private decryptorMetadata: DecryptorMetadata | undefined;
@@ -46,7 +46,7 @@ export class DecryptorTransform extends PromisifyTransform {
             headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
         } = { type: 'cid' };
 
-    constructor(password: PasswordDataType) {
+    constructor(password: InputDataType) {
         super({ writableObjectMode: true });
         this.password = password;
     }

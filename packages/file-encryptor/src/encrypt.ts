@@ -5,7 +5,7 @@ import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { InputDataType, isInputDataType, PasswordDataType } from './types';
+import { InputDataType, isInputDataType } from './types';
 import { anyArrayBuffer2Buffer, printObject } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
@@ -17,7 +17,7 @@ export interface EncryptOptions {
 
 export async function encryptFirstChunk(
     cleartext: InputDataType,
-    password: PasswordDataType,
+    password: InputDataType,
     options: EncryptOptions,
 ): Promise<{
     encryptedData: Buffer;
@@ -149,11 +149,11 @@ export async function encryptSubsequentChunk(
 }
 
 export class EncryptorTransform extends PromisifyTransform {
-    private readonly password: PasswordDataType;
+    private readonly password: InputDataType;
     private readonly options: EncryptOptions;
     private encryptData: { algorithm: CryptAlgorithm; key: Uint8Array } | undefined;
 
-    constructor(password: PasswordDataType, options: EncryptOptions) {
+    constructor(password: InputDataType, options: EncryptOptions) {
         super({ writableObjectMode: true });
         this.password = password;
         this.options = options;
