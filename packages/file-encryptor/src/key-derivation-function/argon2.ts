@@ -2,14 +2,14 @@ import argon2 from 'argon2-browser';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, printObject } from '../utils';
-import type { objectEntries, objectKeys } from '../utils/type';
+import type { objectEntries } from '../utils/type';
 
 const argon2TypeRecord = {
     argon2d: argon2.ArgonType.Argon2d,
     argon2id: argon2.ArgonType.Argon2id,
 };
-const typeNameList = (Object.keys as objectKeys)(argon2TypeRecord);
 const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
+const typeNameList = [...argon2TypeMap.keys()];
 
 export type Argon2Algorithm = (typeof typeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
