@@ -13,8 +13,9 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { InputDataType, isInputDataType } from './types';
-import { bufferFrom, fixNodePrimordialsErrorInstance, printObject } from './utils';
+import { validateChunk } from './stream';
+import type { InputDataType } from './types';
+import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface DecryptedData {
@@ -52,13 +53,7 @@ export class DecryptorTransform extends PromisifyTransform {
     }
 
     async transform(chunk: unknown, encoding: BufferEncoding): Promise<void> {
-        if (!isInputDataType(chunk)) {
-            throw new TypeError(
-                `Invalid type chunk received.`
-                    + ` Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer.`
-                    + ` Received ${printObject(chunk)}`,
-            );
-        }
+        validateChunk(chunk);
         const chunkBuffer = bufferFrom(chunk, encoding);
         this.buffer = Buffer.concat([this.buffer, chunkBuffer]);
         await this.processMultiChunk(false);
