@@ -227,53 +227,46 @@ describe('parseHeaderData()', () => {
         const headerByteLength = varint.decode(headerDataBuffer, headerLengthStartOffset);
         const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
 
-        it('offset=undefined', () => {
+        it.each<[string, { data: Buffer; offset?: number }]>([
+            [
+                'offset=undefined',
+                { data: headerDataBuffer.subarray(headerDataStartOffset) },
+            ],
+            [
+                'offset=0',
+                { data: headerDataBuffer.subarray(headerDataStartOffset), offset: 0 },
+            ],
+            [
+                'offset defined',
+                { data: headerDataBuffer, offset: headerDataStartOffset },
+            ],
+        ])('%s', (_, opts) => {
             const result = parseHeaderData({
-                data: headerDataBuffer.subarray(headerDataStartOffset),
+                ...opts,
                 headerByteLength,
-            });
-            expect(result.headerData).toStrictEqual(headerData);
-        });
-        it('offset=0', () => {
-            const result = parseHeaderData({
-                data: headerDataBuffer.subarray(headerDataStartOffset),
-                headerByteLength,
-                offset: 0,
-            });
-            expect(result.headerData).toStrictEqual(headerData);
-        });
-        it('offset defined', () => {
-            const result = parseHeaderData({
-                data: headerDataBuffer,
-                headerByteLength,
-                offset: headerDataStartOffset,
             });
             expect(result.headerData).toStrictEqual(headerData);
         });
         describe('invalid offset defined', () => {
-            it('offset=undefined', () => {
+            it.each<[string, { offset?: number }]>([
+                [
+                    'offset=undefined',
+                    {},
+                ],
+                [
+                    'offset=0',
+                    { offset: 0 },
+                ],
+                [
+                    'offset=+1',
+                    { offset: headerDataStartOffset + 1 },
+                ],
+            ])('%s', (_, opts) => {
                 expect(() =>
                     parseHeaderData({
                         data: headerDataBuffer,
                         headerByteLength,
-                    })
-                ).toThrow();
-            });
-            it('offset=0', () => {
-                expect(() =>
-                    parseHeaderData({
-                        data: headerDataBuffer,
-                        headerByteLength,
-                        offset: 0,
-                    })
-                ).toThrow();
-            });
-            it('offset=+1', () => {
-                expect(() =>
-                    parseHeaderData({
-                        data: headerDataBuffer,
-                        headerByteLength,
-                        offset: headerDataStartOffset + 1,
+                        ...opts,
                     })
                 ).toThrow();
             });
@@ -454,53 +447,46 @@ describe('parseSimpleHeaderData()', () => {
         const headerByteLength = varint.decode(headerDataBuffer);
         const headerDataStartOffset = varint.decode.bytes;
 
-        it('offset=undefined', () => {
+        it.each<[string, { data: Buffer; offset?: number }]>([
+            [
+                'offset=undefined',
+                { data: headerDataBuffer.subarray(headerDataStartOffset) },
+            ],
+            [
+                'offset=0',
+                { data: headerDataBuffer.subarray(headerDataStartOffset), offset: 0 },
+            ],
+            [
+                'offset defined',
+                { data: headerDataBuffer, offset: headerDataStartOffset },
+            ],
+        ])('%s', (_, opts) => {
             const result = parseSimpleHeaderData({
-                data: headerDataBuffer.subarray(headerDataStartOffset),
+                ...opts,
                 headerByteLength,
-            });
-            expect(result.headerData).toStrictEqual(headerData);
-        });
-        it('offset=0', () => {
-            const result = parseSimpleHeaderData({
-                data: headerDataBuffer.subarray(headerDataStartOffset),
-                headerByteLength,
-                offset: 0,
-            });
-            expect(result.headerData).toStrictEqual(headerData);
-        });
-        it('offset defined', () => {
-            const result = parseSimpleHeaderData({
-                data: headerDataBuffer,
-                headerByteLength,
-                offset: headerDataStartOffset,
             });
             expect(result.headerData).toStrictEqual(headerData);
         });
         describe('invalid offset defined', () => {
-            it('offset=undefined', () => {
+            it.each<[string, { offset?: number }]>([
+                [
+                    'offset=undefined',
+                    {},
+                ],
+                [
+                    'offset=0',
+                    { offset: 0 },
+                ],
+                [
+                    'offset=+1',
+                    { offset: headerDataStartOffset + 1 },
+                ],
+            ])('%s', (_, opts) => {
                 expect(() =>
                     parseSimpleHeaderData({
                         data: headerDataBuffer,
                         headerByteLength,
-                    })
-                ).toThrow();
-            });
-            it('offset=0', () => {
-                expect(() =>
-                    parseSimpleHeaderData({
-                        data: headerDataBuffer,
-                        headerByteLength,
-                        offset: 0,
-                    })
-                ).toThrow();
-            });
-            it('offset=+1', () => {
-                expect(() =>
-                    parseSimpleHeaderData({
-                        data: headerDataBuffer,
-                        headerByteLength,
-                        offset: headerDataStartOffset + 1,
+                        ...opts,
                     })
                 ).toThrow();
             });
