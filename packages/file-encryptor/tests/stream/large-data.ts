@@ -1,12 +1,8 @@
-import * as stream from 'stream';
-import { promisify } from 'util';
-
 import { writableNoopStream } from 'noop-stream';
 import randomBytesReadableStream from 'random-bytes-readable-stream';
 
 import { encryptStream } from '../../src';
-
-const waitStreamFinished = promisify(stream.finished);
+import { waitStreamFinished } from '../helpers/stream';
 
 const password = '1234';
 

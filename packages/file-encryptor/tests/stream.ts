@@ -1,7 +1,12 @@
+import * as stream from 'stream';
+
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
-import { createChunkerStream, createCountStream, createStreamFromBuffer } from './helpers/stream';
+import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
+
+const chunkTypeErrorMessageRegExp =
+    /^Invalid type chunk received\. Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer\. Received\b/;
 
 describe('encryptStream()', () => {
     it('single chunk', async () => {
@@ -32,6 +37,46 @@ describe('encryptStream()', () => {
                 firstChunkLen = chunk.byteLength;
             }
         }
+    });
+    describe('non Buffer chunk', () => {
+        it.each<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>([
+            ['string', 'foo'],
+            // TypedArray
+            ['Uint8Array', new Uint8Array(3)],
+            ['Uint8ClampedArray', new Uint8ClampedArray(2)],
+            ['Uint16Array', new Uint16Array(1)],
+            ['Uint32Array', new Uint32Array(6)],
+            ['Int8Array', new Int8Array(4)],
+            ['Int16Array', new Int16Array(9)],
+            ['Int32Array', new Int32Array(7)],
+            ['BigUint64Array', new BigUint64Array(5)],
+            ['BigInt64Array', new BigInt64Array(8)],
+            ['Float32Array', new Float32Array(1)],
+            ['Float64Array', new Float64Array(1)],
+            // DataView
+            ['DataView', new DataView(new ArrayBuffer(3))],
+            // ArrayBufferLike
+            ['ArrayBuffer', new ArrayBuffer(5)],
+            ['SharedArrayBuffer', new SharedArrayBuffer(5)],
+        ])('%s', async (_, chunk) => {
+            await expect(pipelineAsync(
+                // eslint-disable-next-line node/no-unsupported-features/node-builtins
+                stream.Readable.from([chunk]),
+                encryptStream(''),
+            )).toResolve();
+        });
+        it.each<[string, unknown]>([
+            ['number', 42],
+            ['object', { hoge: 'fuga' }],
+        ])('%s', async (_, chunk) => {
+            const resultPromise = pipelineAsync(
+                // eslint-disable-next-line node/no-unsupported-features/node-builtins
+                stream.Readable.from([chunk]),
+                encryptStream(''),
+            );
+            await expect(resultPromise).rejects.toThrow(TypeError);
+            await expect(resultPromise).rejects.toThrow(chunkTypeErrorMessageRegExp);
+        });
     });
 });
 
@@ -89,6 +134,47 @@ describe('decryptStream()', () => {
                     .pipe(decryptStream(password)),
             );
             expect(decryptedData).toStrictEqual(cleartext);
+        });
+    });
+    describe('non Buffer chunk', () => {
+        it.each<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>([
+            ['string', 'foo'],
+            // TypedArray
+            ['Uint8Array', new Uint8Array(3)],
+            ['Uint8ClampedArray', new Uint8ClampedArray(2)],
+            ['Uint16Array', new Uint16Array(1)],
+            ['Uint32Array', new Uint32Array(6)],
+            ['Int8Array', new Int8Array(4)],
+            ['Int16Array', new Int16Array(9)],
+            ['Int32Array', new Int32Array(7)],
+            ['BigUint64Array', new BigUint64Array(5)],
+            ['BigInt64Array', new BigInt64Array(8)],
+            ['Float32Array', new Float32Array(1)],
+            ['Float64Array', new Float64Array(1)],
+            // DataView
+            ['DataView', new DataView(new ArrayBuffer(3))],
+            // ArrayBufferLike
+            ['ArrayBuffer', new ArrayBuffer(5)],
+            ['SharedArrayBuffer', new SharedArrayBuffer(5)],
+        ])('%s', async (_, chunk) => {
+            const resultPromise = pipelineAsync(
+                // eslint-disable-next-line node/no-unsupported-features/node-builtins
+                stream.Readable.from([chunk]),
+                decryptStream(''),
+            );
+            await expect(resultPromise).rejects.toThrow(/^Invalid identifier detected\./);
+        });
+        it.each<[string, unknown]>([
+            ['number', 42],
+            ['object', { hoge: 'fuga' }],
+        ])('%s', async (_, chunk) => {
+            const resultPromise = pipelineAsync(
+                // eslint-disable-next-line node/no-unsupported-features/node-builtins
+                stream.Readable.from([chunk]),
+                decryptStream(''),
+            );
+            await expect(resultPromise).rejects.toThrow(TypeError);
+            await expect(resultPromise).rejects.toThrow(chunkTypeErrorMessageRegExp);
         });
     });
 });

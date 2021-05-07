@@ -1,18 +1,22 @@
-import { Readable, Transform } from 'stream';
+import * as stream from 'stream';
+import { promisify } from 'util';
 
-export function createCountStream(chunkCount: number): Readable {
+export const waitStreamFinished = promisify(stream.finished);
+export const pipelineAsync = promisify(stream.pipeline);
+
+export function createCountStream(chunkCount: number): stream.Readable {
     const generate = function*(): Generator<Buffer> {
         for (let i = 0; i < chunkCount; i++) {
             yield Buffer.from([i]);
         }
     };
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
-    return Readable.from(generate());
+    return stream.Readable.from(generate());
 }
 
-export function createChunkerStream({ chunkSize }: { chunkSize: number }): Transform {
+export function createChunkerStream({ chunkSize }: { chunkSize: number }): stream.Transform {
     let allChunk = Buffer.alloc(0);
-    return new Transform({
+    return new stream.Transform({
         transform(chunk, _, done) {
             allChunk = Buffer.concat([allChunk, chunk]);
             while (chunkSize <= allChunk.byteLength) {
@@ -30,7 +34,7 @@ export function createChunkerStream({ chunkSize }: { chunkSize: number }): Trans
     });
 }
 
-export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): Readable {
+export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): stream.Readable {
     const generate = function*(): Generator<Buffer> {
         let i = 0;
         while (i < buf.byteLength) {
@@ -38,5 +42,5 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): R
         }
     };
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
-    return Readable.from(generate());
+    return stream.Readable.from(generate());
 }
