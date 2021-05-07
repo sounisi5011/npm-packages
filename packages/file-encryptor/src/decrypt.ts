@@ -13,7 +13,8 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { fixNodePrimordialsErrorInstance } from './utils';
+import { isInputDataType, PasswordDataType } from './types';
+import { bufferFrom, fixNodePrimordialsErrorInstance, printObject } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface DecryptedData {
@@ -30,7 +31,7 @@ export interface DecryptorMetadata {
 export type DecryptedFirstData = DecryptedData & DecryptorMetadata;
 
 export class DecryptorTransform extends PromisifyTransform {
-    private readonly password: string | Buffer;
+    private readonly password: PasswordDataType;
     private buffer: Buffer = Buffer.alloc(0);
     private needByteLength = 0;
     private decryptorMetadata: DecryptorMetadata | undefined;
@@ -45,13 +46,21 @@ export class DecryptorTransform extends PromisifyTransform {
             headerData: HeaderData | SimpleHeaderData & DecryptorMetadata;
         } = { type: 'cid' };
 
-    constructor(password: string | Buffer) {
-        super();
+    constructor(password: PasswordDataType) {
+        super({ writableObjectMode: true });
         this.password = password;
     }
 
-    async transform(chunk: Buffer): Promise<void> {
-        this.buffer = Buffer.concat([this.buffer, chunk]);
+    async transform(chunk: unknown, encoding: BufferEncoding): Promise<void> {
+        if (!isInputDataType(chunk)) {
+            throw new TypeError(
+                `Invalid type chunk received.`
+                    + ` Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer.`
+                    + ` Received ${printObject(chunk)}`,
+            );
+        }
+        const chunkBuffer = bufferFrom(chunk, encoding);
+        this.buffer = Buffer.concat([this.buffer, chunkBuffer]);
         await this.processMultiChunk(false);
     }
 

@@ -1,4 +1,4 @@
-import { inspect } from 'util';
+import { inspect, types } from 'util';
 
 import type { objectEntries } from './type';
 
@@ -13,6 +13,34 @@ function isObject(value: unknown): value is Record<PropertyKey, unknown> {
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
     const findEntry = (Object.entries as objectEntries)(rec).find(([, val]) => val === value);
     return findEntry ? findEntry[0] : null;
+}
+
+export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
+export function bufferFrom(
+    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
+    encoding: BufferEncoding,
+): Buffer;
+export function bufferFrom(
+    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
+    encoding?: BufferEncoding,
+): Buffer {
+    if (Buffer.isBuffer(value)) return value;
+    if (typeof value === 'string') return Buffer.from(value, encoding);
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
+     */
+    if (types.isArrayBufferView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
+     */
+    return Buffer.from(value);
+}
+
+/**
+ * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
+ */
+export function anyArrayBuffer2Buffer<T>(value: T | ArrayBufferLike): T | Buffer {
+    return types.isAnyArrayBuffer(value) ? Buffer.from(value) : value;
 }
 
 export function number2hex(template: TemplateStringsArray, ...substitutions: number[]): string {

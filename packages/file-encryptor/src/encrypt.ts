@@ -5,6 +5,8 @@ import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
+import { InputDataType, isInputDataType, PasswordDataType } from './types';
+import { anyArrayBuffer2Buffer, printObject } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface EncryptOptions {
@@ -14,8 +16,8 @@ export interface EncryptOptions {
 }
 
 export async function encryptFirstChunk(
-    cleartext: string | Buffer,
-    password: string | Buffer,
+    cleartext: InputDataType,
+    password: PasswordDataType,
     options: EncryptOptions,
 ): Promise<{
     encryptedData: Buffer;
@@ -32,7 +34,7 @@ export async function encryptFirstChunk(
      */
     const { algorithm: compressAlgorithmName, data: compressedCleartext } = options.compress
         ? await compress(cleartext, options.compress)
-        : { algorithm: undefined, data: cleartext };
+        : { algorithm: undefined, data: anyArrayBuffer2Buffer(cleartext) };
 
     /**
      * Generate key
@@ -94,7 +96,7 @@ export async function encryptFirstChunk(
 }
 
 export async function encryptSubsequentChunk(
-    cleartext: string | Buffer,
+    cleartext: InputDataType,
     options: {
         algorithm: CryptAlgorithm;
         key: Uint8Array;
@@ -106,7 +108,7 @@ export async function encryptSubsequentChunk(
      */
     const compressedCleartext = options.compress
         ? (await compress(cleartext, options.compress)).data
-        : cleartext;
+        : anyArrayBuffer2Buffer(cleartext);
 
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
@@ -147,17 +149,25 @@ export async function encryptSubsequentChunk(
 }
 
 export class EncryptorTransform extends PromisifyTransform {
-    private readonly password: string | Buffer;
+    private readonly password: PasswordDataType;
     private readonly options: EncryptOptions;
     private encryptData: { algorithm: CryptAlgorithm; key: Uint8Array } | undefined;
 
-    constructor(password: string | Buffer, options: EncryptOptions) {
-        super();
+    constructor(password: PasswordDataType, options: EncryptOptions) {
+        super({ writableObjectMode: true });
         this.password = password;
         this.options = options;
     }
 
-    async transform(chunk: Buffer): Promise<Buffer> {
+    async transform(chunk: unknown): Promise<Buffer> {
+        if (!isInputDataType(chunk)) {
+            throw new TypeError(
+                `Invalid type chunk received.`
+                    + ` Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer.`
+                    + ` Received ${printObject(chunk)}`,
+            );
+        }
+
         const encryptData = this.encryptData;
         if (encryptData) {
             const { encryptedData } = await encryptSubsequentChunk(

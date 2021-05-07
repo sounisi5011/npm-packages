@@ -11,9 +11,9 @@ export interface PromisifyTransform {
 }
 
 export abstract class PromisifyTransform extends Transform {
-    protected abstract transform(chunk: Buffer, encoding: BufferEncoding): Promise<StreamResult>;
+    protected abstract transform(chunk: unknown, encoding: BufferEncoding): Promise<StreamResult>;
 
-    _transform(chunk: Buffer, encoding: BufferEncoding, callback: stream.TransformCallback): void {
+    _transform(chunk: unknown, encoding: BufferEncoding, callback: stream.TransformCallback): void {
         callbackify(async () => await this.transform(chunk, encoding))(callback);
     }
 
