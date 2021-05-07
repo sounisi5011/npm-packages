@@ -72,7 +72,7 @@ importers:
     dependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
       argon2-browser: 1.15.4
-      google-protobuf: 3.15.8
+      google-protobuf: 3.16.0
       varint: 6.0.0
     devDependencies:
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
@@ -87,7 +87,6 @@ importers:
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
       multicodec: 3.0.1
-      noop-stream: 0.1.0
       random-bytes-readable-stream: 2.1.0
     specifiers:
       '@jorgeferrero/stream-to-buffer': ^2.0.6
@@ -105,7 +104,6 @@ importers:
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
       multicodec: 3.0.1
-      noop-stream: 0.1.0
       random-bytes-readable-stream: 2.1.0
       varint: ^6.0.0
   packages/file-encryptor/examples:
@@ -3414,8 +3412,13 @@ packages:
     resolution:
       integrity: sha512-ollPHROa5mcxDEkwg6bPt3QbEf4pDQSNtd6JPL1YvOvAo/7/0VAm9TccUeoTmarjPw4pfUthSCqcyfNB1I3ZSg==
   /google-protobuf/3.15.8:
+    dev: true
     resolution:
       integrity: sha512-2jtfdqTaSxk0cuBJBtTTWsot4WtR9RVr2rXg7x7OoqiuOKopPrwXpM1G4dXIkLcUNRh3RKzz76C8IOkksZSeOw==
+  /google-protobuf/3.16.0:
+    dev: false
+    resolution:
+      integrity: sha512-gBY66yYL1wbQMU2r1POkXSXkm035Ni0wFv3vx0K9IEUsJLP9G5rAcFVn0xUXfZneRu6MmDjaw93pt/DE56VOyw==
   /got/9.6.0:
     dependencies:
       '@sindresorhus/is': 0.14.0
@@ -5240,14 +5243,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zR6HoT6LrLCRBwukmrVbHv0EpEQjksO6GmFcZQQuCAy139BEsoVKPYnf3jongYW83fAa1torLGYwxxky/p28sg==
-  /noop-stream/0.1.0:
-    dependencies:
-      type-fest: 0.5.2
-    dev: true
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-GyQPM8zEoN9LADidd/DHLbIE8lOyNz+LrNyT9YQjGGu7KGPEvx9PvgRlWhXhvqcBAVKf/SI6k+RzNSy/QUmvZQ==
   /normalize-package-data/2.5.0:
     dependencies:
       hosted-git-info: 2.8.8
@@ -7082,12 +7077,6 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
-  /type-fest/0.5.2:
-    dev: true
-    engines:
-      node: '>=6'
-    resolution:
-      integrity: sha512-DWkS49EQKVX//Tbupb9TFa19c7+MK1XmzkrZUR8TAktmE/DizXoaoJV6TZ/tSIPXipqNiRI6CyAe7x69Jb6RSw==
   /type-fest/0.6.0:
     dev: true
     engines:

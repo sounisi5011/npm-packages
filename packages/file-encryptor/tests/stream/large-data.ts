@@ -1,8 +1,9 @@
-import { writableNoopStream } from 'noop-stream';
+import * as crypto from 'crypto';
+
 import randomBytesReadableStream from 'random-bytes-readable-stream';
 
-import { encryptStream } from '../../src';
-import { waitStreamFinished } from '../helpers/stream';
+import { decryptStream, encryptStream } from '../../src';
+import { pipelineAsync } from '../helpers/stream';
 
 const password = '1234';
 
@@ -14,9 +15,25 @@ describe('encryptStream()', () => {
      */
     it('transform 3GiB data', async () => {
         const threeGiB = 3 * 2 ** 30;
-        const stream = randomBytesReadableStream({ size: threeGiB })
-            .pipe(encryptStream(password))
-            .pipe(writableNoopStream());
-        await expect(waitStreamFinished(stream)).toResolve();
+        const inputHash = crypto.createHash('sha1');
+        const outputHash = crypto.createHash('sha1');
+        const inputStream = randomBytesReadableStream({ size: threeGiB });
+
+        await Promise.all([
+            pipelineAsync(
+                inputStream,
+                encryptStream(password),
+                decryptStream(password),
+                outputHash,
+            ),
+            pipelineAsync(
+                inputStream,
+                inputHash,
+            ),
+        ]);
+
+        const inputSHA1 = inputHash.digest('hex');
+        const outputSha1 = outputHash.digest('hex');
+        expect(outputSha1).toStrictEqual(inputSHA1);
     }, 10 * 60 * 1000);
 });

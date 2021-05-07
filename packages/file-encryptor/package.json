@@ -94,7 +94,6 @@
     "grpc_tools_node_protoc_ts": "5.2.1",
     "jest-extended": "0.11.5",
     "multicodec": "3.0.1",
-    "noop-stream": "0.1.0",
     "random-bytes-readable-stream": "2.1.0"
   },
   "engines": {
