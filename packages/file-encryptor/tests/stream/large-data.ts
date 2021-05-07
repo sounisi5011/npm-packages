@@ -6,17 +6,13 @@ import { createFillBytesReadableStream, pipelineAsync } from '../helpers/stream'
 const password = '1234';
 
 describe('encryptStream()', () => {
-    /**
-     * If not implemented with proper streaming handling, this test should fail.
-     * This is because 3 GiB is more than the amount of data that can be handled by a single Buffer instance.
-     * @see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_length
-     */
-    it('transform 3GiB data', async () => {
-        const threeGiB = 3 * 2 ** 30;
+    it('transform large data', async () => {
+        const dataSize = 500 * 2 ** 20; // 500 MiB
         const inputHash = crypto.createHash('sha1');
         const outputHash = crypto.createHash('sha1');
-        const inputStream = createFillBytesReadableStream({ size: threeGiB });
+        const inputStream = createFillBytesReadableStream({ size: dataSize });
 
+        const startMem = process.memoryUsage().rss;
         await Promise.all([
             pipelineAsync(
                 inputStream,
@@ -31,6 +27,14 @@ describe('encryptStream()', () => {
                 inputHash,
             ),
         ]);
+        const endMem = process.memoryUsage().rss;
+
+        /**
+         * If Encryptor is using the Stream API correctly,
+         * the amount of memory used will be less than the input data length
+         * even when converting huge data.
+         */
+        expect(endMem - startMem).toBeLessThan(dataSize);
 
         const inputSHA1 = inputHash.digest('hex');
         const outputSha1 = outputHash.digest('hex');
