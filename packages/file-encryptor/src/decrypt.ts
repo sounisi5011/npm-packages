@@ -235,7 +235,7 @@ export class DecryptorTransform extends PromisifyTransform {
             /**
              * Generate key
              */
-            const { key } = await getKDF(headerData.keyDerivationOptions)
+            const key = await getKDF(headerData.keyDerivationOptions)
                 .deriveKey(
                     this.password,
                     headerData.salt,

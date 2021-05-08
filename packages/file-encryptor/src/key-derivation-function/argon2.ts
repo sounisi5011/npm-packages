@@ -57,8 +57,8 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
     }
 
     return {
-        async deriveKey(password, salt, keyLengthBytes) {
-            const { hash: key } = await argon2.hash({
+        deriveKey: async (password, salt, keyLengthBytes) =>
+            (await argon2.hash({
                 pass: bufferFrom(password),
                 salt,
                 time: normalizedOptions.iterations,
@@ -66,9 +66,8 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
                 hashLen: keyLengthBytes,
                 parallelism: normalizedOptions.parallelism,
                 type: foundType.type,
-            });
-            return { key, normalizedOptions };
-        },
+            })).hash,
         saltLength: SALT_LEN,
+        normalizedOptions,
     };
 }

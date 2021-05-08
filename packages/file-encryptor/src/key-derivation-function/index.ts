@@ -20,11 +20,13 @@ export type KeyDerivationOptions = KeyDerivationOptionsWithoutDefault | DefaultK
 export type NormalizedKeyDerivationOptions = Required<KeyDerivationOptionsWithoutDefault>;
 
 export interface GetKDFResult<T extends NormalizedKeyDerivationOptions> {
-    deriveKey: (password: InputDataType, salt: Uint8Array, keyLengthBytes: number) => Promise<{
-        key: Uint8Array;
-        normalizedOptions: T;
-    }>;
+    deriveKey: (
+        password: InputDataType,
+        salt: Uint8Array,
+        keyLengthBytes: number,
+    ) => Promise<Uint8Array>;
     saltLength: number;
+    normalizedOptions: T;
 }
 
 export const getKDF = (

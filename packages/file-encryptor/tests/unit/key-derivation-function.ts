@@ -10,11 +10,11 @@ describe('getKDF()', () => {
         const salt = randomBytes(saltLength);
 
         it.each([...Array(20).keys()].map(l => l + 4))('keyLengthBytes: %i', async keyLengthBytes => {
-            const { key } = await deriveKey(password, salt, keyLengthBytes);
+            const key = await deriveKey(password, salt, keyLengthBytes);
             expect(key.byteLength).toBeByteSize(keyLengthBytes);
-            const { key: key2 } = await deriveKey(password, salt, keyLengthBytes);
+            const key2 = await deriveKey(password, salt, keyLengthBytes);
             expect(key2).toStrictEqual(key);
-            const { key: key3 } = await deriveKey(password, salt, keyLengthBytes);
+            const key3 = await deriveKey(password, salt, keyLengthBytes);
             expect(key3).toStrictEqual(key);
         });
     });

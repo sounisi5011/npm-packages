@@ -40,14 +40,14 @@ export async function encryptFirstChunk(
     /**
      * Generate key
      */
-    const { deriveKey, saltLength } = getKDF(options.keyDerivation);
+    const {
+        deriveKey,
+        saltLength,
+        normalizedOptions: normalizedKeyDerivationOptions,
+    } = getKDF(options.keyDerivation);
     const salt = randomBytes(saltLength);
     const keyLength = algorithm.keyLength;
-    const { key, normalizedOptions: normalizedKeyDerivationOptions } = await deriveKey(
-        password,
-        salt,
-        keyLength,
-    );
+    const key = await deriveKey(password, salt, keyLength);
 
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
