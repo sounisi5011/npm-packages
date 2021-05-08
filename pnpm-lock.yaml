@@ -86,6 +86,7 @@ importers:
       glob-exec: 0.1.1
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
+      jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
     specifiers:
       '@jorgeferrero/stream-to-buffer': ^2.0.6
@@ -102,6 +103,7 @@ importers:
       google-protobuf: ^3.15.8
       grpc_tools_node_protoc_ts: 5.2.1
       jest-extended: 0.11.5
+      jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
       varint: ^6.0.0
   packages/file-encryptor/examples:

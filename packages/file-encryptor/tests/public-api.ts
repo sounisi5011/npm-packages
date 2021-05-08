@@ -1,6 +1,7 @@
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import { CryptAlgorithmName, decrypt, encrypt, encryptStream } from '../src';
+import './helpers/jest-matchers';
 import { createStreamFromBuffer } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
@@ -65,12 +66,12 @@ describe('encrypt()', () => {
         it('gzip', async () => {
             const uncompressedEncryptedData = await encrypt(cleartext, password);
             const compressedEncryptedData = await encrypt(cleartext, password, { compress: 'gzip' });
-            expect(compressedEncryptedData.byteLength).toBeLessThan(uncompressedEncryptedData.byteLength);
+            expect(compressedEncryptedData.byteLength).toBeLessThanByteSize(uncompressedEncryptedData.byteLength);
         });
         it('brotli', async () => {
             const uncompressedEncryptedData = await encrypt(cleartext, password);
             const compressedEncryptedData = await encrypt(cleartext, password, { compress: 'brotli' });
-            expect(compressedEncryptedData.byteLength).toBeLessThan(uncompressedEncryptedData.byteLength);
+            expect(compressedEncryptedData.byteLength).toBeLessThanByteSize(uncompressedEncryptedData.byteLength);
         });
         it('unknown', async () => {
             const resultPromise = encrypt(cleartext, password, {

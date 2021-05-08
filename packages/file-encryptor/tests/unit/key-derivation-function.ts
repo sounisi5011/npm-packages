@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 
 import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
+import '../helpers/jest-matchers';
 
 describe('getKDF()', () => {
     describe('generate key', () => {
@@ -10,7 +11,7 @@ describe('getKDF()', () => {
 
         it.each([...Array(20).keys()].map(l => l + 4))('keyLengthBytes: %i', async keyLengthBytes => {
             const { key } = await deriveKey(password, salt, keyLengthBytes);
-            expect(key.byteLength).toBe(keyLengthBytes);
+            expect(key.byteLength).toBeByteSize(keyLengthBytes);
             const { key: key2 } = await deriveKey(password, salt, keyLengthBytes);
             expect(key2).toStrictEqual(key);
             const { key: key3 } = await deriveKey(password, salt, keyLengthBytes);

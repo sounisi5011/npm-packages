@@ -1,5 +1,6 @@
 import { Nonce } from '../../src/nonce';
 import { padEndArray } from '../helpers';
+import '../helpers/jest-matchers';
 
 const tooSmallFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 const tooLargeFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01];
@@ -9,7 +10,7 @@ describe('class Nonce', () => {
         it.each([9, 10, 11, 12, 13, 14, 15])('byteLength: %i', len => {
             const nonceState = new Nonce();
             const nonce = nonceState.create(len); // invocation: 0
-            expect(nonce.byteLength).toBe(len);
+            expect(nonce.byteLength).toBeByteSize(len);
             const currentFixedField = nonce.subarray(0, 7);
             expect(nonce).toStrictEqual(
                 Buffer.from(padEndArray([...currentFixedField, 0x00, 0x00], len, 0)),

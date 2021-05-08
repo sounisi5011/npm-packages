@@ -1,6 +1,7 @@
 import * as crypto from 'crypto';
 
 import { decryptStream, encryptStream } from '../../src';
+import '../helpers/jest-matchers';
 import { createFillBytesReadableStream, pipelineAsync } from '../helpers/stream';
 
 const password = '1234';
@@ -34,7 +35,7 @@ describe('encryptStream()', () => {
          * the amount of memory used will be less than the input data length
          * even when converting huge data.
          */
-        expect(endMem - startMem).toBeLessThan(dataSize);
+        expect(endMem - startMem).toBeLessThanByteSize(dataSize);
 
         const inputSHA1 = inputHash.digest('hex');
         const outputSha1 = outputHash.digest('hex');

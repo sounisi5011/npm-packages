@@ -21,6 +21,7 @@ import {
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
 import { padStartArray, rangeArray } from '../helpers';
+import '../helpers/jest-matchers';
 
 const dummyHeaderData: HeaderDataWithCiphertextLength = {
     algorithmName: 'aes-256-gcm',
@@ -70,14 +71,14 @@ describe('createHeader()', () => {
             {
                 const headerLength = varint.decode(headerData, headerLenStartOffset);
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBe(
+                expect(headerData.byteLength).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
             {
                 const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBe(
+                expect(headerData.byteLength).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
@@ -107,7 +108,7 @@ describe('createSimpleHeader()', () => {
             const headerLength = varint.decode(headerData);
             const headerLengthVarintBytes = varint.decode.bytes;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
-            expect(headerData.byteLength).toBe(
+            expect(headerData.byteLength).toBeByteSize(
                 headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
             );
         });

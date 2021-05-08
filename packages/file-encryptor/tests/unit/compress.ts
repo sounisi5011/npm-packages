@@ -2,6 +2,7 @@ import * as zlib from 'zlib';
 
 import { compress, decompress } from '../../src/compress';
 import { optGen } from '../helpers/combinations';
+import '../helpers/jest-matchers';
 
 describe('compress()', () => {
     describe('compress data', () => {
@@ -9,22 +10,22 @@ describe('compress()', () => {
 
         it('gzip (string options)', async () => {
             const { data: compressedData } = await compress(data, 'gzip');
-            expect(compressedData.byteLength).toBeLessThan(data.byteLength);
+            expect(compressedData.byteLength).toBeLessThanByteSize(data.byteLength);
         });
 
         it('gzip (object options)', async () => {
             const { data: compressedData } = await compress(data, { algorithm: 'gzip' });
-            expect(compressedData.byteLength).toBeLessThan(data.byteLength);
+            expect(compressedData.byteLength).toBeLessThanByteSize(data.byteLength);
         });
 
         it('brotli (string options)', async () => {
             const { data: compressedData } = await compress(data, 'brotli');
-            expect(compressedData.byteLength).toBeLessThan(data.byteLength);
+            expect(compressedData.byteLength).toBeLessThanByteSize(data.byteLength);
         });
 
         it('brotli (object options)', async () => {
             const { data: compressedData } = await compress(data, { algorithm: 'brotli' });
-            expect(compressedData.byteLength).toBeLessThan(data.byteLength);
+            expect(compressedData.byteLength).toBeLessThanByteSize(data.byteLength);
         });
     });
 

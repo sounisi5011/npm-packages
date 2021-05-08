@@ -3,6 +3,7 @@ import * as stream from 'stream';
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
+import './helpers/jest-matchers';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
@@ -32,7 +33,7 @@ describe('encryptStream()', () => {
             // eslint-disable-next-line jest/no-if
             if (typeof firstChunkLen === 'number') {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(chunk.byteLength).toBeLessThan(firstChunkLen);
+                expect(chunk.byteLength).toBeLessThanByteSize(firstChunkLen);
             } else {
                 firstChunkLen = chunk.byteLength;
             }
