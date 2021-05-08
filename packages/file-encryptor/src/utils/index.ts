@@ -15,6 +15,8 @@ export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: 
     return findEntry ? findEntry[0] : null;
 }
 
+export { mergeObjectWithoutUndefined } from './merge-object';
+
 export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
 export function bufferFrom(value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer | string;
 export function bufferFrom(
