@@ -13,3 +13,28 @@ export function padEndArray<T, U>(array: readonly T[], length: number, value: U)
     const newArray = Array<U>(length - array.length).fill(value);
     return [...array, ...newArray];
 }
+
+export function addNegativeNumber(values: readonly number[]): number[];
+export function addNegativeNumber(values: ReadonlyArray<bigint>): Array<bigint>;
+export function addNegativeNumber(values: ReadonlyArray<number | bigint>): Array<number | bigint>;
+export function addNegativeNumber(values: ReadonlyArray<number | bigint>): Array<number | bigint> {
+    return values.flatMap(num => {
+        const negativeNum = -num;
+        return Object.is(num, negativeNum) ? [num] : [num, negativeNum];
+    });
+}
+
+export function createDummySizeBuffer(size: number): Buffer {
+    return Object.defineProperties(Buffer.alloc(0), {
+        byteLength: {
+            get: () => size,
+            enumerable: false,
+            configurable: true,
+        },
+        length: {
+            get: () => size,
+            enumerable: false,
+            configurable: true,
+        },
+    });
+}

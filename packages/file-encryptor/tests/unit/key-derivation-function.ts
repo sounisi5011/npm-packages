@@ -1,15 +1,23 @@
 import { randomBytes } from 'crypto';
 
+import escapeStringRegexp from 'escape-string-regexp';
+
 import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
+import type { Argon2Options } from '../../src/key-derivation-function/argon2';
 import '../helpers/jest-matchers';
+import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
+
+/** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L57 */
+const ARGON2_MIN_OUTLEN = 4;
+
+const password = 'Hoge Fuga';
 
 describe('getKDF()', () => {
     describe('generate key', () => {
         const { deriveKey, saltLength } = getKDF(undefined);
-        const password = 'Hoge Fuga';
         const salt = randomBytes(saltLength);
 
-        it.each([...Array(20).keys()].map(l => l + 4))('keyLengthBytes: %i', async keyLengthBytes => {
+        it.each(rangeArray(ARGON2_MIN_OUTLEN, 20))('keyLengthBytes: %i', async keyLengthBytes => {
             const key = await deriveKey(password, salt, keyLengthBytes);
             expect(key.byteLength).toBeByteSize(keyLengthBytes);
             const key2 = await deriveKey(password, salt, keyLengthBytes);
@@ -28,5 +36,266 @@ describe('getKDF()', () => {
             TypeError,
             `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
         );
+    });
+});
+
+describe('algorithm: Argon2', () => {
+    type Argon2Opts = Omit<Argon2Options, 'algorithm'>;
+    const optionNameList: ReadonlyArray<keyof Argon2Opts> = [
+        'iterations',
+        'memory',
+        'parallelism',
+    ];
+
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L46 */
+    const ARGON2_MIN_LANES = 1;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L47 */
+    const ARGON2_MAX_LANES = 0xFFFFFF;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L50 */
+    const ARGON2_MIN_THREADS = 1;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L51 */
+    const ARGON2_MAX_THREADS = 0xFFFFFF;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L58 */
+    const ARGON2_MAX_OUTLEN = 0xFFFFFFFF;
+    /**
+     * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L61
+     * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/src/core.c#L473
+     * @default 8
+     */
+    const ARGON2_MIN_MEMORY = (parallelism = ARGON2_MIN_LANES): number => Math.max(2 * 4, 8 * parallelism);
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L67-L68 */
+    const ARGON2_MAX_MEMORY = 0xFFFFFFFF;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L71 */
+    const ARGON2_MIN_TIME = 1;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L72 */
+    const ARGON2_MAX_TIME = 0xFFFFFFFF;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L83 */
+    const ARGON2_MIN_SALT_LENGTH = 8;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L84 */
+    const ARGON2_MAX_SALT_LENGTH = 0xFFFFFFFF;
+
+    const safeKeyLengthBytes = ARGON2_MIN_OUTLEN;
+
+    describe('generate key', () => {
+        describe.each<Argon2Options['algorithm']>([
+            'argon2d',
+            'argon2id',
+        ])('%s', algorithm => {
+            const { deriveKey, saltLength } = getKDF({ algorithm });
+            const salt = randomBytes(saltLength);
+
+            it.each(
+                rangeArray(ARGON2_MIN_OUTLEN, 20),
+            )('keyLengthBytes: %i', async keyLengthBytes => {
+                const key = await deriveKey(password, salt, keyLengthBytes);
+                expect(key.byteLength).toBeByteSize(keyLengthBytes);
+                const key2 = await deriveKey(password, salt, keyLengthBytes);
+                expect(key2).toStrictEqual(key);
+                const key3 = await deriveKey(password, salt, keyLengthBytes);
+                expect(key3).toStrictEqual(key);
+            });
+        });
+    });
+
+    describe('normalize options', () => {
+        it.each([
+            {},
+            ...optionNameList.flatMap<Argon2Opts>(optionName => [
+                { [optionName]: undefined },
+            ]),
+        ])('%p', opts => {
+            const options: Argon2Options = { algorithm: 'argon2d', ...opts };
+            const { normalizedOptions } = getKDF(options);
+            expect(normalizedOptions.iterations).toBeNumber();
+            expect(normalizedOptions.memory).toBeNumber();
+            expect(normalizedOptions.parallelism).toBeNumber();
+        });
+    });
+
+    describe('invalid options', () => {
+        const nonPositiveIntegerErrorMessageSuffix = (optionName: keyof Argon2Opts): string =>
+            `The "${optionName}" option must be of positive integers without 0, but received:`;
+        const notBetweenNumberErrorMessage = (name: string, { min, max }: Record<'min' | 'max', number>): string =>
+            `${name} must be >= ${min} and <= ${max}`;
+
+        describe.each<[string, unknown[]]>(
+            Object.entries({
+                'not number': [
+                    null,
+                    true,
+                    false,
+                    ...addNegativeNumber([
+                        BigInt(0),
+                        BigInt(1),
+                        BigInt(2),
+                    ]),
+                    '',
+                    'foo',
+                    [],
+                    {},
+                ],
+                'non integer': addNegativeNumber([
+                    2.1,
+                    2.5,
+                    2.9,
+                    0.1,
+                    1.001,
+                    NaN,
+                    Infinity,
+                ]),
+            }),
+        )('%s', (_, valueList) => {
+            describe.each(valueList)('%p', value => {
+                it.each(optionNameList.map<[Argon2Opts, keyof Argon2Opts]>(optionName => [
+                    { [optionName]: value },
+                    optionName,
+                ]))('%p', (opts, optionName) => {
+                    const options: Argon2Options = { algorithm: 'argon2d', ...opts };
+                    expect(() => getKDF(options)).toThrowWithMessage(
+                        TypeError,
+                        new RegExp(`^${
+                            escapeStringRegexp([
+                                `^Invalid type value received for Argon2's option "${optionName}"`,
+                                nonPositiveIntegerErrorMessageSuffix(optionName),
+                            ].join('. '))
+                        }\\b`),
+                    );
+                });
+            });
+        });
+
+        describe.each(
+            Object.entries({
+                'zero': addNegativeNumber([0]),
+                'negative integer': [-1],
+            }),
+        )('%s', (_, valueList) => {
+            describe.each(valueList)('%p', value => {
+                it.each(optionNameList.map<[Argon2Opts, keyof Argon2Opts]>(optionName => [
+                    { [optionName]: value },
+                    optionName,
+                ]))('%p', (opts, optionName) => {
+                    const options: Argon2Options = { algorithm: 'argon2d', ...opts };
+                    expect(() => getKDF(options)).toThrowWithMessage(
+                        RangeError,
+                        new RegExp(`^${
+                            escapeStringRegexp([
+                                `^Invalid integer received for Argon2's option "${optionName}"`,
+                                nonPositiveIntegerErrorMessageSuffix(optionName),
+                            ].join('. '))
+                        }\\b`),
+                    );
+                });
+            });
+        });
+
+        const optionMinMaxRecord: Record<keyof Argon2Opts, Record<'min' | 'max', number>> = {
+            iterations: {
+                min: ARGON2_MIN_TIME,
+                max: ARGON2_MAX_TIME,
+            },
+            memory: {
+                min: ARGON2_MIN_MEMORY(),
+                max: ARGON2_MAX_MEMORY,
+            },
+            parallelism: {
+                min: Math.max(ARGON2_MIN_LANES, ARGON2_MIN_THREADS),
+                max: Math.min(ARGON2_MAX_LANES, ARGON2_MAX_THREADS),
+            },
+        };
+        describe.each(['small', 'large'] as const)('too %s', mode => {
+            it.each(
+                optionNameList.map(
+                    (optionName): [string, Argon2Opts, typeof optionName, number, Record<'min' | 'max', number>] => {
+                        const { min, max } = optionMinMaxRecord[optionName];
+                        const [valueText, value] = mode === 'small'
+                            ? [`${min} - 1`, min - 1]
+                            : [`${max} + 1`, max + 1];
+                        return [
+                            `{ "${optionName}": ${valueText} }`,
+                            { [optionName]: value },
+                            optionName,
+                            value,
+                            { min, max },
+                        ];
+                    },
+                ).filter(([, , , value]) => value >= 1),
+            )('%s', (_, opts, optionName, value, { min, max }) => {
+                const options: Argon2Options = { algorithm: 'argon2d', ...opts };
+                expect(() => getKDF(options)).toThrowWithMessage(
+                    RangeError,
+                    [
+                        `The value "${value}" is too ${mode} for Argon2's option "${optionName}".`,
+                        notBetweenNumberErrorMessage(`The "${optionName}" option`, { min, max }),
+                    ].join('. '),
+                );
+            });
+        });
+        describe('too short', () => {
+            it('salt length', async () => {
+                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
+                const salt = Buffer.alloc(saltLength);
+                const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
+                await expect(resultPromise).rejects.toThrow(RangeError);
+                await expect(resultPromise).rejects.toThrow(
+                    new Error([
+                        `Too short salt was received for Argon2's option "salt"`,
+                        `${
+                            notBetweenNumberErrorMessage(
+                                `Salt length`,
+                                { min: ARGON2_MIN_SALT_LENGTH, max: ARGON2_MAX_SALT_LENGTH },
+                            )
+                        }, but received: ${saltLength}`,
+                    ].join('. ')),
+                );
+            });
+            it('key length', async () => {
+                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const salt = Buffer.alloc(saltLength);
+                const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
+                const resultPromise = deriveKey('', salt, keyLengthBytes);
+                await expect(resultPromise).rejects.toThrow(RangeError);
+                await expect(resultPromise).rejects.toThrow(
+                    new Error([
+                        `The value "${keyLengthBytes}" is too short for Argon2's option "keyLengthBytes"`,
+                        notBetweenNumberErrorMessage(`Key length`, { min: ARGON2_MIN_OUTLEN, max: ARGON2_MAX_OUTLEN }),
+                    ].join('. ')),
+                );
+            });
+        });
+        describe('too long', () => {
+            it('salt length', async () => {
+                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
+                const salt = createDummySizeBuffer(saltLength);
+                const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
+                await expect(resultPromise).rejects.toThrow(RangeError);
+                await expect(resultPromise).rejects.toThrow(
+                    new Error([
+                        `Too long salt was received for Argon2's option "salt"`,
+                        `${
+                            notBetweenNumberErrorMessage(
+                                `Salt length`,
+                                { min: ARGON2_MIN_SALT_LENGTH, max: ARGON2_MAX_SALT_LENGTH },
+                            )
+                        }, but received: ${saltLength}`,
+                    ].join('. ')),
+                );
+            });
+            it('key length', async () => {
+                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const salt = Buffer.alloc(saltLength);
+                const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
+                const resultPromise = deriveKey('', salt, keyLengthBytes);
+                await expect(resultPromise).rejects.toThrow(RangeError);
+                await expect(resultPromise).rejects.toThrow(
+                    new Error([
+                        `The value "${keyLengthBytes}" is too long for Argon2's option "keyLengthBytes"`,
+                        notBetweenNumberErrorMessage(`Key length`, { min: ARGON2_MIN_OUTLEN, max: ARGON2_MAX_OUTLEN }),
+                    ].join('. ')),
+                );
+            });
+        });
     });
 });
