@@ -147,37 +147,44 @@ type ValidateBetweenOptionsFn<TValue, TReturn> =
             & Required<Pick<ValidateBetweenOptions<TValue>, 'tooX' | 'type'>>,
     ) => TReturn | undefined);
 
-function validateBetween<TValue extends number>(
+function createBetweenErrorMessage<TValue extends number>(
     optionName: string,
     value: TValue,
     options: ValidateBetweenOptions<TValue>,
-): asserts value {
+): Record<'min' | 'max', string> {
     const tooX = options.tooX ?? { min: 'small', max: 'large' };
     const type = options.type ?? `the "${optionName}" option`;
     const subOpts = { value, ...options, tooX, type };
-    const startPrefix = ifFuncThenExec(options.startPrefix, subOpts) ?? {
-        min: `the value "${value}" is too ${tooX.min}`,
-        max: `the value "${value}" is too ${tooX.max}`,
-    };
     const between = (Object.fromEntries as objectFromEntries)((['min', 'max'] as const).map(mode => {
         const cond = ifFuncThenExec(options.rangeCond?.[mode], subOpts);
-        return [
-            mode,
-            cond ? `${options[mode]} (${cond})` : options[mode],
-        ];
+        const message = cond ? `${options[mode]} (${cond})` : options[mode];
+        return [mode, message];
     }));
     const messageSuffixList: string[] = [
         ifFuncThenExec(options.suffix?.prefix, subOpts),
         `${type} must be between ${between.min} and ${between.max}`,
         ifFuncThenExec(options.suffix?.suffix, subOpts),
     ].filter(isNotUndefined);
+
+    const startPrefix = ifFuncThenExec(options.startPrefix, subOpts) ?? {
+        min: `the value "${value}" is too ${tooX.min}`,
+        max: `the value "${value}" is too ${tooX.max}`,
+    };
     const messageSuffix = capitalize(messageSuffixList.join(', '));
-    if (!(options.min <= value)) {
-        throw new RangeError(`${capitalize(startPrefix.min)} for Argon2's option "${optionName}". ${messageSuffix}`);
-    }
-    if (!(value <= options.max)) {
-        throw new RangeError(`${capitalize(startPrefix.max)} for Argon2's option "${optionName}". ${messageSuffix}`);
-    }
+    return {
+        min: `${capitalize(startPrefix.min)} for Argon2's option "${optionName}". ${messageSuffix}`,
+        max: `${capitalize(startPrefix.max)} for Argon2's option "${optionName}". ${messageSuffix}`,
+    };
+}
+
+function validateBetween<TValue extends number>(
+    optionName: string,
+    value: TValue,
+    options: ValidateBetweenOptions<TValue>,
+): asserts value {
+    const errorMessage = createBetweenErrorMessage(optionName, value, options);
+    if (!(options.min <= value)) throw new RangeError(errorMessage.min);
+    if (!(value <= options.max)) throw new RangeError(errorMessage.max);
 }
 
 interface ValidateBetweenLengthOptions<TValue> extends ValidateBetweenOptions<TValue> {
@@ -242,7 +249,40 @@ function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm
     );
 }
 
-export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<NormalizedArgon2Options> {
+type GetArgon2KDFResult = GetKDFResult<NormalizedArgon2Options>;
+
+function createDeriveKeyFunc(
+    type: argon2.ArgonType,
+    options: Omit<NormalizedArgon2Options, 'algorithm'>,
+): GetArgon2KDFResult['deriveKey'] {
+    return async (password, salt, keyLengthBytes) => {
+        validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
+        validateBetweenLength(
+            'keyLengthBytes',
+            keyLengthBytes,
+            { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
+        );
+
+        const passwordBufferOrString = bufferFrom(password);
+        validateBetweenByteLength(
+            'password',
+            passwordBufferOrString,
+            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
+        );
+
+        return (await argon2.hash({
+            pass: passwordBufferOrString,
+            salt,
+            time: options.iterations,
+            mem: options.memory,
+            hashLen: keyLengthBytes,
+            parallelism: options.parallelism,
+            type,
+        })).hash;
+    };
+}
+
+export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResult {
     const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
     const foundType = argon2TypeMap.get(algorithm);
     if (!foundType) {
@@ -253,31 +293,7 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<Nor
     validateArgon2Options(argon2Options);
 
     return {
-        deriveKey: async (password, salt, keyLengthBytes) => {
-            validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
-            validateBetweenLength(
-                'keyLengthBytes',
-                keyLengthBytes,
-                { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
-            );
-
-            const passwordBufferOrString = bufferFrom(password);
-            validateBetweenByteLength(
-                'password',
-                passwordBufferOrString,
-                { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
-            );
-
-            return (await argon2.hash({
-                pass: passwordBufferOrString,
-                salt,
-                time: argon2Options.iterations,
-                mem: argon2Options.memory,
-                hashLen: keyLengthBytes,
-                parallelism: argon2Options.parallelism,
-                type: foundType.type,
-            })).hash;
-        },
+        deriveKey: createDeriveKeyFunc(foundType.type, argon2Options),
         saltLength: SALT_LEN,
         normalizedOptions: { algorithm, ...argon2Options },
     };
