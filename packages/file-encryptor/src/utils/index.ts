@@ -6,7 +6,7 @@ function isString(value: unknown): value is string {
     return typeof value === 'string';
 }
 
-function isObject(value: unknown): value is Record<PropertyKey, unknown> {
+export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
     return typeof value === 'object' && value !== null;
 }
 

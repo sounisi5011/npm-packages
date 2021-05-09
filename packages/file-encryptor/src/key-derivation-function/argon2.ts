@@ -2,7 +2,7 @@ import argon2 from 'argon2-browser';
 import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
-import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
+import { bufferFrom, ifFuncThenExec, isNotUndefined, isObject, normalizeOptions, printObject } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
 
 const argon2TypeRecord = {
@@ -251,6 +251,23 @@ function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm
 
 type GetArgon2KDFResult = GetKDFResult<NormalizedArgon2Options>;
 
+function normalizeInternalError(error: unknown): never {
+    if (error instanceof Error) {
+        error.message = `Internal error from Argon2: ${error.message}`;
+        throw error;
+    }
+    if (isObject(error)) {
+        const { message, code, ...other } = error;
+        if (typeof message === 'string' && typeof code === 'number' && Object.keys(other).length === 0) {
+            throw Object.assign(
+                new Error(`Internal error from Argon2: ${message}`),
+                { code },
+            );
+        }
+    }
+    throw new Error(`Internal error from Argon2: ${printObject(error)}`);
+}
+
 function createDeriveKeyFunc(
     type: argon2.ArgonType,
     options: Omit<NormalizedArgon2Options, 'algorithm'>,
@@ -270,7 +287,7 @@ function createDeriveKeyFunc(
             { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
-        return (await argon2.hash({
+        return await argon2.hash({
             pass: passwordBufferOrString,
             salt,
             time: options.iterations,
@@ -278,7 +295,9 @@ function createDeriveKeyFunc(
             hashLen: keyLengthBytes,
             parallelism: options.parallelism,
             type,
-        })).hash;
+        })
+            .then(({ hash }) => hash)
+            .catch(normalizeInternalError);
     };
 }
 
