@@ -10,8 +10,19 @@ function isObject(value: unknown): value is Record<PropertyKey, unknown> {
     return typeof value === 'object' && value !== null;
 }
 
-function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
+function isFunction(value: unknown): value is () => void {
+    return typeof value === 'function';
+}
+
+export function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
     return value !== undefined;
+}
+
+export function ifFuncThenExec<TArgs extends unknown[], TResult, TOther>(
+    value: ((...args: TArgs) => TResult) | TOther,
+    ...args: TArgs
+): TResult | TOther {
+    return isFunction(value) ? value(...args) : value;
 }
 
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
