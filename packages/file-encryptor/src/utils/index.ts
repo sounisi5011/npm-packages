@@ -10,6 +10,10 @@ function isObject(value: unknown): value is Record<PropertyKey, unknown> {
     return typeof value === 'object' && value !== null;
 }
 
+function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
+    return value !== undefined;
+}
+
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
     const findEntry = (Object.entries as objectEntries)(rec).find(([, val]) => val === value);
     return findEntry ? findEntry[0] : null;
@@ -46,15 +50,19 @@ export function normalizeOptions<T extends object>(
     // The `Object.keys()` method does not read symbol properties.
     // Therefore, use the `Reflect.ownKeys()` method instead, which also reads the symbol properties.
     const optionNameList = Reflect.ownKeys(normalizedOptions) as Array<keyof T>;
-    for (const partialOptions of optionsList) {
-        for (const optionName of optionNameList) {
-            // Copies only enumerable properties.
-            if (!Object.prototype.propertyIsEnumerable.call(partialOptions, optionName)) continue;
-            const value: T[keyof T] | undefined = partialOptions[optionName];
-            if (value !== undefined) normalizedOptions[optionName] = value;
-        }
-    }
-    return normalizedOptions;
+
+    return optionsList.reduce<typeof normalizedOptions>(
+        (normalizedOptions, partialOptions) =>
+            optionNameList
+                // Copies only enumerable properties.
+                .filter(optionName => Object.prototype.propertyIsEnumerable.call(partialOptions, optionName))
+                .reduce((normalizedOptions, optionName) => {
+                    const value = partialOptions[optionName];
+                    if (isNotUndefined(value)) normalizedOptions[optionName] = value;
+                    return normalizedOptions;
+                }, normalizedOptions),
+        normalizedOptions,
+    );
 }
 
 export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
