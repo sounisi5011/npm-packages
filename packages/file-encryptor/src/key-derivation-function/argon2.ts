@@ -1,7 +1,7 @@
 import argon2 from 'argon2-browser';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
-import { bufferFrom, mergeObjectWithoutUndefined, printObject } from '../utils';
+import { bufferFrom, normalizeOptions, printObject } from '../utils';
 import type { objectEntries } from '../utils/type';
 
 const argon2TypeRecord = {
@@ -47,7 +47,7 @@ export function isArgon2Options<T extends (Partial<BaseKeyDerivationOptions> | u
 }
 
 export function getArgon2KDF(options: Readonly<Argon2Options>): GetKDFResult<NormalizedArgon2Options> {
-    const normalizedOptions = mergeObjectWithoutUndefined(defaultOptions, options);
+    const normalizedOptions = normalizeOptions(defaultOptions, options);
 
     const foundType = argon2TypeMap.get(normalizedOptions.algorithm);
     if (!foundType) {

@@ -95,8 +95,7 @@
     "grpc_tools_node_protoc_ts": "5.2.1",
     "jest-extended": "0.11.5",
     "jest-matcher-utils": "26.6.2",
-    "multicodec": "3.0.1",
-    "type-fest": "1.1.1"
+    "multicodec": "3.0.1"
   },
   "engines": {
     "node": "12.x || 14.x || 15.x || 16.x"
