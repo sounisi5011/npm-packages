@@ -321,4 +321,24 @@ describe('algorithm: Argon2', () => {
             });
         });
     });
+
+    it('internal error', async () => {
+        const { deriveKey, saltLength } = getKDF({
+            algorithm: 'argon2d',
+            iterations: ARGON2_MIN_TIME,
+            parallelism: ARGON2_MIN_THREADS,
+            /**
+             * This option tells Argon2 to use 1TiB of memory.
+             * However, at present (May 2021), there is no computer in this world with such a huge memory.
+             * Therefore, this process will always fail and Argon2's internal error will be output.
+             */
+            memory: 2 ** 40 / 2 ** 10,
+        });
+        const salt = Buffer.alloc(saltLength);
+        const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
+        await expect(resultPromise).rejects.toThrow(Error);
+        await expect(resultPromise).rejects.toThrow(
+            new Error(`Internal error from Argon2: Memory cost is too large`),
+        );
+    });
 });
