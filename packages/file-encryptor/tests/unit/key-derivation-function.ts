@@ -1,4 +1,5 @@
 import { randomBytes } from 'crypto';
+import * as util from 'util';
 
 import escapeStringRegexp from 'escape-string-regexp';
 
@@ -62,7 +63,7 @@ describe('algorithm: Argon2', () => {
      * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/src/core.c#L473
      * @default 8
      */
-    const ARGON2_MIN_MEMORY = (parallelism = ARGON2_MIN_LANES): number => Math.max(2 * 4, 8 * parallelism);
+    const ARGON2_MIN_MEMORY = (parallelism: number): number => Math.max(2 * 4, 8 * parallelism);
     /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L67-L68 */
     const ARGON2_MAX_MEMORY = 0xFFFFFFFF;
     /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L71 */
@@ -115,8 +116,10 @@ describe('algorithm: Argon2', () => {
     describe('invalid options', () => {
         const nonPositiveIntegerErrorMessageSuffix = (optionName: keyof Argon2Opts): string =>
             `The "${optionName}" option must be of positive integers without 0, but received:`;
-        const notBetweenNumberErrorMessage = (name: string, { min, max }: Record<'min' | 'max', number>): string =>
-            `${name} must be >= ${min} and <= ${max}`;
+        const notBetweenNumberErrorMessage = (
+            name: string,
+            { min, max }: Record<'min' | 'max', number | string>,
+        ): string => `${name} must be between ${min} and ${max}`;
 
         describe.each<[string, unknown[]]>(
             Object.entries({
@@ -155,10 +158,10 @@ describe('algorithm: Argon2', () => {
                         TypeError,
                         new RegExp(`^${
                             escapeStringRegexp([
-                                `^Invalid type value received for Argon2's option "${optionName}"`,
+                                `Invalid type value received for Argon2's option "${optionName}"`,
                                 nonPositiveIntegerErrorMessageSuffix(optionName),
                             ].join('. '))
-                        }\\b`),
+                        }`),
                     );
                 });
             });
@@ -180,53 +183,73 @@ describe('algorithm: Argon2', () => {
                         RangeError,
                         new RegExp(`^${
                             escapeStringRegexp([
-                                `^Invalid integer received for Argon2's option "${optionName}"`,
+                                `Invalid integer received for Argon2's option "${optionName}"`,
                                 nonPositiveIntegerErrorMessageSuffix(optionName),
                             ].join('. '))
-                        }\\b`),
+                        }`),
                     );
                 });
             });
         });
 
-        const optionMinMaxRecord: Record<keyof Argon2Opts, Record<'min' | 'max', number>> = {
+        const optionMinMaxRecord: Record<Exclude<keyof Argon2Opts, 'memory'>, Record<'min' | 'max', number>> & {
+            memory: (parallelism: number) => Record<'min' | 'max', number>;
+        } = {
             iterations: {
                 min: ARGON2_MIN_TIME,
                 max: ARGON2_MAX_TIME,
             },
-            memory: {
-                min: ARGON2_MIN_MEMORY(),
+            memory: parallelism => ({
+                min: ARGON2_MIN_MEMORY(parallelism),
                 max: ARGON2_MAX_MEMORY,
-            },
+            }),
             parallelism: {
                 min: Math.max(ARGON2_MIN_LANES, ARGON2_MIN_THREADS),
                 max: Math.min(ARGON2_MAX_LANES, ARGON2_MAX_THREADS),
             },
         };
         describe.each(['small', 'large'] as const)('too %s', mode => {
-            it.each(
-                optionNameList.map(
-                    (optionName): [string, Argon2Opts, typeof optionName, number, Record<'min' | 'max', number>] => {
-                        const { min, max } = optionMinMaxRecord[optionName];
+            type Case = [
+                string,
+                { opts: Argon2Opts; optionName: keyof Argon2Opts; value: number; min: number; max: number },
+            ];
+            const table = optionNameList.flatMap<Case>(
+                optionName => {
+                    return rangeArray(0, optionName === 'memory' && mode === 'small' ? 5 : 0).map<Case>(parallelism => {
+                        const { min, max } = optionName === 'memory'
+                            ? optionMinMaxRecord[optionName](parallelism || 1)
+                            : optionMinMaxRecord[optionName];
                         const [valueText, value] = mode === 'small'
                             ? [`${min} - 1`, min - 1]
                             : [`${max} + 1`, max + 1];
-                        return [
-                            `{ "${optionName}": ${valueText} }`,
-                            { [optionName]: value },
-                            optionName,
-                            value,
-                            { min, max },
-                        ];
-                    },
-                ).filter(([, , , value]) => value >= 1),
-            )('%s', (_, opts, optionName, value, { min, max }) => {
+                        const opts: Argon2Opts = parallelism
+                            ? { [optionName]: value, parallelism }
+                            : { [optionName]: value };
+                        const testName = util.inspect(
+                            {
+                                ...opts,
+                                [optionName]: { [util.inspect.custom]: () => valueText },
+                            },
+                        );
+                        return [testName, { opts, optionName, value, min, max }];
+                    });
+                },
+            ).filter(([, { value }]) => value >= 1);
+            it.each(table)('%s', (_, { opts, optionName, value, min, max }) => {
                 const options: Argon2Options = { algorithm: 'argon2d', ...opts };
                 expect(() => getKDF(options)).toThrowWithMessage(
                     RangeError,
                     [
-                        `The value "${value}" is too ${mode} for Argon2's option "${optionName}".`,
-                        notBetweenNumberErrorMessage(`The "${optionName}" option`, { min, max }),
+                        `The value "${value}" is too ${mode} for Argon2's option "${optionName}"`,
+                        notBetweenNumberErrorMessage(
+                            `The "${optionName}" option`,
+                            {
+                                min: optionName === 'memory'
+                                    ? `${min} (if "parallelism" option is ${options.parallelism ?? 1})`
+                                    : min,
+                                max,
+                            },
+                        ),
                     ].join('. '),
                 );
             });
