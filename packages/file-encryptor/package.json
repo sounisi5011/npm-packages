@@ -79,6 +79,7 @@
     "@jorgeferrero/stream-to-buffer": "^2.0.6",
     "argon2-browser": "^1.15.4",
     "capitalize": "^2.0.3",
+    "duplexify": "^4.1.1",
     "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
   },
@@ -87,6 +88,7 @@
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
     "@types/capitalize": "2.0.0",
+    "@types/duplexify": "3.6.0",
     "@types/google-protobuf": "3.15.2",
     "@types/node": "*",
     "@types/varint": "6.0.0",
@@ -100,7 +102,7 @@
     "multicodec": "3.0.1"
   },
   "engines": {
-    "node": "12.x || 14.x || 15.x || 16.x"
+    "node": "^12.3.0 || 14.x || 15.x || 16.x"
   },
   "runkitExampleFilename": "./examples/index.js"
 }

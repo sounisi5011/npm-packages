@@ -2,7 +2,7 @@ import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import type { CryptAlgorithmName } from './cipher';
 import type { CompressOptionsWithString } from './compress';
-import { DecryptorTransform } from './decrypt';
+import { createDecryptorTransform } from './decrypt';
 import { encryptFirstChunk, EncryptOptions, EncryptorTransform } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
 import type { InputDataType } from './types';
@@ -18,7 +18,7 @@ export async function encrypt(
 }
 
 export async function decrypt(encryptedData: InputDataType, password: InputDataType): Promise<Buffer> {
-    const stream = new DecryptorTransform(password);
+    const stream = createDecryptorTransform(password);
     const dataPromise = streamToBuffer(stream);
     stream.end(encryptedData);
     return await dataPromise;
@@ -28,6 +28,6 @@ export function encryptStream(password: InputDataType, options: EncryptOptions =
     return new EncryptorTransform(password, options);
 }
 
-export function decryptStream(password: InputDataType): DecryptorTransform {
-    return new DecryptorTransform(password);
+export function decryptStream(password: InputDataType): NodeJS.ReadWriteStream {
+    return createDecryptorTransform(password);
 }

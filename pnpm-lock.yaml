@@ -73,6 +73,7 @@ importers:
       '@jorgeferrero/stream-to-buffer': 2.0.6
       argon2-browser: 1.15.4
       capitalize: 2.0.3
+      duplexify: 4.1.1
       google-protobuf: 3.16.0
       varint: 6.0.0
     devDependencies:
@@ -80,6 +81,7 @@ importers:
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.12.0
       '@types/capitalize': 2.0.0
+      '@types/duplexify': 3.6.0
       '@types/google-protobuf': 3.15.2
       '@types/node': 14.14.33
       '@types/varint': 6.0.0
@@ -97,6 +99,7 @@ importers:
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/argon2-browser': 1.12.0
       '@types/capitalize': 2.0.0
+      '@types/duplexify': 3.6.0
       '@types/google-protobuf': 3.15.2
       '@types/node': '*'
       '@types/varint': 6.0.0
@@ -104,6 +107,7 @@ importers:
       capitalize: ^2.0.3
       combinate: 1.1.3
       cpy-cli: 3.1.1
+      duplexify: ^4.1.1
       escape-string-regexp: 4.0.0
       glob-exec: 0.1.1
       google-protobuf: ^3.15.8
@@ -933,6 +937,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Jxz08Zch+/J+R3DUcPGmXZ4hNzZImd/FXXij32ByTfclrCQr15+geQjV5teTyFQb3zYPi7O5pRv2/YsyDfRmjA==
+  /@types/duplexify/3.6.0:
+    dependencies:
+      '@types/node': 14.14.33
+    dev: true
+    resolution:
+      integrity: sha512-5zOA53RUlzN74bvrSGwjudssD9F3a797sDZQkiYpUOxW+WHaXTCPz4/d5Dgi6FKnOqZ2CpaTo0DhgIfsXAOE/A==
   /@types/glob/7.1.3:
     dependencies:
       '@types/minimatch': 3.0.3
@@ -2406,6 +2416,15 @@ packages:
     dev: true
     resolution:
       integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
+  /duplexify/4.1.1:
+    dependencies:
+      end-of-stream: 1.4.4
+      inherits: 2.0.4
+      readable-stream: 3.6.0
+      stream-shift: 1.0.1
+    dev: false
+    resolution:
+      integrity: sha512-DY3xVEmVHTv1wSzKNbwoU6nVjzI369Y6sPoqfYr0/xlx3IdX2n94xIszTcjPO8W8ZIv0Wb0PXNcjuZyT4wiICA==
   /ecc-jsbn/0.1.2:
     dependencies:
       jsbn: 0.1.1
@@ -2434,7 +2453,6 @@ packages:
   /end-of-stream/1.4.4:
     dependencies:
       once: 1.4.0
-    dev: true
     resolution:
       integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==
   /enquirer/2.3.6:
@@ -6042,6 +6060,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
+  /readable-stream/3.6.0:
+    dependencies:
+      inherits: 2.0.4
+      string_decoder: 1.1.1
+      util-deprecate: 1.0.2
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
   /redent/3.0.0:
     dependencies:
       indent-string: 4.0.0
@@ -6624,6 +6652,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+  /stream-shift/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
   /strict-uri-encode/2.0.0:
     dev: false
     engines:
