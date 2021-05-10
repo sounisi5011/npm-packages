@@ -5,6 +5,7 @@ import { StreamReader } from '../../../src/utils/stream';
 describe('class StreamReader', () => {
     describe('read() method', () => {
         it('empty stream', async () => {
+            // eslint-disable-next-line node/no-unsupported-features/node-builtins
             const targetStream = stream.Readable.from([]);
             const reader = new StreamReader(targetStream);
             await expect(reader.read(1)).resolves
@@ -25,6 +26,7 @@ describe('class StreamReader', () => {
                 [{ size: 4, offset: 4 }, [4, 5]],
                 [{ size: 4, offset: 999 }, []],
             ])('%p', async (input, expected) => {
+                // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
                 const reader = new StreamReader(targetStream);
 
@@ -38,19 +40,18 @@ describe('class StreamReader', () => {
             });
         });
         it('multi read', async () => {
+            const chunkList = [
+                [0, 1, 2, 3],
+                [4],
+                [5, 6, 7, 8],
+            ];
+
             let readCount = 0;
-            const gen = function*(): Generator<Buffer> {
-                const chunkList = [
-                    [0, 1, 2, 3],
-                    [4],
-                    [5, 6, 7, 8],
-                ];
-                for (const chunkData of chunkList) {
-                    yield Buffer.from(chunkData);
+            // eslint-disable-next-line node/no-unsupported-features/node-builtins
+            const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)))
+                .on('data', () => {
                     readCount++;
-                }
-            };
-            const targetStream = stream.Readable.from(gen());
+                });
             const reader = new StreamReader(targetStream);
 
             expect(readCount).toBe(0);
@@ -100,6 +101,7 @@ describe('class StreamReader', () => {
                     ['zero seek', 0, [9, 8, 7]],
                     ['over seek', 999, []],
                 ])('%s', async (_, offset, expected) => {
+                    // eslint-disable-next-line node/no-unsupported-features/node-builtins
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
                     const reader = new StreamReader(targetStream);
 
@@ -115,6 +117,7 @@ describe('class StreamReader', () => {
                     ['zero seek', 0, [9, 8, 7]],
                     ['over seek', 999, []],
                 ])('%s', async (_, offset, expected) => {
+                    // eslint-disable-next-line node/no-unsupported-features/node-builtins
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
                     const reader = new StreamReader(targetStream);
 
@@ -129,12 +132,14 @@ describe('class StreamReader', () => {
     });
     describe('isEnd() method', () => {
         it('empty stream', async () => {
+            // eslint-disable-next-line node/no-unsupported-features/node-builtins
             const targetStream = stream.Readable.from([]);
             const reader = new StreamReader(targetStream);
 
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
         it('non empty stream', async () => {
+            // eslint-disable-next-line node/no-unsupported-features/node-builtins
             const targetStream = stream.Readable.from([Buffer.alloc(1)]);
             const reader = new StreamReader(targetStream);
 
