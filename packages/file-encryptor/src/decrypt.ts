@@ -83,28 +83,17 @@ async function decryptChunk(
     reader: StreamReader,
 ): Promise<{ cleartext: Buffer; decryptorMetadata: DecryptorMetadata }> {
     let headerData: HeaderData | SimpleHeaderData;
-    const seekToEndOffset = async <T extends { endOffset: number }>(result: T): Promise<Omit<T, 'endOffset'>> => {
-        const { endOffset, ...other } = result;
-        await reader.seek(endOffset);
-        return other;
-    };
-
     if (!decryptorMetadata) {
         /**
          * Validate CID (Content IDentifier)
          */
-        await seekToEndOffset(validateCID({ data: await reader.read(9) }));
+        await validateCID(reader);
 
         /**
          * Read header
          */
-        const { dataByteLength: headerByteLength } = await seekToEndOffset(
-            parseHeaderLength({ data: await reader.read(9) }),
-        );
-        const fullHeaderData = (await seekToEndOffset(parseHeaderData({
-            data: await reader.read(headerByteLength),
-            headerByteLength,
-        }))).headerData;
+        const { dataByteLength: headerByteLength } = await parseHeaderLength(reader);
+        const { headerData: fullHeaderData } = await parseHeaderData(reader, { headerByteLength });
 
         /**
          * Read algorithm and generate key
@@ -121,25 +110,15 @@ async function decryptChunk(
         /**
          * Read header
          */
-        const { dataByteLength: headerByteLength } = await seekToEndOffset(
-            parseSimpleHeaderLength({ data: await reader.read(9) }),
-        );
-        headerData = (await seekToEndOffset(parseSimpleHeaderData({
-            data: await reader.read(headerByteLength),
-            headerByteLength,
-        }))).headerData;
+        const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
+        headerData = (await parseSimpleHeaderData(reader, { headerByteLength })).headerData;
     }
 
     /**
      * Read ciphertext
      */
-    const { dataByteLength: ciphertextByteLength } = await seekToEndOffset(
-        parseCiphertextLength({ data: await reader.read(9) }),
-    );
-    const { ciphertextDataBytes } = await seekToEndOffset(parseCiphertextData({
-        data: await reader.read(ciphertextByteLength),
-        ciphertextByteLength,
-    }));
+    const { dataByteLength: ciphertextByteLength } = await parseCiphertextLength(reader);
+    const { ciphertextDataBytes } = await parseCiphertextData(reader, { ciphertextByteLength });
 
     /**
      * Update the invocation part in the nonce
