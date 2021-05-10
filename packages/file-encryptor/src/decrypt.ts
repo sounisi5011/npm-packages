@@ -34,6 +34,28 @@ export interface DecryptorMetadata {
 
 export type DecryptedFirstData = DecryptedData & DecryptorMetadata;
 
+async function getAlgorithmAndKey(
+    password: InputDataType,
+    headerData: HeaderData,
+): Promise<{ algorithm: CryptAlgorithm; key: Uint8Array }> {
+    const algorithm = cryptAlgorithmMap.get(headerData.algorithmName);
+    if (!algorithm) {
+        throw new TypeError(`Unknown algorithm was received: ${headerData.algorithmName}`);
+    }
+
+    /**
+     * Generate key
+     */
+    const key = await getKDF(headerData.keyDerivationOptions)
+        .deriveKey(
+            password,
+            headerData.salt,
+            headerData.keyLength,
+        );
+
+    return { algorithm, key };
+}
+
 function decrypt(
     { algorithm, key, nonce, authTag, ciphertext }: {
         algorithm: CryptAlgorithm;
@@ -55,94 +77,108 @@ function decrypt(
     }
 }
 
+async function decryptChunk(
+    password: InputDataType,
+    decryptorMetadata: DecryptorMetadata | undefined,
+    reader: StreamReader,
+): Promise<{ cleartext: Buffer; decryptorMetadata: DecryptorMetadata }> {
+    let headerData: HeaderData | SimpleHeaderData;
+    const seekToEndOffset = async <T extends { endOffset: number }>(result: T): Promise<Omit<T, 'endOffset'>> => {
+        const { endOffset, ...other } = result;
+        await reader.seek(endOffset);
+        return other;
+    };
+
+    if (!decryptorMetadata) {
+        /**
+         * Validate CID (Content IDentifier)
+         */
+        await seekToEndOffset(validateCID({ data: await reader.read(9) }));
+
+        /**
+         * Read header
+         */
+        const { dataByteLength: headerByteLength } = await seekToEndOffset(
+            parseHeaderLength({ data: await reader.read(9) }),
+        );
+        const fullHeaderData = (await seekToEndOffset(parseHeaderData({
+            data: await reader.read(headerByteLength),
+            headerByteLength,
+        }))).headerData;
+
+        /**
+         * Read algorithm and generate key
+         */
+        const { algorithm, key } = await getAlgorithmAndKey(password, fullHeaderData);
+
+        headerData = fullHeaderData;
+        decryptorMetadata = {
+            algorithm,
+            key,
+            compressAlgorithmName: fullHeaderData.compressAlgorithmName,
+        };
+    } else {
+        /**
+         * Read header
+         */
+        const { dataByteLength: headerByteLength } = await seekToEndOffset(
+            parseSimpleHeaderLength({ data: await reader.read(9) }),
+        );
+        headerData = (await seekToEndOffset(parseSimpleHeaderData({
+            data: await reader.read(headerByteLength),
+            headerByteLength,
+        }))).headerData;
+    }
+
+    /**
+     * Read ciphertext
+     */
+    const { dataByteLength: ciphertextByteLength } = await seekToEndOffset(
+        parseCiphertextLength({ data: await reader.read(9) }),
+    );
+    const { ciphertextDataBytes } = await seekToEndOffset(parseCiphertextData({
+        data: await reader.read(ciphertextByteLength),
+        ciphertextByteLength,
+    }));
+
+    /**
+     * Update the invocation part in the nonce
+     */
+    nonceState.updateInvocation(headerData.nonce);
+
+    /**
+     * Decrypt ciphertext
+     */
+    const compressedCleartext = decrypt({
+        algorithm: decryptorMetadata.algorithm,
+        key: decryptorMetadata.key,
+        nonce: headerData.nonce,
+        authTag: headerData.authTag,
+        ciphertext: ciphertextDataBytes,
+    });
+
+    /**
+     * Decompress cleartext
+     */
+    const cleartext = decryptorMetadata.compressAlgorithmName
+        ? await decompress(compressedCleartext, decryptorMetadata.compressAlgorithmName)
+        : compressedCleartext;
+
+    return { cleartext, decryptorMetadata };
+}
+
 export function createDecryptorTransform(password: InputDataType): stream.Duplex {
     const stream = gts(async function*(inputStream) {
         const reader = new StreamReader(inputStream, chunk => {
             validateChunk(chunk);
             return bufferFrom(chunk, 'utf8');
         });
-        const seekToEndOffset = async <T extends { endOffset: number }>(result: T): Promise<Omit<T, 'endOffset'>> => {
-            const { endOffset, ...other } = result;
-            await reader.seek(endOffset);
-            return other;
-        };
 
         let decryptorMetadata: DecryptorMetadata | undefined;
         while (!(await reader.isEnd())) {
-            let headerData: HeaderData | SimpleHeaderData;
-            if (!decryptorMetadata) {
-                await seekToEndOffset(validateCID({ data: await reader.read(9) }));
-                const { dataByteLength: headerByteLength } = await seekToEndOffset(
-                    parseHeaderLength({ data: await reader.read(9) }),
-                );
-                const fullHeaderData = (await seekToEndOffset(parseHeaderData({
-                    data: await reader.read(headerByteLength),
-                    headerByteLength,
-                }))).headerData;
-
-                const algorithm = cryptAlgorithmMap.get(fullHeaderData.algorithmName);
-                if (!algorithm) {
-                    throw new TypeError(`Unknown algorithm was received: ${fullHeaderData.algorithmName}`);
-                }
-
-                /**
-                 * Generate key
-                 */
-                const key = await getKDF(fullHeaderData.keyDerivationOptions)
-                    .deriveKey(
-                        password,
-                        fullHeaderData.salt,
-                        fullHeaderData.keyLength,
-                    );
-
-                headerData = fullHeaderData;
-                decryptorMetadata = {
-                    algorithm: algorithm,
-                    key,
-                    compressAlgorithmName: fullHeaderData.compressAlgorithmName,
-                };
-            } else {
-                const { dataByteLength: headerByteLength } = await seekToEndOffset(
-                    parseSimpleHeaderLength({ data: await reader.read(9) }),
-                );
-                headerData = (await seekToEndOffset(parseSimpleHeaderData({
-                    data: await reader.read(headerByteLength),
-                    headerByteLength,
-                }))).headerData;
-            }
-
-            const { dataByteLength: ciphertextByteLength } = await seekToEndOffset(
-                parseCiphertextLength({ data: await reader.read(9) }),
-            );
-            const { ciphertextDataBytes } = await seekToEndOffset(parseCiphertextData({
-                data: await reader.read(ciphertextByteLength),
-                ciphertextByteLength,
-            }));
-
-            /**
-             * Update the invocation part in the nonce
-             */
-            nonceState.updateInvocation(headerData.nonce);
-
-            /**
-             * Decrypt ciphertext
-             */
-            const compressedCleartext = decrypt({
-                algorithm: decryptorMetadata.algorithm,
-                key: decryptorMetadata.key,
-                nonce: headerData.nonce,
-                authTag: headerData.authTag,
-                ciphertext: ciphertextDataBytes,
-            });
-
-            /**
-             * Decompress cleartext
-             */
-            const cleartext = decryptorMetadata.compressAlgorithmName
-                ? await decompress(compressedCleartext, decryptorMetadata.compressAlgorithmName)
-                : compressedCleartext;
-
-            yield cleartext;
+            const result = await decryptChunk(password, decryptorMetadata, reader);
+            decryptorMetadata = result.decryptorMetadata;
+            yield result.cleartext;
         }
     }, { readableObjectMode: true, writableObjectMode: true });
     return stream;
