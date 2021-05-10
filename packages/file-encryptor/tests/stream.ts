@@ -1,6 +1,7 @@
 import * as stream from 'stream';
 
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
+import { writableNoopStream } from 'noop-stream';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
 import './helpers/jest-matchers';
@@ -162,6 +163,7 @@ describe('decryptStream()', () => {
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 decryptStream(''),
+                writableNoopStream(),
             );
             await expect(resultPromise).rejects.toThrow(/^Invalid identifier detected\./);
         });
@@ -173,9 +175,39 @@ describe('decryptStream()', () => {
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 decryptStream(''),
+                writableNoopStream(),
             );
             await expect(resultPromise).rejects.toThrow(TypeError);
             await expect(resultPromise).rejects.toThrow(chunkTypeErrorMessageRegExp);
         });
+    });
+    /**
+     * Note: The Transform stream emits an `error` event followed by a `close` event when an error occurs.
+     *       However, the `duplexify@4.1.1` package will emit a `finish` event before the `error` event.
+     *       Because of this, errors emitted from the decryptor are not received by the `stream.pipeline()` module method.
+     *       This problem can be solved by using the `pipe()` method or the `stream.pipeline()` module method to attach the Writable stream to the decryptor.
+     *       In most cases, the decryptor stream is connected to the Writable stream for use.
+     *       Therefore, it should not affect most users.
+     *       However, there may be other bugs that cause errors emitted by the decryptor to be ignored.
+     *       Conclusion: This bug has to be fixed.
+     * TODO: Fork the `duplexify` package or stop using it to fix this bug.
+     */
+    it.skip('decryptor should throw an error even if not piped to WritableStream', async () => {
+        /**
+         * In the case of Transform streams, errors can be detected even if they are not attached to a Writable stream.
+         */
+        await expect(pipelineAsync(
+            createCountStream(1),
+            new stream.Transform({
+                transform(_c, _e, done) {
+                    done(new Error(`error!!!!!`));
+                },
+            }),
+        )).rejects.toThrow(new Error(`error!!!!!`));
+
+        await expect(pipelineAsync(
+            createCountStream(1),
+            decryptStream(''),
+        )).rejects.toThrow(/^Invalid identifier detected\./);
     });
 });
