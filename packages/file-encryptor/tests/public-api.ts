@@ -1,6 +1,16 @@
+import * as stream from 'stream';
+
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
-import { CryptAlgorithmName, decrypt, encrypt, encryptStream } from '../src';
+import {
+    CompressOptionsWithString,
+    CryptAlgorithmName,
+    decrypt,
+    encrypt,
+    EncryptOptions,
+    encryptStream,
+    KeyDerivationOptions,
+} from '../src';
 import './helpers/jest-matchers';
 import { createStreamFromBuffer } from './helpers/stream';
 
@@ -88,22 +98,54 @@ describe('encrypt()', () => {
 
 describe('decrypt()', () => {
     describe('should be decryptable', () => {
-        describe.each<CryptAlgorithmName>([
-            'aes-256-gcm',
-            'chacha20-poly1305',
-        ])('%s', algorithm => {
-            it('single chunk', async () => {
-                const encryptedData = await encrypt(cleartext, password, { algorithm });
-                const decryptedData = await decrypt(encryptedData, password);
-                expect(decryptedData.equals(cleartext)).toBeTrue();
+        describe.each<[string, (options: EncryptOptions) => Promise<Buffer>]>([
+            [
+                'single chunk',
+                async options => await encrypt(cleartext, password, options),
+            ],
+            [
+                'multi chunk',
+                async options =>
+                    await streamToBuffer(
+                        stream.pipeline(
+                            createStreamFromBuffer(cleartext, 2),
+                            encryptStream(password, options),
+                            () => {
+                                //
+                            },
+                        ),
+                    ),
+            ],
+        ])('%s', (_, encrypt) => {
+            describe('encryption algorithms', () => {
+                it.each<CryptAlgorithmName>([
+                    'aes-256-gcm',
+                    'chacha20-poly1305',
+                ])('%s', async algorithm => {
+                    const encryptedData = await encrypt({ algorithm });
+                    const decryptedData = await decrypt(encryptedData, password);
+                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                });
             });
-            it('multi chunk', async () => {
-                const encryptedData = await streamToBuffer(
-                    createStreamFromBuffer(cleartext, 2)
-                        .pipe(encryptStream(password, { algorithm })),
-                );
-                const decryptedData = await decrypt(encryptedData, password);
-                expect(decryptedData.equals(cleartext)).toBeTrue();
+            describe('key derivation function', () => {
+                it.each<KeyDerivationOptions['algorithm']>([
+                    'argon2d',
+                    'argon2id',
+                ])('%s', async keyDerivationAlgorithm => {
+                    const encryptedData = await encrypt({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
+                    const decryptedData = await decrypt(encryptedData, password);
+                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                });
+            });
+            describe('compression', () => {
+                it.each<CompressOptionsWithString>([
+                    'gzip',
+                    'brotli',
+                ])('%s', async compressAlgorithm => {
+                    const encryptedData = await encrypt({ compress: compressAlgorithm });
+                    const decryptedData = await decrypt(encryptedData, password);
+                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                });
             });
         });
     });
