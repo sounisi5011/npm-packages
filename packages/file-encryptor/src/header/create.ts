@@ -28,18 +28,11 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
     ciphertextLength: number;
 }
 
-function createHeaderDataBinary(headerData: HeaderData): Uint8Array {
-    return createProtobufHeader(headerData).serializeBinary();
-}
-
-function createSimpleHeaderDataBinary(headerData: SimpleHeaderData): Uint8Array {
-    return createProtobufSimpleHeader(headerData).serializeBinary();
-}
-
 export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
     const { ciphertextLength, ...headerData } = data;
 
-    const headerDataBinary = createHeaderDataBinary(headerData);
+    const headerDataBinary = createProtobufHeader(headerData)
+        .serializeBinary();
 
     return Buffer.concat([
         Buffer.from([
@@ -54,7 +47,8 @@ export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
 export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Buffer {
     const { ciphertextLength, ...headerData } = data;
 
-    const simpleHeaderDataBinary = createSimpleHeaderDataBinary(headerData);
+    const simpleHeaderDataBinary = createProtobufSimpleHeader(headerData)
+        .serializeBinary();
 
     return Buffer.concat([
         Buffer.from(varintEncode(simpleHeaderDataBinary.byteLength)),

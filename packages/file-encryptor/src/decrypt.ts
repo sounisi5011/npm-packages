@@ -21,18 +21,11 @@ import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import gts from './utils/generator-transform-stream';
 import { StreamReader } from './utils/stream';
 
-export interface DecryptedData {
-    cleartext: Buffer;
-    readByteLength: number;
-}
-
-export interface DecryptorMetadata {
+interface DecryptorMetadata {
     algorithm: CryptAlgorithm;
     key: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
 }
-
-export type DecryptedFirstData = DecryptedData & DecryptorMetadata;
 
 async function getAlgorithmAndKey(
     password: InputDataType,
