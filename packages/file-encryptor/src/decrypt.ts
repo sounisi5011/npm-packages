@@ -1,7 +1,7 @@
 import type * as stream from 'stream';
 
 import { CryptAlgorithm, cryptAlgorithmMap } from './cipher';
-import { CompressAlgorithmName, decompress } from './compress';
+import { CompressAlgorithmName, decompressGenerator } from './compress';
 import {
     HeaderData,
     parseCiphertextData,
@@ -92,7 +92,7 @@ async function parseHeader(
     }
 }
 
-function decrypt(
+function* decrypt(
     { algorithm, key, nonce, authTag, ciphertext }: {
         algorithm: CryptAlgorithm;
         key: Uint8Array;
@@ -100,24 +100,22 @@ function decrypt(
         authTag: Uint8Array;
         ciphertext: Uint8Array;
     },
-): Buffer {
+): Generator<Buffer, void> {
     try {
         const decipher = algorithm.createDecipher(key, nonce);
         decipher.setAuthTag(authTag);
-        return Buffer.concat([
-            decipher.update(ciphertext),
-            decipher.final(),
-        ]);
+        yield decipher.update(ciphertext);
+        yield decipher.final();
     } catch (error) {
         fixNodePrimordialsErrorInstance(error);
     }
 }
 
-async function decryptChunk(
+async function* decryptChunk(
     password: InputDataType,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
     reader: StreamReader,
-): Promise<{ cleartext: Buffer; decryptorMetadata: DecryptorMetadata }> {
+): AsyncGenerator<Buffer, DecryptorMetadata> {
     /**
      * Parse header
      */
@@ -141,7 +139,7 @@ async function decryptChunk(
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartext = decrypt({
+    const compressedCleartextGenerator = decrypt({
         algorithm: decryptorMetadata.algorithm,
         key: decryptorMetadata.key,
         nonce: headerData.nonce,
@@ -152,11 +150,11 @@ async function decryptChunk(
     /**
      * Decompress cleartext
      */
-    const cleartext = decryptorMetadata.compressAlgorithmName
-        ? await decompress(compressedCleartext, decryptorMetadata.compressAlgorithmName)
-        : compressedCleartext;
+    yield* decryptorMetadata.compressAlgorithmName
+        ? decompressGenerator(compressedCleartextGenerator, decryptorMetadata.compressAlgorithmName)
+        : compressedCleartextGenerator;
 
-    return { cleartext, decryptorMetadata };
+    return decryptorMetadata;
 }
 
 export function createDecryptorTransform(password: InputDataType): stream.Duplex {
@@ -168,9 +166,7 @@ export function createDecryptorTransform(password: InputDataType): stream.Duplex
 
         let decryptorMetadata: DecryptorMetadata | undefined;
         while (!(await reader.isEnd())) {
-            const result = await decryptChunk(password, decryptorMetadata, reader);
-            decryptorMetadata = result.decryptorMetadata;
-            yield result.cleartext;
+            decryptorMetadata = yield* decryptChunk(password, decryptorMetadata, reader);
         }
     }, { readableObjectMode: true, writableObjectMode: true });
     return stream;

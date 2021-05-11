@@ -1,8 +1,10 @@
+import { Readable } from 'stream';
 import { promisify } from 'util';
-import { brotliCompress, brotliDecompress, gunzip, gzip } from 'zlib';
+import { brotliCompress, brotliDecompress, createBrotliDecompress, createGunzip, gunzip, gzip } from 'zlib';
 import type * as zlib from 'zlib';
 
 import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
+import { pipelineWithoutCallback } from './utils/stream';
 
 const gzipAsync = promisify(gzip);
 const gunzipAsync = promisify(gunzip);
@@ -64,4 +66,28 @@ export async function decompress(data: zlib.InputType, algorithm: CompressAlgori
     throw new TypeError(
         `Unknown compress algorithm was received: ${printObject(algorithm, { passThroughString: true })}`,
     );
+}
+
+export async function* decompressGenerator(
+    data: Iterable<Buffer> | AsyncIterable<Buffer>,
+    algorithm: CompressAlgorithmName,
+): AsyncGenerator<Buffer, void> {
+    const decompressStream = algorithm === 'gzip'
+        ? createGunzip()
+        : algorithm === 'brotli'
+        ? createBrotliDecompress()
+        : null;
+    if (!decompressStream) {
+        throw new TypeError(
+            `Unknown compress algorithm was received: ${printObject(algorithm, { passThroughString: true })}`,
+        );
+    }
+
+    try {
+        for await (const chunk of pipelineWithoutCallback(Readable.from(data), decompressStream)) {
+            yield chunk;
+        }
+    } catch (error) {
+        fixNodePrimordialsErrorStackTrace(error);
+    }
 }

@@ -188,7 +188,7 @@ export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
  * For example, the results of {@link https://jestjs.io/ Jest} do not show where the error occurred.
  * This function will fix the stack trace of the pseudo Error object to the proper one.
  */
-export async function fixNodePrimordialsErrorStackTrace(oldError: unknown): Promise<never> {
+export function fixNodePrimordialsErrorStackTrace(oldError: unknown): never {
     /* eslint-disable @typescript-eslint/no-throw-literal, @typescript-eslint/dot-notation */
     if (!(isObject(oldError) && !(oldError instanceof Error))) throw oldError;
     const oldErrorStackTrace = oldError['stack'];
@@ -207,7 +207,9 @@ export async function fixNodePrimordialsErrorStackTrace(oldError: unknown): Prom
     );
     newError.stack = oldErrorStackTrace
         + newErrorStackTrace.replace(
-            new RegExp(String.raw`^Error: [^\n]*(?:\n *at ${fixNodePrimordialsErrorStackTrace.name}\b[^\n]*)?`),
+            new RegExp(
+                String.raw`^Error: [^\n]*(?:\n *at (?:Object\.)?${fixNodePrimordialsErrorStackTrace.name}\b[^\n]*)?`,
+            ),
             '',
         );
     throw newError;

@@ -1,8 +1,16 @@
-import { Transform } from 'stream';
+import { pipeline, Transform } from 'stream';
 import type * as stream from 'stream';
 import { callbackify } from 'util';
 
 import { printObject } from '.';
+
+export function pipelineWithoutCallback<T extends NodeJS.WritableStream>(
+    ...streams: [NodeJS.ReadableStream, ...NodeJS.ReadableStream[], T]
+): T {
+    return pipeline(streams, () => {
+        //
+    }) as T;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type StreamResult = Buffer | null | undefined | void;
