@@ -49,6 +49,49 @@ async function getAlgorithmAndKey(
     return { algorithm, key };
 }
 
+async function parseHeader(
+    password: InputDataType,
+    reader: StreamReader,
+    prevDecryptorMetadata: DecryptorMetadata | undefined,
+): Promise<{ headerData: HeaderData | SimpleHeaderData; decryptorMetadata: DecryptorMetadata }> {
+    if (!prevDecryptorMetadata) {
+        /**
+         * Validate CID (Content IDentifier)
+         */
+        await validateCID(reader);
+
+        /**
+         * Parse header
+         */
+        const { dataByteLength: headerByteLength } = await parseHeaderLength(reader);
+        const { headerData } = await parseHeaderData(reader, { headerByteLength });
+
+        /**
+         * Read algorithm and generate key
+         */
+        const { algorithm, key } = await getAlgorithmAndKey(password, headerData);
+
+        return {
+            headerData,
+            decryptorMetadata: {
+                algorithm,
+                key,
+                compressAlgorithmName: headerData.compressAlgorithmName,
+            },
+        };
+    } else {
+        /**
+         * Parse simple header
+         */
+        const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
+        const { headerData } = await parseSimpleHeaderData(reader, { headerByteLength });
+        return {
+            headerData,
+            decryptorMetadata: prevDecryptorMetadata,
+        };
+    }
+}
+
 function decrypt(
     { algorithm, key, nonce, authTag, ciphertext }: {
         algorithm: CryptAlgorithm;
@@ -72,40 +115,17 @@ function decrypt(
 
 async function decryptChunk(
     password: InputDataType,
-    decryptorMetadata: DecryptorMetadata | undefined,
+    prevDecryptorMetadata: DecryptorMetadata | undefined,
     reader: StreamReader,
 ): Promise<{ cleartext: Buffer; decryptorMetadata: DecryptorMetadata }> {
-    let headerData: HeaderData | SimpleHeaderData;
-    if (!decryptorMetadata) {
-        /**
-         * Validate CID (Content IDentifier)
-         */
-        await validateCID(reader);
-
-        /**
-         * Read header
-         */
-        const { dataByteLength: headerByteLength } = await parseHeaderLength(reader);
-        const { headerData: fullHeaderData } = await parseHeaderData(reader, { headerByteLength });
-
-        /**
-         * Read algorithm and generate key
-         */
-        const { algorithm, key } = await getAlgorithmAndKey(password, fullHeaderData);
-
-        headerData = fullHeaderData;
-        decryptorMetadata = {
-            algorithm,
-            key,
-            compressAlgorithmName: fullHeaderData.compressAlgorithmName,
-        };
-    } else {
-        /**
-         * Read header
-         */
-        const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
-        headerData = (await parseSimpleHeaderData(reader, { headerByteLength })).headerData;
-    }
+    /**
+     * Parse header
+     */
+    const { headerData, decryptorMetadata } = await parseHeader(
+        password,
+        reader,
+        prevDecryptorMetadata,
+    );
 
     /**
      * Read ciphertext
