@@ -1,53 +1,67 @@
 import { Readable } from 'stream';
+import type * as stream from 'stream';
 import { promisify } from 'util';
 import { brotliCompress, brotliDecompress, createBrotliDecompress, createGunzip, gunzip, gzip } from 'zlib';
 import type * as zlib from 'zlib';
 
 import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
 import { pipelineWithoutCallback } from './utils/stream';
+import type { ObjectValue } from './utils/type';
 
 const gzipAsync = promisify(gzip);
 const gunzipAsync = promisify(gunzip);
-const brotliCompressAsync = promisify(brotliCompress);
 const brotliDecompressAsync = promisify(brotliDecompress);
+
+interface CompressorTableEntry {
+    compressAsync: (data: never, options: never) => Promise<Buffer>;
+    createDecompress: () => stream.Transform;
+}
+
+type Table2CompressOptions<T extends Record<string, CompressorTableEntry>> = ObjectValue<
+    {
+        [P in keyof T]: { algorithm: P } & Exclude<Parameters<T[P]['compressAsync']>[1], undefined>;
+    }
+>;
 
 const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info'] as const;
 type ZlibDisallowOptionName = (typeof zlibDisallowOptionNameList)[number];
 
-export interface CompressGzipOptions extends Omit<zlib.ZlibOptions, ZlibDisallowOptionName> {
-    algorithm: 'gzip';
-}
+const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record: T) => record)({
+    gzip: {
+        compressAsync: async (
+            data: Parameters<typeof gzipAsync>[0],
+            zlibOptions: Omit<zlib.ZlibOptions, ZlibDisallowOptionName>,
+        ) => {
+            const disallowOptionList = zlibDisallowOptionNameList.filter(optName => optName in zlibOptions);
+            if (disallowOptionList.length > 0) {
+                throw new Error(`The following compress options are not allowed: ${disallowOptionList.join(', ')}`);
+            }
+            return await gzipAsync(data, zlibOptions);
+        },
+        createDecompress: createGunzip,
+    },
+    brotli: {
+        compressAsync: promisify(brotliCompress),
+        createDecompress: createBrotliDecompress,
+    },
+});
 
-export interface CompressBrotliOptions extends zlib.BrotliOptions {
-    algorithm: 'brotli';
-}
-
-export type CompressOptions = CompressGzipOptions | CompressBrotliOptions;
+export type CompressInput = Parameters<ObjectValue<typeof compressorTable>['compressAsync']>[0];
+export type CompressOptions = Table2CompressOptions<typeof compressorTable>;
 export type CompressAlgorithmName = CompressOptions['algorithm'];
 export type CompressOptionsWithString = CompressOptions | CompressAlgorithmName;
 
 export async function compress(
-    data: zlib.InputType,
+    data: CompressInput,
     options: CompressOptionsWithString,
 ): Promise<{ algorithm: CompressAlgorithmName; data: Buffer }> {
     const normalizedOptions = typeof options === 'string' ? { algorithm: options } : options;
-    if (normalizedOptions.algorithm === 'gzip') {
-        const { algorithm, ...zlibOptions } = normalizedOptions;
-
-        const disallowOptionList = zlibDisallowOptionNameList.filter(optName => optName in zlibOptions);
-        if (disallowOptionList.length > 0) {
-            throw new Error(`The following compress options are not allowed: ${disallowOptionList.join(', ')}`);
-        }
-
+    const entry = compressorTable[normalizedOptions.algorithm];
+    if (entry) {
+        const { algorithm, ...options } = normalizedOptions;
         return {
             algorithm,
-            data: await gzipAsync(data, zlibOptions).catch(fixNodePrimordialsErrorStackTrace),
-        };
-    } else if (normalizedOptions.algorithm === 'brotli') {
-        const { algorithm, ...brotliOptions } = normalizedOptions;
-        return {
-            algorithm,
-            data: await brotliCompressAsync(data, brotliOptions).catch(fixNodePrimordialsErrorStackTrace),
+            data: await entry.compressAsync(data, options).catch(fixNodePrimordialsErrorStackTrace),
         };
     }
     throw new TypeError(
@@ -72,17 +86,14 @@ export async function* decompressGenerator(
     data: Iterable<Buffer> | AsyncIterable<Buffer>,
     algorithm: CompressAlgorithmName,
 ): AsyncGenerator<Buffer, void> {
-    const decompressStream = algorithm === 'gzip'
-        ? createGunzip()
-        : algorithm === 'brotli'
-        ? createBrotliDecompress()
-        : null;
-    if (!decompressStream) {
+    const entry = compressorTable[algorithm];
+    if (!entry) {
         throw new TypeError(
             `Unknown compress algorithm was received: ${printObject(algorithm, { passThroughString: true })}`,
         );
     }
 
+    const decompressStream = entry.createDecompress();
     try {
         for await (const chunk of pipelineWithoutCallback(Readable.from(data), decompressStream)) {
             yield chunk;
