@@ -1,12 +1,12 @@
 import { number2hex } from '../utils';
-import type { StreamReader } from '../utils/stream';
+import type { StreamReaderInterface } from '../utils/stream';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 import { Header } from './protocol-buffers/header_pb';
 import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
 
-export async function validateCID(reader: StreamReader): Promise<void> {
+export async function validateCID(reader: StreamReaderInterface): Promise<void> {
     const result = await readVarint(
         reader,
         new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`),
@@ -42,7 +42,7 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
 export async function parseCiphertextData(
-    reader: StreamReader,
+    reader: StreamReaderInterface,
     { ciphertextByteLength, offset = 0, autoSeek = true }: {
         ciphertextByteLength: number;
         offset?: number;

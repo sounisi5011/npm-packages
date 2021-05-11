@@ -100,7 +100,8 @@
     "jest-extended": "0.11.5",
     "jest-matcher-utils": "26.6.2",
     "multicodec": "3.0.1",
-    "noop-stream": "0.1.0"
+    "noop-stream": "0.1.0",
+    "type-fest": "1.1.1"
   },
   "engines": {
     "node": "^12.3.0 || 14.x || 15.x || 16.x"

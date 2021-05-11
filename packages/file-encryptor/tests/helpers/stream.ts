@@ -1,6 +1,8 @@
 import * as stream from 'stream';
 import { promisify } from 'util';
 
+import type { StreamReaderInterface } from '../../src/utils/stream';
+
 export const waitStreamFinished = promisify(stream.finished);
 export const pipelineAsync = promisify(stream.pipeline);
 
@@ -60,4 +62,21 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): s
     };
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
     return stream.Readable.from(generate());
+}
+
+export class DummyStreamReader implements StreamReaderInterface {
+    constructor(private data: Buffer) {}
+
+    async read(size: number, offset = 0): Promise<Buffer> {
+        const needByteLength = offset + size;
+        return this.data.subarray(offset, needByteLength);
+    }
+
+    async seek(offset: number): Promise<void> {
+        this.data = this.data.subarray(offset);
+    }
+
+    async isEnd(): Promise<boolean> {
+        return this.data.byteLength < 1;
+    }
 }

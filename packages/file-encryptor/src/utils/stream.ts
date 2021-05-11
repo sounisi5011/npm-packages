@@ -29,7 +29,13 @@ export abstract class PromisifyTransform extends Transform {
     }
 }
 
-export class StreamReader {
+export interface StreamReaderInterface {
+    read: (size: number, offset?: number) => Promise<Buffer | Uint8Array>;
+    seek: (offset: number) => Promise<void>;
+    isEnd: () => Promise<boolean>;
+}
+
+export class StreamReader implements StreamReaderInterface {
     private streamIterator: AsyncIterableIterator<unknown> | undefined;
     private buffer: Buffer = Buffer.alloc(0);
 

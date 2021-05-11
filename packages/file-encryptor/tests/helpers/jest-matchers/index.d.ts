@@ -8,5 +8,6 @@ declare namespace jest {
     interface Matchers<R> {
         toBeByteSize: (...args: ActualArgs<'toBeByteSize'>) => R;
         toBeLessThanByteSize: (...args: ActualArgs<'toBeLessThanByteSize'>) => R;
+        toThrowWithMessageFixed: (...args: ActualArgs<'toThrowWithMessageFixed'>) => R;
     }
 }

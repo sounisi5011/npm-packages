@@ -1,9 +1,9 @@
 import { decode as varintDecode } from 'varint';
 
-import type { StreamReader } from '../utils/stream';
+import type { StreamReaderInterface } from '../utils/stream';
 
 export async function readVarint(
-    reader: StreamReader,
+    reader: StreamReaderInterface,
     error: Error | ((error: unknown) => Error),
     options?: { offset?: number; autoSeek?: true },
 ): Promise<{ value: number; byteLength: number; endOffset: number }> {
@@ -31,7 +31,7 @@ export interface ParseDataLengthFn {
 export function parseDataLength(
     { name, autoSeek: defaultAutoSeek }: { name: string; autoSeek?: true },
 ): (
-    reader: StreamReader,
+    reader: StreamReaderInterface,
     opts?: { offset?: number; autoSeek?: boolean },
 ) => Promise<{ dataByteLength: number; endOffset: number }> {
     return async (reader, { offset = 0, autoSeek = defaultAutoSeek } = {}) => {
@@ -51,7 +51,7 @@ export function parseDataLength(
 
 export async function validateDataLength(
     { reader, dataByteLength, offset, name, longname, autoSeek }: {
-        reader: StreamReader;
+        reader: StreamReaderInterface;
         dataByteLength: number;
         offset: number;
         name: string;
@@ -80,7 +80,7 @@ export function createHeaderDataParser<T>(
         autoSeek?: true;
     },
 ): (
-    reader: StreamReader,
+    reader: StreamReaderInterface,
     opts: { headerByteLength: number; offset?: number; autoSeek?: boolean },
 ) => Promise<{ headerData: T; endOffset: number }> {
     return async (reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {

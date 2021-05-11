@@ -94,6 +94,7 @@ importers:
       jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
       noop-stream: 0.1.0
+      type-fest: 1.1.1
     specifiers:
       '@jorgeferrero/stream-to-buffer': ^2.0.6
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
@@ -117,6 +118,7 @@ importers:
       jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
       noop-stream: 0.1.0
+      type-fest: 1.1.1
       varint: ^6.0.0
   packages/file-encryptor/examples:
     dependencies:
@@ -7151,6 +7153,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
+  /type-fest/1.1.1:
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-RPDKc5KrIyKTP7Fk75LruUagqG6b+OTgXlCR2Z0aQDJFeIvL4/mhahSEtHmmVzXu4gmA0srkF/8FCH3WOWxTWA==
   /typedarray-to-buffer/3.1.5:
     dependencies:
       is-typedarray: 1.0.0
