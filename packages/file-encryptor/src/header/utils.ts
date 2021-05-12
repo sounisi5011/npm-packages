@@ -49,27 +49,22 @@ export function parseDataLength(
     };
 }
 
-export async function validateDataLength(
-    { reader, dataByteLength, offset, name, longname, autoSeek }: {
-        reader: StreamReaderInterface;
-        dataByteLength: number;
-        offset: number;
+export function validateDataLength(
+    { requiredLength, received, name, longname }: {
+        requiredLength: number;
+        received: number | Uint8Array;
         name: string;
         longname?: string;
-        autoSeek?: true;
     },
-): Promise<{ targetDataBytes: Uint8Array; endOffset: number }> {
-    const targetDataBytes = await reader.read(dataByteLength, offset);
-    if (targetDataBytes.byteLength !== dataByteLength) {
+): void {
+    const receivedLength = typeof received === 'number' ? received : received.byteLength;
+    if (receivedLength !== requiredLength) {
         throw new Error(
             `Could not read ${longname ?? name}.`
-                + ` ${dataByteLength} byte length ${name} is required.`
-                + ` Received data: ${targetDataBytes.byteLength} bytes`,
+                + ` ${requiredLength} byte length ${name} is required.`
+                + ` Received data: ${receivedLength} bytes`,
         );
     }
-    const endOffset = offset + dataByteLength;
-    if (autoSeek) await reader.seek(endOffset);
-    return { targetDataBytes, endOffset };
 }
 
 export function createHeaderDataParser<T>(
@@ -84,15 +79,16 @@ export function createHeaderDataParser<T>(
     opts: { headerByteLength: number; offset?: number; autoSeek?: boolean },
 ) => Promise<{ headerData: T; endOffset: number }> {
     return async (reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
-        const { targetDataBytes: headerDataBytes, endOffset } = await validateDataLength({
-            reader,
-            dataByteLength: headerByteLength,
-            offset,
+        const headerDataBytes = await reader.read(headerByteLength, offset);
+        validateDataLength({
+            requiredLength: headerByteLength,
+            received: headerDataBytes,
             name,
             longname,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            autoSeek: autoSeek || undefined,
         });
+
+        const endOffset = offset + headerDataBytes.byteLength;
+        if (autoSeek) await reader.seek(endOffset);
 
         const headerData = genHeaderData(headerDataBytes);
 

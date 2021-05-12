@@ -41,21 +41,19 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
-export async function parseCiphertextData(
-    reader: StreamReaderInterface,
-    { ciphertextByteLength, offset = 0, autoSeek = true }: {
-        ciphertextByteLength: number;
-        offset?: number;
-        autoSeek?: boolean;
-    },
-): Promise<{ ciphertextDataBytes: Uint8Array; endOffset: number }> {
-    const { targetDataBytes: ciphertextDataBytes, endOffset } = await validateDataLength({
-        reader,
-        dataByteLength: ciphertextByteLength,
-        offset,
-        name: 'ciphertext',
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        autoSeek: autoSeek || undefined,
-    });
-    return { ciphertextDataBytes, endOffset };
+export async function* parseCiphertextGenerator<T extends Buffer | Uint8Array>(
+    reader: StreamReaderInterface<T>,
+    { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number },
+): AsyncGenerator<T, void> {
+    for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {
+        if (data) {
+            yield data;
+        } else {
+            validateDataLength({
+                requiredLength: ciphertextByteLength,
+                received: readedSize,
+                name: 'ciphertext',
+            });
+        }
+    }
 }

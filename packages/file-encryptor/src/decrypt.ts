@@ -4,7 +4,7 @@ import { CryptAlgorithm, cryptAlgorithmMap } from './cipher';
 import { CompressAlgorithmName, decompressGenerator } from './compress';
 import {
     HeaderData,
-    parseCiphertextData,
+    parseCiphertextGenerator,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -92,19 +92,21 @@ async function parseHeader(
     }
 }
 
-function* decrypt(
-    { algorithm, key, nonce, authTag, ciphertext }: {
+async function* decrypt(
+    ciphertext: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
+    { algorithm, key, nonce, authTag }: {
         algorithm: CryptAlgorithm;
         key: Uint8Array;
         nonce: Uint8Array;
         authTag: Uint8Array;
-        ciphertext: Uint8Array;
     },
-): Generator<Buffer, void> {
+): AsyncGenerator<Buffer, void> {
     try {
         const decipher = algorithm.createDecipher(key, nonce);
         decipher.setAuthTag(authTag);
-        yield decipher.update(ciphertext);
+        for await (const ciphertextChunk of ciphertext) {
+            yield decipher.update(ciphertextChunk);
+        }
         yield decipher.final();
     } catch (error) {
         fixNodePrimordialsErrorInstance(error);
@@ -129,7 +131,7 @@ async function* decryptChunk(
      * Read ciphertext
      */
     const { dataByteLength: ciphertextByteLength } = await parseCiphertextLength(reader);
-    const { ciphertextDataBytes } = await parseCiphertextData(reader, { ciphertextByteLength });
+    const ciphertextDataGenerator = parseCiphertextGenerator(reader, { ciphertextByteLength });
 
     /**
      * Update the invocation part in the nonce
@@ -139,12 +141,11 @@ async function* decryptChunk(
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartextGenerator = decrypt({
+    const compressedCleartextGenerator = decrypt(ciphertextDataGenerator, {
         algorithm: decryptorMetadata.algorithm,
         key: decryptorMetadata.key,
         nonce: headerData.nonce,
         authTag: headerData.authTag,
-        ciphertext: ciphertextDataBytes,
     });
 
     /**

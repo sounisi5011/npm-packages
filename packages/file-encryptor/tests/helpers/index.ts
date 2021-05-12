@@ -38,3 +38,9 @@ export function createDummySizeBuffer(size: number): Buffer {
         },
     });
 }
+
+export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable<Buffer>): Promise<Buffer> {
+    const bufferList: Buffer[] = [];
+    for await (const buffer of iterable) bufferList.push(buffer);
+    return Buffer.concat(bufferList);
+}
