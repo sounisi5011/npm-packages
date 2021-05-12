@@ -259,10 +259,9 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF({ algorithm: 'argon2d' });
                 const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
                 const salt = Buffer.alloc(saltLength);
-                const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
-                await expect(resultPromise).rejects.toThrow(RangeError);
-                await expect(resultPromise).rejects.toThrow(
-                    new Error([
+                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+                    RangeError,
+                    [
                         `Too short salt was received for Argon2's option "salt"`,
                         `${
                             notBetweenNumberErrorMessage(
@@ -270,20 +269,19 @@ describe('algorithm: Argon2', () => {
                                 { min: ARGON2_MIN_SALT_LENGTH, max: ARGON2_MAX_SALT_LENGTH },
                             )
                         }, but received: ${saltLength}`,
-                    ].join('. ')),
+                    ].join('. '),
                 );
             });
             it('key length', async () => {
                 const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
-                const resultPromise = deriveKey('', salt, keyLengthBytes);
-                await expect(resultPromise).rejects.toThrow(RangeError);
-                await expect(resultPromise).rejects.toThrow(
-                    new Error([
+                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessageFixed(
+                    RangeError,
+                    [
                         `The value "${keyLengthBytes}" is too short for Argon2's option "keyLengthBytes"`,
                         notBetweenNumberErrorMessage(`Key length`, { min: ARGON2_MIN_OUTLEN, max: ARGON2_MAX_OUTLEN }),
-                    ].join('. ')),
+                    ].join('. '),
                 );
             });
         });
@@ -292,10 +290,9 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF({ algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
                 const salt = createDummySizeBuffer(saltLength);
-                const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
-                await expect(resultPromise).rejects.toThrow(RangeError);
-                await expect(resultPromise).rejects.toThrow(
-                    new Error([
+                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+                    RangeError,
+                    [
                         `Too long salt was received for Argon2's option "salt"`,
                         `${
                             notBetweenNumberErrorMessage(
@@ -303,20 +300,19 @@ describe('algorithm: Argon2', () => {
                                 { min: ARGON2_MIN_SALT_LENGTH, max: ARGON2_MAX_SALT_LENGTH },
                             )
                         }, but received: ${saltLength}`,
-                    ].join('. ')),
+                    ].join('. '),
                 );
             });
             it('key length', async () => {
                 const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
-                const resultPromise = deriveKey('', salt, keyLengthBytes);
-                await expect(resultPromise).rejects.toThrow(RangeError);
-                await expect(resultPromise).rejects.toThrow(
-                    new Error([
+                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessageFixed(
+                    RangeError,
+                    [
                         `The value "${keyLengthBytes}" is too long for Argon2's option "keyLengthBytes"`,
                         notBetweenNumberErrorMessage(`Key length`, { min: ARGON2_MIN_OUTLEN, max: ARGON2_MAX_OUTLEN }),
-                    ].join('. ')),
+                    ].join('. '),
                 );
             });
         });
@@ -335,10 +331,9 @@ describe('algorithm: Argon2', () => {
             memory: 2 ** 40 / 2 ** 10,
         });
         const salt = Buffer.alloc(saltLength);
-        const resultPromise = deriveKey('', salt, safeKeyLengthBytes);
-        await expect(resultPromise).rejects.toThrow(Error);
-        await expect(resultPromise).rejects.toThrow(
-            new Error(`Internal error from Argon2: Memory cost is too large`),
+        await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+            Error,
+            `Internal error from Argon2: Memory cost is too large`,
         );
     });
 });

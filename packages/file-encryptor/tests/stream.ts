@@ -76,8 +76,10 @@ describe('encryptStream()', () => {
                 stream.Readable.from([chunk]),
                 encryptStream(''),
             );
-            await expect(resultPromise).rejects.toThrow(TypeError);
-            await expect(resultPromise).rejects.toThrow(chunkTypeErrorMessageRegExp);
+            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+                TypeError,
+                chunkTypeErrorMessageRegExp,
+            );
         });
     });
 });
@@ -177,8 +179,10 @@ describe('decryptStream()', () => {
                 decryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrow(TypeError);
-            await expect(resultPromise).rejects.toThrow(chunkTypeErrorMessageRegExp);
+            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+                TypeError,
+                chunkTypeErrorMessageRegExp,
+            );
         });
     });
     /**

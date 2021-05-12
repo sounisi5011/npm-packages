@@ -40,13 +40,12 @@ describe('encrypt()', () => {
             await expect(encrypt(cleartext, password, { algorithm: 'chacha20-poly1305' })).toResolve();
         });
         it('unknown', async () => {
-            const resultPromise = encrypt(cleartext, password, {
+            await expect(encrypt(cleartext, password, {
                 // @ts-expect-error TS2322
                 algorithm: 'foo',
-            });
-            await expect(resultPromise).rejects.toThrow(TypeError);
-            await expect(resultPromise).rejects.toThrow(
-                new TypeError(`Unknown algorithm was received: foo`),
+            })).rejects.toThrowWithMessageFixed(
+                TypeError,
+                `Unknown algorithm was received: foo`,
             );
         });
     });
@@ -59,15 +58,14 @@ describe('encrypt()', () => {
             await expect(encrypt(cleartext, password, { keyDerivation: { algorithm: 'argon2id' } })).toResolve();
         });
         it('unknown', async () => {
-            const resultPromise = encrypt(cleartext, password, {
+            await expect(encrypt(cleartext, password, {
                 keyDerivation: {
                     // @ts-expect-error TS2322
                     algorithm: 'bar',
                 },
-            });
-            await expect(resultPromise).rejects.toThrow(TypeError);
-            await expect(resultPromise).rejects.toThrow(
-                new TypeError(`Unknown KDF (Key Derivation Function) algorithm was received: bar`),
+            })).rejects.toThrowWithMessageFixed(
+                TypeError,
+                `Unknown KDF (Key Derivation Function) algorithm was received: bar`,
             );
         });
     });
@@ -84,13 +82,12 @@ describe('encrypt()', () => {
             expect(compressedEncryptedData.byteLength).toBeLessThanByteSize(uncompressedEncryptedData.byteLength);
         });
         it('unknown', async () => {
-            const resultPromise = encrypt(cleartext, password, {
+            await expect(encrypt(cleartext, password, {
                 // @ts-expect-error TS2322
                 compress: 'hoge',
-            });
-            await expect(resultPromise).rejects.toThrow(TypeError);
-            await expect(resultPromise).rejects.toThrow(
-                new TypeError(`Unknown compress algorithm was received: hoge`),
+            })).rejects.toThrowWithMessageFixed(
+                TypeError,
+                `Unknown compress algorithm was received: hoge`,
             );
         });
     });
@@ -156,10 +153,9 @@ describe('decrypt()', () => {
             'chacha20-poly1305',
         ])('%s', async algorithm => {
             const encryptedData = await encrypt(cleartext, password, { algorithm });
-            const resultPromise = decrypt(encryptedData, password2);
-            await expect(resultPromise).rejects.toThrow(Error);
-            await expect(resultPromise).rejects.toThrow(
-                new Error(`Unsupported state or unable to authenticate data`),
+            await expect(decrypt(encryptedData, password2)).rejects.toThrowWithMessageFixed(
+                Error,
+                `Unsupported state or unable to authenticate data`,
             );
         });
     });
