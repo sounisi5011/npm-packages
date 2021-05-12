@@ -86,10 +86,10 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         let readedSize = 0;
 
         if (readedSize < requestedSize && this.buffer.byteLength > 0) {
-            const [data, remainder] = this.splitBuffer(this.buffer, requestedSize, offset);
+            const [data, remainder] = this.splitBuffer(this.buffer, requestedSize, offset, true);
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            this.buffer = remainder ?? Buffer.alloc(0);
+            this.buffer = remainder;
         }
 
         for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
@@ -130,14 +130,23 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         }
     }
 
-    private splitBuffer(buffer: Buffer, size: number, offset = 0): [Buffer, Buffer?] {
+    private splitBuffer(
+        buffer: Buffer,
+        size: number,
+        offset: number | undefined,
+        alwaysReturnTwoBuffer: true,
+    ): [Buffer, Buffer];
+    private splitBuffer(
+        buffer: Buffer,
+        size: number,
+        offset?: number,
+        alwaysReturnTwoBuffer?: false,
+    ): [Buffer, Buffer?];
+    private splitBuffer(buffer: Buffer, size: number, offset = 0, alwaysReturnTwoBuffer = false): [Buffer, Buffer?] {
         const endOffset = offset + size;
         if (buffer.byteLength <= endOffset) {
-            return [
-                offset < 1
-                    ? buffer
-                    : buffer.subarray(offset),
-            ];
+            const firstBuffer = offset < 1 ? buffer : buffer.subarray(offset);
+            return alwaysReturnTwoBuffer ? [firstBuffer, Buffer.alloc(0)] : [firstBuffer];
         }
         return [
             buffer.subarray(offset, endOffset),
