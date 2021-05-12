@@ -86,21 +86,16 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         let readedSize = 0;
 
         if (readedSize < requestedSize && this.buffer.byteLength > 0) {
-            const [data, other] = this.splitBuffer(this.buffer, requestedSize, offset);
+            const [data, remainder] = this.splitBuffer(this.buffer, requestedSize, offset);
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            this.buffer = other ?? Buffer.alloc(0);
+            this.buffer = remainder ?? Buffer.alloc(0);
         }
 
-        while (readedSize < requestedSize) {
-            const chunk = await this.tryReadChunk();
-            if (!chunk) break;
-
-            const [data, other] = this.splitBuffer(chunk, requestedSize - readedSize);
+        for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-
-            if (other) this.buffer = other;
+            if (remainder) this.buffer = remainder;
         }
 
         yield { requestedSize, offset, readedSize };
@@ -121,6 +116,18 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         const result = await this.streamIterator.next();
         if (result.done) return undefined;
         return this.convertChunk(result.value);
+    }
+
+    private async *readNewChunks(requestedSize: number): AsyncGenerator<[Buffer, Buffer?], void> {
+        let readedSize = 0;
+        while (readedSize < requestedSize) {
+            const chunk = await this.tryReadChunk();
+            if (!chunk) break;
+
+            const [data, remainder] = this.splitBuffer(chunk, requestedSize - readedSize);
+            yield [data, remainder];
+            readedSize += data.byteLength;
+        }
     }
 
     private splitBuffer(buffer: Buffer, size: number, offset = 0): [Buffer, Buffer?] {
