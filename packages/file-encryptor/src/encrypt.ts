@@ -151,21 +151,39 @@ export async function encryptSubsequentChunk(
     return { encryptedData };
 }
 
+type EncryptorMetadata = Omit<EncryptSubsequentChunkOptions, 'compress'>;
+
+async function encryptChunk(
+    chunk: unknown,
+    password: InputDataType,
+    options: EncryptOptions,
+    encryptorMetadata: EncryptorMetadata | undefined,
+): Promise<{ encryptedData: Buffer; encryptorMetadata: EncryptorMetadata }> {
+    validateChunk(chunk);
+    if (!encryptorMetadata) {
+        const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, password, options);
+        return {
+            encryptedData,
+            encryptorMetadata: { algorithm, key },
+        };
+    } else {
+        const { encryptedData } = await encryptSubsequentChunk(
+            chunk,
+            { algorithm: encryptorMetadata.algorithm, key: encryptorMetadata.key, compress: options.compress },
+        );
+        return { encryptedData, encryptorMetadata };
+    }
+}
+
 export function createEncryptorGenerator(password: InputDataType, options: EncryptOptions) {
     return async function* encryptor(
         source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
     ): AsyncGenerator<Buffer, void, unknown> {
-        let subsequentChunkOptions: EncryptSubsequentChunkOptions | undefined;
+        let encryptorMetadata: EncryptorMetadata | undefined;
         for await (const chunk of source) {
-            validateChunk(chunk);
-            if (!subsequentChunkOptions) {
-                const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, password, options);
-                yield encryptedData;
-                subsequentChunkOptions = { algorithm, key, compress: options.compress };
-            } else {
-                const { encryptedData } = await encryptSubsequentChunk(chunk, subsequentChunkOptions);
-                yield encryptedData;
-            }
+            const result = await encryptChunk(chunk, password, options, encryptorMetadata);
+            encryptorMetadata = result.encryptorMetadata;
+            yield result.encryptedData;
         }
     };
 }
@@ -173,7 +191,7 @@ export function createEncryptorGenerator(password: InputDataType, options: Encry
 export class EncryptorTransform extends PromisifyTransform {
     private readonly password: InputDataType;
     private readonly options: EncryptOptions;
-    private encryptData: { algorithm: CryptAlgorithm; key: Uint8Array } | undefined;
+    private encryptorMetadata: EncryptorMetadata | undefined;
 
     constructor(password: InputDataType, options: EncryptOptions) {
         super({ writableObjectMode: true });
@@ -182,19 +200,8 @@ export class EncryptorTransform extends PromisifyTransform {
     }
 
     async transform(chunk: unknown): Promise<Buffer> {
-        validateChunk(chunk);
-
-        const encryptData = this.encryptData;
-        if (encryptData) {
-            const { encryptedData } = await encryptSubsequentChunk(
-                chunk,
-                { algorithm: encryptData.algorithm, key: encryptData.key, compress: this.options.compress },
-            );
-            return encryptedData;
-        } else {
-            const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, this.password, this.options);
-            this.encryptData = { algorithm, key };
-            return encryptedData;
-        }
+        const result = await encryptChunk(chunk, this.password, this.options, this.encryptorMetadata);
+        this.encryptorMetadata = result.encryptorMetadata;
+        return result.encryptedData;
     }
 }
