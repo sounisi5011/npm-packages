@@ -64,12 +64,24 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): s
     return stream.Readable.from(generate());
 }
 
-export class DummyStreamReader implements StreamReaderInterface {
+export class DummyStreamReader implements StreamReaderInterface<Buffer> {
     constructor(private data: Buffer) {}
 
     async read(size: number, offset = 0): Promise<Buffer> {
         const needByteLength = offset + size;
         return this.data.subarray(offset, needByteLength);
+    }
+
+    async *readIterator(
+        size: number,
+        offset = 0,
+    ): AsyncGenerator<{ data?: Buffer; requestedSize: number; offset: number; readedSize: number }, void, void> {
+        const data = await this.read(size, offset);
+        if (data.byteLength > 0) {
+            yield { data, requestedSize: size, offset, readedSize: data.byteLength };
+            await this.seek(offset + data.byteLength);
+        }
+        yield { requestedSize: size, offset, readedSize: data.byteLength };
     }
 
     async seek(offset: number): Promise<void> {

@@ -89,6 +89,210 @@ describe('class StreamReader', () => {
             expect(readCount).toBe(3);
         });
     });
+    describe('readIterator() method', () => {
+        interface ReadEntry {
+            data?: Buffer | undefined;
+            requestedSize: number;
+            offset: number;
+            readedSize: number;
+        }
+
+        describe('empty stream', () => {
+            it.each<number | undefined>([
+                undefined,
+                0,
+                3,
+            ])('offset=%p', async offset => {
+                const targetStream = stream.Readable.from([]);
+                const reader = new StreamReader(targetStream);
+
+                const entryList: ReadEntry[] = [];
+                if (offset === undefined) {
+                    for await (const entry of reader.readIterator(1)) {
+                        entryList.push(entry);
+                    }
+                } else {
+                    for await (const entry of reader.readIterator(1, offset)) {
+                        entryList.push(entry);
+                    }
+                }
+
+                expect(entryList).toStrictEqual([
+                    {
+                        // the last entry always does not contain the data property.
+                        requestedSize: 1,
+                        offset: offset ?? 0,
+                        readedSize: 0,
+                    },
+                ]);
+            });
+        });
+        it('single chunk stream', async () => {
+            const targetStream = stream.Readable.from((function*() {
+                yield Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            })());
+            const reader = new StreamReader(targetStream);
+
+            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([0, 1]));
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(3)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        data: Buffer.from([0, 1, 2]),
+                        requestedSize: 3,
+                        offset: 0,
+                        readedSize: 3,
+                    },
+                    {
+                        // the last entry will always be generated
+                        requestedSize: 3,
+                        offset: 0,
+                        readedSize: 3,
+                    },
+                ]);
+            }
+            // always seek because storing huge data is inefficient
+            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([3, 4]));
+            await expect(reader.isEnd()).resolves.toBeFalse();
+
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(999, 1)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        data: Buffer.from([4, 5, 6, 7, 8, 9]),
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 6,
+                    },
+                    {
+                        // no error will be generated if the requested data length cannot be read
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 6,
+                    },
+                ]);
+            }
+
+            await expect(reader.read(1)).resolves.toStrictEqual(Buffer.from([]));
+            await expect(reader.isEnd()).resolves.toBeTrue();
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(42)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        requestedSize: 42,
+                        offset: 0,
+                        readedSize: 0,
+                    },
+                ]);
+            }
+        });
+        it('multi chunk stream', async () => {
+            const targetStream = stream.Readable.from((function*() {
+                yield Buffer.from([0, 1]);
+                yield Buffer.from([2, 3, 4]);
+                yield Buffer.from([5, 6]);
+                yield Buffer.from([7, 8]);
+                yield Buffer.alloc(0);
+                yield Buffer.from([9]);
+            })());
+            const reader = new StreamReader(targetStream);
+
+            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([0, 1]));
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(3)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        data: Buffer.from([0, 1]),
+                        requestedSize: 3,
+                        offset: 0,
+                        readedSize: 2,
+                    },
+                    {
+                        // chunks coming from the stream will not be merged
+                        data: Buffer.from([2]),
+                        requestedSize: 3,
+                        offset: 0,
+                        readedSize: 3,
+                    },
+                    {
+                        requestedSize: 3,
+                        offset: 0,
+                        readedSize: 3,
+                    },
+                ]);
+            }
+
+            // the `read()` method merges the chunks as it reads them
+            await expect(reader.read(3)).resolves.toStrictEqual(Buffer.from([3, 4, 5]));
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(999, 1)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        // chunks read by the `read()` method will be concatenated.
+                        data: Buffer.from([4, 5, 6]),
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 3,
+                    },
+                    {
+                        data: Buffer.from([7, 8]),
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 5,
+                    },
+                    {
+                        // data with zero length should not be ignored
+                        data: Buffer.from([]),
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 5,
+                    },
+                    {
+                        data: Buffer.from([9]),
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 6,
+                    },
+                    {
+                        requestedSize: 999,
+                        offset: 1,
+                        readedSize: 6,
+                    },
+                ]);
+            }
+
+            await expect(reader.read(1)).resolves.toStrictEqual(Buffer.from([]));
+            await expect(reader.isEnd()).resolves.toBeTrue();
+            {
+                const entryList: ReadEntry[] = [];
+                for await (const entry of reader.readIterator(42)) {
+                    entryList.push(entry);
+                }
+                expect(entryList).toStrictEqual([
+                    {
+                        requestedSize: 42,
+                        offset: 0,
+                        readedSize: 0,
+                    },
+                ]);
+            }
+        });
+    });
     describe('seek() method', () => {
         describe.each([
             ['non empty stream', [[9, 8, 7, 6, 5, 4]]],

@@ -37,21 +37,25 @@ export abstract class PromisifyTransform extends Transform {
     }
 }
 
-export interface StreamReaderInterface {
-    read: (size: number, offset?: number) => Promise<Buffer | Uint8Array>;
+export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | Uint8Array> {
+    read: (size: number, offset?: number) => Promise<T>;
+    readIterator: (
+        size: number,
+        offset?: number,
+    ) => AsyncIterable<{ data?: T; requestedSize: number; offset: number; readedSize: number }>;
     seek: (offset: number) => Promise<void>;
     isEnd: () => Promise<boolean>;
 }
 
-export class StreamReader implements StreamReaderInterface {
+export class StreamReader implements StreamReaderInterface<Buffer> {
     private streamIterator: AsyncIterableIterator<unknown> | undefined;
     private buffer: Buffer = Buffer.alloc(0);
 
     constructor(
         private readonly stream: NodeJS.ReadableStream,
-        private readonly convertChunk = (chunk: unknown): Buffer | Uint8Array => {
-            if (chunk instanceof Uint8Array || Buffer.isBuffer(chunk)) return chunk;
-            if (typeof chunk === 'string') return Buffer.from(chunk);
+        private readonly convertChunk = (chunk: unknown): Buffer => {
+            if (Buffer.isBuffer(chunk)) return chunk;
+            if (typeof chunk === 'string' || chunk instanceof Uint8Array) return Buffer.from(chunk);
             throw new TypeError(
                 `Invalid type chunk received.`
                     + ` Each chunk must be of type string or an instance of Buffer or Uint8Array.`
@@ -74,6 +78,46 @@ export class StreamReader implements StreamReaderInterface {
             this.buffer = Buffer.concat([this.buffer, chunk]);
         }
         return this.buffer.subarray(offset, needByteLength);
+    }
+
+    async *readIterator(
+        size: number,
+        offset = 0,
+    ): AsyncGenerator<{ data?: Buffer; requestedSize: number; offset: number; readedSize: number }, void, void> {
+        const requestedSize = size;
+        let readedSize = 0;
+
+        if (this.buffer.byteLength > 0) {
+            const needByteLength = offset + requestedSize;
+
+            const data = this.buffer.subarray(offset, needByteLength);
+            readedSize += data.byteLength;
+            yield { data, requestedSize, offset, readedSize };
+
+            this.buffer = this.buffer.subarray(needByteLength);
+        }
+
+        while (readedSize < requestedSize) {
+            this.streamIterator = this.streamIterator ?? this.stream[Symbol.asyncIterator]();
+            const result = await this.streamIterator.next();
+            if (result.done) break;
+            const chunk = this.convertChunk(result.value);
+
+            const needByteLength = requestedSize - readedSize;
+            if (chunk.byteLength < needByteLength) {
+                readedSize += chunk.byteLength;
+                yield { data: chunk, requestedSize, offset, readedSize };
+            } else {
+                const data = chunk.subarray(0, needByteLength);
+                readedSize += data.byteLength;
+                yield { data, requestedSize, offset, readedSize };
+
+                this.buffer = chunk.subarray(needByteLength);
+                break;
+            }
+        }
+
+        yield { requestedSize, offset, readedSize };
     }
 
     async seek(offset: number): Promise<void> {
