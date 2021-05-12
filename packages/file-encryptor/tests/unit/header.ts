@@ -2,7 +2,6 @@ import { promises as fsAsync } from 'fs';
 import * as path from 'path';
 
 import * as multicodec from 'multicodec';
-import type { PromiseValue } from 'type-fest';
 import * as varint from 'varint';
 
 import {
@@ -10,7 +9,7 @@ import {
     createSimpleHeader,
     HeaderData,
     HeaderDataWithCiphertextLength,
-    parseCiphertextData,
+    parseCiphertextGenerator,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -20,7 +19,7 @@ import {
     validateCID,
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
-import { padStartArray } from '../helpers';
+import { iterable2buffer, padStartArray } from '../helpers';
 import '../helpers/jest-matchers';
 import { DummyStreamReader } from '../helpers/stream';
 
@@ -529,59 +528,55 @@ describe('parseCiphertextLength()', () => {
     });
 });
 
-describe('parseCiphertextData()', () => {
-    type Optsions = Parameters<typeof parseCiphertextData>[1];
-    type Ret = PromiseValue<ReturnType<typeof parseCiphertextData>>;
+describe('parseCiphertextGenerator()', () => {
+    type Optsions = Parameters<typeof parseCiphertextGenerator>[1];
     describe('larger data than needed byte length', () => {
         const data = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
         const ciphertextByteLength = 6;
-        it.each<[string, Omit<Optsions, 'ciphertextByteLength'>, Ret]>([
+        it.each<[string, Omit<Optsions, 'ciphertextByteLength'>, Buffer]>([
             [
                 'offset=undefined',
                 {},
-                { ciphertextDataBytes: data.subarray(0, ciphertextByteLength), endOffset: ciphertextByteLength },
+                data.subarray(0, ciphertextByteLength),
             ],
             [
                 'offset=0',
                 { offset: 0 },
-                { ciphertextDataBytes: data.subarray(0, ciphertextByteLength), endOffset: ciphertextByteLength },
+                data.subarray(0, ciphertextByteLength),
             ],
             [
                 'offset defined',
                 { offset: 2 },
-                {
-                    ciphertextDataBytes: data.subarray(2, ciphertextByteLength + 2),
-                    endOffset: ciphertextByteLength + 2,
-                },
+                data.subarray(2, ciphertextByteLength + 2),
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const result = await parseCiphertextData(reader, { ciphertextByteLength: 6, ...opts });
-            expect(result).toStrictEqual(expected);
+            const resultIterable = parseCiphertextGenerator(reader, { ciphertextByteLength: 6, ...opts });
+            await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
         });
     });
     describe('same size data as needed byte length', () => {
         const data = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        it.each<[string, Optsions, Ret]>([
+        it.each<[string, Optsions, Buffer]>([
             [
                 'offset=undefined',
                 { ciphertextByteLength: data.byteLength },
-                { ciphertextDataBytes: data, endOffset: data.byteLength },
+                data,
             ],
             [
                 'offset=0',
                 { ciphertextByteLength: data.byteLength, offset: 0 },
-                { ciphertextDataBytes: data, endOffset: data.byteLength },
+                data,
             ],
             [
                 'offset defined',
                 { ciphertextByteLength: data.byteLength - 2, offset: 2 },
-                { ciphertextDataBytes: data.subarray(2, data.byteLength), endOffset: data.byteLength },
+                data.subarray(2, data.byteLength),
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const result = await parseCiphertextData(reader, opts);
-            expect(result).toStrictEqual(expected);
+            const resultIterable = parseCiphertextGenerator(reader, opts);
+            await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
         });
     });
     describe('smaller data than required byte length', () => {
@@ -610,7 +605,8 @@ describe('parseCiphertextData()', () => {
             ],
         ])('%s', async (_, opts, expectedErrorMessage) => {
             const reader = new DummyStreamReader(data);
-            await expect(parseCiphertextData(reader, opts)).rejects.toThrowWithMessageFixed(
+            const resultIterable = parseCiphertextGenerator(reader, opts);
+            await expect(iterable2buffer(resultIterable)).rejects.toThrowWithMessageFixed(
                 Error,
                 expectedErrorMessage,
             );

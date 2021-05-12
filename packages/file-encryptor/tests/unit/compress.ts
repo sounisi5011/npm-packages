@@ -1,6 +1,7 @@
 import * as zlib from 'zlib';
 
 import { compress, CompressAlgorithmName, decompressGenerator } from '../../src/compress';
+import { iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 import '../helpers/jest-matchers';
 
@@ -94,11 +95,6 @@ describe('decompressGenerator()', () => {
             yield buffer.subarray(0, chunkSize);
             buffer = buffer.subarray(chunkSize);
         }
-    };
-    const iterable2buffer = async (iterable: Iterable<Buffer> | AsyncIterable<Buffer>): Promise<Buffer> => {
-        const bufferList: Buffer[] = [];
-        for await (const buffer of iterable) bufferList.push(buffer);
-        return Buffer.concat(bufferList);
     };
 
     describe('decompress data', () => {
