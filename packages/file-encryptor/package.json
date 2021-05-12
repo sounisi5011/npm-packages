@@ -46,6 +46,7 @@
   },
   "license": "MIT",
   "author": "sounisi5011",
+  "type": "commonjs",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
