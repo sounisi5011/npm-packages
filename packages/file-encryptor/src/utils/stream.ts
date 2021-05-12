@@ -48,11 +48,11 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
 }
 
 export class StreamReader implements StreamReaderInterface<Buffer> {
-    private streamIterator: AsyncIterableIterator<unknown> | undefined;
+    private iterator: AsyncIterator<unknown> | undefined;
     private buffer: Buffer = Buffer.alloc(0);
 
     constructor(
-        private readonly stream: NodeJS.ReadableStream,
+        private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
         private readonly convertChunk = (chunk: unknown): Buffer => {
             if (Buffer.isBuffer(chunk)) return chunk;
             if (typeof chunk === 'string' || chunk instanceof Uint8Array) return Buffer.from(chunk);
@@ -112,8 +112,8 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     }
 
     private async tryReadChunk(): Promise<Buffer | undefined> {
-        this.streamIterator = this.streamIterator ?? this.stream[Symbol.asyncIterator]();
-        const result = await this.streamIterator.next();
+        this.iterator = this.iterator ?? this.toAsyncIterator(this.source);
+        const result = await this.iterator.next();
         if (result.done) return undefined;
         return this.convertChunk(result.value);
     }
@@ -152,5 +152,9 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
             buffer.subarray(offset, endOffset),
             buffer.subarray(endOffset),
         ];
+    }
+
+    private async *toAsyncIterator<T>(source: Iterable<T> | AsyncIterable<T>): AsyncIterator<T> {
+        for await (const chunk of source) yield chunk;
     }
 }

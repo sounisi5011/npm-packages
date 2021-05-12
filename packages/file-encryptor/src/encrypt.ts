@@ -96,13 +96,15 @@ export async function encryptFirstChunk(
     };
 }
 
+interface EncryptSubsequentChunkOptions {
+    algorithm: CryptAlgorithm;
+    key: Uint8Array;
+    compress: CompressOptionsWithString | undefined;
+}
+
 export async function encryptSubsequentChunk(
     cleartext: InputDataType,
-    options: {
-        algorithm: CryptAlgorithm;
-        key: Uint8Array;
-        compress: CompressOptionsWithString | undefined;
-    },
+    options: EncryptSubsequentChunkOptions,
 ): Promise<{ encryptedData: Buffer }> {
     /**
      * Compress cleartext
@@ -147,6 +149,25 @@ export async function encryptSubsequentChunk(
         ciphertextPart2,
     ]);
     return { encryptedData };
+}
+
+export function createEncryptorGenerator(password: InputDataType, options: EncryptOptions) {
+    return async function* encryptor(
+        source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
+    ): AsyncGenerator<Buffer, void, unknown> {
+        let subsequentChunkOptions: EncryptSubsequentChunkOptions | undefined;
+        for await (const chunk of source) {
+            validateChunk(chunk);
+            if (!subsequentChunkOptions) {
+                const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, password, options);
+                yield encryptedData;
+                subsequentChunkOptions = { algorithm, key, compress: options.compress };
+            } else {
+                const { encryptedData } = await encryptSubsequentChunk(chunk, subsequentChunkOptions);
+                yield encryptedData;
+            }
+        }
+    };
 }
 
 export class EncryptorTransform extends PromisifyTransform {

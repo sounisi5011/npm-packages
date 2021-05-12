@@ -1,5 +1,3 @@
-import type * as stream from 'stream';
-
 import { CryptAlgorithm, cryptAlgorithmMap } from './cipher';
 import { CompressAlgorithmName, decompressGenerator } from './compress';
 import {
@@ -18,7 +16,6 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
-import gts from './utils/generator-transform-stream';
 import { StreamReader } from './utils/stream';
 
 interface DecryptorMetadata {
@@ -158,9 +155,11 @@ async function* decryptChunk(
     return decryptorMetadata;
 }
 
-export function createDecryptorTransform(password: InputDataType): stream.Duplex {
-    const stream = gts(async function*(inputStream) {
-        const reader = new StreamReader(inputStream, chunk => {
+export function createDecryptorGenerator(password: InputDataType) {
+    return async function* decryptor(
+        source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
+    ): AsyncGenerator<Buffer, void, unknown> {
+        const reader = new StreamReader(source, chunk => {
             validateChunk(chunk);
             return bufferFrom(chunk, 'utf8');
         });
@@ -169,6 +168,5 @@ export function createDecryptorTransform(password: InputDataType): stream.Duplex
         while (!(await reader.isEnd())) {
             decryptorMetadata = yield* decryptChunk(password, decryptorMetadata, reader);
         }
-    }, { readableObjectMode: true, writableObjectMode: true });
-    return stream;
+    };
 }
