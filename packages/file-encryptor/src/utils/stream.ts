@@ -68,11 +68,9 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     async read(size: number, offset = 0): Promise<Buffer> {
         const needByteLength = offset + size;
         while (this.buffer.byteLength < needByteLength) {
-            this.streamIterator = this.streamIterator ?? this.stream[Symbol.asyncIterator]();
-            const result = await this.streamIterator.next();
-            if (result.done) break;
+            const chunk = await this.tryReadChunk();
+            if (!chunk) break;
 
-            const chunk = this.convertChunk(result.value);
             // TODO: Buffer should not be merged every time a chunk is read.
             //       Each chunk should be stored in an array and merged only when the Buffer is returned.
             this.buffer = Buffer.concat([this.buffer, chunk]);
@@ -87,34 +85,22 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         const requestedSize = size;
         let readedSize = 0;
 
-        if (this.buffer.byteLength > 0) {
-            const needByteLength = offset + requestedSize;
-
-            const data = this.buffer.subarray(offset, needByteLength);
+        if (readedSize < requestedSize && this.buffer.byteLength > 0) {
+            const [data, other] = this.splitBuffer(this.buffer, requestedSize, offset);
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-
-            this.buffer = this.buffer.subarray(needByteLength);
+            this.buffer = other ?? Buffer.alloc(0);
         }
 
         while (readedSize < requestedSize) {
-            this.streamIterator = this.streamIterator ?? this.stream[Symbol.asyncIterator]();
-            const result = await this.streamIterator.next();
-            if (result.done) break;
-            const chunk = this.convertChunk(result.value);
+            const chunk = await this.tryReadChunk();
+            if (!chunk) break;
 
-            const needByteLength = requestedSize - readedSize;
-            if (chunk.byteLength < needByteLength) {
-                readedSize += chunk.byteLength;
-                yield { data: chunk, requestedSize, offset, readedSize };
-            } else {
-                const data = chunk.subarray(0, needByteLength);
-                readedSize += data.byteLength;
-                yield { data, requestedSize, offset, readedSize };
+            const [data, other] = this.splitBuffer(chunk, requestedSize - readedSize);
+            readedSize += data.byteLength;
+            yield { data, requestedSize, offset, readedSize };
 
-                this.buffer = chunk.subarray(needByteLength);
-                break;
-            }
+            if (other) this.buffer = other;
         }
 
         yield { requestedSize, offset, readedSize };
@@ -128,5 +114,27 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     async isEnd(): Promise<boolean> {
         await this.read(1);
         return this.buffer.byteLength < 1;
+    }
+
+    private async tryReadChunk(): Promise<Buffer | undefined> {
+        this.streamIterator = this.streamIterator ?? this.stream[Symbol.asyncIterator]();
+        const result = await this.streamIterator.next();
+        if (result.done) return undefined;
+        return this.convertChunk(result.value);
+    }
+
+    private splitBuffer(buffer: Buffer, size: number, offset = 0): [Buffer, Buffer?] {
+        const endOffset = offset + size;
+        if (buffer.byteLength <= endOffset) {
+            return [
+                offset < 1
+                    ? buffer
+                    : buffer.subarray(offset),
+            ];
+        }
+        return [
+            buffer.subarray(offset, endOffset),
+            buffer.subarray(endOffset),
+        ];
     }
 }
