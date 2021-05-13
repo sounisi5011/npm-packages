@@ -72,7 +72,7 @@ export async function compress(
 export async function* decompressGenerator(
     data: Iterable<Buffer> | AsyncIterable<Buffer>,
     algorithm: CompressAlgorithmName,
-): AsyncGenerator<Buffer, void> {
+): AsyncGenerator<Buffer, void, never> {
     const entry = compressorTable[algorithm];
     if (!entry) {
         throw new TypeError(
@@ -82,9 +82,7 @@ export async function* decompressGenerator(
 
     const decompressStream = entry.createDecompress();
     try {
-        for await (const chunk of pipelineWithoutCallback(Readable.from(data), decompressStream)) {
-            yield chunk;
-        }
+        yield* pipelineWithoutCallback(Readable.from(data), decompressStream);
     } catch (error) {
         fixNodePrimordialsErrorStackTrace(error);
     }

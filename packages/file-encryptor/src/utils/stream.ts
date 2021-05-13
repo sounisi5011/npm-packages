@@ -128,6 +128,6 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     }
 
     private async *toAsyncIterator<T>(source: Iterable<T> | AsyncIterable<T>): AsyncIterator<T> {
-        for await (const chunk of source) yield chunk;
+        yield* source;
     }
 }

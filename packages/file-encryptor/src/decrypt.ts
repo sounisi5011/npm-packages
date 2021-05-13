@@ -114,7 +114,7 @@ async function* decryptChunk(
     password: InputDataType,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
     reader: StreamReader,
-): AsyncGenerator<Buffer, DecryptorMetadata> {
+): AsyncGenerator<Buffer, DecryptorMetadata, never> {
     /**
      * Parse header
      */
@@ -158,7 +158,7 @@ async function* decryptChunk(
 export function createDecryptorGenerator(password: InputDataType) {
     return async function* decryptor(
         source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-    ): AsyncGenerator<Buffer, void, unknown> {
+    ): AsyncGenerator<Buffer, void, never> {
         const reader = new StreamReader(source, chunk => {
             validateChunk(chunk);
             return bufferFrom(chunk, 'utf8');
