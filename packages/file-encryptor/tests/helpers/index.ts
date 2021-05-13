@@ -1,3 +1,5 @@
+import type { AsyncIterableReturn } from '../../src/utils/type';
+
 export function rangeArray(start: number, stop: number, step = 1): number[] {
     return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }
@@ -43,4 +45,11 @@ export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable
     const bufferList: Buffer[] = [];
     for await (const buffer of iterable) bufferList.push(buffer);
     return Buffer.concat(bufferList);
+}
+
+export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): AsyncIterableReturn<Buffer, void> {
+    while (buffer.byteLength > 0) {
+        yield buffer.subarray(0, chunkSize);
+        buffer = buffer.subarray(chunkSize);
+    }
 }

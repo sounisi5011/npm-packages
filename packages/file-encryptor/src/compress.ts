@@ -1,64 +1,77 @@
 import type * as stream from 'stream';
-import { promisify } from 'util';
-import { brotliCompress, createBrotliDecompress, createGunzip, gzip } from 'zlib';
-import type * as zlib from 'zlib';
+import { createBrotliCompress, createBrotliDecompress, createGunzip, createGzip } from 'zlib';
 
 import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
 import { writeFromIterableToStream } from './utils/stream';
 import type { AsyncIterableReturn, ObjectValue } from './utils/type';
 
-const gzipAsync = promisify(gzip);
-
 interface CompressorTableEntry {
-    compressAsync: (data: never, options: never) => Promise<Buffer>;
+    createCompress: (options: never) => () => stream.Transform;
     createDecompress: () => stream.Transform;
 }
 
 type Table2CompressOptions<T extends Record<string, CompressorTableEntry>> = ObjectValue<
     {
-        [P in keyof T]: { algorithm: P } & Exclude<Parameters<T[P]['compressAsync']>[1], undefined>;
+        [P in keyof T]: { algorithm: P } & Exclude<Parameters<T[P]['createCompress']>[0], undefined>;
     }
 >;
+type GetOptions<T extends (options?: never) => stream.Transform> = (
+    T extends ((options?: infer U) => stream.Transform) ? U : never
+);
 
 const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info'] as const;
 type ZlibDisallowOptionName = (typeof zlibDisallowOptionNameList)[number];
+type GzipOptions = GetOptions<typeof createGzip>;
+type GzipDisallowedOptions = Omit<GzipOptions, ZlibDisallowOptionName>;
 
 const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record: T) => record)({
     gzip: {
-        compressAsync: async (
-            data: Parameters<typeof gzipAsync>[0],
-            zlibOptions: Omit<zlib.ZlibOptions, ZlibDisallowOptionName>,
-        ) => {
+        createCompress: (zlibOptions: GzipDisallowedOptions) => {
             const disallowOptionList = zlibDisallowOptionNameList.filter(optName => optName in zlibOptions);
             if (disallowOptionList.length > 0) {
                 throw new Error(`The following compress options are not allowed: ${disallowOptionList.join(', ')}`);
             }
-            return await gzipAsync(data, zlibOptions);
+            return () => createGzip(zlibOptions);
         },
         createDecompress: createGunzip,
     },
     brotli: {
-        compressAsync: promisify(brotliCompress),
+        createCompress: (options: GetOptions<typeof createBrotliCompress>) => () => createBrotliCompress(options),
         createDecompress: createBrotliDecompress,
     },
 });
 
-export type CompressInput = Parameters<ObjectValue<typeof compressorTable>['compressAsync']>[0];
 export type CompressOptions = Table2CompressOptions<typeof compressorTable>;
 export type CompressAlgorithmName = CompressOptions['algorithm'];
 export type CompressOptionsWithString = CompressOptions | CompressAlgorithmName;
 
-export async function compress(
-    data: CompressInput,
-    options: CompressOptionsWithString,
-): Promise<{ algorithm: CompressAlgorithmName; data: Buffer }> {
+export function createCompressor(options: CompressOptionsWithString | undefined): {
+    compressAlgorithmName: CompressAlgorithmName | undefined;
+    compressIterable: (source: AsyncIterable<Buffer>) => AsyncIterableReturn<Buffer, void>;
+} {
+    if (!options) {
+        return {
+            compressAlgorithmName: undefined,
+            compressIterable: source => source,
+        };
+    }
+
     const normalizedOptions = typeof options === 'string' ? { algorithm: options } : options;
     const entry = compressorTable[normalizedOptions.algorithm];
     if (entry) {
         const { algorithm, ...options } = normalizedOptions;
+        const createCompressStream = entry.createCompress(options);
         return {
-            algorithm,
-            data: await entry.compressAsync(data, options).catch(fixNodePrimordialsErrorStackTrace),
+            compressAlgorithmName: algorithm,
+            async *compressIterable(source) {
+                // Note: To prevent reuse of the Stream object, create it here.
+                const compressStream = createCompressStream();
+                try {
+                    yield* writeFromIterableToStream(source, compressStream);
+                } catch (error) {
+                    fixNodePrimordialsErrorStackTrace(error);
+                }
+            },
         };
     }
     throw new TypeError(

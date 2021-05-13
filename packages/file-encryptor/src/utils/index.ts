@@ -1,6 +1,6 @@
 import { inspect, types } from 'util';
 
-import type { objectEntries } from './type';
+import type { AsyncIterableReturn, objectEntries } from './type';
 
 function isString(value: unknown): value is string {
     return typeof value === 'string';
@@ -114,13 +114,6 @@ export function bufferFrom(
     return Buffer.from(value);
 }
 
-/**
- * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
- */
-export function anyArrayBuffer2Buffer<T>(value: T | ArrayBufferLike): T | Buffer {
-    return types.isAnyArrayBuffer(value) ? Buffer.from(value) : value;
-}
-
 export async function asyncIterable2Buffer(iterable: AsyncIterable<Buffer>): Promise<Buffer> {
     const chunkList: Buffer[] = [];
     for await (const chunk of iterable) {
@@ -129,6 +122,13 @@ export async function asyncIterable2Buffer(iterable: AsyncIterable<Buffer>): Pro
     // The `Buffer.concat()` function will always copy the Buffer object.
     // However, if the length of the array is 1, there is no need to copy it.
     return isOneArray(chunkList) ? chunkList[0] : Buffer.concat(chunkList);
+}
+
+export async function* convertIterableValue<T, U>(
+    iterable: Iterable<T> | AsyncIterable<T>,
+    converter: (value: T) => U,
+): AsyncIterableReturn<U, void> {
+    for await (const value of iterable) yield converter(value);
 }
 
 export function number2hex(template: TemplateStringsArray, ...substitutions: number[]): string {

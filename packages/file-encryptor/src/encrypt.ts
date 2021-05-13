@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
-import { compress, CompressOptionsWithString } from './compress';
+import { CompressAlgorithmName, CompressOptionsWithString, createCompressor } from './compress';
 import {
     createHeader,
     createSimpleHeader,
@@ -12,7 +12,7 @@ import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
-import { anyArrayBuffer2Buffer } from './utils';
+import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableIteratorReturn } from './utils/type';
 
 export interface EncryptOptions {
@@ -29,31 +29,22 @@ function createHeaderData(
 }
 
 async function encryptChunk({
-    chunk,
+    compressedCleartext,
     algorithm,
     key,
     salt,
     keyDerivationOptions,
-    compressOptions,
+    compressAlgorithmName,
     isFirst,
 }: {
-    chunk: unknown;
+    compressedCleartext: Buffer;
     algorithm: CryptoAlgorithm;
     key: Uint8Array;
     salt: Uint8Array;
     keyDerivationOptions: NormalizedKeyDerivationOptions;
-    compressOptions: CompressOptionsWithString | undefined;
+    compressAlgorithmName: CompressAlgorithmName | undefined;
     isFirst: boolean;
 }): Promise<Buffer> {
-    const cleartext = validateChunk(chunk);
-
-    /**
-     * Compress cleartext
-     */
-    const { algorithm: compressAlgorithmName, data: compressedCleartext } = compressOptions
-        ? await compress(cleartext, compressOptions)
-        : { algorithm: undefined, data: anyArrayBuffer2Buffer(cleartext) };
-
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */
@@ -104,6 +95,8 @@ export function createEncryptorIterator(
     const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
+    const { compressAlgorithmName, compressIterable } = createCompressor(options.compress);
+
     return async function* encryptor(source) {
         /**
          * Generate key
@@ -117,15 +110,25 @@ export function createEncryptorIterator(
         const keyLength = algorithm.keyLength;
         const key = await deriveKey(password, salt, keyLength);
 
+        const bufferSourceIterable = convertIterableValue(
+            source,
+            chunk => bufferFrom(validateChunk(chunk), 'utf8'),
+        );
+
+        /**
+         * Compress cleartext
+         */
+        const compressedSourceIterable = compressIterable(bufferSourceIterable);
+
         let isFirst = true;
-        for await (const chunk of source) {
-            yield encryptChunk({
-                chunk,
+        for await (const compressedCleartext of compressedSourceIterable) {
+            yield await encryptChunk({
+                compressedCleartext,
                 algorithm,
                 key,
                 salt,
                 keyDerivationOptions: normalizedKeyDerivationOptions,
-                compressOptions: options.compress,
+                compressAlgorithmName,
                 isFirst,
             });
             isFirst = false;
