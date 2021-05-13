@@ -2,12 +2,7 @@ import { randomBytes } from 'crypto';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressAlgorithmName, CompressOptionsWithString, createCompressor } from './compress';
-import {
-    createHeader,
-    createSimpleHeader,
-    HeaderDataWithCiphertextLength,
-    SimpleHeaderDataWithCiphertextLength,
-} from './header';
+import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
@@ -21,13 +16,19 @@ export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
+interface KeyResult {
+    key: Uint8Array;
+    salt: Uint8Array;
+    normalizedKeyDerivationOptions: NormalizedKeyDerivationOptions;
+}
+
 async function generateKey(
     { password, keyLength, keyDerivationOptions }: {
         password: InputDataType;
         keyLength: number;
         keyDerivationOptions: KeyDerivationOptions | undefined;
     },
-): Promise<{ key: Uint8Array; salt: Uint8Array; normalizedKeyDerivationOptions: NormalizedKeyDerivationOptions }> {
+): Promise<KeyResult> {
     const {
         deriveKey,
         saltLength,
@@ -44,29 +45,43 @@ async function generateKey(
 }
 
 function createHeaderData(
-    data: HeaderDataWithCiphertextLength & SimpleHeaderDataWithCiphertextLength,
+    { algorithmName, keyResult, nonce, authTag, compressAlgorithmName, ciphertextLength }: {
+        algorithmName: CryptoAlgorithmName;
+        keyResult: KeyResult;
+        nonce: Uint8Array;
+        authTag: Uint8Array;
+        compressAlgorithmName: CompressAlgorithmName | undefined;
+        ciphertextLength: number;
+    },
     isFirst: boolean,
 ): Uint8Array {
-    return isFirst ? createHeader(data) : createSimpleHeader(data);
+    return isFirst
+        ? createHeader({
+            algorithmName,
+            salt: keyResult.salt,
+            keyLength: keyResult.key.byteLength,
+            keyDerivationOptions: keyResult.normalizedKeyDerivationOptions,
+            nonce,
+            authTag,
+            compressAlgorithmName,
+            ciphertextLength,
+        })
+        : createSimpleHeader({
+            nonce,
+            authTag,
+            ciphertextLength,
+        });
 }
 
-async function encryptChunk({
-    compressedCleartext,
+async function encryptChunk(compressedCleartext: Buffer, {
     algorithm,
-    key,
-    salt,
-    keyDerivationOptions,
+    keyResult,
     compressAlgorithmName,
-    isFirst,
 }: {
-    compressedCleartext: Buffer;
     algorithm: CryptoAlgorithm;
-    key: Uint8Array;
-    salt: Uint8Array;
-    keyDerivationOptions: NormalizedKeyDerivationOptions;
+    keyResult: KeyResult;
     compressAlgorithmName: CompressAlgorithmName | undefined;
-    isFirst: boolean;
-}): Promise<Buffer> {
+}, isFirst: boolean): Promise<Buffer> {
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */
@@ -75,7 +90,7 @@ async function encryptChunk({
     /**
      * Encrypt cleartext
      */
-    const cipher = algorithm.createCipher(key, nonce);
+    const cipher = algorithm.createCipher(keyResult.key, nonce);
     const ciphertextPart1 = cipher.update(compressedCleartext);
     const ciphertextPart2 = cipher.final();
 
@@ -90,9 +105,7 @@ async function encryptChunk({
      */
     const headerData = createHeaderData({
         algorithmName: algorithm.name,
-        salt,
-        keyLength: key.byteLength,
-        keyDerivationOptions,
+        keyResult,
         nonce,
         authTag,
         compressAlgorithmName,
@@ -123,7 +136,7 @@ export function createEncryptorIterator(
         /**
          * Generate key
          */
-        const { key, salt, normalizedKeyDerivationOptions } = await generateKey({
+        const keyResult = await generateKey({
             password,
             keyLength: algorithm.keyLength,
             keyDerivationOptions: options.keyDerivation,
@@ -141,15 +154,11 @@ export function createEncryptorIterator(
 
         let isFirst = true;
         for await (const compressedCleartext of compressedSourceIterable) {
-            yield await encryptChunk({
-                compressedCleartext,
+            yield await encryptChunk(compressedCleartext, {
                 algorithm,
-                key,
-                salt,
-                keyDerivationOptions: normalizedKeyDerivationOptions,
+                keyResult,
                 compressAlgorithmName,
-                isFirst,
-            });
+            }, isFirst);
             isFirst = false;
         }
     };
