@@ -16,15 +16,23 @@ export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
-async function encryptChunk(
-    chunk: unknown,
-    algorithm: CryptoAlgorithm,
-    key: Uint8Array,
-    salt: Uint8Array,
-    keyDerivationOptions: NormalizedKeyDerivationOptions,
-    compressOptions: CompressOptionsWithString | undefined,
-    isFirst: boolean,
-): Promise<Buffer> {
+async function encryptChunk({
+    chunk,
+    algorithm,
+    key,
+    salt,
+    keyDerivationOptions,
+    compressOptions,
+    isFirst,
+}: {
+    chunk: unknown;
+    algorithm: CryptoAlgorithm;
+    key: Uint8Array;
+    salt: Uint8Array;
+    keyDerivationOptions: NormalizedKeyDerivationOptions;
+    compressOptions: CompressOptionsWithString | undefined;
+    isFirst: boolean;
+}): Promise<Buffer> {
     validateChunk(chunk);
     const cleartext = chunk;
 
@@ -107,15 +115,15 @@ export function createEncryptorIterator(
 
         let isFirst = true;
         for await (const chunk of source) {
-            yield encryptChunk(
+            yield encryptChunk({
                 chunk,
                 algorithm,
                 key,
                 salt,
-                normalizedKeyDerivationOptions,
-                options.compress,
+                keyDerivationOptions: normalizedKeyDerivationOptions,
+                compressOptions: options.compress,
                 isFirst,
-            );
+            });
             isFirst = false;
         }
     };
