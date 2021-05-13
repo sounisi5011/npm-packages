@@ -28,8 +28,11 @@ describe('encryptStream()', () => {
         expect(chunkList).toHaveLength(4);
     });
     it('subsequent chunks are smaller than the first chunk', async () => {
+        const chunkCount = 4;
         let firstChunkLen: number | undefined;
-        const stream = createCountStream(4).pipe(encryptStream(''));
+        const stream = createCountStream(chunkCount).pipe(encryptStream(''));
+
+        expect.assertions(chunkCount - 1);
         for await (const chunk of stream) {
             // eslint-disable-next-line jest/no-if
             if (typeof firstChunkLen === 'number') {
