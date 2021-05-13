@@ -16,7 +16,7 @@ export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
-export async function encryptFirstChunk(
+async function encryptFirstChunk(
     cleartext: InputDataType,
     password: InputDataType,
     options: EncryptOptions,
@@ -102,7 +102,7 @@ interface EncryptSubsequentChunkOptions {
     compress: CompressOptionsWithString | undefined;
 }
 
-export async function encryptSubsequentChunk(
+async function encryptSubsequentChunk(
     cleartext: InputDataType,
     options: EncryptSubsequentChunkOptions,
 ): Promise<{ encryptedData: Buffer }> {

@@ -18,6 +18,12 @@ export function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
     return value !== undefined;
 }
 
+function isOneArray<T>(value: T[]): value is [T];
+function isOneArray<T>(value: readonly T[]): value is readonly [T];
+function isOneArray<T>(value: readonly T[]): value is readonly [T] {
+    return value.length === 1;
+}
+
 export function ifFuncThenExec<TArgs extends unknown[], TResult, TOther>(
     value: ((...args: TArgs) => TResult) | TOther,
     ...args: TArgs
@@ -28,6 +34,12 @@ export function ifFuncThenExec<TArgs extends unknown[], TResult, TOther>(
 export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: U): T | null {
     const findEntry = (Object.entries as objectEntries)(rec).find(([, val]) => val === value);
     return findEntry ? findEntry[0] : null;
+}
+
+export function createIterable<T>(value: T): { [Symbol.iterator]: () => Iterator<T, void> } {
+    return (function*() {
+        yield value;
+    })();
 }
 
 /**
@@ -107,6 +119,16 @@ export function bufferFrom(
  */
 export function anyArrayBuffer2Buffer<T>(value: T | ArrayBufferLike): T | Buffer {
     return types.isAnyArrayBuffer(value) ? Buffer.from(value) : value;
+}
+
+export async function asyncIterable2Buffer(iterable: AsyncIterable<Buffer>): Promise<Buffer> {
+    const chunkList: Buffer[] = [];
+    for await (const chunk of iterable) {
+        chunkList.push(chunk);
+    }
+    // The `Buffer.concat()` function will always copy the Buffer object.
+    // However, if the length of the array is 1, there is no need to copy it.
+    return isOneArray(chunkList) ? chunkList[0] : Buffer.concat(chunkList);
 }
 
 export function number2hex(template: TemplateStringsArray, ...substitutions: number[]): string {
