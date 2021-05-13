@@ -8,6 +8,7 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
 import { anyArrayBuffer2Buffer } from './utils';
+import type { AsyncIterableIteratorReturn } from './utils/type';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
@@ -174,10 +175,10 @@ async function encryptChunk(
     }
 }
 
-export function createEncryptorGenerator(password: InputDataType, options: EncryptOptions) {
+export function createEncryptorIterator(password: InputDataType, options: EncryptOptions) {
     return async function* encryptor(
         source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-    ): AsyncGenerator<Buffer, void, unknown> {
+    ): AsyncIterableIteratorReturn<Buffer, void> {
         let encryptorMetadata: EncryptorMetadata | undefined;
         for await (const chunk of source) {
             const result = await encryptChunk(chunk, password, options, encryptorMetadata);

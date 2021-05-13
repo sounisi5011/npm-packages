@@ -1,5 +1,6 @@
 import { number2hex } from '../utils';
 import type { StreamReaderInterface } from '../utils/stream';
+import type { AsyncIterableReturn } from '../utils/type';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
@@ -41,10 +42,10 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
-export async function* parseCiphertextGenerator<T extends Buffer | Uint8Array>(
+export async function* parseCiphertextIterable<T extends Buffer | Uint8Array>(
     reader: StreamReaderInterface<T>,
     { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number },
-): AsyncGenerator<T, void> {
+): AsyncIterableReturn<T, void> {
     for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {
         if (data) {
             yield data;

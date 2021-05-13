@@ -1,8 +1,8 @@
 import { CryptoAlgorithm, cryptoAlgorithmMap } from './cipher';
-import { CompressAlgorithmName, decompressGenerator } from './compress';
+import { CompressAlgorithmName, decompressIterable } from './compress';
 import {
     HeaderData,
-    parseCiphertextGenerator,
+    parseCiphertextIterable,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -17,6 +17,7 @@ import { validateChunk } from './stream';
 import type { InputDataType } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { StreamReader } from './utils/stream';
+import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './utils/type';
 
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithm;
@@ -97,7 +98,7 @@ async function* decrypt(
         nonce: Uint8Array;
         authTag: Uint8Array;
     },
-): AsyncGenerator<Buffer, void> {
+): AsyncIterableReturn<Buffer, void> {
     try {
         const decipher = algorithm.createDecipher(key, nonce);
         decipher.setAuthTag(authTag);
@@ -114,7 +115,7 @@ async function* decryptChunk(
     password: InputDataType,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
     reader: StreamReader,
-): AsyncGenerator<Buffer, DecryptorMetadata, never> {
+): AsyncIterableReturn<Buffer, DecryptorMetadata> {
     /**
      * Parse header
      */
@@ -128,7 +129,7 @@ async function* decryptChunk(
      * Read ciphertext
      */
     const { dataByteLength: ciphertextByteLength } = await parseCiphertextLength(reader);
-    const ciphertextDataGenerator = parseCiphertextGenerator(reader, { ciphertextByteLength });
+    const ciphertextDataIterable = parseCiphertextIterable(reader, { ciphertextByteLength });
 
     /**
      * Update the invocation part in the nonce
@@ -138,7 +139,7 @@ async function* decryptChunk(
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartextGenerator = decrypt(ciphertextDataGenerator, {
+    const compressedCleartextIterable = decrypt(ciphertextDataIterable, {
         algorithm: decryptorMetadata.algorithm,
         key: decryptorMetadata.key,
         nonce: headerData.nonce,
@@ -149,16 +150,16 @@ async function* decryptChunk(
      * Decompress cleartext
      */
     yield* decryptorMetadata.compressAlgorithmName
-        ? decompressGenerator(compressedCleartextGenerator, decryptorMetadata.compressAlgorithmName)
-        : compressedCleartextGenerator;
+        ? decompressIterable(compressedCleartextIterable, decryptorMetadata.compressAlgorithmName)
+        : compressedCleartextIterable;
 
     return decryptorMetadata;
 }
 
-export function createDecryptorGenerator(password: InputDataType) {
+export function createDecryptorIterator(password: InputDataType) {
     return async function* decryptor(
         source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-    ): AsyncGenerator<Buffer, void, never> {
+    ): AsyncIterableIteratorReturn<Buffer, void> {
         const reader = new StreamReader(source, chunk => {
             validateChunk(chunk);
             return bufferFrom(chunk, 'utf8');

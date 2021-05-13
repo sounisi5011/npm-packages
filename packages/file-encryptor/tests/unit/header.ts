@@ -9,7 +9,7 @@ import {
     createSimpleHeader,
     HeaderData,
     HeaderDataWithCiphertextLength,
-    parseCiphertextGenerator,
+    parseCiphertextIterable,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -528,8 +528,8 @@ describe('parseCiphertextLength()', () => {
     });
 });
 
-describe('parseCiphertextGenerator()', () => {
-    type Optsions = Parameters<typeof parseCiphertextGenerator>[1];
+describe('parseCiphertextIterable()', () => {
+    type Optsions = Parameters<typeof parseCiphertextIterable>[1];
     describe('larger data than needed byte length', () => {
         const data = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
         const ciphertextByteLength = 6;
@@ -551,7 +551,7 @@ describe('parseCiphertextGenerator()', () => {
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextGenerator(reader, { ciphertextByteLength: 6, ...opts });
+            const resultIterable = parseCiphertextIterable(reader, { ciphertextByteLength: 6, ...opts });
             await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
         });
     });
@@ -575,7 +575,7 @@ describe('parseCiphertextGenerator()', () => {
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextGenerator(reader, opts);
+            const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
         });
     });
@@ -605,7 +605,7 @@ describe('parseCiphertextGenerator()', () => {
             ],
         ])('%s', async (_, opts, expectedErrorMessage) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextGenerator(reader, opts);
+            const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).rejects.toThrowWithMessageFixed(
                 Error,
                 expectedErrorMessage,

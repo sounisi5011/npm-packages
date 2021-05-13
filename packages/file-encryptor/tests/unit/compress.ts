@@ -1,6 +1,6 @@
 import * as zlib from 'zlib';
 
-import { compress, CompressAlgorithmName, decompressGenerator } from '../../src/compress';
+import { compress, CompressAlgorithmName, decompressIterable } from '../../src/compress';
 import { iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 import '../helpers/jest-matchers';
@@ -95,7 +95,7 @@ describe('compress()', () => {
     });
 });
 
-describe('decompressGenerator()', () => {
+describe('decompressIterable()', () => {
     const buffer2generator = async function*(buffer: Buffer, chunkSize = 5): AsyncGenerator<Buffer, void> {
         while (buffer.byteLength > 0) {
             yield buffer.subarray(0, chunkSize);
@@ -111,7 +111,7 @@ describe('decompressGenerator()', () => {
         ])('%s', async algorithm => {
             const { data: compressedData } = await compress(data, algorithm);
             const compressedIterable = buffer2generator(compressedData);
-            const decompressedIterable = decompressGenerator(compressedIterable, algorithm);
+            const decompressedIterable = decompressIterable(compressedIterable, algorithm);
             const decompressedData = await iterable2buffer(decompressedIterable);
             expect(decompressedData.equals(data)).toBeTrue();
         });
@@ -122,7 +122,7 @@ describe('decompressGenerator()', () => {
         const emptyIterable = buffer2generator(Buffer.from(''));
 
         // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli"'.
-        await expect(iterable2buffer(decompressGenerator(emptyIterable, algorithm))).rejects.toThrowWithMessageFixed(
+        await expect(iterable2buffer(decompressIterable(emptyIterable, algorithm))).rejects.toThrowWithMessageFixed(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
         );
@@ -141,7 +141,7 @@ describe('decompressGenerator()', () => {
             }))('{ %s }', async (_, options) => {
                 const { data: compressedData } = await compress(data, { ...options, algorithm: 'gzip' });
                 const compressedIterable = buffer2generator(compressedData);
-                const decompressedIterable = decompressGenerator(compressedIterable, 'gzip');
+                const decompressedIterable = decompressIterable(compressedIterable, 'gzip');
                 const decompressedData = await iterable2buffer(decompressedIterable);
                 expect(decompressedData.equals(data)).toBeTrue();
             });

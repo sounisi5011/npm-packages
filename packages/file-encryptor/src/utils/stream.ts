@@ -1,6 +1,7 @@
 import { pipeline } from 'stream';
 
 import { printObject } from '.';
+import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
 export function pipelineWithoutCallback<T extends NodeJS.WritableStream>(
     ...streams: [NodeJS.ReadableStream, ...NodeJS.ReadableStream[], T]
@@ -54,7 +55,10 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     async *readIterator(
         size: number,
         offset = 0,
-    ): AsyncGenerator<{ data?: Buffer; requestedSize: number; offset: number; readedSize: number }, void, void> {
+    ): AsyncIterableIteratorReturn<
+        { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
+        void
+    > {
         const requestedSize = size;
         let readedSize = 0;
 
@@ -91,7 +95,7 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         return this.convertChunk(result.value);
     }
 
-    private async *readNewChunks(requestedSize: number): AsyncGenerator<[Buffer, Buffer?], void> {
+    private async *readNewChunks(requestedSize: number): AsyncIterableReturn<[Buffer, Buffer?], void> {
         let readedSize = 0;
         while (readedSize < requestedSize) {
             const chunk = await this.tryReadChunk();

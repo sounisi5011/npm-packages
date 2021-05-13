@@ -4,6 +4,28 @@ export type ObjectValue<T> = T[keyof T];
 
 export type OneOrMoreReadonlyArray<T> = readonly [T, ...T[]];
 
+/**
+ * The built-in `AsyncIterable` type does not have the `TReturn` and `TNext` arguments.
+ * This type fixes that problem and makes it easier to use with function return types.
+ *
+ * Note: Do not specify the `never` type for the `TNext` argument!
+ *       It will not be available for the for-await-of statement.
+ */
+export interface AsyncIterableReturn<T, TReturn, TNext = undefined> {
+    [Symbol.asyncIterator]: () => AsyncIterator<T, TReturn, TNext>;
+}
+
+/**
+ * The built-in `AsyncIterableIterator` type does not have the `TReturn` and `TNext` arguments.
+ * This type fixes that problem and makes it easier to use with function return types.
+ *
+ * Note: Do not specify the `never` type for the `TNext` argument!
+ *       It will not be available for the for-await-of statement.
+ */
+export interface AsyncIterableIteratorReturn<T, TReturn, TNext = undefined> extends AsyncIterator<T, TReturn, TNext> {
+    [Symbol.asyncIterator]: () => AsyncIterableIteratorReturn<T, TReturn, TNext>;
+}
+
 export function assertType<T>(_: T): void {
     //
 }

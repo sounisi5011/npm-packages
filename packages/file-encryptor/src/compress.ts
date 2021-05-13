@@ -6,7 +6,7 @@ import type * as zlib from 'zlib';
 
 import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
 import { pipelineWithoutCallback } from './utils/stream';
-import type { ObjectValue } from './utils/type';
+import type { AsyncIterableReturn, ObjectValue } from './utils/type';
 
 const gzipAsync = promisify(gzip);
 
@@ -69,10 +69,10 @@ export async function compress(
     );
 }
 
-export async function* decompressGenerator(
+export async function* decompressIterable(
     data: Iterable<Buffer> | AsyncIterable<Buffer>,
     algorithm: CompressAlgorithmName,
-): AsyncGenerator<Buffer, void, never> {
+): AsyncIterableReturn<Buffer, void> {
     const entry = compressorTable[algorithm];
     if (!entry) {
         throw new TypeError(
