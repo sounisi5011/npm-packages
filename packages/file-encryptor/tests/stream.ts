@@ -68,6 +68,7 @@ describe('encryptStream()', () => {
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 encryptStream(''),
+                writableNoopStream(),
             )).toResolve();
         });
         it.each<[string, unknown]>([
@@ -78,12 +79,42 @@ describe('encryptStream()', () => {
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 encryptStream(''),
+                writableNoopStream(),
             );
             await expect(resultPromise).rejects.toThrowWithMessageFixed(
                 TypeError,
                 chunkTypeErrorMessageRegExp,
             );
         });
+    });
+    /**
+     * Note: The Transform stream emits an `error` event followed by a `close` event when an error occurs.
+     *       However, the `duplexify@4.1.1` package will emit a `finish` event before the `error` event.
+     *       Because of this, errors emitted from the encryptor are not received by the `stream.pipeline()` module method.
+     *       This problem can be solved by using the `pipe()` method or the `stream.pipeline()` module method to attach the Writable stream to the decryptor.
+     *       In most cases, the encryptor stream is connected to the Writable stream for use.
+     *       Therefore, it should not affect most users.
+     *       However, there may be other bugs that cause errors emitted by the encryptor to be ignored.
+     *       Conclusion: This bug has to be fixed.
+     * TODO: Fork the `duplexify` package or stop using it to fix this bug.
+     */
+    it.skip('encryptor should throw an error even if not piped to WritableStream', async () => {
+        /**
+         * In the case of Transform streams, errors can be detected even if they are not attached to a Writable stream.
+         */
+        await expect(pipelineAsync(
+            createCountStream(1),
+            new stream.Transform({
+                transform(_c, _e, done) {
+                    done(new Error(`error!!!!!`));
+                },
+            }),
+        )).rejects.toThrow(new Error(`error!!!!!`));
+
+        await expect(pipelineAsync(
+            stream.Readable.from([42]),
+            encryptStream(''),
+        )).rejects.toThrow(chunkTypeErrorMessageRegExp);
     });
 });
 

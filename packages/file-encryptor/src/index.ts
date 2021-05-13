@@ -1,7 +1,9 @@
+import type * as stream from 'stream';
+
 import type { CryptoAlgorithmName } from './cipher';
 import type { CompressAlgorithmName, CompressOptions, CompressOptionsWithString } from './compress';
 import { createDecryptorGenerator } from './decrypt';
-import { createEncryptorGenerator, EncryptOptions, EncryptorTransform } from './encrypt';
+import { createEncryptorGenerator, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
 import type { InputDataType } from './types';
 import { asyncIterable2Buffer, createIterable } from './utils';
@@ -36,11 +38,14 @@ export async function decrypt(encryptedData: InputDataType, password: InputDataT
 export { createEncryptorGenerator as encryptGenerator };
 export { createDecryptorGenerator as decryptGenerator };
 
-export function encryptStream(password: InputDataType, options: EncryptOptions = {}): EncryptorTransform {
-    return new EncryptorTransform(password, options);
+export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Duplex {
+    return gts(
+        createEncryptorGenerator(password, options),
+        { readableObjectMode: true, writableObjectMode: true },
+    );
 }
 
-export function decryptStream(password: InputDataType): NodeJS.ReadWriteStream {
+export function decryptStream(password: InputDataType): stream.Duplex {
     return gts(
         createDecryptorGenerator(password),
         { readableObjectMode: true, writableObjectMode: true },

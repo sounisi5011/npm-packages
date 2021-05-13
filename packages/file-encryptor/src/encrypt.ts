@@ -8,7 +8,6 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
 import { anyArrayBuffer2Buffer } from './utils';
-import { PromisifyTransform } from './utils/stream';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
@@ -186,22 +185,4 @@ export function createEncryptorGenerator(password: InputDataType, options: Encry
             yield result.encryptedData;
         }
     };
-}
-
-export class EncryptorTransform extends PromisifyTransform {
-    private readonly password: InputDataType;
-    private readonly options: EncryptOptions;
-    private encryptorMetadata: EncryptorMetadata | undefined;
-
-    constructor(password: InputDataType, options: EncryptOptions) {
-        super({ writableObjectMode: true });
-        this.password = password;
-        this.options = options;
-    }
-
-    async transform(chunk: unknown): Promise<Buffer> {
-        const result = await encryptChunk(chunk, this.password, this.options, this.encryptorMetadata);
-        this.encryptorMetadata = result.encryptorMetadata;
-        return result.encryptedData;
-    }
 }
