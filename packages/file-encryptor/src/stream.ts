@@ -1,7 +1,7 @@
 import { InputDataType, isInputDataType } from './types';
 import { printObject } from './utils';
 
-export function validateChunk(chunk: unknown): asserts chunk is InputDataType {
+export function validateChunk(chunk: unknown): InputDataType {
     if (!isInputDataType(chunk)) {
         throw new TypeError(
             `Invalid type chunk received.`
@@ -9,4 +9,5 @@ export function validateChunk(chunk: unknown): asserts chunk is InputDataType {
                 + ` Received ${printObject(chunk)}`,
         );
     }
+    return chunk;
 }

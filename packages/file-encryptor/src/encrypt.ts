@@ -2,7 +2,12 @@ import { randomBytes } from 'crypto';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { compress, CompressOptionsWithString } from './compress';
-import { createHeader, createSimpleHeader } from './header';
+import {
+    createHeader,
+    createSimpleHeader,
+    HeaderDataWithCiphertextLength,
+    SimpleHeaderDataWithCiphertextLength,
+} from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
@@ -14,6 +19,13 @@ export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
     keyDerivation?: KeyDerivationOptions;
     compress?: CompressOptionsWithString;
+}
+
+function createHeaderData(
+    data: HeaderDataWithCiphertextLength & SimpleHeaderDataWithCiphertextLength,
+    isFirst: boolean,
+): Uint8Array {
+    return isFirst ? createHeader(data) : createSimpleHeader(data);
 }
 
 async function encryptChunk({
@@ -33,8 +45,7 @@ async function encryptChunk({
     compressOptions: CompressOptionsWithString | undefined;
     isFirst: boolean;
 }): Promise<Buffer> {
-    validateChunk(chunk);
-    const cleartext = chunk;
+    const cleartext = validateChunk(chunk);
 
     /**
      * Compress cleartext
@@ -64,23 +75,16 @@ async function encryptChunk({
      * Generate header data
      * The data contained in the header will be used for decryption.
      */
-    const ciphertextLength = ciphertextPart1.byteLength + ciphertextPart2.byteLength;
-    const headerData = isFirst
-        ? createHeader({
-            algorithmName: algorithm.name,
-            salt,
-            keyLength: key.byteLength,
-            keyDerivationOptions,
-            nonce,
-            authTag,
-            compressAlgorithmName,
-            ciphertextLength,
-        })
-        : createSimpleHeader({
-            nonce,
-            authTag,
-            ciphertextLength,
-        });
+    const headerData = createHeaderData({
+        algorithmName: algorithm.name,
+        salt,
+        keyLength: key.byteLength,
+        keyDerivationOptions,
+        nonce,
+        authTag,
+        compressAlgorithmName,
+        ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
+    }, isFirst);
 
     /**
      * Merge header and ciphertext

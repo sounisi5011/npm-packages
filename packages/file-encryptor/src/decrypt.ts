@@ -160,10 +160,7 @@ export function createDecryptorIterator(password: InputDataType) {
     return async function* decryptor(
         source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
     ): AsyncIterableIteratorReturn<Buffer, void> {
-        const reader = new StreamReader(source, chunk => {
-            validateChunk(chunk);
-            return bufferFrom(chunk, 'utf8');
-        });
+        const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
 
         let decryptorMetadata: DecryptorMetadata | undefined;
         while (!(await reader.isEnd())) {
