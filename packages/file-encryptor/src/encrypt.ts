@@ -21,6 +21,28 @@ export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
+async function generateKey(
+    { password, keyLength, keyDerivationOptions }: {
+        password: InputDataType;
+        keyLength: number;
+        keyDerivationOptions: KeyDerivationOptions | undefined;
+    },
+): Promise<{ key: Uint8Array; salt: Uint8Array; normalizedKeyDerivationOptions: NormalizedKeyDerivationOptions }> {
+    const {
+        deriveKey,
+        saltLength,
+        normalizedOptions: normalizedKeyDerivationOptions,
+    } = getKDF(keyDerivationOptions);
+    const salt = randomBytes(saltLength);
+    const key = await deriveKey(password, salt, keyLength);
+
+    return {
+        key,
+        salt,
+        normalizedKeyDerivationOptions,
+    };
+}
+
 function createHeaderData(
     data: HeaderDataWithCiphertextLength & SimpleHeaderDataWithCiphertextLength,
     isFirst: boolean,
@@ -101,14 +123,11 @@ export function createEncryptorIterator(
         /**
          * Generate key
          */
-        const {
-            deriveKey,
-            saltLength,
-            normalizedOptions: normalizedKeyDerivationOptions,
-        } = getKDF(options.keyDerivation);
-        const salt = randomBytes(saltLength);
-        const keyLength = algorithm.keyLength;
-        const key = await deriveKey(password, salt, keyLength);
+        const { key, salt, normalizedKeyDerivationOptions } = await generateKey({
+            password,
+            keyLength: algorithm.keyLength,
+            keyDerivationOptions: options.keyDerivation,
+        });
 
         const bufferSourceIterable = convertIterableValue(
             source,
