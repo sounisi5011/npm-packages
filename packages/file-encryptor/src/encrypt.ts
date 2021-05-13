@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
-import { getKDF, KeyDerivationOptions } from './key-derivation-function';
+import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
@@ -16,38 +16,24 @@ export interface EncryptOptions {
     compress?: CompressOptionsWithString;
 }
 
-async function encryptFirstChunk(
-    cleartext: InputDataType,
-    password: InputDataType,
-    options: EncryptOptions,
-): Promise<{
-    encryptedData: Buffer;
-    algorithm: CryptoAlgorithm;
-    key: Uint8Array;
-}> {
-    const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
-    if (!algorithm) {
-        throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
-    }
+async function encryptChunk(
+    chunk: unknown,
+    algorithm: CryptoAlgorithm,
+    key: Uint8Array,
+    salt: Uint8Array,
+    keyDerivationOptions: NormalizedKeyDerivationOptions,
+    compressOptions: CompressOptionsWithString | undefined,
+    isFirst: boolean,
+): Promise<Buffer> {
+    validateChunk(chunk);
+    const cleartext = chunk;
 
     /**
      * Compress cleartext
      */
-    const { algorithm: compressAlgorithmName, data: compressedCleartext } = options.compress
-        ? await compress(cleartext, options.compress)
+    const { algorithm: compressAlgorithmName, data: compressedCleartext } = compressOptions
+        ? await compress(cleartext, compressOptions)
         : { algorithm: undefined, data: anyArrayBuffer2Buffer(cleartext) };
-
-    /**
-     * Generate key
-     */
-    const {
-        deriveKey,
-        saltLength,
-        normalizedOptions: normalizedKeyDerivationOptions,
-    } = getKDF(options.keyDerivation);
-    const salt = randomBytes(saltLength);
-    const keyLength = algorithm.keyLength;
-    const key = await deriveKey(password, salt, keyLength);
 
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
@@ -70,16 +56,23 @@ async function encryptFirstChunk(
      * Generate header data
      * The data contained in the header will be used for decryption.
      */
-    const headerData = createHeader({
-        algorithmName: algorithm.name,
-        salt,
-        keyLength,
-        keyDerivationOptions: normalizedKeyDerivationOptions,
-        nonce,
-        authTag,
-        compressAlgorithmName,
-        ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
-    });
+    const ciphertextLength = ciphertextPart1.byteLength + ciphertextPart2.byteLength;
+    const headerData = isFirst
+        ? createHeader({
+            algorithmName: algorithm.name,
+            salt,
+            keyLength: key.byteLength,
+            keyDerivationOptions,
+            nonce,
+            authTag,
+            compressAlgorithmName,
+            ciphertextLength,
+        })
+        : createSimpleHeader({
+            nonce,
+            authTag,
+            ciphertextLength,
+        });
 
     /**
      * Merge header and ciphertext
@@ -89,101 +82,41 @@ async function encryptFirstChunk(
         ciphertextPart1,
         ciphertextPart2,
     ]);
-    return {
-        encryptedData,
-        algorithm,
-        key,
-    };
+    return encryptedData;
 }
 
-interface EncryptSubsequentChunkOptions {
-    algorithm: CryptoAlgorithm;
-    key: Uint8Array;
-    compress: CompressOptionsWithString | undefined;
-}
-
-async function encryptSubsequentChunk(
-    cleartext: InputDataType,
-    options: EncryptSubsequentChunkOptions,
-): Promise<{ encryptedData: Buffer }> {
-    /**
-     * Compress cleartext
-     */
-    const compressedCleartext = options.compress
-        ? (await compress(cleartext, options.compress)).data
-        : anyArrayBuffer2Buffer(cleartext);
-
-    /**
-     * Generate nonce (also known as an IV / Initialization Vector)
-     */
-    const nonce = nonceState.create(options.algorithm.nonceLength);
-
-    /**
-     * Encrypt cleartext
-     */
-    const cipher = options.algorithm.createCipher(options.key, nonce);
-    const ciphertextPart1 = cipher.update(compressedCleartext);
-    const ciphertextPart2 = cipher.final();
-
-    /**
-     * Get authentication tag
-     */
-    const authTag = cipher.getAuthTag();
-
-    /**
-     * Generate simple header data
-     * The data contained in the header will be used for decryption.
-     */
-    const simpleHeaderData = createSimpleHeader({
-        nonce,
-        authTag,
-        ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
-    });
-
-    /**
-     * Merge header and ciphertext
-     */
-    const encryptedData = Buffer.concat([
-        simpleHeaderData,
-        ciphertextPart1,
-        ciphertextPart2,
-    ]);
-    return { encryptedData };
-}
-
-type EncryptorMetadata = Omit<EncryptSubsequentChunkOptions, 'compress'>;
-
-async function encryptChunk(
-    chunk: unknown,
+export function createEncryptorIterator(
     password: InputDataType,
     options: EncryptOptions,
-    encryptorMetadata: EncryptorMetadata | undefined,
-): Promise<{ encryptedData: Buffer; encryptorMetadata: EncryptorMetadata }> {
-    validateChunk(chunk);
-    if (!encryptorMetadata) {
-        const { algorithm, key, encryptedData } = await encryptFirstChunk(chunk, password, options);
-        return {
-            encryptedData,
-            encryptorMetadata: { algorithm, key },
-        };
-    } else {
-        const { encryptedData } = await encryptSubsequentChunk(
-            chunk,
-            { algorithm: encryptorMetadata.algorithm, key: encryptorMetadata.key, compress: options.compress },
-        );
-        return { encryptedData, encryptorMetadata };
-    }
-}
+): (source: Iterable<InputDataType> | AsyncIterable<InputDataType>) => AsyncIterableIteratorReturn<Buffer, void> {
+    const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
+    if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
-export function createEncryptorIterator(password: InputDataType, options: EncryptOptions) {
-    return async function* encryptor(
-        source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-    ): AsyncIterableIteratorReturn<Buffer, void> {
-        let encryptorMetadata: EncryptorMetadata | undefined;
+    return async function* encryptor(source) {
+        /**
+         * Generate key
+         */
+        const {
+            deriveKey,
+            saltLength,
+            normalizedOptions: normalizedKeyDerivationOptions,
+        } = getKDF(options.keyDerivation);
+        const salt = randomBytes(saltLength);
+        const keyLength = algorithm.keyLength;
+        const key = await deriveKey(password, salt, keyLength);
+
+        let isFirst = true;
         for await (const chunk of source) {
-            const result = await encryptChunk(chunk, password, options, encryptorMetadata);
-            encryptorMetadata = result.encryptorMetadata;
-            yield result.encryptedData;
+            yield encryptChunk(
+                chunk,
+                algorithm,
+                key,
+                salt,
+                normalizedKeyDerivationOptions,
+                options.compress,
+                isFirst,
+            );
+            isFirst = false;
         }
     };
 }
