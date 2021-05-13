@@ -4,7 +4,7 @@ import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import {
     CompressOptionsWithString,
-    CryptAlgorithmName,
+    CryptoAlgorithmName,
     decrypt,
     encrypt,
     EncryptOptions,
@@ -115,7 +115,7 @@ describe('decrypt()', () => {
             ],
         ])('%s', (_, encrypt) => {
             describe('encryption algorithms', () => {
-                it.each<CryptAlgorithmName>([
+                it.each<CryptoAlgorithmName>([
                     'aes-256-gcm',
                     'chacha20-poly1305',
                 ])('%s', async algorithm => {
@@ -148,7 +148,7 @@ describe('decrypt()', () => {
     });
     describe('wrong password should fail', () => {
         const password2 = `${password} `;
-        it.each<CryptAlgorithmName>([
+        it.each<CryptoAlgorithmName>([
             'aes-256-gcm',
             'chacha20-poly1305',
         ])('%s', async algorithm => {

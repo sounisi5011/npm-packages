@@ -1,4 +1,4 @@
-import { CryptAlgorithm, cryptAlgorithmMap } from './cipher';
+import { CryptoAlgorithm, cryptoAlgorithmMap } from './cipher';
 import { CompressAlgorithmName, decompressGenerator } from './compress';
 import {
     HeaderData,
@@ -19,7 +19,7 @@ import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { StreamReader } from './utils/stream';
 
 interface DecryptorMetadata {
-    algorithm: CryptAlgorithm;
+    algorithm: CryptoAlgorithm;
     key: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
 }
@@ -27,8 +27,8 @@ interface DecryptorMetadata {
 async function getAlgorithmAndKey(
     password: InputDataType,
     headerData: HeaderData,
-): Promise<{ algorithm: CryptAlgorithm; key: Uint8Array }> {
-    const algorithm = cryptAlgorithmMap.get(headerData.algorithmName);
+): Promise<{ algorithm: CryptoAlgorithm; key: Uint8Array }> {
+    const algorithm = cryptoAlgorithmMap.get(headerData.algorithmName);
     if (!algorithm) {
         throw new TypeError(`Unknown algorithm was received: ${headerData.algorithmName}`);
     }
@@ -92,7 +92,7 @@ async function parseHeader(
 async function* decrypt(
     ciphertext: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
     { algorithm, key, nonce, authTag }: {
-        algorithm: CryptAlgorithm;
+        algorithm: CryptoAlgorithm;
         key: Uint8Array;
         nonce: Uint8Array;
         authTag: Uint8Array;

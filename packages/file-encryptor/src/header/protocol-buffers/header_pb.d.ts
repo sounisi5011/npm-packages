@@ -55,24 +55,24 @@ export namespace Argon2Options {
 
 export class Header extends jspb.Message { 
 
-    hasCryptNonce(): boolean;
-    clearCryptNonce(): void;
-    getCryptNonce(): Uint8Array | string;
-    getCryptNonce_asU8(): Uint8Array;
-    getCryptNonce_asB64(): string;
-    setCryptNonce(value: Uint8Array | string): Header;
+    hasCryptoNonce(): boolean;
+    clearCryptoNonce(): void;
+    getCryptoNonce(): Uint8Array | string;
+    getCryptoNonce_asU8(): Uint8Array;
+    getCryptoNonce_asB64(): string;
+    setCryptoNonce(value: Uint8Array | string): Header;
 
-    hasCryptAuthTag(): boolean;
-    clearCryptAuthTag(): void;
-    getCryptAuthTag(): Uint8Array | string;
-    getCryptAuthTag_asU8(): Uint8Array;
-    getCryptAuthTag_asB64(): string;
-    setCryptAuthTag(value: Uint8Array | string): Header;
+    hasCryptoAuthTag(): boolean;
+    clearCryptoAuthTag(): void;
+    getCryptoAuthTag(): Uint8Array | string;
+    getCryptoAuthTag_asU8(): Uint8Array;
+    getCryptoAuthTag_asB64(): string;
+    setCryptoAuthTag(value: Uint8Array | string): Header;
 
-    hasCryptAlgorithm(): boolean;
-    clearCryptAlgorithm(): void;
-    getCryptAlgorithm(): Header.CryptAlgorithm | undefined;
-    setCryptAlgorithm(value: Header.CryptAlgorithm): Header;
+    hasCryptoAlgorithm(): boolean;
+    clearCryptoAlgorithm(): void;
+    getCryptoAlgorithm(): Header.CryptoAlgorithm | undefined;
+    setCryptoAlgorithm(value: Header.CryptoAlgorithm): Header;
 
     hasKeySalt(): boolean;
     clearKeySalt(): void;
@@ -110,16 +110,16 @@ export class Header extends jspb.Message {
 
 export namespace Header {
     export type AsObject = {
-        cryptNonce: Uint8Array | string,
-        cryptAuthTag: Uint8Array | string,
-        cryptAlgorithm?: Header.CryptAlgorithm,
+        cryptoNonce: Uint8Array | string,
+        cryptoAuthTag: Uint8Array | string,
+        cryptoAlgorithm?: Header.CryptoAlgorithm,
         keySalt: Uint8Array | string,
         keyLength?: number,
         argon2KeyOptions?: Argon2Options.AsObject,
         compressAlgorithm?: Header.CompressAlgorithm,
     }
 
-    export enum CryptAlgorithm {
+    export enum CryptoAlgorithm {
     AES_256_GCM = 0,
     CHACHA20_POLY1305 = 1,
     }

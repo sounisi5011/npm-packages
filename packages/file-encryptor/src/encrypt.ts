@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 
-import { CryptAlgorithm, cryptAlgorithmMap, CryptAlgorithmName, defaultCryptAlgorithmName } from './cipher';
+import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { compress, CompressOptionsWithString } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions } from './key-derivation-function';
@@ -11,7 +11,7 @@ import { anyArrayBuffer2Buffer } from './utils';
 import { PromisifyTransform } from './utils/stream';
 
 export interface EncryptOptions {
-    algorithm?: CryptAlgorithmName;
+    algorithm?: CryptoAlgorithmName;
     keyDerivation?: KeyDerivationOptions;
     compress?: CompressOptionsWithString;
 }
@@ -22,10 +22,10 @@ async function encryptFirstChunk(
     options: EncryptOptions,
 ): Promise<{
     encryptedData: Buffer;
-    algorithm: CryptAlgorithm;
+    algorithm: CryptoAlgorithm;
     key: Uint8Array;
 }> {
-    const algorithm = cryptAlgorithmMap.get(options.algorithm ?? defaultCryptAlgorithmName);
+    const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) {
         throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
     }
@@ -97,7 +97,7 @@ async function encryptFirstChunk(
 }
 
 interface EncryptSubsequentChunkOptions {
-    algorithm: CryptAlgorithm;
+    algorithm: CryptoAlgorithm;
     key: Uint8Array;
     compress: CompressOptionsWithString | undefined;
 }

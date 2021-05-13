@@ -1,8 +1,8 @@
 import { randomBytes } from 'crypto';
 
-import { cryptAlgorithmMap } from '../../src/cipher';
+import { cryptoAlgorithmMap } from '../../src/cipher';
 
-describe.each([...cryptAlgorithmMap.values()].map(algorithm => [algorithm.name, algorithm] as const))(
+describe.each([...cryptoAlgorithmMap.values()].map(algorithm => [algorithm.name, algorithm] as const))(
     '%s',
     (_, algorithm) => {
         const key = randomBytes(algorithm.keyLength);

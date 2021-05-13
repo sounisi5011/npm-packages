@@ -1,4 +1,4 @@
-import type { CryptAlgorithmName } from './cipher';
+import type { CryptoAlgorithmName } from './cipher';
 import type { CompressAlgorithmName, CompressOptions, CompressOptionsWithString } from './compress';
 import { createDecryptorGenerator } from './decrypt';
 import { createEncryptorGenerator, EncryptOptions, EncryptorTransform } from './encrypt';
@@ -11,7 +11,7 @@ export {
     CompressAlgorithmName,
     CompressOptions,
     CompressOptionsWithString,
-    CryptAlgorithmName,
+    CryptoAlgorithmName,
     EncryptOptions,
     InputDataType,
     KeyDerivationOptions,

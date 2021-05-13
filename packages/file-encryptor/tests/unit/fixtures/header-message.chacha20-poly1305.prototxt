@@ -1,4 +1,4 @@
-crypt_algorithm: ChaCha20_Poly1305
+crypto_algorithm: ChaCha20_Poly1305
 key_salt: "\x00\x01\x02"
 key_length: 96
 argon2_key_options {
@@ -7,6 +7,6 @@ argon2_key_options {
   memory_kib: 128
   parallelism: 6
 }
-crypt_nonce: "\x03\x04"
-crypt_auth_tag: "\x05\x06\x07\x08"
+crypto_nonce: "\x03\x04"
+crypto_auth_tag: "\x05\x06\x07\x08"
 compress_algorithm: None

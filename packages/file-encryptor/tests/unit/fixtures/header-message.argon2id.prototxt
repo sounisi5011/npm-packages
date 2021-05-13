@@ -1,4 +1,4 @@
-crypt_algorithm: AES_256_GCM
+crypto_algorithm: AES_256_GCM
 key_salt: ""
 key_length: 666
 argon2_key_options {
@@ -7,6 +7,6 @@ argon2_key_options {
   memory_kib: 6
   parallelism: 99
 }
-crypt_nonce: "\xFF"
-crypt_auth_tag: "\x08"
+crypto_nonce: "\xFF"
+crypto_auth_tag: "\x08"
 compress_algorithm: None

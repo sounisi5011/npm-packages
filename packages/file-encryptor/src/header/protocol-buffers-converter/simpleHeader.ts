@@ -6,24 +6,24 @@ const dataName = 'SimpleHeader data';
 
 export function createProtobufSimpleHeader(data: SimpleHeaderData): Header {
     return new Header()
-        .setCryptNonce(data.nonce)
-        .setCryptAuthTag(data.authTag);
+        .setCryptoNonce(data.nonce)
+        .setCryptoAuthTag(data.authTag);
 }
 
 export function parseProtobufSimpleHeader(header: Header): SimpleHeaderData {
-    const cryptNonce = validateBytesField(
-        header.getCryptNonce_asU8(),
-        header.hasCryptNonce(),
-        { fieldName: 'crypt_nonce', dataName },
+    const cryptoNonce = validateBytesField(
+        header.getCryptoNonce_asU8(),
+        header.hasCryptoNonce(),
+        { fieldName: 'crypto_nonce', dataName },
     );
-    const cryptAuthTag = validateBytesField(
-        header.getCryptAuthTag_asU8(),
-        header.hasCryptAuthTag(),
-        { fieldName: 'crypt_auth_tag', dataName },
+    const cryptoAuthTag = validateBytesField(
+        header.getCryptoAuthTag_asU8(),
+        header.hasCryptoAuthTag(),
+        { fieldName: 'crypto_auth_tag', dataName },
     );
 
     return {
-        nonce: cryptNonce,
-        authTag: cryptAuthTag,
+        nonce: cryptoNonce,
+        authTag: cryptoAuthTag,
     };
 }

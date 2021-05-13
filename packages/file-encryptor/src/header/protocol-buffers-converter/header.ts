@@ -9,11 +9,11 @@ import { createEnum2value, validateBytesField, validateNumberField } from './uti
 const dataName = 'Header data';
 
 const {
-    enum2value: cryptAlgorithm2algorithmName,
-    value2enum: algorithmName2cryptAlgorithm,
-} = createEnum2value<HeaderData['algorithmName']>()(Header.CryptAlgorithm)([
-    [Header.CryptAlgorithm.AES_256_GCM, 'aes-256-gcm'],
-    [Header.CryptAlgorithm.CHACHA20_POLY1305, 'chacha20-poly1305'],
+    enum2value: cryptoAlgorithm2algorithmName,
+    value2enum: algorithmName2cryptoAlgorithm,
+} = createEnum2value<HeaderData['algorithmName']>()(Header.CryptoAlgorithm)([
+    [Header.CryptoAlgorithm.AES_256_GCM, 'aes-256-gcm'],
+    [Header.CryptoAlgorithm.CHACHA20_POLY1305, 'chacha20-poly1305'],
 ]);
 
 function getKeyDerivationOptions(
@@ -58,9 +58,9 @@ const {
 export function createProtobufHeader(data: HeaderData): Header {
     return setKeyDerivationOptions(
         new Header()
-            .setCryptNonce(data.nonce)
-            .setCryptAuthTag(data.authTag)
-            .setCryptAlgorithm(algorithmName2cryptAlgorithm(data.algorithmName))
+            .setCryptoNonce(data.nonce)
+            .setCryptoAuthTag(data.authTag)
+            .setCryptoAlgorithm(algorithmName2cryptoAlgorithm(data.algorithmName))
             .setKeySalt(data.salt)
             .setKeyLength(data.keyLength)
             .setCompressAlgorithm(compressAlgorithmName2CompressAlgorithm(data.compressAlgorithmName)),
@@ -70,10 +70,10 @@ export function createProtobufHeader(data: HeaderData): Header {
 
 export function parseProtobufHeader(header: Header): HeaderData {
     return {
-        algorithmName: cryptAlgorithm2algorithmName(
-            header.getCryptAlgorithm(),
-            header.hasCryptAlgorithm(),
-            { fieldName: 'crypt_algorithm', dataName },
+        algorithmName: cryptoAlgorithm2algorithmName(
+            header.getCryptoAlgorithm(),
+            header.hasCryptoAlgorithm(),
+            { fieldName: 'crypto_algorithm', dataName },
         ),
         salt: validateBytesField(
             header.getKeySalt_asU8(),
@@ -90,14 +90,14 @@ export function parseProtobufHeader(header: Header): HeaderData {
             { oneofFieldName: 'key_options', dataName },
         ),
         nonce: validateBytesField(
-            header.getCryptNonce_asU8(),
-            header.hasCryptNonce(),
-            { fieldName: 'crypt_nonce', dataName },
+            header.getCryptoNonce_asU8(),
+            header.hasCryptoNonce(),
+            { fieldName: 'crypto_nonce', dataName },
         ),
         authTag: validateBytesField(
-            header.getCryptAuthTag_asU8(),
-            header.hasCryptAuthTag(),
-            { fieldName: 'crypt_auth_tag', dataName },
+            header.getCryptoAuthTag_asU8(),
+            header.hasCryptoAuthTag(),
+            { fieldName: 'crypto_auth_tag', dataName },
         ),
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
             header.getCompressAlgorithm(),

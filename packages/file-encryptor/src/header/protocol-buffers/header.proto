@@ -16,7 +16,7 @@ message Argon2Options {
 }
 
 message Header {
-  enum CryptAlgorithm {
+  enum CryptoAlgorithm {
     AES_256_GCM = 0;
     ChaCha20_Poly1305 = 1;
   }
@@ -26,9 +26,9 @@ message Header {
     Brotli = 2;
   }
 
-  optional bytes crypt_nonce = 1;
-  optional bytes crypt_auth_tag = 2;
-  optional CryptAlgorithm crypt_algorithm = 3;
+  optional bytes crypto_nonce = 1;
+  optional bytes crypto_auth_tag = 2;
+  optional CryptoAlgorithm crypto_algorithm = 3;
   optional bytes key_salt = 4;
   optional uint32 key_length = 5;
   oneof key_options {
@@ -38,6 +38,6 @@ message Header {
 }
 
 // message SimpleHeader {
-//   optional bytes crypt_nonce = 1;
-//   optional bytes crypt_auth_tag = 2;
+//   optional bytes crypto_nonce = 1;
+//   optional bytes crypto_auth_tag = 2;
 // }
