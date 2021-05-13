@@ -1,6 +1,5 @@
 import * as stream from 'stream';
 
-import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 import { writableNoopStream } from 'noop-stream';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
@@ -11,21 +10,17 @@ const chunkTypeErrorMessageRegExp =
     /^Invalid type chunk received\. Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer\. Received\b/;
 
 describe('encryptStream()', () => {
-    it('single chunk', async () => {
-        const stream = createCountStream(1).pipe(encryptStream(''));
+    it.each<[string, number]>([
+        ['single chunk', 1],
+        ['multi chunk', 4],
+    ])('%s', async (_, chunkCount) => {
+        const stream = createCountStream(chunkCount).pipe(encryptStream(''));
         const chunkList: Buffer[] = [];
         for await (const chunk of stream) {
+            expect(chunk).toBeInstanceOf(Buffer);
             chunkList.push(chunk);
         }
-        expect(chunkList).toHaveLength(1);
-    });
-    it('multi chunk', async () => {
-        const stream = createCountStream(4).pipe(encryptStream(''));
-        const chunkList: Buffer[] = [];
-        for await (const chunk of stream) {
-            chunkList.push(chunk);
-        }
-        expect(chunkList).toHaveLength(4);
+        expect(chunkList).toHaveLength(chunkCount);
     });
     it('subsequent chunks are smaller than the first chunk', async () => {
         const chunkCount = 4;
@@ -123,54 +118,56 @@ describe('decryptStream()', () => {
     const password = 'HK6715263GHA';
 
     describe('can decrypt', () => {
-        it('full data', async () => {
-            const encryptedData = await encrypt(cleartext, password);
-            const decryptedData = await streamToBuffer(
-                createStreamFromBuffer(encryptedData)
-                    .pipe(decryptStream(password)),
-            );
-            expect(decryptedData).toStrictEqual(cleartext);
-        });
-        it('full data [torn]', async () => {
-            const encryptedData = await encrypt(cleartext, password);
-            const decryptedData = await streamToBuffer(
-                createStreamFromBuffer(encryptedData, 2)
-                    .pipe(decryptStream(password)),
-            );
-            expect(decryptedData).toStrictEqual(cleartext);
-        });
-        it('single chunk', async () => {
-            const decryptedData = await streamToBuffer(
+        it.each<[string, NodeJS.ReadableStream | (() => Promise<NodeJS.ReadableStream>)]>([
+            [
+                'full data',
+                async () => {
+                    const encryptedData = await encrypt(cleartext, password);
+                    return createStreamFromBuffer(encryptedData);
+                },
+            ],
+            [
+                'full data [torn]',
+                async () => {
+                    const encryptedData = await encrypt(cleartext, password);
+                    return createStreamFromBuffer(encryptedData, 2);
+                },
+            ],
+            [
+                'single chunk',
+                createStreamFromBuffer(cleartext)
+                    .pipe(encryptStream(password)),
+            ],
+            [
+                'single chunk [torn]',
                 createStreamFromBuffer(cleartext)
                     .pipe(encryptStream(password))
-                    .pipe(decryptStream(password)),
-            );
-            expect(decryptedData).toStrictEqual(cleartext);
-        });
-        it('single chunk [torn]', async () => {
-            const decryptedData = await streamToBuffer(
-                createStreamFromBuffer(cleartext)
-                    .pipe(encryptStream(password))
-                    .pipe(createChunkerStream({ chunkSize: 2 }))
-                    .pipe(decryptStream(password)),
-            );
-            expect(decryptedData).toStrictEqual(cleartext);
-        });
-        it('multi chunk', async () => {
-            const decryptedData = await streamToBuffer(
+                    .pipe(createChunkerStream({ chunkSize: 2 })),
+            ],
+            [
+                'multi chunk',
+                createStreamFromBuffer(cleartext, 2)
+                    .pipe(encryptStream(password)),
+            ],
+            [
+                'multi chunk [torn]',
                 createStreamFromBuffer(cleartext, 2)
                     .pipe(encryptStream(password))
-                    .pipe(decryptStream(password)),
-            );
-            expect(decryptedData).toStrictEqual(cleartext);
-        });
-        it('multi chunk [torn]', async () => {
-            const decryptedData = await streamToBuffer(
-                createStreamFromBuffer(cleartext, 2)
-                    .pipe(encryptStream(password))
-                    .pipe(createChunkerStream({ chunkSize: 2 }))
-                    .pipe(decryptStream(password)),
-            );
+                    .pipe(createChunkerStream({ chunkSize: 2 })),
+            ],
+        ])('%s', async (_, createInputStream) => {
+            const inputStream = typeof createInputStream === 'function'
+                ? await createInputStream()
+                : createInputStream;
+            const stream = inputStream.pipe(decryptStream(password));
+
+            const chunkList: Buffer[] = [];
+            for await (const chunk of stream) {
+                expect(chunk).toBeInstanceOf(Buffer);
+                chunkList.push(chunk);
+            }
+
+            const decryptedData = Buffer.concat(chunkList);
             expect(decryptedData).toStrictEqual(cleartext);
         });
     });
