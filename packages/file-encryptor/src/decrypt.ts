@@ -111,11 +111,11 @@ async function* decrypt(
     }
 }
 
-async function* decryptChunk(
+async function decryptChunk(
     password: InputDataType,
-    prevDecryptorMetadata: DecryptorMetadata | undefined,
     reader: StreamReader,
-): AsyncIterableReturn<Buffer, DecryptorMetadata> {
+    prevDecryptorMetadata?: DecryptorMetadata,
+): Promise<{ compressedCleartextIterable: AsyncIterableReturn<Buffer, void>; decryptorMetadata: DecryptorMetadata }> {
     /**
      * Parse header
      */
@@ -146,14 +146,10 @@ async function* decryptChunk(
         authTag: headerData.authTag,
     });
 
-    /**
-     * Decompress cleartext
-     */
-    yield* decryptorMetadata.compressAlgorithmName
-        ? decompressIterable(compressedCleartextIterable, decryptorMetadata.compressAlgorithmName)
-        : compressedCleartextIterable;
-
-    return decryptorMetadata;
+    return {
+        compressedCleartextIterable,
+        decryptorMetadata,
+    };
 }
 
 export function createDecryptorIterator(password: InputDataType) {
@@ -162,9 +158,23 @@ export function createDecryptorIterator(password: InputDataType) {
     ): AsyncIterableIteratorReturn<Buffer, void> {
         const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
 
-        let decryptorMetadata: DecryptorMetadata | undefined;
-        while (!(await reader.isEnd())) {
-            decryptorMetadata = yield* decryptChunk(password, decryptorMetadata, reader);
-        }
+        const {
+            compressedCleartextIterable: firstChunkCompressedCleartextIterable,
+            decryptorMetadata,
+        } = await decryptChunk(password, reader);
+        const compressedCleartextIterable = async function*() {
+            yield* firstChunkCompressedCleartextIterable;
+            while (!(await reader.isEnd())) {
+                const { compressedCleartextIterable } = await decryptChunk(password, reader, decryptorMetadata);
+                yield* compressedCleartextIterable;
+            }
+        }();
+
+        /**
+         * Decompress cleartext
+         */
+        yield* decryptorMetadata.compressAlgorithmName
+            ? decompressIterable(compressedCleartextIterable, decryptorMetadata.compressAlgorithmName)
+            : compressedCleartextIterable;
     };
 }
