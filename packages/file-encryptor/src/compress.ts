@@ -1,11 +1,10 @@
-import { Readable } from 'stream';
 import type * as stream from 'stream';
 import { promisify } from 'util';
 import { brotliCompress, createBrotliDecompress, createGunzip, gzip } from 'zlib';
 import type * as zlib from 'zlib';
 
 import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
-import { pipelineWithoutCallback } from './utils/stream';
+import { writeFromIterableToStream } from './utils/stream';
 import type { AsyncIterableReturn, ObjectValue } from './utils/type';
 
 const gzipAsync = promisify(gzip);
@@ -82,7 +81,7 @@ export async function* decompressIterable(
 
     const decompressStream = entry.createDecompress();
     try {
-        yield* pipelineWithoutCallback(Readable.from(data), decompressStream);
+        yield* writeFromIterableToStream(data, decompressStream);
     } catch (error) {
         fixNodePrimordialsErrorStackTrace(error);
     }

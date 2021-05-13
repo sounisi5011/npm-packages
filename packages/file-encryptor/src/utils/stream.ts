@@ -1,14 +1,48 @@
-import { pipeline } from 'stream';
+import { once } from 'events';
+import type * as stream from 'stream';
 
 import { printObject } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
-export function pipelineWithoutCallback<T extends NodeJS.WritableStream>(
-    ...streams: [NodeJS.ReadableStream, ...NodeJS.ReadableStream[], T]
-): T {
-    return pipeline(streams, () => {
-        //
-    }) as T;
+/**
+ * Writes a value of type `Iterable` to a writable stream object.
+ * Inspired by the `stream.pipeline()` module method in Node.js v13.10.0 and later (which adds support for async generators).
+ */
+export function writeFromIterableToStream<TStream extends stream.Writable>(
+    iterable: Iterable<unknown> | AsyncIterable<unknown>,
+    stream: TStream,
+): TStream {
+    void (async () => {
+        try {
+            /**
+             * @see https://github.com/nodejs/node/blob/v13.14.0/lib/internal/streams/pipeline.js#L132-L150
+             * @see https://github.com/nodejs/node/blob/v14.17.0/lib/internal/streams/pipeline.js#L119-L141
+             * @see https://github.com/nodejs/node/blob/v15.14.0/lib/internal/streams/pipeline.js#L105-L127
+             * @see https://github.com/nodejs/node/blob/v16.1.0/lib/internal/streams/pipeline.js#L104-L126
+             */
+            // @ts-expect-error TS2339: Property 'writableNeedDrain' does not exist on type 'TStream'.
+            // Note: The "writableNeedDrain" property was added in Node.js v14.17.0.
+            if (stream.writableNeedDrain === true) {
+                await once(stream, 'drain');
+            }
+            for await (const chunk of iterable) {
+                if (!stream.write(chunk)) {
+                    if (stream.destroyed) return;
+                    await once(stream, 'drain');
+                }
+            }
+            stream.end();
+        } catch (error) {
+            /**
+             * @see https://github.com/nodejs/node/blob/v13.14.0/lib/internal/streams/destroy.js#L136-L142
+             * @see https://github.com/nodejs/node/blob/v14.17.0/lib/internal/streams/destroy.js#L178-L183
+             * @see https://github.com/nodejs/node/blob/v15.14.0/lib/internal/streams/destroy.js#L362-L367
+             * @see https://github.com/nodejs/node/blob/v16.1.0/lib/internal/streams/destroy.js#L367-L372
+             */
+            stream.destroy(error);
+        }
+    })();
+    return stream;
 }
 
 export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | Uint8Array> {

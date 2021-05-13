@@ -68,6 +68,11 @@ overrides:
         - config:
             <<: *dprint-config
             indentWidth: 4
+      # The "@typescript-eslint/no-floating-promises" rule requires a void operator to be used as a statement.
+      # see https://github.com/typescript-eslint/typescript-eslint/blob/v4.21.0/packages/eslint-plugin/docs/rules/no-floating-promises.md
+      no-void:
+        - error
+        - allowAsStatement: true
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
       node/no-missing-import: off
