@@ -1,5 +1,5 @@
 import type { CryptAlgorithmName } from './cipher';
-import type { CompressOptionsWithString } from './compress';
+import type { CompressAlgorithmName, CompressOptions, CompressOptionsWithString } from './compress';
 import { createDecryptorGenerator } from './decrypt';
 import { createEncryptorGenerator, EncryptOptions, EncryptorTransform } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
@@ -7,7 +7,15 @@ import type { InputDataType } from './types';
 import { asyncIterable2Buffer, createIterable } from './utils';
 import gts from './utils/generator-transform-stream';
 
-export { CompressOptionsWithString, CryptAlgorithmName, EncryptOptions, KeyDerivationOptions };
+export {
+    CompressAlgorithmName,
+    CompressOptions,
+    CompressOptionsWithString,
+    CryptAlgorithmName,
+    EncryptOptions,
+    InputDataType,
+    KeyDerivationOptions,
+};
 
 export async function encrypt(
     cleartext: InputDataType,
