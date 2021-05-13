@@ -49,36 +49,30 @@ export function createCompressor(options: CompressOptionsWithString | undefined)
     compressAlgorithmName: CompressAlgorithmName | undefined;
     compressIterable: (source: AsyncIterable<Buffer>) => AsyncIterableReturn<Buffer, void>;
 } {
-    if (!options) {
-        return {
-            compressAlgorithmName: undefined,
-            compressIterable: source => source,
-        };
+    if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
+
+    const { algorithm, ...compressOptions } = typeof options === 'string' ? { algorithm: options } : options;
+
+    const entry = compressorTable[algorithm];
+    if (!entry) {
+        throw new TypeError(
+            `Unknown compress algorithm was received: ${printObject(algorithm, { passThroughString: true })}`,
+        );
     }
 
-    const normalizedOptions = typeof options === 'string' ? { algorithm: options } : options;
-    const entry = compressorTable[normalizedOptions.algorithm];
-    if (entry) {
-        const { algorithm, ...options } = normalizedOptions;
-        const createCompressStream = entry.createCompress(options);
-        return {
-            compressAlgorithmName: algorithm,
-            async *compressIterable(source) {
-                // Note: To prevent reuse of the Stream object, create it here.
-                const compressStream = createCompressStream();
-                try {
-                    yield* writeFromIterableToStream(source, compressStream);
-                } catch (error) {
-                    fixNodePrimordialsErrorStackTrace(error);
-                }
-            },
-        };
-    }
-    throw new TypeError(
-        `Unknown compress algorithm was received: ${
-            printObject(normalizedOptions.algorithm, { passThroughString: true })
-        }`,
-    );
+    const createCompressStream = entry.createCompress(compressOptions);
+    return {
+        compressAlgorithmName: algorithm,
+        async *compressIterable(source) {
+            // Note: To prevent reuse of the Stream object, create it here.
+            const compressStream = createCompressStream();
+            try {
+                yield* writeFromIterableToStream(source, compressStream);
+            } catch (error) {
+                fixNodePrimordialsErrorStackTrace(error);
+            }
+        },
+    };
 }
 
 export async function* decompressIterable(
