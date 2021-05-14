@@ -41,21 +41,17 @@ const dummyHeaderData: HeaderDataWithCiphertextLength = {
 
 const cidByte = Buffer.from(cidByteList);
 
-function toBuffer(dataList: Array<Uint8Array | number[]>): Buffer {
-    return Buffer.concat(dataList.map(data => data instanceof Uint8Array ? data : Buffer.from(data)));
-}
-
 describe('createHeader()', () => {
     describe('multicodec compliant', () => {
         it('can read', () => {
-            const headerData = toBuffer(createHeader(dummyHeaderData));
+            const headerData = createHeader(dummyHeaderData);
             expect(() => multicodec.getCodeFromData(headerData)).not.toThrow();
         });
         it('code is within Private Use Area', () => {
             /**
              * @see https://github.com/multiformats/multicodec/blob/909e183da65818ecd1e672904980e53711da8780/README.md#private-use-area
              */
-            const headerData = toBuffer(createHeader(dummyHeaderData));
+            const headerData = createHeader(dummyHeaderData);
             const code = multicodec.getCodeFromData(headerData);
             expect(code).toBeGreaterThanOrEqual(0x300000);
             expect(code).toBeLessThanOrEqual(0x3FFFFF);
@@ -63,13 +59,13 @@ describe('createHeader()', () => {
     });
     describe('header byte length included', () => {
         it('can read', () => {
-            const headerData = toBuffer(createHeader(dummyHeaderData));
+            const headerData = createHeader(dummyHeaderData);
             const headerStartOffset = 0 + cidByte.byteLength;
             expect(() => varint.decode(headerData, headerStartOffset)).not.toThrow();
             expect(() => varint.decode(headerData.subarray(headerStartOffset))).not.toThrow();
         });
         it('correct length', () => {
-            const headerData = toBuffer(createHeader(dummyHeaderData));
+            const headerData = createHeader(dummyHeaderData);
             const headerLenStartOffset = 0 + cidByte.byteLength;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
             {
@@ -90,7 +86,7 @@ describe('createHeader()', () => {
     });
     it('ciphertext byte length included', () => {
         const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
-        const headerData = toBuffer(createHeader(dummyHeaderData));
+        const headerData = createHeader(dummyHeaderData);
         const headerInCiphertextLenBytes = headerData.subarray(
             headerData.byteLength - ciphertextLengthByte.byteLength,
             headerData.byteLength,
@@ -102,13 +98,13 @@ describe('createHeader()', () => {
 describe('createSimpleHeader()', () => {
     describe('header byte length included', () => {
         it('can read', () => {
-            const headerData = toBuffer(createSimpleHeader(dummyHeaderData));
+            const headerData = createSimpleHeader(dummyHeaderData);
             const headerStartOffset = 0;
             expect(() => varint.decode(headerData, headerStartOffset)).not.toThrow();
             expect(() => varint.decode(headerData.subarray(headerStartOffset))).not.toThrow();
         });
         it('correct length', () => {
-            const headerData = toBuffer(createSimpleHeader(dummyHeaderData));
+            const headerData = createSimpleHeader(dummyHeaderData);
             const headerLength = varint.decode(headerData);
             const headerLengthVarintBytes = varint.decode.bytes;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
@@ -119,7 +115,7 @@ describe('createSimpleHeader()', () => {
     });
     it('ciphertext byte length included', () => {
         const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
-        const headerData = toBuffer(createSimpleHeader(dummyHeaderData));
+        const headerData = createSimpleHeader(dummyHeaderData);
         const headerInCiphertextLenBytes = headerData
             .subarray(headerData.byteLength - ciphertextLengthByte.byteLength, headerData.byteLength);
         expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
@@ -200,7 +196,7 @@ describe('parseHeaderData()', () => {
             authTag: new Uint8Array([4, 6, 8]),
             compressAlgorithmName: 'gzip',
         };
-        const headerDataBuffer = toBuffer(createHeader({ ...headerData, ciphertextLength: 0 }));
+        const headerDataBuffer = createHeader({ ...headerData, ciphertextLength: 0 });
         const headerLengthStartOffset = 0 + cidByte.byteLength;
         const headerByteLength = varint.decode(headerDataBuffer, headerLengthStartOffset);
         const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
@@ -414,7 +410,7 @@ describe('parseSimpleHeaderData()', () => {
             nonce: new Uint8Array([2, 3, 4]),
             authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
         };
-        const headerDataBuffer = toBuffer(createSimpleHeader({ ...headerData, ciphertextLength: 0 }));
+        const headerDataBuffer = createSimpleHeader({ ...headerData, ciphertextLength: 0 });
         const headerByteLength = varint.decode(headerDataBuffer);
         const headerDataStartOffset = varint.decode.bytes;
 

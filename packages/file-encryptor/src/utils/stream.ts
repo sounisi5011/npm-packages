@@ -1,7 +1,7 @@
 import { once } from 'events';
 import type * as stream from 'stream';
 
-import { isOneArray, printObject } from '.';
+import { printObject } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
 /**
@@ -57,7 +57,7 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
 
 export class StreamReader implements StreamReaderInterface<Buffer> {
     private iterator: AsyncIterator<unknown> | undefined;
-    private readonly chunkList: Buffer[] = [];
+    private buffer: Buffer = Buffer.alloc(0);
 
     constructor(
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
@@ -74,26 +74,16 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     }
 
     async read(size: number, offset = 0): Promise<Buffer> {
-        const { chunkList } = this;
         const needByteLength = offset + size;
-
-        let readedByteLength = 0;
-        for (const chunk of chunkList) {
-            readedByteLength += chunk.byteLength;
-        }
-
-        while (readedByteLength < needByteLength) {
+        while (this.buffer.byteLength < needByteLength) {
             const chunk = await this.tryReadChunk();
             if (!chunk) break;
-            chunkList.push(chunk);
-            readedByteLength += chunk.byteLength;
+
+            // TODO: Buffer should not be merged every time a chunk is read.
+            //       Each chunk should be stored in an array and merged only when the Buffer is returned.
+            this.buffer = Buffer.concat([this.buffer, chunk]);
         }
-
-        const bufferList = this.readFromChunkList(chunkList, { offset, size });
-
-        // The `Buffer.concat()` function will always copy the Buffer object.
-        // However, if the length of the array is 1, there is no need to copy it.
-        return isOneArray(bufferList) ? bufferList[0] : Buffer.concat(bufferList);
+        return this.buffer.subarray(offset, needByteLength);
     }
 
     async *readIterator(
@@ -103,39 +93,33 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
         void
     > {
-        const { chunkList } = this;
         const requestedSize = size;
         let readedSize = 0;
 
-        if (readedSize < requestedSize && chunkList.length > 0) {
-            for (const data of this.readFromChunkList(chunkList, { offset, size: requestedSize })) {
-                readedSize += data.byteLength;
-                yield { data, requestedSize, offset, readedSize };
-            }
-
-            const remainder = this.readFromChunkList(chunkList, { offset: offset + requestedSize, size: Infinity });
-            chunkList.splice(0, Infinity, ...remainder);
+        if (readedSize < requestedSize && this.buffer.byteLength > 0) {
+            const [data, remainder] = this.splitBuffer(this.buffer, requestedSize, offset, true);
+            readedSize += data.byteLength;
+            yield { data, requestedSize, offset, readedSize };
+            this.buffer = remainder;
         }
 
         for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            if (remainder) chunkList.push(remainder);
+            if (remainder) this.buffer = remainder;
         }
 
         yield { requestedSize, offset, readedSize };
     }
 
     async seek(offset: number): Promise<void> {
-        const { chunkList } = this;
-        const remainderOffset = this.seekChunkList(chunkList, offset);
-        const newChunk = await this.seekNewChunks(remainderOffset);
-        if (newChunk) chunkList.push(newChunk);
+        await this.read(offset);
+        this.buffer = this.buffer.subarray(offset);
     }
 
     async isEnd(): Promise<boolean> {
         await this.read(1);
-        return this.chunkList.length < 1;
+        return this.buffer.byteLength < 1;
     }
 
     private async tryReadChunk(): Promise<Buffer | undefined> {
@@ -155,72 +139,6 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
             yield [data, remainder];
             readedSize += data.byteLength;
         }
-    }
-
-    private async seekNewChunks(offset: number): Promise<Buffer | null> {
-        while (offset > 0) {
-            const chunk = await this.tryReadChunk();
-            if (!chunk) break;
-
-            const { byteLength } = chunk;
-            if (offset < byteLength) {
-                return chunk.subarray(offset);
-            }
-            offset -= byteLength;
-        }
-        return null;
-    }
-
-    private readFromChunkList(
-        chunkList: readonly Buffer[],
-        { offset, size }: { offset: number; size: number },
-    ): Buffer[] {
-        const bufferList: Buffer[] = [];
-        const needByteLength = offset + size;
-        let readedSize = 0;
-
-        if (size < 1) return [];
-
-        for (const chunk of chunkList) {
-            if (needByteLength <= readedSize) break;
-
-            const { byteLength } = chunk;
-
-            const bigin = offset - readedSize;
-            const needSize = needByteLength - readedSize;
-            if (bigin < 1 && byteLength <= needSize) {
-                bufferList.push(chunk);
-            } else if (bigin < 1) {
-                bufferList.push(chunk.subarray(0, needSize));
-            } else if (bigin < byteLength) {
-                bufferList.push(chunk.subarray(bigin, needSize));
-            }
-
-            readedSize += byteLength;
-        }
-
-        return bufferList;
-    }
-
-    /**
-     * Delete a Buffer from the `chunkList` array up to the position specified by `offset`.
-     * If `offset` is in the middle of the last Buffer, the last Buffer is cropped and inserted into the `chunkList`.
-     * @returns If offset is in the middle of the last Buffer, the last Buffer is cropped and inserted into the chunkList.
-     */
-    private seekChunkList(chunkList: Buffer[], offset: number): number {
-        while (offset > 0) {
-            const firstChunk = chunkList[0];
-            if (!firstChunk) break;
-
-            const { byteLength } = firstChunk;
-            if (byteLength <= offset) {
-                chunkList.shift();
-            } else {
-                chunkList[0] = firstChunk.subarray(offset);
-            }
-            offset -= byteLength;
-        }
-        return offset;
     }
 
     private splitBuffer(

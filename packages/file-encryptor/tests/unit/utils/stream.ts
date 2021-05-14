@@ -234,6 +234,7 @@ describe('class StreamReader', () => {
                 ]);
             }
 
+            // the `read()` method merges the chunks as it reads them
             await expect(reader.read(3)).resolves.toStrictEqual(Buffer.from([3, 4, 5]));
             {
                 const entryList: ReadEntry[] = [];
@@ -242,13 +243,8 @@ describe('class StreamReader', () => {
                 }
                 expect(entryList).toStrictEqual([
                     {
-                        data: Buffer.from([4]),
-                        requestedSize: 999,
-                        offset: 1,
-                        readedSize: 1,
-                    },
-                    {
-                        data: Buffer.from([5, 6]),
+                        // chunks read by the `read()` method will be concatenated.
+                        data: Buffer.from([4, 5, 6]),
                         requestedSize: 999,
                         offset: 1,
                         readedSize: 3,

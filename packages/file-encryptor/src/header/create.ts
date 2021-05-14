@@ -28,29 +28,31 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
     ciphertextLength: number;
 }
 
-export function createHeader(data: HeaderDataWithCiphertextLength): Array<Uint8Array | number[]> {
+export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
     const { ciphertextLength, ...headerData } = data;
 
     const headerDataBinary = createProtobufHeader(headerData)
         .serializeBinary();
 
-    return [
-        cidByteList,
-        varintEncode(headerDataBinary.byteLength),
+    return Buffer.concat([
+        Buffer.from([
+            ...cidByteList,
+            ...varintEncode(headerDataBinary.byteLength),
+        ]),
         headerDataBinary,
-        varintEncode(ciphertextLength),
-    ];
+        Buffer.from(varintEncode(ciphertextLength)),
+    ]);
 }
 
-export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Array<Uint8Array | number[]> {
+export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Buffer {
     const { ciphertextLength, ...headerData } = data;
 
     const simpleHeaderDataBinary = createProtobufSimpleHeader(headerData)
         .serializeBinary();
 
-    return [
-        varintEncode(simpleHeaderDataBinary.byteLength),
+    return Buffer.concat([
+        Buffer.from(varintEncode(simpleHeaderDataBinary.byteLength)),
         simpleHeaderDataBinary,
-        varintEncode(ciphertextLength),
-    ];
+        Buffer.from(varintEncode(ciphertextLength)),
+    ]);
 }
