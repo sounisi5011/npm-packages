@@ -18,9 +18,9 @@ export function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
     return value !== undefined;
 }
 
-function isOneArray<T>(value: T[]): value is [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T] {
+export function isOneArray<T>(value: T[]): value is [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T] {
     return value.length === 1;
 }
 

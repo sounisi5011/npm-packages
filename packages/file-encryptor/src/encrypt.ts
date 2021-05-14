@@ -54,7 +54,7 @@ function createHeaderData(
         ciphertextLength: number;
     },
     isFirst: boolean,
-): Uint8Array {
+): Array<Uint8Array | number[]> {
     return isFirst
         ? createHeader({
             algorithmName,
@@ -116,7 +116,8 @@ async function encryptChunk(compressedCleartext: Buffer, {
      * Merge header and ciphertext
      */
     const encryptedData = Buffer.concat([
-        headerData,
+        ...headerData
+            .map(data => data instanceof Uint8Array ? data : Buffer.from(data)),
         ciphertextPart1,
         ciphertextPart2,
     ]);
