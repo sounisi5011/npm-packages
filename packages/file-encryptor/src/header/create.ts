@@ -8,12 +8,19 @@ import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 
 export interface SimpleHeaderData {
-    nonce: Uint8Array;
+    nonce:
+        | { addCounter: bigint }
+        | {
+            addFixed: bigint;
+            resetCounter: bigint;
+        };
     authTag: Uint8Array;
 }
 
-export interface HeaderData extends SimpleHeaderData {
+export interface HeaderData {
     algorithmName: CryptoAlgorithmName;
+    nonce: Uint8Array;
+    authTag: Uint8Array;
     salt: Uint8Array;
     keyLength: number;
     keyDerivationOptions: NormalizedKeyDerivationOptions;

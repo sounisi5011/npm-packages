@@ -1,2 +1,1 @@
-crypto_nonce: "\x01\x02\x03"
 crypto_auth_tag: "\x04\x05\x06"

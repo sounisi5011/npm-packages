@@ -23,6 +23,31 @@ export function validateBytesField(
     return value;
 }
 
+export function validateNumberFieldInRange<T extends number | bigint>(
+    value: T,
+    { min, max }: Record<'min' | 'max', number | bigint>,
+    opts: { fieldName: string; dataName: string },
+): T {
+    const errorMessage = `The value of the ${opts.fieldName} field in the ${opts.dataName} is out of range.`
+        + ` It must be >= ${min} and <= ${max}.`
+        + ` Received ${value}`;
+    if (value < min) throw new Error(errorMessage);
+    if (max < value) throw new Error(errorMessage);
+    return value;
+}
+
+export function validateNumberOptionInRange<T extends number | bigint>(
+    value: T,
+    { min, max }: Record<'min' | 'max', number | bigint>,
+    opts: { paramName: string },
+): T {
+    const errorMessage = `The value of "${opts.paramName}" is out of range.`
+        + ` It must be >= ${min} and <= ${max}.`
+        + ` Received ${printObject(value)}`;
+    if (value < min || max < value) throw new RangeError(errorMessage);
+    return value;
+}
+
 export function createEnum2value<TValue>(): (
     <TEnumKey extends string, TEnum>(enumRecord: Record<TEnumKey, TEnum>) => (
         <TEnum2 extends TEnum, TValue2 extends TValue>(

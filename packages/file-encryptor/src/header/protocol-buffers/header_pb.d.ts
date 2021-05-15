@@ -137,3 +137,34 @@ export namespace Header {
     }
 
 }
+
+export class SimpleHeader extends jspb.Message { 
+
+    hasCryptoAuthTag(): boolean;
+    clearCryptoAuthTag(): void;
+    getCryptoAuthTag(): Uint8Array | string;
+    getCryptoAuthTag_asU8(): Uint8Array;
+    getCryptoAuthTag_asB64(): string;
+    setCryptoAuthTag(value: Uint8Array | string): SimpleHeader;
+    getCryptoNonceCounterAddOrReset(): string;
+    setCryptoNonceCounterAddOrReset(value: string): SimpleHeader;
+    getCryptoNonceFixedAdd(): string;
+    setCryptoNonceFixedAdd(value: string): SimpleHeader;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): SimpleHeader.AsObject;
+    static toObject(includeInstance: boolean, msg: SimpleHeader): SimpleHeader.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: SimpleHeader, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SimpleHeader;
+    static deserializeBinaryFromReader(message: SimpleHeader, reader: jspb.BinaryReader): SimpleHeader;
+}
+
+export namespace SimpleHeader {
+    export type AsObject = {
+        cryptoAuthTag: Uint8Array | string,
+        cryptoNonceCounterAddOrReset: string,
+        cryptoNonceFixedAdd: string,
+    }
+}

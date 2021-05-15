@@ -4,7 +4,7 @@ import type { AsyncIterableReturn } from '../utils/type';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
-import { Header } from './protocol-buffers/header_pb';
+import { Header, SimpleHeader } from './protocol-buffers/header_pb';
 import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
 
 export async function validateCID(reader: StreamReaderInterface): Promise<void> {
@@ -36,7 +36,7 @@ export const parseHeaderData = createHeaderDataParser({
 export const parseSimpleHeaderData = createHeaderDataParser({
     name: 'simple header',
     longname: 'simple header data',
-    genHeaderData: headerDataBytes => parseProtobufSimpleHeader(Header.deserializeBinary(headerDataBytes)),
+    genHeaderData: headerDataBytes => parseProtobufSimpleHeader(SimpleHeader.deserializeBinary(headerDataBytes)),
     autoSeek: true,
 });
 

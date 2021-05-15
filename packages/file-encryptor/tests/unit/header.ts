@@ -16,12 +16,15 @@ import {
     parseSimpleHeaderData,
     parseSimpleHeaderLength,
     SimpleHeaderData,
+    SimpleHeaderDataWithCiphertextLength,
     validateCID,
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
 import { iterable2buffer, padStartArray } from '../helpers';
 import '../helpers/jest-matchers';
 import { DummyStreamReader } from '../helpers/stream';
+
+const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
 const dummyHeaderData: HeaderDataWithCiphertextLength = {
     algorithmName: 'aes-256-gcm',
@@ -96,6 +99,12 @@ describe('createHeader()', () => {
 });
 
 describe('createSimpleHeader()', () => {
+    const dummyHeaderData: SimpleHeaderDataWithCiphertextLength = {
+        authTag: new Uint8Array([2, 6, 0, 8]),
+        nonce: { addCounter: BigInt(1) },
+        ciphertextLength: 4219,
+    };
+
     describe('header byte length included', () => {
         it('can read', () => {
             const headerData = createSimpleHeader(dummyHeaderData);
@@ -119,6 +128,80 @@ describe('createSimpleHeader()', () => {
         const headerInCiphertextLenBytes = headerData
             .subarray(headerData.byteLength - ciphertextLengthByte.byteLength, headerData.byteLength);
         expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
+    });
+    describe('invalid nonce', () => {
+        {
+            const min = BigInt(1);
+            const max = MAX_UINT64;
+            it.each<[string, bigint, bigint]>([
+                ['addCounter must be greater than 0', min, min - BigInt(1)],
+                ['addCounter must be less than 2^64', max, max + BigInt(1)],
+            ])('%s', (_, safeValue, outValue) => {
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addCounter: safeValue },
+                    })
+                ).not.toThrow();
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addCounter: outValue },
+                    })
+                ).toThrowWithMessageFixed(
+                    RangeError,
+                    `The value of "simpleHeaderData.nonce.addCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                );
+            });
+        }
+        {
+            const min = BigInt(1);
+            const max = MAX_UINT64;
+            it.each<[string, bigint, bigint]>([
+                ['addFixed must be greater than 0', min, min - BigInt(1)],
+                ['addFixed must be less than 2^64', max, max + BigInt(1)],
+            ])('%s', (_, safeValue, outValue) => {
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addFixed: safeValue, resetCounter: BigInt(0) },
+                    })
+                ).not.toThrow();
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addFixed: outValue, resetCounter: BigInt(0) },
+                    })
+                ).toThrowWithMessageFixed(
+                    RangeError,
+                    `The value of "simpleHeaderData.nonce.addFixed" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                );
+            });
+        }
+        {
+            const min = BigInt(0);
+            const max = MAX_UINT64;
+            it.each<[string, bigint, bigint]>([
+                ['resetCounter must be greater than or equal to 0', min, min - BigInt(1)],
+                ['resetCounter must be less than 2^64', max, max + BigInt(1)],
+            ])('%s', (_, safeValue, outValue) => {
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addFixed: BigInt(1), resetCounter: safeValue },
+                    })
+                ).not.toThrow();
+                expect(() =>
+                    createSimpleHeader({
+                        ...dummyHeaderData,
+                        nonce: { addFixed: BigInt(1), resetCounter: outValue },
+                    })
+                ).toThrowWithMessageFixed(
+                    RangeError,
+                    `The value of "simpleHeaderData.nonce.resetCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                );
+            });
+        }
     });
 });
 
@@ -406,60 +489,99 @@ describe('parseSimpleHeaderLength()', () => {
 
 describe('parseSimpleHeaderData()', () => {
     describe('parse generated data by createSimpleHeader()', () => {
-        const headerData: SimpleHeaderData = {
-            nonce: new Uint8Array([2, 3, 4]),
-            authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
-        };
-        const headerDataBuffer = createSimpleHeader({ ...headerData, ciphertextLength: 0 });
-        const headerByteLength = varint.decode(headerDataBuffer);
-        const headerDataStartOffset = varint.decode.bytes;
+        let unsafeAdd: number | undefined;
+        for (let i = 1; i < 1000; i++) {
+            if (i !== ((Number.MAX_SAFE_INTEGER + i) - Number.MAX_SAFE_INTEGER)) {
+                unsafeAdd = i;
+                break;
+            }
+        }
+        if (!unsafeAdd) throw new Error('The derivation of "unsafeAdd" failed.');
 
-        type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[1], 'headerByteLength'>;
-        it.each<[string, Opts, Buffer]>([
-            [
-                'offset=undefined',
-                {},
-                headerDataBuffer.subarray(headerDataStartOffset),
-            ],
-            [
-                'offset=0',
-                { offset: 0 },
-                headerDataBuffer.subarray(headerDataStartOffset),
-            ],
-            [
-                'offset defined',
-                { offset: headerDataStartOffset },
-                headerDataBuffer,
-            ],
-        ])('%s', async (_, opts, data) => {
-            const reader = new DummyStreamReader(data);
-            const result = await parseSimpleHeaderData(reader, {
-                ...opts,
-                headerByteLength,
-            });
-            expect(result.headerData).toStrictEqual(headerData);
-        });
-        describe('invalid offset defined', () => {
-            it.each<[string, Opts]>([
+        const intList: ReadonlyArray<{ label?: string; value: bigint }> = [
+            { value: BigInt(1) },
+            { value: BigInt(2) },
+            {
+                label: `Number.MAX_SAFE_INTEGER + ${unsafeAdd}`,
+                value: BigInt(Number.MAX_SAFE_INTEGER) + BigInt(unsafeAdd),
+            },
+            { label: '2^64 - 1', value: MAX_UINT64 },
+        ];
+
+        describe.each<[string, SimpleHeaderData]>([
+            ...intList.map<[string, SimpleHeaderData]>(({ label, value }) => [
+                `nonce.addCounter=${label ? `(${label})` : String(value)}`,
+                {
+                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                    nonce: { addCounter: value },
+                },
+            ]),
+            ...intList.map<[string, SimpleHeaderData]>(({ label, value }) => [
+                `nonce.addFixed=${label ? `(${label})` : String(value)}`,
+                {
+                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                    nonce: { addFixed: value, resetCounter: BigInt(0) },
+                },
+            ]),
+            ...[{ value: BigInt(0) }, ...intList].map<[string, SimpleHeaderData]>(({ label, value }) => [
+                `nonce.resetCounter=${label ? `(${label})` : String(value)}`,
+                {
+                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                    nonce: { addFixed: BigInt(1), resetCounter: value },
+                },
+            ]),
+        ])('%s', (_, headerData) => {
+            const headerDataBuffer = createSimpleHeader({ ...headerData, ciphertextLength: 0 });
+            const headerByteLength = varint.decode(headerDataBuffer);
+            const headerDataStartOffset = varint.decode.bytes;
+
+            type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[1], 'headerByteLength'>;
+            it.each<[string, Opts, Buffer]>([
                 [
                     'offset=undefined',
                     {},
+                    headerDataBuffer.subarray(headerDataStartOffset),
                 ],
                 [
                     'offset=0',
                     { offset: 0 },
+                    headerDataBuffer.subarray(headerDataStartOffset),
                 ],
                 [
-                    'offset=+1',
-                    { offset: headerDataStartOffset + 1 },
+                    'offset defined',
+                    { offset: headerDataStartOffset },
+                    headerDataBuffer,
                 ],
-            ])('%s', async (_, opts) => {
-                await expect(
-                    parseSimpleHeaderData(new DummyStreamReader(headerDataBuffer), {
-                        headerByteLength,
-                        ...opts,
-                    }),
-                ).rejects.toThrow();
+            ])('%s', async (_, opts, data) => {
+                const reader = new DummyStreamReader(data);
+                const result = await parseSimpleHeaderData(reader, {
+                    ...opts,
+                    headerByteLength,
+                });
+                expect(result.headerData).toStrictEqual(headerData);
+            });
+            describe('invalid offset defined', () => {
+                it.each<[string, Opts]>([
+                    [
+                        'offset=undefined',
+                        {},
+                    ],
+                    [
+                        'offset=0',
+                        { offset: 0 },
+                    ],
+                    [
+                        'offset=+1',
+                        { offset: headerDataStartOffset + 1 },
+                    ],
+                ])('%s', async (_, opts) => {
+                    await expect(
+                        parseSimpleHeaderData(new DummyStreamReader(headerDataBuffer), {
+                            headerByteLength,
+                            ...opts,
+                        }),
+                    ).rejects.toThrow();
+                });
             });
         });
     });
@@ -468,15 +590,58 @@ describe('parseSimpleHeaderData()', () => {
             [
                 'simple-header-message.basic.bin',
                 {
-                    nonce: new Uint8Array([1, 2, 3]),
                     authTag: new Uint8Array([4, 5, 6]),
+                    nonce: {
+                        addCounter: BigInt(1),
+                    },
+                },
+            ],
+            [
+                'simple-header-message.add-nonce-counter.bin',
+                {
+                    authTag: new Uint8Array([0, 1, 0]),
+                    nonce: {
+                        addCounter: BigInt(2),
+                    },
+                },
+            ],
+            [
+                'simple-header-message.max-nonce-counter.bin',
+                {
+                    authTag: new Uint8Array([7, 1, 4]),
+                    nonce: {
+                        addCounter: MAX_UINT64,
+                    },
+                },
+            ],
+            [
+                'simple-header-message.add-nonce-fixed.bin',
+                {
+                    authTag: new Uint8Array([1, 3, 2]),
+                    nonce: {
+                        addFixed: BigInt(1),
+                        resetCounter: BigInt(0),
+                    },
                 },
             ],
             [
                 'simple-header-message.full-length.bin',
                 {
-                    nonce: new Uint8Array([...Array(96 / 8).keys()]),
                     authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                    nonce: {
+                        addFixed: BigInt(8640000000000000),
+                        resetCounter: BigInt(2) ** (BigInt(5) * BigInt(8)) - BigInt(1),
+                    },
+                },
+            ],
+            [
+                'simple-header-message.max-length.bin',
+                {
+                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                    nonce: {
+                        addFixed: MAX_UINT64,
+                        resetCounter: MAX_UINT64,
+                    },
                 },
             ],
         ])('%s', async (filename, expected) => {
@@ -486,6 +651,21 @@ describe('parseSimpleHeaderData()', () => {
             const result = await parseSimpleHeaderData(reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
+        {
+            const filename = 'simple-header-message.overflow-nonce-counter.bin';
+            it(`${filename}`, async () => {
+                const filepath = path.resolve(__dirname, 'fixtures', filename);
+                const data = await fsAsync.readFile(filepath);
+                const reader = new DummyStreamReader(data);
+                await expect(parseSimpleHeaderData(reader, { headerByteLength: data.byteLength })).rejects
+                    .toThrowWithMessageFixed(
+                        Error,
+                        `The value of the crypto_nonce_counter_add_or_reset field in the SimpleHeader data is out of range.`
+                            + ` It must be >= 0 and <= ${MAX_UINT64 - BigInt(1)}.`
+                            + ` Received ${MAX_UINT64}`,
+                    );
+            });
+        }
     });
     describe('invalid length bytes', () => {
         it.each([
