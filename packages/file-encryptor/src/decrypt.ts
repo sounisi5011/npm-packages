@@ -22,6 +22,7 @@ import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './utils/t
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithm;
     key: Uint8Array;
+    nonce: Uint8Array | Buffer;
     compressAlgorithmName: CompressAlgorithmName | undefined;
 }
 
@@ -74,6 +75,7 @@ async function parseHeader(
             decryptorMetadata: {
                 algorithm,
                 key,
+                nonce: headerData.nonce,
                 compressAlgorithmName: headerData.compressAlgorithmName,
             },
         };
@@ -83,9 +85,17 @@ async function parseHeader(
          */
         const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
         const { headerData } = await parseSimpleHeaderData(reader, { headerByteLength });
+        const prevNonce = prevDecryptorMetadata.nonce;
+        const nonceDiff = headerData.nonce;
+        const newNonce = 'addFixed' in nonceDiff
+            ? nonceState.createFromFixedFieldDiff(prevNonce, nonceDiff.addFixed, nonceDiff.resetCounter)
+            : nonceState.createFromInvocationCountDiff(prevNonce, nonceDiff.addCounter);
         return {
             headerData,
-            decryptorMetadata: prevDecryptorMetadata,
+            decryptorMetadata: {
+                ...prevDecryptorMetadata,
+                nonce: newNonce,
+            },
         };
     }
 }
@@ -132,17 +142,12 @@ async function decryptChunk(
     const ciphertextDataIterable = parseCiphertextIterable(reader, { ciphertextByteLength });
 
     /**
-     * Update the invocation part in the nonce
-     */
-    nonceState.updateInvocation(headerData.nonce);
-
-    /**
      * Decrypt ciphertext
      */
     const compressedCleartextIterable = decrypt(ciphertextDataIterable, {
         algorithm: decryptorMetadata.algorithm,
         key: decryptorMetadata.key,
-        nonce: headerData.nonce,
+        nonce: decryptorMetadata.nonce,
         authTag: headerData.authTag,
     });
 
@@ -164,9 +169,15 @@ export function createDecryptorIterator(password: InputDataType) {
         } = await decryptChunk(password, reader);
         const compressedCleartextIterable = async function*() {
             yield* firstChunkCompressedCleartextIterable;
+            let prevDecryptorMetadata = decryptorMetadata;
             while (!(await reader.isEnd())) {
-                const { compressedCleartextIterable } = await decryptChunk(password, reader, decryptorMetadata);
+                const { compressedCleartextIterable, decryptorMetadata: newDecryptorMetadata } = await decryptChunk(
+                    password,
+                    reader,
+                    prevDecryptorMetadata,
+                );
                 yield* compressedCleartextIterable;
+                prevDecryptorMetadata = newDecryptorMetadata;
             }
         }();
 

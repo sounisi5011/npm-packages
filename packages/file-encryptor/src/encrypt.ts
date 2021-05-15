@@ -8,12 +8,16 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType } from './types';
 import { bufferFrom, convertIterableValue } from './utils';
-import type { AsyncIterableIteratorReturn } from './utils/type';
+import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
     keyDerivation?: KeyDerivationOptions;
     compress?: CompressOptionsWithString;
+}
+
+interface EncryptorState {
+    nonce: Uint8Array | Buffer;
 }
 
 interface KeyResult {
@@ -45,18 +49,18 @@ async function generateKey(
 }
 
 function createHeaderData(
-    { algorithmName, keyResult, nonce, authTag, compressAlgorithmName, ciphertextLength }: {
+    { algorithmName, keyResult, nonce, authTag, compressAlgorithmName, ciphertextLength, prevState }: {
         algorithmName: CryptoAlgorithmName;
         keyResult: KeyResult;
         nonce: Uint8Array;
         authTag: Uint8Array;
         compressAlgorithmName: CompressAlgorithmName | undefined;
         ciphertextLength: number;
+        prevState: EncryptorState | undefined;
     },
-    isFirst: boolean,
 ): Uint8Array {
-    return isFirst
-        ? createHeader({
+    if (!prevState) {
+        return createHeader({
             algorithmName,
             salt: keyResult.salt,
             keyLength: keyResult.key.byteLength,
@@ -65,23 +69,30 @@ function createHeaderData(
             authTag,
             compressAlgorithmName,
             ciphertextLength,
-        })
-        : createSimpleHeader({
-            nonce,
-            authTag,
-            ciphertextLength,
         });
+    }
+
+    const nonceDiff = nonceState.getDiff(prevState.nonce, nonce);
+    return createSimpleHeader({
+        nonce: 'fixedField' in nonceDiff
+            ? { addFixed: nonceDiff.fixedField, resetCounter: nonceDiff.resetInvocationCount }
+            : { addCounter: nonceDiff.invocationCount },
+        authTag,
+        ciphertextLength,
+    });
 }
 
-async function encryptChunk(compressedCleartext: Buffer, {
+async function* encryptChunk(compressedCleartext: Buffer, {
     algorithm,
     keyResult,
     compressAlgorithmName,
+    prevState,
 }: {
     algorithm: CryptoAlgorithm;
     keyResult: KeyResult;
     compressAlgorithmName: CompressAlgorithmName | undefined;
-}, isFirst: boolean): Promise<Buffer> {
+    prevState: EncryptorState | undefined;
+}): AsyncIterableReturn<Buffer, EncryptorState> {
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */
@@ -110,7 +121,8 @@ async function encryptChunk(compressedCleartext: Buffer, {
         authTag,
         compressAlgorithmName,
         ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
-    }, isFirst);
+        prevState,
+    });
 
     /**
      * Merge header and ciphertext
@@ -120,7 +132,12 @@ async function encryptChunk(compressedCleartext: Buffer, {
         ciphertextPart1,
         ciphertextPart2,
     ]);
-    return encryptedData;
+    yield encryptedData;
+
+    const newState: EncryptorState = {
+        nonce,
+    };
+    return newState;
 }
 
 export function createEncryptorIterator(
@@ -152,14 +169,14 @@ export function createEncryptorIterator(
          */
         const compressedSourceIterable = compressIterable(bufferSourceIterable);
 
-        let isFirst = true;
+        let prevState: EncryptorState | undefined;
         for await (const compressedCleartext of compressedSourceIterable) {
-            yield await encryptChunk(compressedCleartext, {
+            prevState = yield* encryptChunk(compressedCleartext, {
                 algorithm,
                 keyResult,
                 compressAlgorithmName,
-            }, isFirst);
-            isFirst = false;
+                prevState,
+            });
         }
     };
 }

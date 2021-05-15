@@ -26,26 +26,84 @@ export class Nonce {
 
     create(byteLength: number): Buffer {
         this.validateLength('byteLength', byteLength, minCreateByteLength, maxByteLength);
-        this.incrementFixedField(byteLength);
+        return this.createNonceBytes({
+            nonceByteLength: byteLength,
+            fixedFieldData: this.fixedFieldData,
+            invocationCount: this.invocationCount,
+        }).nonce;
+    }
 
-        const view = this.nonceByteView;
+    createFromInvocationCountDiff(prevNonce: Buffer | Uint8Array, addInvocationCount: bigint): Buffer {
+        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
+        if (!(addInvocationCount >= 1)) {
+            throw new RangeError(
+                `The value of "addInvocationCount" argument is out of range. It must be >= 1. Received ${addInvocationCount}`,
+            );
+        }
 
-        view.setBigUint64(0, this.fixedFieldData, true);
-        view.setBigUint64(fixedFieldByteLength, this.invocationCount, true);
-        this.invocationCount += BigInt(1);
+        const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
+        return this.createNonceBytes({
+            nonceByteLength: prevNonce.byteLength,
+            fixedFieldData,
+            invocationCount: invocationCount + addInvocationCount,
+        }).nonce;
+    }
 
-        return Buffer.from(view.buffer.slice(0, byteLength));
+    createFromFixedFieldDiff(
+        prevNonce: Buffer | Uint8Array,
+        addFixedField: bigint,
+        resetInvocationCount: bigint,
+    ): Buffer {
+        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
+        if (!(addFixedField >= 1)) {
+            throw new RangeError(
+                `The value of "addFixedField" argument is out of range. It must be >= 1. Received ${addFixedField}`,
+            );
+        }
+        if (!(resetInvocationCount >= 0)) {
+            throw new RangeError(
+                `The value of "resetInvocationCount" argument is out of range. It must be >= 0. Received ${resetInvocationCount}`,
+            );
+        }
+
+        const { fixedFieldData } = this.parseNonceBytes(prevNonce);
+        return this.createNonceBytes({
+            nonceByteLength: prevNonce.byteLength,
+            fixedFieldData: fixedFieldData + addFixedField,
+            invocationCount: resetInvocationCount,
+        }).nonce;
+    }
+
+    getDiff(
+        prevNonce: Buffer | Uint8Array,
+        currentNonce: Buffer | Uint8Array,
+    ): { invocationCount: bigint } | { fixedField: bigint; resetInvocationCount: bigint } {
+        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
+        this.validateLength('prevNonce', currentNonce, minUpdateByteLength, maxByteLength);
+
+        const { fixedFieldData: prevFixedFieldData, invocationCount: prevInvocationCount } = this.parseNonceBytes(
+            prevNonce,
+        );
+        const { fixedFieldData: currentFixedFieldData, invocationCount: currentInvocationCount } = this.parseNonceBytes(
+            currentNonce,
+        );
+
+        if (currentFixedFieldData === prevFixedFieldData) {
+            return { invocationCount: currentInvocationCount - prevInvocationCount };
+        }
+        return {
+            fixedField: currentFixedFieldData - prevFixedFieldData,
+            resetInvocationCount: currentInvocationCount,
+        };
     }
 
     updateInvocation(prevNonce: Uint8Array): this {
         this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
         const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
-        if (this.fixedFieldData < fixedFieldData) {
-            this.fixedFieldData = fixedFieldData;
-            this.invocationCount = invocationCount + BigInt(1);
-        } else if (this.fixedFieldData === fixedFieldData && this.invocationCount <= invocationCount) {
-            this.invocationCount = invocationCount + BigInt(1);
-        }
+        this.updateState({
+            newFixedFieldData: fixedFieldData,
+            newInvocationCount: invocationCount,
+        });
         return this;
     }
 
@@ -64,11 +122,20 @@ export class Nonce {
         }
     }
 
-    private incrementFixedField(nonceByteLength: number): void {
+    private createNonceBytes(
+        { nonceByteLength, fixedFieldData, invocationCount }: {
+            nonceByteLength: number;
+            fixedFieldData: bigint;
+            invocationCount: bigint;
+        },
+    ): { nonce: Buffer; newFixedFieldData: bigint; newInvocationCount: bigint } {
         const invocationFieldByteLength = nonceByteLength - fixedFieldByteLength;
-        const maxInvocationCount = BigInt(2) ** BigInt(invocationFieldByteLength * 8);
-        if (this.invocationCount < maxInvocationCount) return;
-        if (MAX_FIXED_FIELD_COUNT <= this.fixedFieldData) {
+        const invocationFieldBits = BigInt(invocationFieldByteLength * 8);
+        const maxInvocationFieldCount = BigInt(2) ** invocationFieldBits - BigInt(1);
+
+        const newInvocationCount = invocationCount & maxInvocationFieldCount;
+        const newFixedFieldData = fixedFieldData + (invocationCount >> invocationFieldBits);
+        if (MAX_FIXED_FIELD_COUNT < newFixedFieldData) {
             if (nonceByteLength < maxByteLength) {
                 throw new Error(
                     `Unable to create nonce. All bits are overflowing. Please increase the nonce bytes from current value. Received ${nonceByteLength}`,
@@ -77,8 +144,26 @@ export class Nonce {
                 throw new Error(`Unable to create nonce. All bits are overflowing.`);
             }
         }
-        this.fixedFieldData += BigInt(1);
-        this.invocationCount = BigInt(0);
+
+        const newNonce = Buffer.alloc(nonceByteLength);
+        for (let i = 0; i < fixedFieldByteLength; i++) {
+            newNonce[i] = Number(
+                (newFixedFieldData >> BigInt(i * 8)) & BigInt(0xFF),
+            );
+        }
+        for (let i = 0; i < invocationFieldByteLength; i++) {
+            newNonce[fixedFieldByteLength + i] = Number(
+                (newInvocationCount >> BigInt(i * 8)) & BigInt(0xFF),
+            );
+        }
+
+        this.updateState({ newFixedFieldData, newInvocationCount });
+
+        return {
+            nonce: newNonce,
+            newFixedFieldData,
+            newInvocationCount,
+        };
     }
 
     private parseNonceBytes(nonceBytes: Uint8Array): { fixedFieldData: bigint; invocationCount: bigint } {
@@ -91,7 +176,24 @@ export class Nonce {
         );
         const invocationCount = view.getBigUint64(fixedFieldByteLength, true);
 
+        this.updateState({
+            newFixedFieldData: fixedFieldData,
+            newInvocationCount: invocationCount,
+        });
         return { fixedFieldData, invocationCount };
+    }
+
+    private updateState(
+        { newFixedFieldData, newInvocationCount }: Record<'newFixedFieldData' | 'newInvocationCount', bigint>,
+    ): void {
+        if (this.fixedFieldData <= newFixedFieldData) {
+            if (this.fixedFieldData < newFixedFieldData) {
+                this.fixedFieldData = newFixedFieldData;
+                this.invocationCount = newInvocationCount + BigInt(1);
+            } else if (this.invocationCount <= newInvocationCount) {
+                this.invocationCount = newInvocationCount + BigInt(1);
+            }
+        }
     }
 }
 
