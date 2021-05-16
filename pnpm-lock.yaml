@@ -68,7 +68,7 @@ importers:
       '@vercel/ncc': 0.28.2
       find-git-root: ^1.0.4
       workspace-tools: ^0.13.0
-  packages/file-encryptor:
+  packages/encrypted-archive:
     dependencies:
       argon2-browser: 1.15.4
       capitalize: 2.0.3
@@ -118,11 +118,11 @@ importers:
       multicodec: 3.0.1
       noop-stream: 0.1.0
       varint: ^6.0.0
-  packages/file-encryptor/examples:
+  packages/encrypted-archive/examples:
     dependencies:
-      '@sounisi5011/file-encryptor': link:..
+      '@sounisi5011/encrypted-archive': link:..
     specifiers:
-      '@sounisi5011/file-encryptor': file:..
+      '@sounisi5011/encrypted-archive': file:..
   packages/ts-type-utils/has-own-property:
     devDependencies:
       tsd: 0.14.0

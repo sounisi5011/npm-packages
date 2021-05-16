@@ -1,7 +1,7 @@
 {
-  "name": "@sounisi5011/file-encryptor",
+  "name": "@sounisi5011/encrypted-archive",
   "version": "0.0.0",
-  "description": "Convert files and data into encrypted binary data",
+  "description": "Convert data into a single encrypted archive data that contains all metadata needed for decryption",
   "keywords": [
     "AES",
     "AES-256",
@@ -35,14 +35,14 @@
     "util",
     "utility"
   ],
-  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/file-encryptor#readme",
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/encrypted-archive#readme",
   "bugs": {
     "url": "https://github.com/sounisi5011/npm-packages/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sounisi5011/npm-packages.git",
-    "directory": "packages/file-encryptor"
+    "directory": "packages/encrypted-archive"
   },
   "license": "MIT",
   "author": "sounisi5011",

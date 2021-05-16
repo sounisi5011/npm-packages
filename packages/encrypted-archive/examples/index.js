@@ -3,7 +3,7 @@ const path = require('path');
 const stream = require('stream');
 const util = require('util');
 
-const { encrypt, decrypt, encryptStream, decryptStream } = require('@sounisi5011/file-encryptor');
+const { encrypt, decrypt, encryptStream, decryptStream } = require('@sounisi5011/encrypted-archive');
 
 const fsPromises = fs.promises;
 const streamPipelineAsync = util.promisify(stream.pipeline);
