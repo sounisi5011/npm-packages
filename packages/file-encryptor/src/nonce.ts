@@ -144,11 +144,8 @@ export class Nonce {
         },
     ): Buffer {
         const invocationFieldByteLength = nonceByteLength - fixedFieldByteLength;
-        const invocationFieldBits = BigInt(invocationFieldByteLength * 8);
-        const maxInvocationFieldCount = BigInt(2) ** invocationFieldBits - BigInt(1);
-
-        const newInvocationCount = invocationCount & maxInvocationFieldCount;
-        const newFixedFieldData = fixedFieldData + (invocationCount >> invocationFieldBits);
+        const newInvocationCount = invocationCount & (BigInt(2) ** BigInt(invocationFieldByteLength * 8) - BigInt(1));
+        const newFixedFieldData = fixedFieldData + (invocationCount >> BigInt(invocationFieldByteLength * 8));
         if (MAX_FIXED_FIELD_COUNT < newFixedFieldData) {
             throw new Error(
                 `Unable to create nonce. All bits are overflowing.${
