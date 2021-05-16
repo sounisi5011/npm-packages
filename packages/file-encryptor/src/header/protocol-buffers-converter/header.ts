@@ -72,17 +72,17 @@ export function parseProtobufHeader(header: Header): HeaderData {
     return {
         algorithmName: cryptoAlgorithm2algorithmName(
             header.getCryptoAlgorithm(),
-            header.hasCryptoAlgorithm(),
+            true,
             { fieldName: 'crypto_algorithm', dataName },
         ),
         salt: validateBytesField(
             header.getKeySalt_asU8(),
-            header.hasKeySalt(),
+            true,
             { fieldName: 'key_salt', dataName },
         ),
         keyLength: validateNumberField(
             header.getKeyLength(),
-            header.hasKeyLength(),
+            true,
             { fieldName: 'key_length', dataName },
         ),
         keyDerivationOptions: getKeyDerivationOptions(
@@ -91,17 +91,17 @@ export function parseProtobufHeader(header: Header): HeaderData {
         ),
         nonce: validateBytesField(
             header.getCryptoNonce_asU8(),
-            header.hasCryptoNonce(),
+            true,
             { fieldName: 'crypto_nonce', dataName },
         ),
         authTag: validateBytesField(
             header.getCryptoAuthTag_asU8(),
-            header.hasCryptoAuthTag(),
+            true,
             { fieldName: 'crypto_auth_tag', dataName },
         ),
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
             header.getCompressAlgorithm(),
-            header.hasCompressAlgorithm(),
+            true,
             { fieldName: 'compress_algorithm', dataName },
         ),
     };

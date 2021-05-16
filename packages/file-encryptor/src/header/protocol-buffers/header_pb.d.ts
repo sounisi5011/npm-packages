@@ -7,25 +7,13 @@
 import * as jspb from "google-protobuf";
 
 export class Argon2Options extends jspb.Message { 
-
-    hasType(): boolean;
-    clearType(): void;
-    getType(): Argon2Options.Argon2Type | undefined;
+    getType(): Argon2Options.Argon2Type;
     setType(value: Argon2Options.Argon2Type): Argon2Options;
-
-    hasTimeIterations(): boolean;
-    clearTimeIterations(): void;
-    getTimeIterations(): number | undefined;
+    getTimeIterations(): number;
     setTimeIterations(value: number): Argon2Options;
-
-    hasMemoryKib(): boolean;
-    clearMemoryKib(): void;
-    getMemoryKib(): number | undefined;
+    getMemoryKib(): number;
     setMemoryKib(value: number): Argon2Options;
-
-    hasParallelism(): boolean;
-    clearParallelism(): void;
-    getParallelism(): number | undefined;
+    getParallelism(): number;
     setParallelism(value: number): Argon2Options;
 
     serializeBinary(): Uint8Array;
@@ -40,10 +28,10 @@ export class Argon2Options extends jspb.Message {
 
 export namespace Argon2Options {
     export type AsObject = {
-        type?: Argon2Options.Argon2Type,
-        timeIterations?: number,
-        memoryKib?: number,
-        parallelism?: number,
+        type: Argon2Options.Argon2Type,
+        timeIterations: number,
+        memoryKib: number,
+        parallelism: number,
     }
 
     export enum Argon2Type {
@@ -54,46 +42,28 @@ export namespace Argon2Options {
 }
 
 export class Header extends jspb.Message { 
-
-    hasCryptoNonce(): boolean;
-    clearCryptoNonce(): void;
     getCryptoNonce(): Uint8Array | string;
     getCryptoNonce_asU8(): Uint8Array;
     getCryptoNonce_asB64(): string;
     setCryptoNonce(value: Uint8Array | string): Header;
-
-    hasCryptoAuthTag(): boolean;
-    clearCryptoAuthTag(): void;
     getCryptoAuthTag(): Uint8Array | string;
     getCryptoAuthTag_asU8(): Uint8Array;
     getCryptoAuthTag_asB64(): string;
     setCryptoAuthTag(value: Uint8Array | string): Header;
-
-    hasCryptoAlgorithm(): boolean;
-    clearCryptoAlgorithm(): void;
-    getCryptoAlgorithm(): Header.CryptoAlgorithm | undefined;
+    getCryptoAlgorithm(): Header.CryptoAlgorithm;
     setCryptoAlgorithm(value: Header.CryptoAlgorithm): Header;
-
-    hasKeySalt(): boolean;
-    clearKeySalt(): void;
     getKeySalt(): Uint8Array | string;
     getKeySalt_asU8(): Uint8Array;
     getKeySalt_asB64(): string;
     setKeySalt(value: Uint8Array | string): Header;
-
-    hasKeyLength(): boolean;
-    clearKeyLength(): void;
-    getKeyLength(): number | undefined;
+    getKeyLength(): number;
     setKeyLength(value: number): Header;
 
     hasArgon2KeyOptions(): boolean;
     clearArgon2KeyOptions(): void;
     getArgon2KeyOptions(): Argon2Options | undefined;
     setArgon2KeyOptions(value?: Argon2Options): Header;
-
-    hasCompressAlgorithm(): boolean;
-    clearCompressAlgorithm(): void;
-    getCompressAlgorithm(): Header.CompressAlgorithm | undefined;
+    getCompressAlgorithm(): Header.CompressAlgorithm;
     setCompressAlgorithm(value: Header.CompressAlgorithm): Header;
 
     getKeyOptionsCase(): Header.KeyOptionsCase;
@@ -112,11 +82,11 @@ export namespace Header {
     export type AsObject = {
         cryptoNonce: Uint8Array | string,
         cryptoAuthTag: Uint8Array | string,
-        cryptoAlgorithm?: Header.CryptoAlgorithm,
+        cryptoAlgorithm: Header.CryptoAlgorithm,
         keySalt: Uint8Array | string,
-        keyLength?: number,
+        keyLength: number,
         argon2KeyOptions?: Argon2Options.AsObject,
-        compressAlgorithm?: Header.CompressAlgorithm,
+        compressAlgorithm: Header.CompressAlgorithm,
     }
 
     export enum CryptoAlgorithm {
@@ -139,9 +109,6 @@ export namespace Header {
 }
 
 export class SimpleHeader extends jspb.Message { 
-
-    hasCryptoAuthTag(): boolean;
-    clearCryptoAuthTag(): void;
     getCryptoAuthTag(): Uint8Array | string;
     getCryptoAuthTag_asU8(): Uint8Array;
     getCryptoAuthTag_asB64(): string;

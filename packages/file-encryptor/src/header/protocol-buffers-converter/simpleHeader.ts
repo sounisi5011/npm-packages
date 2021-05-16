@@ -42,7 +42,7 @@ const validateUInt64FromProtobuf = (fieldName: string, value: string, max: bigin
 export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderData {
     const authTag = validateBytesField(
         header.getCryptoAuthTag_asU8(),
-        header.hasCryptoAuthTag(),
+        true,
         { fieldName: 'crypto_auth_tag', dataName },
     );
     const cryptoNonceCounterAddOrReset = (max: bigint): bigint =>

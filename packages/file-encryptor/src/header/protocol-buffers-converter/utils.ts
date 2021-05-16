@@ -17,9 +17,14 @@ export function validateNumberField(
 export function validateBytesField(
     value: Uint8Array,
     exists: boolean,
-    opts: { fieldName: string; dataName: string },
+    opts: { fieldName: string; dataName: string; failZero?: false },
 ): Uint8Array {
     if (!exists) reportNonDefinedField(opts);
+    if (opts.failZero !== false && value.byteLength < 1) {
+        throw new Error(
+            `The value of the ${opts.fieldName} field in the ${opts.dataName} is 0 bytes. It must be >= 1`,
+        );
+    }
     return value;
 }
 

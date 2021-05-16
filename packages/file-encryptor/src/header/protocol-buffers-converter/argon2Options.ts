@@ -24,22 +24,22 @@ export function parseProtobufArgon2Options(argon2Options: Argon2Options): Normal
     return {
         algorithm: argon2Type2algorithm(
             argon2Options.getType(),
-            argon2Options.hasType(),
+            true,
             { fieldName: 'type', dataName },
         ),
         iterations: validateNumberField(
             argon2Options.getTimeIterations(),
-            argon2Options.hasTimeIterations(),
+            true,
             { fieldName: 'time_iterations', dataName },
         ),
         memory: validateNumberField(
             argon2Options.getMemoryKib(),
-            argon2Options.hasMemoryKib(),
+            true,
             { fieldName: 'memory_kib', dataName },
         ),
         parallelism: validateNumberField(
             argon2Options.getParallelism(),
-            argon2Options.hasParallelism(),
+            true,
             { fieldName: 'parallelism', dataName },
         ),
     };

@@ -1,5 +1,5 @@
 crypto_algorithm: AES_256_GCM
-key_salt: ""
+key_salt: "\x42"
 key_length: 666
 argon2_key_options {
   type: Argon2id

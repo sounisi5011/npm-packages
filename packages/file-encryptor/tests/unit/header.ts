@@ -390,7 +390,7 @@ describe('parseHeaderData()', () => {
                 'header-message.argon2id.bin',
                 {
                     algorithmName: 'aes-256-gcm',
-                    salt: new Uint8Array([]),
+                    salt: new Uint8Array([0x42]),
                     keyLength: 666,
                     keyDerivationOptions: {
                         algorithm: 'argon2id',
@@ -443,6 +443,56 @@ describe('parseHeaderData()', () => {
             const reader = new DummyStreamReader(data);
             const result = await parseHeaderData(reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
+        });
+    });
+    describe('invalid Protocol Buffers binary', () => {
+        it.each<[string, ErrorConstructor, string]>([
+            [
+                'header-message.empty.bin',
+                Error,
+                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+            ],
+            [
+                'simple-header-message.add-nonce-counter.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'simple-header-message.add-nonce-fixed.bin',
+                Error,
+                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+            ],
+            [
+                'simple-header-message.basic.bin',
+                Error,
+                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+            ],
+            [
+                'simple-header-message.full-length.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'simple-header-message.max-length.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'simple-header-message.max-nonce-counter.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'simple-header-message.overflow-nonce-counter.bin',
+                Error,
+                'Assertion failed',
+            ],
+        ])('%s', async (filename, errorConst, errorMsg) => {
+            const filepath = path.resolve(__dirname, 'fixtures', filename);
+            const data = await fsAsync.readFile(filepath);
+            const reader = new DummyStreamReader(data);
+            await expect(parseHeaderData(reader, { headerByteLength: data.byteLength })).rejects
+                .toThrowWithMessageFixed(errorConst, errorMsg);
         });
     });
     describe('invalid length bytes', () => {
@@ -651,21 +701,58 @@ describe('parseSimpleHeaderData()', () => {
             const result = await parseSimpleHeaderData(reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
-        {
-            const filename = 'simple-header-message.overflow-nonce-counter.bin';
-            it(`${filename}`, async () => {
-                const filepath = path.resolve(__dirname, 'fixtures', filename);
-                const data = await fsAsync.readFile(filepath);
-                const reader = new DummyStreamReader(data);
-                await expect(parseSimpleHeaderData(reader, { headerByteLength: data.byteLength })).rejects
-                    .toThrowWithMessageFixed(
-                        Error,
-                        `The value of the crypto_nonce_counter_add_or_reset field in the SimpleHeader data is out of range.`
-                            + ` It must be >= 0 and <= ${MAX_UINT64 - BigInt(1)}.`
-                            + ` Received ${MAX_UINT64}`,
-                    );
-            });
-        }
+    });
+    describe('invalid Protocol Buffers binary', () => {
+        it.each<[string, ErrorConstructor, string]>([
+            [
+                'header-message.empty.bin',
+                Error,
+                'The value of the crypto_auth_tag field in the SimpleHeader data is 0 bytes. It must be >= 1',
+            ],
+            [
+                'simple-header-message.overflow-nonce-counter.bin',
+                Error,
+                `The value of the crypto_nonce_counter_add_or_reset field in the SimpleHeader data is out of range.`
+                + ` It must be >= 0 and <= ${MAX_UINT64 - BigInt(1)}.`
+                + ` Received ${MAX_UINT64}`,
+            ],
+            [
+                'header-message.argon2id.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'header-message.basic.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'header-message.chacha20-poly1305.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'header-message.compress-brotli.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'header-message.compress-gzip.bin',
+                Error,
+                'Assertion failed',
+            ],
+            [
+                'header-message.full-length.bin',
+                Error,
+                'Assertion failed',
+            ],
+        ])('%s', async (filename, errorConst, errorMsg) => {
+            const filepath = path.resolve(__dirname, 'fixtures', filename);
+            const data = await fsAsync.readFile(filepath);
+            const reader = new DummyStreamReader(data);
+            await expect(parseSimpleHeaderData(reader, { headerByteLength: data.byteLength })).rejects
+                .toThrowWithMessageFixed(errorConst, errorMsg);
+        });
     });
     describe('invalid length bytes', () => {
         it.each([

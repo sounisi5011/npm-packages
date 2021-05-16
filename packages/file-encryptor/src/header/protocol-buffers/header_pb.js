@@ -202,29 +202,29 @@ proto.Argon2Options.prototype.serializeBinary = function() {
  */
 proto.Argon2Options.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = /** @type {!proto.Argon2Options.Argon2Type} */ (jspb.Message.getField(message, 1));
-  if (f != null) {
+  f = message.getType();
+  if (f !== 0.0) {
     writer.writeEnum(
       1,
       f
     );
   }
-  f = /** @type {number} */ (jspb.Message.getField(message, 2));
-  if (f != null) {
+  f = message.getTimeIterations();
+  if (f !== 0) {
     writer.writeUint32(
       2,
       f
     );
   }
-  f = /** @type {number} */ (jspb.Message.getField(message, 3));
-  if (f != null) {
+  f = message.getMemoryKib();
+  if (f !== 0) {
     writer.writeUint32(
       3,
       f
     );
   }
-  f = /** @type {number} */ (jspb.Message.getField(message, 4));
-  if (f != null) {
+  f = message.getParallelism();
+  if (f !== 0) {
     writer.writeUint32(
       4,
       f
@@ -255,25 +255,7 @@ proto.Argon2Options.prototype.getType = function() {
  * @return {!proto.Argon2Options} returns this
  */
 proto.Argon2Options.prototype.setType = function(value) {
-  return jspb.Message.setField(this, 1, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Argon2Options} returns this
- */
-proto.Argon2Options.prototype.clearType = function() {
-  return jspb.Message.setField(this, 1, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Argon2Options.prototype.hasType = function() {
-  return jspb.Message.getField(this, 1) != null;
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -291,25 +273,7 @@ proto.Argon2Options.prototype.getTimeIterations = function() {
  * @return {!proto.Argon2Options} returns this
  */
 proto.Argon2Options.prototype.setTimeIterations = function(value) {
-  return jspb.Message.setField(this, 2, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Argon2Options} returns this
- */
-proto.Argon2Options.prototype.clearTimeIterations = function() {
-  return jspb.Message.setField(this, 2, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Argon2Options.prototype.hasTimeIterations = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -327,25 +291,7 @@ proto.Argon2Options.prototype.getMemoryKib = function() {
  * @return {!proto.Argon2Options} returns this
  */
 proto.Argon2Options.prototype.setMemoryKib = function(value) {
-  return jspb.Message.setField(this, 3, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Argon2Options} returns this
- */
-proto.Argon2Options.prototype.clearMemoryKib = function() {
-  return jspb.Message.setField(this, 3, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Argon2Options.prototype.hasMemoryKib = function() {
-  return jspb.Message.getField(this, 3) != null;
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -363,25 +309,7 @@ proto.Argon2Options.prototype.getParallelism = function() {
  * @return {!proto.Argon2Options} returns this
  */
 proto.Argon2Options.prototype.setParallelism = function(value) {
-  return jspb.Message.setField(this, 4, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Argon2Options} returns this
- */
-proto.Argon2Options.prototype.clearParallelism = function() {
-  return jspb.Message.setField(this, 4, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Argon2Options.prototype.hasParallelism = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -543,36 +471,36 @@ proto.Header.prototype.serializeBinary = function() {
  */
 proto.Header.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 1));
-  if (f != null) {
+  f = message.getCryptoNonce_asU8();
+  if (f.length > 0) {
     writer.writeBytes(
       1,
       f
     );
   }
-  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 2));
-  if (f != null) {
+  f = message.getCryptoAuthTag_asU8();
+  if (f.length > 0) {
     writer.writeBytes(
       2,
       f
     );
   }
-  f = /** @type {!proto.Header.CryptoAlgorithm} */ (jspb.Message.getField(message, 3));
-  if (f != null) {
+  f = message.getCryptoAlgorithm();
+  if (f !== 0.0) {
     writer.writeEnum(
       3,
       f
     );
   }
-  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 4));
-  if (f != null) {
+  f = message.getKeySalt_asU8();
+  if (f.length > 0) {
     writer.writeBytes(
       4,
       f
     );
   }
-  f = /** @type {number} */ (jspb.Message.getField(message, 5));
-  if (f != null) {
+  f = message.getKeyLength();
+  if (f !== 0) {
     writer.writeUint32(
       5,
       f
@@ -586,8 +514,8 @@ proto.Header.serializeBinaryToWriter = function(message, writer) {
       proto.Argon2Options.serializeBinaryToWriter
     );
   }
-  f = /** @type {!proto.Header.CompressAlgorithm} */ (jspb.Message.getField(message, 6));
-  if (f != null) {
+  f = message.getCompressAlgorithm();
+  if (f !== 0.0) {
     writer.writeEnum(
       6,
       f
@@ -651,25 +579,7 @@ proto.Header.prototype.getCryptoNonce_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCryptoNonce = function(value) {
-  return jspb.Message.setField(this, 1, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearCryptoNonce = function() {
-  return jspb.Message.setField(this, 1, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasCryptoNonce = function() {
-  return jspb.Message.getField(this, 1) != null;
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -711,25 +621,7 @@ proto.Header.prototype.getCryptoAuthTag_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCryptoAuthTag = function(value) {
-  return jspb.Message.setField(this, 2, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearCryptoAuthTag = function() {
-  return jspb.Message.setField(this, 2, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasCryptoAuthTag = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -747,25 +639,7 @@ proto.Header.prototype.getCryptoAlgorithm = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCryptoAlgorithm = function(value) {
-  return jspb.Message.setField(this, 3, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearCryptoAlgorithm = function() {
-  return jspb.Message.setField(this, 3, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasCryptoAlgorithm = function() {
-  return jspb.Message.getField(this, 3) != null;
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -807,25 +681,7 @@ proto.Header.prototype.getKeySalt_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setKeySalt = function(value) {
-  return jspb.Message.setField(this, 4, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearKeySalt = function() {
-  return jspb.Message.setField(this, 4, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasKeySalt = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.setProto3BytesField(this, 4, value);
 };
 
 
@@ -843,25 +699,7 @@ proto.Header.prototype.getKeyLength = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setKeyLength = function(value) {
-  return jspb.Message.setField(this, 5, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearKeyLength = function() {
-  return jspb.Message.setField(this, 5, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasKeyLength = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -916,25 +754,7 @@ proto.Header.prototype.getCompressAlgorithm = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCompressAlgorithm = function(value) {
-  return jspb.Message.setField(this, 6, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.clearCompressAlgorithm = function() {
-  return jspb.Message.setField(this, 6, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.Header.prototype.hasCompressAlgorithm = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 
@@ -1050,8 +870,8 @@ proto.SimpleHeader.prototype.serializeBinary = function() {
  */
 proto.SimpleHeader.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 1));
-  if (f != null) {
+  f = message.getCryptoAuthTag_asU8();
+  if (f.length > 0) {
     writer.writeBytes(
       1,
       f
@@ -1112,25 +932,7 @@ proto.SimpleHeader.prototype.getCryptoAuthTag_asU8 = function() {
  * @return {!proto.SimpleHeader} returns this
  */
 proto.SimpleHeader.prototype.setCryptoAuthTag = function(value) {
-  return jspb.Message.setField(this, 1, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.SimpleHeader} returns this
- */
-proto.SimpleHeader.prototype.clearCryptoAuthTag = function() {
-  return jspb.Message.setField(this, 1, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.SimpleHeader.prototype.hasCryptoAuthTag = function() {
-  return jspb.Message.getField(this, 1) != null;
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
