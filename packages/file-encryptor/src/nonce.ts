@@ -160,11 +160,15 @@ export class Nonce {
         }
 
         const newNonce = Buffer.alloc(nonceByteLength);
-        for (let index = 0; index < nonceByteLength; index++) {
-            const byteCode = index < fixedFieldByteLength
-                ? newFixedFieldData >> BigInt(index * 8)
-                : newInvocationCount >> BigInt((index - fixedFieldByteLength) * 8);
-            newNonce[index] = Number(byteCode & BigInt(0xFF));
+        for (let index = 0; index < fixedFieldByteLength; index++) {
+            newNonce[index] = Number(
+                newFixedFieldData >> BigInt(index * 8) & BigInt(0xFF),
+            );
+        }
+        for (let index = 0; index < invocationFieldByteLength; index++) {
+            newNonce[fixedFieldByteLength + index] = Number(
+                newInvocationCount >> BigInt(index * 8) & BigInt(0xFF),
+            );
         }
 
         this.updateState({ newFixedFieldData, newInvocationCount });
