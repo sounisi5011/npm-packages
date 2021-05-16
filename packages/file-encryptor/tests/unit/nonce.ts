@@ -603,6 +603,218 @@ describe('class Nonce', () => {
         });
     });
 
+    describe('getDiff()', () => {
+        describe('get invocation count diff', () => {
+            describe.each<[number[], number[], bigint]>([
+                [
+                    [...createFixedField(), 0x00],
+                    [...createFixedField(), 0x01],
+                    BigInt(1),
+                ],
+                [
+                    [...createFixedField(), 0x00],
+                    [...createFixedField(), 0x02],
+                    BigInt(2),
+                ],
+                [
+                    [...createFixedField(), 0x10],
+                    [...createFixedField(), 0x42],
+                    BigInt(0x32),
+                ],
+                [
+                    [...createFixedField(), 0x01],
+                    [...createFixedField(), 0x00, 0x02],
+                    BigInt(0x1FF),
+                ],
+                [
+                    [...createFixedField(), 0x00],
+                    [...createFixedField(), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF],
+                    BigInt('0xFFFFFFFFFFFFFFFF'),
+                ],
+                [
+                    [...createFixedField(), 0x03],
+                    [...createFixedField(), 0x00],
+                    -BigInt(3),
+                ],
+                [
+                    [...createFixedField(), 0x04],
+                    [...createFixedField(), 0x04],
+                    BigInt(0),
+                ],
+            ])('prevNonceData:%p currentNonceData:%p', (prevNonceData, currentNonceData, invocationCount) => {
+                it.each([
+                    ['Buffer x Buffer', Buffer.from(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Buffer x Uint8Array', Buffer.from(prevNonceData), new Uint8Array(currentNonceData)],
+                    ['Uint8Array x Buffer', new Uint8Array(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Uint8Array x Uint8Array', new Uint8Array(prevNonceData), new Uint8Array(currentNonceData)],
+                ])('%s', (_, prevNonce, currentNonce) => {
+                    const nonceState = new Nonce();
+                    expect(nonceState.getDiff(prevNonce, currentNonce))
+                        .toStrictEqual({
+                            invocationCount,
+                        });
+                });
+            });
+        });
+
+        describe('get fixed field diff', () => {
+            describe.each<[number[], number[], bigint]>([
+                [
+                    [...createFixedField(0x00), 0x00],
+                    [...createFixedField(0x01), 0x00],
+                    BigInt(1),
+                ],
+                [
+                    [...createFixedField(0x00), 0x09],
+                    [...createFixedField(0x02), 0x01],
+                    BigInt(2),
+                ],
+                [
+                    [...createFixedField(0x10), 0x00],
+                    [...createFixedField(0x42), 0x00],
+                    BigInt(0x32),
+                ],
+                [
+                    [...createFixedField(0x01), 0x00],
+                    [...createFixedField(0x00, 0x02), 0x00],
+                    BigInt(0x1FF),
+                ],
+                [
+                    [...createFixedField(), 0x00],
+                    [...createFixedField(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF), 0x00],
+                    BigInt('0xFFFFFFFFFFFFFF'),
+                ],
+                [
+                    [...createFixedField(0x3), 0x00],
+                    [...createFixedField(0x00), 0x00],
+                    -BigInt(3),
+                ],
+            ])('prevNonceData:%p currentNonceData:%p', (prevNonceData, currentNonceData, fixedField) => {
+                it.each([
+                    ['Buffer x Buffer', Buffer.from(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Buffer x Uint8Array', Buffer.from(prevNonceData), new Uint8Array(currentNonceData)],
+                    ['Uint8Array x Buffer', new Uint8Array(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Uint8Array x Uint8Array', new Uint8Array(prevNonceData), new Uint8Array(currentNonceData)],
+                ])('%s', (_, prevNonce, currentNonce) => {
+                    const nonceState = new Nonce();
+                    expect(nonceState.getDiff(prevNonce, currentNonce))
+                        .toStrictEqual({
+                            fixedField,
+                            resetInvocationCount: expect.any(BigInt),
+                        });
+                });
+            });
+        });
+
+        describe('get new invocation count from fixed field diff', () => {
+            describe.each<[number[], number[], bigint]>([
+                [
+                    [...createFixedField(0x00), 0x09],
+                    [...createFixedField(0x01), 0x00],
+                    BigInt(0),
+                ],
+                [
+                    [...createFixedField(0x00), 0x00],
+                    [...createFixedField(0x01), 0x09],
+                    BigInt(9),
+                ],
+                [
+                    [...createFixedField(0x00), 0x58],
+                    [...createFixedField(0x01), 0x32],
+                    BigInt(0x32),
+                ],
+                [
+                    [...createFixedField(0x00), 0x01],
+                    [...createFixedField(0x01), 0x00, 0x02],
+                    BigInt(0x200),
+                ],
+                [
+                    [...createFixedField(0x00), 0x10, 0x20],
+                    [...createFixedField(0x01), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF],
+                    BigInt('0xFFFFFFFFFFFFFFFF'),
+                ],
+            ])('prevNonceData:%p currentNonceData:%p', (prevNonceData, currentNonceData, resetInvocationCount) => {
+                it.each([
+                    ['Buffer x Buffer', Buffer.from(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Buffer x Uint8Array', Buffer.from(prevNonceData), new Uint8Array(currentNonceData)],
+                    ['Uint8Array x Buffer', new Uint8Array(prevNonceData), Buffer.from(currentNonceData)],
+                    ['Uint8Array x Uint8Array', new Uint8Array(prevNonceData), new Uint8Array(currentNonceData)],
+                ])('%s', (_, prevNonce, currentNonce) => {
+                    const nonceState = new Nonce();
+                    expect(nonceState.getDiff(prevNonce, currentNonce))
+                        .toStrictEqual({
+                            fixedField: expect.any(BigInt),
+                            resetInvocationCount: resetInvocationCount,
+                        });
+                });
+            });
+        });
+
+        describe('invalid "prevNonce" argument', () => {
+            describe('too short byte length', () => {
+                it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(len), new Uint8Array(MIN_INPUT_NONCE_LENGTH)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+
+            describe('valid byte length', () => {
+                it.each(rangeArray(MIN_INPUT_NONCE_LENGTH, MAX_NONCE_LENGTH))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(len), new Uint8Array(MIN_INPUT_NONCE_LENGTH)))
+                        .not.toThrow();
+                });
+            });
+
+            describe('too long byte length', () => {
+                it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(len), new Uint8Array(MIN_INPUT_NONCE_LENGTH)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+        });
+
+        describe('invalid "currentNonce" argument', () => {
+            describe('too short byte length', () => {
+                it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(MIN_INPUT_NONCE_LENGTH), new Uint8Array(len)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "currentNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+
+            describe('valid byte length', () => {
+                it.each(rangeArray(MIN_INPUT_NONCE_LENGTH, MAX_NONCE_LENGTH))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(MIN_INPUT_NONCE_LENGTH), new Uint8Array(len)))
+                        .not.toThrow();
+                });
+            });
+
+            describe('too long byte length', () => {
+                it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.getDiff(new Uint8Array(MIN_INPUT_NONCE_LENGTH), new Uint8Array(len)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "currentNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+        });
+    });
+
     describe('updateInvocation()', () => {
         describe('update state', () => {
             it('fixed field value is too large', () => {
