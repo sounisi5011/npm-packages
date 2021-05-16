@@ -29,7 +29,7 @@ export class Nonce {
             nonceByteLength: byteLength,
             fixedFieldData: this.fixedFieldData,
             invocationCount: this.invocationCount,
-        }).nonce;
+        });
     }
 
     createFromInvocationCountDiff(prevNonce: Buffer | Uint8Array, addInvocationCount: bigint): Buffer {
@@ -41,7 +41,7 @@ export class Nonce {
             nonceByteLength: prevNonce.byteLength,
             fixedFieldData,
             invocationCount: invocationCount + addInvocationCount,
-        }).nonce;
+        });
     }
 
     createFromFixedFieldDiff(
@@ -58,7 +58,7 @@ export class Nonce {
             nonceByteLength: prevNonce.byteLength,
             fixedFieldData: fixedFieldData + addFixedField,
             invocationCount: resetInvocationCount,
-        }).nonce;
+        });
     }
 
     getDiff(
@@ -133,7 +133,7 @@ export class Nonce {
             fixedFieldData: bigint;
             invocationCount: bigint;
         },
-    ): { nonce: Buffer; newFixedFieldData: bigint; newInvocationCount: bigint } {
+    ): Buffer {
         const invocationFieldByteLength = nonceByteLength - fixedFieldByteLength;
         const invocationFieldBits = BigInt(invocationFieldByteLength * 8);
         const maxInvocationFieldCount = BigInt(2) ** invocationFieldBits - BigInt(1);
@@ -159,12 +159,7 @@ export class Nonce {
         }
 
         this.updateState({ newFixedFieldData, newInvocationCount });
-
-        return {
-            nonce: newNonce,
-            newFixedFieldData,
-            newInvocationCount,
-        };
+        return newNonce;
     }
 
     private parseNonceBytes(nonceBytes: Uint8Array | Buffer): { fixedFieldData: bigint; invocationCount: bigint } {
