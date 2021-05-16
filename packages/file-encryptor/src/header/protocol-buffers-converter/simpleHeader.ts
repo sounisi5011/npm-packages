@@ -32,40 +32,38 @@ export function createProtobufSimpleHeader(simpleHeaderData: SimpleHeaderData): 
     return header;
 }
 
+const validateUInt64FromProtobuf = (fieldName: string, value: string, max: bigint = MAX_UINT64): bigint =>
+    validateNumberFieldInRange(
+        BigInt(value),
+        { min: 0, max },
+        { fieldName, dataName },
+    );
+
 export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderData {
-    const cryptoAuthTag = validateBytesField(
+    const authTag = validateBytesField(
         header.getCryptoAuthTag_asU8(),
         header.hasCryptoAuthTag(),
         { fieldName: 'crypto_auth_tag', dataName },
     );
     const cryptoNonceCounterAddOrReset = (max: bigint): bigint =>
-        validateNumberFieldInRange(
-            BigInt(header.getCryptoNonceCounterAddOrReset()),
-            { min: 0, max },
-            { fieldName: 'crypto_nonce_counter_add_or_reset', dataName },
+        validateUInt64FromProtobuf(
+            'crypto_nonce_counter_add_or_reset',
+            header.getCryptoNonceCounterAddOrReset(),
+            max,
         );
-    const cryptoNonceFixedAdd = validateNumberFieldInRange(
-        BigInt(header.getCryptoNonceFixedAdd()),
-        { min: 0, max: MAX_UINT64 },
-        { fieldName: 'crypto_nonce_fixed_add', dataName },
+    const cryptoNonceFixedAdd = validateUInt64FromProtobuf(
+        'crypto_nonce_fixed_add',
+        header.getCryptoNonceFixedAdd(),
     );
 
-    if (cryptoNonceFixedAdd > 0) {
-        const cryptoNonceCounterReset = cryptoNonceCounterAddOrReset(MAX_UINT64);
-        return {
-            authTag: cryptoAuthTag,
-            nonce: {
-                addFixed: cryptoNonceFixedAdd,
-                resetCounter: cryptoNonceCounterReset,
-            },
+    const nonce = cryptoNonceFixedAdd > 0
+        ? {
+            addFixed: cryptoNonceFixedAdd,
+            resetCounter: cryptoNonceCounterAddOrReset(MAX_UINT64),
+        }
+        : {
+            addCounter: cryptoNonceCounterAddOrReset(MAX_UINT64 - BigInt(1)) + BigInt(1),
         };
-    } else {
-        const cryptoNonceCounterAdd = cryptoNonceCounterAddOrReset(MAX_UINT64 - BigInt(1));
-        return {
-            authTag: cryptoAuthTag,
-            nonce: {
-                addCounter: cryptoNonceCounterAdd + BigInt(1),
-            },
-        };
-    }
+
+    return { authTag, nonce };
 }
