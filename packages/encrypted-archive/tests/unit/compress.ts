@@ -136,7 +136,6 @@ describe('decompressIterable()', () => {
 
         describe('gzip', () => {
             it.each(optGen<zlib.ZlibOptions>({
-                chunkSize: [undefined, 2 ** 6, 2 ** 10, 2 ** 14, 2 ** 20],
                 windowBits: [undefined, 9, 10, 11, 12, 13, 14, 15],
                 level: [undefined, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 memLevel: [undefined, 1, 2, 3, 4, 5, 6, 7, 8, 9],
