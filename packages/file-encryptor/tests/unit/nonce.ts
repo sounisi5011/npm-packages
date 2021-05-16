@@ -323,6 +323,286 @@ describe('class Nonce', () => {
         });
     });
 
+    describe('createFromFixedFieldDiff()', () => {
+        describe('create from fixed field diff', () => {
+            const prevNonce = new Uint8Array([...createFixedField(42), 0x00]);
+            it.each(rangeArray(1, 9))('+%i', addFixedField => {
+                const nonceState = new Nonce();
+                const newNonce = nonceState.createFromFixedFieldDiff(
+                    prevNonce,
+                    BigInt(addFixedField),
+                    BigInt(0),
+                );
+                expect([...newNonce])
+                    .toStrictEqual([...createFixedField(42 + addFixedField), 0x00]);
+            });
+        });
+
+        describe('reset invocation count', () => {
+            const prevNonce = new Uint8Array([...createFixedField(2), 0x08]);
+            it.each(rangeArray(1, 9))('+%i', resetInvocationCount => {
+                const nonceState = new Nonce();
+                const newNonce = nonceState.createFromFixedFieldDiff(
+                    prevNonce,
+                    BigInt(1),
+                    BigInt(resetInvocationCount),
+                );
+                expect([...newNonce])
+                    .toStrictEqual([...createFixedField(2 + 1), resetInvocationCount]);
+            });
+        });
+
+        describe('increment fixed field by invocation count', () => {
+            const prevNonce = new Uint8Array([...createFixedField(), 0x04]);
+            const table = [
+                {
+                    resetInvocationCount: 0xFF + 0,
+                    expected: [...createFixedField(0x00 + 1), 0xFF],
+                },
+                {
+                    resetInvocationCount: 0xFF + 1,
+                    expected: [...createFixedField(0x01 + 1), 0x00],
+                },
+                {
+                    resetInvocationCount: 0xFF + 2,
+                    expected: [...createFixedField(0x01 + 1), 0x01],
+                },
+                {
+                    resetInvocationCount: 0x1FF + 0,
+                    expected: [...createFixedField(0x01 + 1), 0xFF],
+                },
+                {
+                    resetInvocationCount: 0x1FF + 1,
+                    expected: [...createFixedField(0x02 + 1), 0x00],
+                },
+                {
+                    resetInvocationCount: 0x1FF + 2,
+                    expected: [...createFixedField(0x02 + 1), 0x01],
+                },
+                {
+                    resetInvocationCount: 0xFEFF + 0,
+                    expected: [...createFixedField(0xFE + 1), 0xFF],
+                },
+                {
+                    resetInvocationCount: 0xFEFF + 1,
+                    expected: [...createFixedField(0x00, 0x01), 0x00],
+                },
+                {
+                    resetInvocationCount: 0xFEFF + 2,
+                    expected: [...createFixedField(0x00, 0x01), 0x01],
+                },
+            ];
+
+            it.each<[string, number, number[]]>(table.map(({ resetInvocationCount, expected }) => [
+                `0x${resetInvocationCount.toString(16).toUpperCase()}`,
+                resetInvocationCount,
+                expected,
+            ]))('reset to %s', (_, resetInvocationCount, expected) => {
+                const nonceState = new Nonce();
+                const newNonce = nonceState.createFromFixedFieldDiff(
+                    prevNonce,
+                    BigInt(1),
+                    BigInt(resetInvocationCount),
+                );
+                expect([...newNonce]).toStrictEqual(expected);
+            });
+        });
+
+        it('return value is not affected by state', () => {
+            const nonceState = new Nonce();
+            const currentNonce = nonceState.create(9);
+            const prevNonce = new Uint8Array([...createFixedField(0x03), 0x00]);
+
+            expect([...currentNonce.subarray(0, 7)])
+                .not.toStrictEqual([...prevNonce.subarray(0, 7)]);
+
+            const newNonce = nonceState.createFromFixedFieldDiff(prevNonce, BigInt(1), BigInt(0));
+            expect([...newNonce])
+                .toStrictEqual([...createFixedField(0x03 + 1), 0x00]);
+        });
+
+        describe('update state', () => {
+            it('fixed field value is too large', () => {
+                const nonceState = new Nonce();
+                // fixed: currentFixedField, invocation: 0
+                const currentFixedField = nonceState.create(9).subarray(0, 7);
+
+                nonceState.create(9); // fixed: currentFixedField, invocation: 1
+                nonceState.create(9); // fixed: currentFixedField, invocation: 2
+                nonceState.create(9); // fixed: currentFixedField, invocation: 3
+                // fixed: currentFixedField, invocation: 4
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 4, 0x00]);
+
+                // fixed: currentFixedField -> ([0x00, ..., 0x01] + 1) because currentFixedField < ([0x00, ..., 0x01] + 1)
+                // invocation: 4 -> 0 because currentFixedField < ([0x00, ..., 0x01] + 1)
+                expect([...nonceState.createFromFixedFieldDiff(
+                    Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00]),
+                    BigInt(1),
+                    BigInt(0),
+                )])
+                    .toStrictEqual([0x00 + 1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0]);
+
+                // fixed: ([0x00, ..., 0x01] + 1), invocation: 1
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([0x00 + 1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 1, 0x00]);
+            });
+            it('invocation field value is too large', () => {
+                const nonceState = new Nonce();
+
+                const prevFixedField = tooLargeFixedField;
+                // invocation: 11
+                const currentFixedField = nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...prevFixedField, 69]),
+                    BigInt(1),
+                    BigInt(11),
+                ).subarray(0, 7);
+
+                nonceState.create(9); // invocation: 12
+                nonceState.create(9); // invocation: 13
+                // invocation: 14
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 14, 0x00]);
+
+                // invocation: 14 -> 42 because 14 < 42
+                expect([...nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...prevFixedField, 121]),
+                    BigInt(1),
+                    BigInt(42),
+                )])
+                    .toStrictEqual([...currentFixedField, 42]);
+
+                // fixed: currentFixedField, invocation: 43
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 43, 0x00]);
+            });
+        });
+
+        describe('should not update state', () => {
+            it('fixed field value is too small', () => {
+                const nonceState = new Nonce();
+                const currentFixedField = nonceState.create(9).subarray(0, 7); // invocation: 0
+                // fixed: currentFixedField, invocation: 1
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 0x01, 0x00]);
+
+                // can not update fixed field because not currentFixedField < (tooSmallFixedField + 1)
+                nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...tooSmallFixedField, 0x00]),
+                    BigInt(1),
+                    BigInt(0),
+                );
+                // fixed: currentFixedField, invocation: 2
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 0x02, 0x00]);
+
+                // can not update fixed field
+                nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...tooSmallFixedField, 0x00]),
+                    BigInt(2),
+                    BigInt(0),
+                );
+                nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...tooSmallFixedField, 0x00]),
+                    BigInt(3),
+                    BigInt(0),
+                );
+                nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...tooSmallFixedField, 0x00]),
+                    BigInt(4),
+                    BigInt(0),
+                );
+                // fixed: currentFixedField, invocation: 3
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 0x03, 0x00]);
+            });
+            it('invocation field value is too small', () => {
+                const nonceState = new Nonce();
+
+                const prevFixedField = tooLargeFixedField;
+                // invocation: 11
+                const currentFixedField = nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...prevFixedField, 69]),
+                    BigInt(1),
+                    BigInt(11),
+                ).subarray(0, 7);
+
+                nonceState.create(9); // invocation: 12
+                nonceState.create(9); // invocation: 13
+                nonceState.create(9); // invocation: 14
+                nonceState.create(9); // invocation: 15
+                nonceState.create(9); // invocation: 16
+                // invocation: 17
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 17, 0x00]);
+
+                // can not update invocation because equals fixed field and not 18 < 12
+                nonceState.createFromFixedFieldDiff(
+                    Buffer.from([...prevFixedField, 666]),
+                    BigInt(1),
+                    BigInt(12),
+                );
+                // invocation: 18
+                expect([...nonceState.create(9)])
+                    .toStrictEqual([...currentFixedField, 18, 0x00]);
+            });
+        });
+
+        describe('invalid "prevNonce" argument', () => {
+            describe('too short byte length', () => {
+                it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(len), BigInt(1), BigInt(0)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+
+            describe('valid byte length', () => {
+                it.each(rangeArray(MIN_INPUT_NONCE_LENGTH, MAX_NONCE_LENGTH))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(len), BigInt(1), BigInt(0)))
+                        .not.toThrow();
+                });
+            });
+
+            describe('too long byte length', () => {
+                it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
+                    const nonceState = new Nonce();
+                    expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(len), BigInt(1), BigInt(0)))
+                        .toThrowWithMessageFixed(
+                            RangeError,
+                            `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
+                        );
+                });
+            });
+        });
+
+        describe('invalid "addFixedField" argument', () => {
+            it.each(rangeArray(-5, 0).map(BigInt))('%i', addFixedField => {
+                const nonceState = new Nonce();
+                expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(8), addFixedField, BigInt(0)))
+                    .toThrowWithMessageFixed(
+                        RangeError,
+                        `The value of "addFixedField" argument is out of range. It must be >= 1. Received ${addFixedField}`,
+                    );
+            });
+        });
+
+        describe('invalid "resetInvocationCount" argument', () => {
+            it.each(rangeArray(-5, -1).map(BigInt))('%i', resetInvocationCount => {
+                const nonceState = new Nonce();
+                expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(8), BigInt(1), resetInvocationCount))
+                    .toThrowWithMessageFixed(
+                        RangeError,
+                        `The value of "resetInvocationCount" argument is out of range. It must be >= 0. Received ${resetInvocationCount}`,
+                    );
+            });
+        });
+    });
+
     describe('updateInvocation()', () => {
         describe('update state', () => {
             it('fixed field value is too large', () => {
