@@ -68,6 +68,9 @@ export function createProtobufHeader(data: HeaderData): Header {
     );
 }
 
+const validateBytesFromProtobuf = (fieldName: string, value: Uint8Array): Uint8Array =>
+    validateBytesField(value, true, { fieldName, dataName });
+
 export function parseProtobufHeader(header: Header): HeaderData {
     return {
         algorithmName: cryptoAlgorithm2algorithmName(
@@ -75,30 +78,11 @@ export function parseProtobufHeader(header: Header): HeaderData {
             true,
             { fieldName: 'crypto_algorithm', dataName },
         ),
-        salt: validateBytesField(
-            header.getKeySalt_asU8(),
-            true,
-            { fieldName: 'key_salt', dataName },
-        ),
-        keyLength: validateNumberField(
-            header.getKeyLength(),
-            true,
-            { fieldName: 'key_length', dataName },
-        ),
-        keyDerivationOptions: getKeyDerivationOptions(
-            header,
-            { oneofFieldName: 'key_options', dataName },
-        ),
-        nonce: validateBytesField(
-            header.getCryptoNonce_asU8(),
-            true,
-            { fieldName: 'crypto_nonce', dataName },
-        ),
-        authTag: validateBytesField(
-            header.getCryptoAuthTag_asU8(),
-            true,
-            { fieldName: 'crypto_auth_tag', dataName },
-        ),
+        salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
+        keyLength: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
+        keyDerivationOptions: getKeyDerivationOptions(header, { oneofFieldName: 'key_options', dataName }),
+        nonce: validateBytesFromProtobuf('crypto_nonce', header.getCryptoNonce_asU8()),
+        authTag: validateBytesFromProtobuf('crypto_auth_tag', header.getCryptoAuthTag_asU8()),
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
             header.getCompressAlgorithm(),
             true,
