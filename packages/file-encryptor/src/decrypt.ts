@@ -48,6 +48,24 @@ async function getAlgorithmAndKey(
     return { algorithm, key };
 }
 
+function createNonceFromDiff(
+    nonceDiff: SimpleHeaderData['nonce'],
+    prevNonce: Buffer | Uint8Array,
+): Buffer | Uint8Array {
+    if ('addFixed' in nonceDiff) {
+        return nonceState.createFromFixedFieldDiff(
+            prevNonce,
+            nonceDiff.addFixed,
+            nonceDiff.resetCounter,
+        );
+    } else {
+        return nonceState.createFromInvocationCountDiff(
+            prevNonce,
+            nonceDiff.addCounter,
+        );
+    }
+}
+
 async function parseHeader(
     password: InputDataType,
     reader: StreamReader,
@@ -85,17 +103,10 @@ async function parseHeader(
          */
         const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
         const { headerData } = await parseSimpleHeaderData(reader, { headerByteLength });
-        const prevNonce = prevDecryptorMetadata.nonce;
-        const nonceDiff = headerData.nonce;
-        const newNonce = 'addFixed' in nonceDiff
-            ? nonceState.createFromFixedFieldDiff(prevNonce, nonceDiff.addFixed, nonceDiff.resetCounter)
-            : nonceState.createFromInvocationCountDiff(prevNonce, nonceDiff.addCounter);
+        const nonce = createNonceFromDiff(headerData.nonce, prevDecryptorMetadata.nonce);
         return {
             headerData,
-            decryptorMetadata: {
-                ...prevDecryptorMetadata,
-                nonce: newNonce,
-            },
+            decryptorMetadata: { ...prevDecryptorMetadata, nonce },
         };
     }
 }
