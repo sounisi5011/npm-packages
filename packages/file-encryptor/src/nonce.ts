@@ -112,18 +112,27 @@ export class Nonce {
         maxLength: number,
     ): void {
         for (const [argName, value] of Object.entries(valueRecord)) {
-            const [shortMsg, longMsg, length] = typeof value === 'number'
-                ? ['is too short', 'is too long', value]
-                : ['has too short byte length', 'has too long byte length', value.byteLength];
-            let shortOrLongMsg = '';
-            if (length < minLength) shortOrLongMsg = shortMsg;
-            if (length > maxLength) shortOrLongMsg = longMsg;
-            if (shortOrLongMsg) {
-                throw new RangeError(
-                    `The value of "${argName}" argument ${shortOrLongMsg}.`
-                        + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
-                );
-            }
+            this.validateOneArgLength(argName, value, minLength, maxLength);
+        }
+    }
+
+    private validateOneArgLength(
+        argName: string,
+        value: number | Uint8Array | Buffer,
+        minLength: number,
+        maxLength: number,
+    ): void {
+        const [shortMsg, longMsg, length] = typeof value === 'number'
+            ? ['is too short', 'is too long', value]
+            : ['has too short byte length', 'has too long byte length', value.byteLength];
+        let shortOrLongMsg = '';
+        if (length < minLength) shortOrLongMsg = shortMsg;
+        if (length > maxLength) shortOrLongMsg = longMsg;
+        if (shortOrLongMsg) {
+            throw new RangeError(
+                `The value of "${argName}" argument ${shortOrLongMsg}.`
+                    + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
+            );
         }
     }
 
