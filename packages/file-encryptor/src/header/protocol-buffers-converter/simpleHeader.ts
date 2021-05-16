@@ -10,28 +10,22 @@ export function createProtobufSimpleHeader(simpleHeaderData: SimpleHeaderData): 
         .setCryptoAuthTag(simpleHeaderData.authTag);
 
     const { nonce } = simpleHeaderData;
+    const validateNonceInput = (paramName: string, value: bigint, min: number): bigint =>
+        validateNumberOptionInRange(
+            value,
+            { min, max: MAX_UINT64 },
+            { paramName: `simpleHeaderData.nonce.${paramName}` },
+        );
     if ('addCounter' in nonce) {
         header.setCryptoNonceCounterAddOrReset(String(
-            validateNumberOptionInRange(
-                nonce.addCounter,
-                { min: 1, max: MAX_UINT64 },
-                { paramName: `simpleHeaderData.nonce.addCounter` },
-            ) - BigInt(1),
+            validateNonceInput('addCounter', nonce.addCounter, 1) - BigInt(1),
         ));
     } else {
         header.setCryptoNonceFixedAdd(String(
-            validateNumberOptionInRange(
-                nonce.addFixed,
-                { min: 1, max: MAX_UINT64 },
-                { paramName: `simpleHeaderData.nonce.addFixed` },
-            ),
+            validateNonceInput('addFixed', nonce.addFixed, 1),
         ));
         header.setCryptoNonceCounterAddOrReset(String(
-            validateNumberOptionInRange(
-                nonce.resetCounter,
-                { min: 0, max: MAX_UINT64 },
-                { paramName: `simpleHeaderData.nonce.resetCounter` },
-            ),
+            validateNonceInput('resetCounter', nonce.resetCounter, 0),
         ));
     }
 
