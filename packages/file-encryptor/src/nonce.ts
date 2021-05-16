@@ -17,7 +17,6 @@ const MAX_FIXED_FIELD_COUNT = BigInt(2) ** BigInt(fixedFieldByteLength * 8) - Bi
 export class Nonce {
     private fixedFieldData: bigint;
     private invocationCount: bigint;
-    private readonly nonceByteView = new DataView(new ArrayBuffer(maxByteLength));
 
     constructor() {
         this.fixedFieldData = BigInt(Date.now());
@@ -25,7 +24,7 @@ export class Nonce {
     }
 
     create(byteLength: number): Buffer {
-        this.validateLength('byteLength', byteLength, minCreateByteLength, maxByteLength);
+        this.validateLength({ byteLength }, minCreateByteLength, maxByteLength);
         return this.createNonceBytes({
             nonceByteLength: byteLength,
             fixedFieldData: this.fixedFieldData,
@@ -34,12 +33,8 @@ export class Nonce {
     }
 
     createFromInvocationCountDiff(prevNonce: Buffer | Uint8Array, addInvocationCount: bigint): Buffer {
-        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
-        if (!(addInvocationCount >= 1)) {
-            throw new RangeError(
-                `The value of "addInvocationCount" argument is out of range. It must be >= 1. Received ${addInvocationCount}`,
-            );
-        }
+        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
+        this.validateMore({ addInvocationCount }, 1);
 
         const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
         return this.createNonceBytes({
@@ -54,17 +49,9 @@ export class Nonce {
         addFixedField: bigint,
         resetInvocationCount: bigint,
     ): Buffer {
-        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
-        if (!(addFixedField >= 1)) {
-            throw new RangeError(
-                `The value of "addFixedField" argument is out of range. It must be >= 1. Received ${addFixedField}`,
-            );
-        }
-        if (!(resetInvocationCount >= 0)) {
-            throw new RangeError(
-                `The value of "resetInvocationCount" argument is out of range. It must be >= 0. Received ${resetInvocationCount}`,
-            );
-        }
+        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
+        this.validateMore({ addFixedField }, 1);
+        this.validateMore({ resetInvocationCount }, 0);
 
         const { fixedFieldData } = this.parseNonceBytes(prevNonce);
         return this.createNonceBytes({
@@ -78,8 +65,7 @@ export class Nonce {
         prevNonce: Buffer | Uint8Array,
         currentNonce: Buffer | Uint8Array,
     ): { invocationCount: bigint } | { fixedField: bigint; resetInvocationCount: bigint } {
-        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
-        this.validateLength('prevNonce', currentNonce, minUpdateByteLength, maxByteLength);
+        this.validateLength({ prevNonce, currentNonce }, minUpdateByteLength, maxByteLength);
 
         const { fixedFieldData: prevFixedFieldData, invocationCount: prevInvocationCount } = this.parseNonceBytes(
             prevNonce,
@@ -98,7 +84,7 @@ export class Nonce {
     }
 
     updateInvocation(prevNonce: Uint8Array): this {
-        this.validateLength('prevNonce', prevNonce, minUpdateByteLength, maxByteLength);
+        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
         const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
         this.updateState({
             newFixedFieldData: fixedFieldData,
@@ -107,18 +93,37 @@ export class Nonce {
         return this;
     }
 
-    private validateLength(argName: string, value: number | Uint8Array, minLength: number, maxLength: number): void {
-        const [shortMsg, longMsg, length] = typeof value === 'number'
-            ? ['is too short', 'is too long', value]
-            : ['has too short byte length', 'has too long byte length', value.byteLength];
-        let shortOrLongMsg = '';
-        if (length < minLength) shortOrLongMsg = shortMsg;
-        if (length > maxLength) shortOrLongMsg = longMsg;
-        if (shortOrLongMsg) {
-            throw new RangeError(
-                `The value of "${argName}" argument ${shortOrLongMsg}.`
-                    + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
-            );
+    private validateMore(
+        valueRecord: Record<string, number | bigint>,
+        min: number | bigint,
+    ): void {
+        for (const [argName, value] of Object.entries(valueRecord)) {
+            if (!(value >= min)) {
+                throw new RangeError(
+                    `The value of "${argName}" argument is out of range. It must be >= ${min}. Received ${value}`,
+                );
+            }
+        }
+    }
+
+    private validateLength(
+        valueRecord: Record<string, number | Uint8Array | Buffer>,
+        minLength: number,
+        maxLength: number,
+    ): void {
+        for (const [argName, value] of Object.entries(valueRecord)) {
+            const [shortMsg, longMsg, length] = typeof value === 'number'
+                ? ['is too short', 'is too long', value]
+                : ['has too short byte length', 'has too long byte length', value.byteLength];
+            let shortOrLongMsg = '';
+            if (length < minLength) shortOrLongMsg = shortMsg;
+            if (length > maxLength) shortOrLongMsg = longMsg;
+            if (shortOrLongMsg) {
+                throw new RangeError(
+                    `The value of "${argName}" argument ${shortOrLongMsg}.`
+                        + ` It must be >= ${minLength} and <= ${maxLength}. Received ${length}`,
+                );
+            }
         }
     }
 
@@ -146,15 +151,11 @@ export class Nonce {
         }
 
         const newNonce = Buffer.alloc(nonceByteLength);
-        for (let i = 0; i < fixedFieldByteLength; i++) {
-            newNonce[i] = Number(
-                (newFixedFieldData >> BigInt(i * 8)) & BigInt(0xFF),
-            );
-        }
-        for (let i = 0; i < invocationFieldByteLength; i++) {
-            newNonce[fixedFieldByteLength + i] = Number(
-                (newInvocationCount >> BigInt(i * 8)) & BigInt(0xFF),
-            );
+        for (let index = 0; index < nonceByteLength; index++) {
+            const byteCode = index < fixedFieldByteLength
+                ? newFixedFieldData >> BigInt(index * 8)
+                : newInvocationCount >> BigInt((index - fixedFieldByteLength) * 8);
+            newNonce[index] = Number(byteCode & BigInt(0xFF));
         }
 
         this.updateState({ newFixedFieldData, newInvocationCount });
@@ -166,15 +167,17 @@ export class Nonce {
         };
     }
 
-    private parseNonceBytes(nonceBytes: Uint8Array): { fixedFieldData: bigint; invocationCount: bigint } {
-        const view = this.nonceByteView;
-        for (let offset = 0; offset < view.byteLength; offset++) view.setUint8(offset, nonceBytes[offset] ?? 0);
+    private parseNonceBytes(nonceBytes: Uint8Array | Buffer): { fixedFieldData: bigint; invocationCount: bigint } {
+        let fixedFieldData = BigInt(0);
+        let invocationCount = BigInt(0);
 
-        const fixedFieldData = BigInt.asUintN(
-            fixedFieldByteLength * 8,
-            view.getBigUint64(0, true),
-        );
-        const invocationCount = view.getBigUint64(fixedFieldByteLength, true);
+        nonceBytes.forEach((byteCode, index) => {
+            if (index < fixedFieldByteLength) {
+                fixedFieldData |= BigInt(byteCode) << BigInt(index * 8);
+            } else {
+                invocationCount |= BigInt(byteCode) << BigInt((index - fixedFieldByteLength) * 8);
+            }
+        });
 
         this.updateState({
             newFixedFieldData: fixedFieldData,
