@@ -815,162 +815,12 @@ describe('class Nonce', () => {
         });
     });
 
-    describe('updateInvocation()', () => {
-        describe('update state', () => {
-            it('fixed field value is too large', () => {
-                const nonceState = new Nonce();
-                const currentFixedField = nonceState.create(9).subarray(0, 7); // invocation: 0
-                nonceState.create(9); // invocation: 1
-                nonceState.create(9); // invocation: 2
-                nonceState.create(9); // invocation: 3
-                // invocation: 4
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x04, 0x00]),
-                );
-
-                // invocation: 4 -> 0 because currentFixedField < tooLargeFixedField
-                nonceState.updateInvocation(
-                    Buffer.from([...tooLargeFixedField, 0x00, 0x00]),
-                );
-                // invocation: 1
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...tooLargeFixedField, 0x01, 0x00]),
-                );
-            });
-            it('invocation field value is too large', () => {
-                const nonceState = new Nonce();
-                const currentFixedField = nonceState.create(9).subarray(0, 7); // invocation: 0
-                nonceState.create(9); // invocation: 1
-                nonceState.create(9); // invocation: 2
-                // invocation: 3
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x03, 0x00]),
-                );
-
-                // invocation: 3 -> 42 because 3 < 4
-                nonceState.updateInvocation(
-                    Buffer.from([...currentFixedField, 0x42, 0x00]),
-                );
-                // invocation: 43
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x43, 0x00]),
-                );
-            });
-        });
-        describe('should not update state', () => {
-            it('fixed field value is too small', () => {
-                const nonceState = new Nonce();
-                const currentFixedField = nonceState.create(9).subarray(0, 7); // invocation: 0
-                // invocation: 1
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x01, 0x00]),
-                );
-
-                // can not update invocation because not currentFixedField < tooSmallFixedField
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0xFE]),
-                );
-                // invocation: 2
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x02, 0x00]),
-                );
-
-                // can not update invocation
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x02]),
-                );
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x03]),
-                );
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x04]),
-                );
-                // invocation: 3
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x03, 0x00]),
-                );
-
-                // can not update invocation
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x04]),
-                );
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x05]),
-                );
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x06]),
-                );
-                nonceState.updateInvocation(
-                    Buffer.from([...tooSmallFixedField, 0x07]),
-                );
-                // invocation: 4
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x04, 0x00]),
-                );
-            });
-            it('invocation field value is too small', () => {
-                const nonceState = new Nonce();
-                const currentFixedField = nonceState.create(9).subarray(0, 7); // invocation: 0
-                nonceState.create(9); // invocation: 1
-                nonceState.create(9); // invocation: 2
-                nonceState.create(9); // invocation: 3
-                nonceState.create(9); // invocation: 4
-                nonceState.create(9); // invocation: 5
-                // invocation: 6
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x06, 0x00]),
-                );
-
-                // can not update invocation because equals fixed field and not 6 < 2
-                nonceState.updateInvocation(
-                    Buffer.from([...currentFixedField, 0x02, 0x00]),
-                );
-                // invocation: 7
-                expect(nonceState.create(9)).toStrictEqual(
-                    Buffer.from([...currentFixedField, 0x07, 0x00]),
-                );
-            });
-        });
-        describe('too short byte length', () => {
-            it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
-                const nonceState = new Nonce();
-                expect(() => nonceState.updateInvocation(new Uint8Array(len))).toThrowWithMessageFixed(
-                    RangeError,
-                    `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
-                );
-            });
-        });
-        it.each(rangeArray(MIN_INPUT_NONCE_LENGTH, MAX_NONCE_LENGTH))('%i bytes', len => {
-            const nonceState = new Nonce();
-            expect(() => nonceState.updateInvocation(new Uint8Array(len))).not.toThrow();
-        });
-        describe('too long byte length', () => {
-            it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
-                const nonceState = new Nonce();
-                expect(() => nonceState.updateInvocation(new Uint8Array(len))).toThrowWithMessageFixed(
-                    RangeError,
-                    `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
-                );
-            });
-        });
-        it('properly handle subarrays', () => {
-            const nonceState = new Nonce();
-            nonceState.updateInvocation(
-                Buffer.from([...tooLargeFixedField, 0x02, 0x01, 0x06, 0x02])
-                    .subarray(0, tooLargeFixedField.length + 2),
-            );
-            expect(nonceState.create(tooLargeFixedField.length + 4)).toStrictEqual(
-                Buffer.from([...tooLargeFixedField, 0x03, 0x01, 0x00, 0x00]),
-            );
-        });
-    });
-
     it('increment 64-bit invocation field', () => {
         const nonceState = new Nonce();
-        nonceState.updateInvocation(
+        expect(nonceState.createFromInvocationCountDiff(
             Buffer.from([...tooLargeFixedField, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
-        );
-        expect(nonceState.create(tooLargeFixedField.length + 8)).toStrictEqual(
+            BigInt(1),
+        )).toStrictEqual(
             Buffer.from([...tooLargeFixedField, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
         );
         expect(nonceState.create(tooLargeFixedField.length + 8)).toStrictEqual(
@@ -980,12 +830,10 @@ describe('class Nonce', () => {
 
     it('increment fixed field if invocation field overflows', () => {
         const nonceState = new Nonce();
-        nonceState.updateInvocation(
+        expect([...nonceState.createFromInvocationCountDiff(
             Buffer.from([0x00, ...tooLargeFixedField.slice(1), 0xFE, 0xFF]),
-        );
-        expect(nonceState.create(9)).toStrictEqual(
-            Buffer.from([0x00, ...tooLargeFixedField.slice(1), 0xFF, 0xFF]),
-        );
+            BigInt(1),
+        )]).toStrictEqual([0x00, ...tooLargeFixedField.slice(1), 0xFF, 0xFF]);
         // If the invocation field overflows, increment the fixed field.
         expect(nonceState.create(9)).toStrictEqual(
             Buffer.from([0x01, ...tooLargeFixedField.slice(1), 0x00, 0x00]),
@@ -1001,10 +849,10 @@ describe('class Nonce', () => {
 
     it('increment fixed field if 64-bit invocation field overflows', () => {
         const nonceState = new Nonce();
-        nonceState.updateInvocation(
+        expect(nonceState.createFromInvocationCountDiff(
             Buffer.from([0x00, ...tooLargeFixedField.slice(1), 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
-        );
-        expect(nonceState.create(15)).toStrictEqual(
+            BigInt(1),
+        )).toStrictEqual(
             Buffer.from([0x00, ...tooLargeFixedField.slice(1), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
         );
         expect(nonceState.create(15)).toStrictEqual(
@@ -1025,10 +873,10 @@ describe('class Nonce', () => {
         const nonceState = new Nonce();
         const fixedField = padEndArray([], 7, 0xFF);
 
-        nonceState.updateInvocation(
+        expect(nonceState.createFromInvocationCountDiff(
             Buffer.from([...fixedField, 0xFE, 0xFF]),
-        );
-        expect(nonceState.create(9)).toStrictEqual(
+            BigInt(1),
+        )).toStrictEqual(
             Buffer.from([...fixedField, 0xFF, 0xFF]),
         );
         expect(() => nonceState.create(9)).toThrowWithMessageFixed(
@@ -1047,10 +895,10 @@ describe('class Nonce', () => {
             Buffer.from([...fixedField, 0x02, 0x00, 0x01]),
         );
 
-        nonceState.updateInvocation(
+        expect(nonceState.createFromInvocationCountDiff(
             Buffer.from([...fixedField, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
-        );
-        expect(nonceState.create(15)).toStrictEqual(
+            BigInt(1),
+        )).toStrictEqual(
             Buffer.from([...fixedField, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
         );
         expect(() => nonceState.create(15)).toThrowWithMessageFixed(

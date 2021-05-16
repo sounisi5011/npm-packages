@@ -83,16 +83,6 @@ export class Nonce {
         };
     }
 
-    updateInvocation(prevNonce: Uint8Array): this {
-        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
-        const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
-        this.updateState({
-            newFixedFieldData: fixedFieldData,
-            newInvocationCount: invocationCount,
-        });
-        return this;
-    }
-
     private validateMore(
         valueRecord: Record<string, number | bigint>,
         min: number | bigint,
