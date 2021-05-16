@@ -44,7 +44,12 @@ export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderDat
         header.hasCryptoAuthTag(),
         { fieldName: 'crypto_auth_tag', dataName },
     );
-    const cryptoNonceCounterAddOrReset = BigInt(header.getCryptoNonceCounterAddOrReset());
+    const cryptoNonceCounterAddOrReset = (max: bigint): bigint =>
+        validateNumberFieldInRange(
+            BigInt(header.getCryptoNonceCounterAddOrReset()),
+            { min: 0, max },
+            { fieldName: 'crypto_nonce_counter_add_or_reset', dataName },
+        );
     const cryptoNonceFixedAdd = validateNumberFieldInRange(
         BigInt(header.getCryptoNonceFixedAdd()),
         { min: 0, max: MAX_UINT64 },
@@ -52,11 +57,7 @@ export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderDat
     );
 
     if (cryptoNonceFixedAdd > 0) {
-        const cryptoNonceCounterReset = validateNumberFieldInRange(
-            cryptoNonceCounterAddOrReset,
-            { min: 0, max: MAX_UINT64 },
-            { fieldName: 'crypto_nonce_counter_add_or_reset', dataName },
-        );
+        const cryptoNonceCounterReset = cryptoNonceCounterAddOrReset(MAX_UINT64);
         return {
             authTag: cryptoAuthTag,
             nonce: {
@@ -65,11 +66,7 @@ export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderDat
             },
         };
     } else {
-        const cryptoNonceCounterAdd = validateNumberFieldInRange(
-            cryptoNonceCounterAddOrReset,
-            { min: 0, max: MAX_UINT64 - BigInt(1) },
-            { fieldName: 'crypto_nonce_counter_add_or_reset', dataName },
-        );
+        const cryptoNonceCounterAdd = cryptoNonceCounterAddOrReset(MAX_UINT64 - BigInt(1));
         return {
             authTag: cryptoAuthTag,
             nonce: {
