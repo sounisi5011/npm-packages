@@ -383,6 +383,9 @@ Currently, the following key derivation functions are supported:
 
         desired parallelism. default: `1`
 
+    For more information on the values that should be specified for these parameters, please refer to the following article:
+    [Choose Argon2 Parameters for Secure Password Hashing and Login - ory.sh](https://www.ory.sh/choose-recommended-argon2-parameters-password-hashing/)
+
 <h4 id="type-encrypt-options--compress"><code>compress</code></h4>
 
 Type: `CompressOptions | CompressOptions['algorithm']`
