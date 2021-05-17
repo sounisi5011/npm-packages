@@ -193,7 +193,7 @@ const decryptor = decryptIterator(password);
 [`Buffer` object]: https://nodejs.org/api/buffer.html
 [`Duplex` stream]: https://nodejs.org/api/stream.html#stream_class_stream_duplex
 [`EncryptOptions`]: #encryptoptions
-[`IteratorConvertFn` function]: #iteratorconvertfnsource
+[`IteratorConverter` function]: #iteratorconvertersource
 
 ### `encrypt(cleartext, password, options?)`
 
@@ -245,7 +245,7 @@ Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer
 
 ### `encryptIterator(password, options?)`
 
-Returns an [`IteratorConvertFn` function].
+Returns an [`IteratorConverter` function].
 
 #### `password`
 
@@ -261,13 +261,13 @@ Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer
 
 ### `decryptIterator(password)`
 
-Returns an [`IteratorConvertFn` function].
+Returns an [`IteratorConverter` function].
 
 #### `password`
 
 Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-### `IteratorConvertFn(source)`
+### `IteratorConverter(source)`
 
 Returns an AsyncIterableIterator giving a [`Buffer` object].
 

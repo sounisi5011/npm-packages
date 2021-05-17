@@ -6,9 +6,9 @@ import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { InputDataType } from './types';
+import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, convertIterableValue } from './utils';
-import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './utils/type';
+import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
@@ -140,10 +140,7 @@ async function* encryptChunk(compressedCleartext: Buffer, {
     return newState;
 }
 
-export function createEncryptorIterator(
-    password: InputDataType,
-    options: EncryptOptions,
-): (source: Iterable<InputDataType> | AsyncIterable<InputDataType>) => AsyncIterableIteratorReturn<Buffer, void> {
+export function createEncryptorIterator(password: InputDataType, options: EncryptOptions): IteratorConverter {
     const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 

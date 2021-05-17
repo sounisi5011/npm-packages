@@ -14,10 +14,10 @@ import {
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { InputDataType } from './types';
+import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { StreamReader } from './utils/stream';
-import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './utils/type';
+import type { AsyncIterableReturn } from './utils/type';
 
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithm;
@@ -168,10 +168,8 @@ async function decryptChunk(
     };
 }
 
-export function createDecryptorIterator(password: InputDataType) {
-    return async function* decryptor(
-        source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-    ): AsyncIterableIteratorReturn<Buffer, void> {
+export function createDecryptorIterator(password: InputDataType): IteratorConverter {
+    return async function* decryptor(source) {
         const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
 
         const {

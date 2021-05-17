@@ -5,10 +5,9 @@ import type { CompressAlgorithmName, CompressOptions, CompressOptionsWithString 
 import { createDecryptorIterator } from './decrypt';
 import { createEncryptorIterator, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
-import type { InputDataType } from './types';
+import type { InputDataType, IteratorConverter } from './types';
 import { asyncIterable2Buffer, createIterable } from './utils';
 import gts from './utils/generator-transform-stream';
-import type { AsyncIterableIteratorReturn } from './utils/type';
 
 export {
     CompressAlgorithmName,
@@ -50,14 +49,10 @@ export function decryptStream(password: InputDataType): stream.Duplex {
     );
 }
 
-type IteratorConvertFn = (
-    source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-) => AsyncIterableIteratorReturn<Buffer, void>;
-
-export function encryptIterator(password: InputDataType, options: EncryptOptions = {}): IteratorConvertFn {
+export function encryptIterator(password: InputDataType, options: EncryptOptions = {}): IteratorConverter {
     return createEncryptorIterator(password, options);
 }
 
-export function decryptIterator(password: InputDataType): IteratorConvertFn {
+export function decryptIterator(password: InputDataType): IteratorConverter {
     return createDecryptorIterator(password);
 }
