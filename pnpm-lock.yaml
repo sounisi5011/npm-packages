@@ -74,6 +74,7 @@ importers:
       bl: 5.0.0
       capitalize: 2.0.3
       duplexify: 4.1.1
+      generator-transform-stream: 1.0.1
       google-protobuf: 3.17.0
       varint: 6.0.0
     devDependencies:
@@ -116,6 +117,7 @@ importers:
       cpy-cli: 3.1.1
       duplexify: ^4.1.1
       escape-string-regexp: 4.0.0
+      generator-transform-stream: ^1.0.1
       glob-exec: 0.1.1
       google-protobuf: ^3.15.8
       grpc_tools_node_protoc_ts: 5.2.1
@@ -3303,6 +3305,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+  /generator-transform-stream/1.0.1:
+    dependencies:
+      duplexify: 4.1.1
+    dev: false
+    resolution:
+      integrity: sha512-F3/lkIVVW1RkyCTB2k5cuHZsxFY+ueqlRqkjQSWoswnfN3TymqwLKacBSslR2IPNJL4wX9kOUCnANp1HOECD9g==
   /gensync/1.0.0-beta.2:
     dev: true
     engines:

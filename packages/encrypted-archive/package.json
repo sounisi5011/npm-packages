@@ -87,6 +87,7 @@
     "bl": "^5.0.0",
     "capitalize": "^2.0.3",
     "duplexify": "^4.1.1",
+    "generator-transform-stream": "^1.0.1",
     "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
   },
