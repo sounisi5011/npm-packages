@@ -106,12 +106,11 @@ const ARGON2_OUTPUT = {
  */
 const SALT_LEN = 128 / 8;
 
-export function isArgon2Options<T extends (Partial<BaseKeyDerivationOptions> | undefined)>(
-    options: T,
-): options is T extends Argon2Options ? T : never {
-    if (options === undefined) return false;
+export function isArgon2Options<T>(options: T): options is T extends Argon2Options ? T : never {
+    if (!isObject(options)) return false;
+    const { algorithm } = options;
     for (const type of typeNameList) {
-        if (options.algorithm === type) return true;
+        if (algorithm === type) return true;
     }
     return false;
 }
