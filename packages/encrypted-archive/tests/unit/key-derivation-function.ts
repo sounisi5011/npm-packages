@@ -28,15 +28,41 @@ describe('getKDF()', () => {
         });
     });
 
-    it('unknown algorithm', async () => {
+    it('unknown algorithm', () => {
         const algorithm = 'foooooooooooooo';
-        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"argon2d" | "argon2id" | undefined'.
+        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"argon2d" | "argon2id"'.
         const options: KeyDerivationOptions = { algorithm };
 
         expect(() => getKDF(options)).toThrowWithMessage(
             TypeError,
             `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
         );
+    });
+
+    describe('invalid options', () => {
+        it.each<unknown>([
+            null,
+            true,
+            false,
+            0,
+            -0,
+            42,
+            -3,
+            BigInt(0),
+            BigInt(42),
+            -BigInt(3),
+            '',
+            'foo',
+            'argon2d',
+            [],
+            {},
+        ])('%p', value => {
+            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Readonly<Argon2Options> | undefined'.
+            expect(() => getKDF(value)).toThrowWithMessageFixed(
+                TypeError,
+                /^Unknown deriveKey options was received: /,
+            );
+        });
     });
 });
 

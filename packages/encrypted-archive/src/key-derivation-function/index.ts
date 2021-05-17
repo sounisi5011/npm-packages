@@ -2,22 +2,19 @@ import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property'
 
 import type { InputDataType } from '../types';
 import { cond, printObject } from '../utils';
-import type { OverrideProp } from '../utils/type';
 import { Argon2Options, defaultOptions as defaultArgon2Options, getArgon2KDF, isArgon2Options } from './argon2';
 
 const defaultValue = {
     options: defaultArgon2Options,
     getKDF: getArgon2KDF,
 };
-export type DefaultKeyDerivationOptions = OverrideProp<Argon2Options, { algorithm?: undefined }>;
 
 export interface BaseKeyDerivationOptions {
     algorithm: string;
 }
 
-type KeyDerivationOptionsWithoutDefault = Argon2Options;
-export type KeyDerivationOptions = KeyDerivationOptionsWithoutDefault | DefaultKeyDerivationOptions;
-export type NormalizedKeyDerivationOptions = Required<KeyDerivationOptionsWithoutDefault>;
+export type KeyDerivationOptions = Argon2Options;
+export type NormalizedKeyDerivationOptions = Required<KeyDerivationOptions>;
 
 export interface GetKDFResult<T extends NormalizedKeyDerivationOptions> {
     deriveKey: (
@@ -35,12 +32,8 @@ export const getKDF = (
     cond(options)
         .case(isArgon2Options, getArgon2KDF)
         .case(
-            (options): options is (undefined | { algorithm?: undefined }) => !options || !options.algorithm,
-            options => {
-                const defaultOptions = defaultValue.options;
-                const normalizedOptions = { ...defaultOptions, ...options, algorithm: defaultOptions.algorithm };
-                return defaultValue.getKDF(normalizedOptions);
-            },
+            (options): options is undefined => options === undefined,
+            () => defaultValue.getKDF(defaultValue.options),
         )
         .default((options: never) => {
             if (options && (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')) {

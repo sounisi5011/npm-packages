@@ -36,8 +36,6 @@ export type objectEntries = <T extends string, U>(o: Record<T, U>) => Array<[T, 
 
 export type objectFromEntries = <K extends PropertyKey, T>(entries: Iterable<readonly [K, T]>) => Record<K, T>;
 
-export type OverrideProp<T, U extends Record<PropertyKey, unknown>> = Omit<T, keyof U> & U;
-
 export type Cond<
     TCond extends Record<'actual' | 'expected', unknown>,
     TResult extends Record<'match' | 'notMatch', unknown>
