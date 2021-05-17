@@ -162,17 +162,92 @@ const inputEncryptedIterator = (async function*() {
 
 ## API
 
+[`Buffer` object]: https://nodejs.org/api/buffer.html
+[`Duplex` stream]: https://nodejs.org/api/stream.html#stream_class_stream_duplex
+[`EncryptOptions`]: #encryptoptions
+[`IteratorConvertFn` function]: #iteratorconvertfn
+
 ### `encrypt(cleartext, password, options?)`
+
+Returns a Promise giving a [`Buffer` object].
+
+#### `cleartext`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+#### `options`
+
+see [`EncryptOptions`]
 
 ### `decrypt(encryptedData, password)`
 
+Returns a Promise giving a [`Buffer` object].
+
+#### `encryptedData`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
 ### `encryptStream(password, options?)`
+
+Returns a [`Duplex` stream].
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+#### `options`
+
+see [`EncryptOptions`]
 
 ### `decryptStream(password)`
 
+Returns a [`Duplex` stream].
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
 ### `encryptIterator(password, options?)`
 
+Returns an [`IteratorConvertFn` function].
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+#### `options`
+
+see [`EncryptOptions`]
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
 ### `decryptIterator(password)`
+
+Returns an [`IteratorConvertFn` function].
+
+#### `password`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+### `IteratorConvertFn(source)`
+
+Returns an AsyncIterableIterator giving a [`Buffer` object].
+
+#### `source`
+
+Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+
+### `EncryptOptions`
 
 ## Structure of the encrypted archive
 
