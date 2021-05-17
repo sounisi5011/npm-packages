@@ -173,3 +173,7 @@ const inputEncryptedIterator = (async function*() {
 ### `encryptIterator(password, options?)`
 
 ### `decryptIterator(password)`
+
+## Structure of the encrypted archive
+
+see [`docs/encrypted-archive-structure.md`](./docs/encrypted-archive-structure.md)
