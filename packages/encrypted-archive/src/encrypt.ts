@@ -1,5 +1,4 @@
 import { randomBytes } from 'crypto';
-import { promisify } from 'util';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressOptions, createCompressor } from './compress';
@@ -10,8 +9,6 @@ import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
-
-const randomBytesAsync = promisify(randomBytes);
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
@@ -41,7 +38,7 @@ async function generateKey(
         saltLength,
         normalizedOptions: normalizedKeyDerivationOptions,
     } = getKDF(keyDerivationOptions);
-    const salt = await randomBytesAsync(saltLength);
+    const salt = randomBytes(saltLength);
     const key = await deriveKey(password, salt, keyLength);
 
     return {
