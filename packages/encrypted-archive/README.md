@@ -199,86 +199,82 @@ const decryptor = decryptIterator(password);
 
 Returns a Promise giving a [`Buffer` object].
 
-#### `cleartext`
+* `cleartext`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-#### `options`
+* `options`
 
-see [`EncryptOptions`]
+    see [`EncryptOptions`]
 
 ### `decrypt(encryptedData, password)`
 
 Returns a Promise giving a [`Buffer` object].
 
-#### `encryptedData`
+* `encryptedData`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 ### `encryptStream(password, options?)`
 
 Returns a [`Duplex` stream].
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-#### `options`
+* `options`
 
-see [`EncryptOptions`]
+    see [`EncryptOptions`]
 
 ### `decryptStream(password)`
 
 Returns a [`Duplex` stream].
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 ### `encryptIterator(password, options?)`
 
 Returns an [`IteratorConverter` function].
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-#### `options`
+* `options`
 
-see [`EncryptOptions`]
-
-#### `password`
-
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    see [`EncryptOptions`]
 
 ### `decryptIterator(password)`
 
 Returns an [`IteratorConverter` function].
 
-#### `password`
+* `password`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 ### `IteratorConverter(source)`
 
 Returns an AsyncIterableIterator giving a [`Buffer` object].
 
-#### `source`
+* `source`
 
-Type:
+    Type:
 
-```ts
-  Iterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
-| AsyncIterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
-```
+    ```ts
+      Iterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+    | AsyncIterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+    ```
 
 ### `EncryptOptions`
 
