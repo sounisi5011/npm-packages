@@ -16,6 +16,7 @@ export {
     CryptoAlgorithmName,
     EncryptOptions,
     InputDataType,
+    IteratorConverter,
     KeyDerivationOptions,
 };
 
