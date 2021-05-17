@@ -47,7 +47,7 @@ encrypt(cleartext, password, {
         memory: 12,
         parallelism: 1,
     },
-    // If the data to be encrypted is text, you can also compress the data
+    // If the data to be encrypted is text, you can also compress the data.
     // Binary data (e.g. images, videos, etc.) can also be compressed,
     // but the effect of compression is often small and is not recommended.
     compress: 'gzip',
@@ -89,7 +89,20 @@ const outputStream = fs.createWriteStream('very-large.mp4.enc');
 
 stream.pipeline(
     inputStream,
-    encryptStream(password),
+    encryptStream(password, {
+        // These options are optional, but it is recommended that you specify the appropriate options for your application.
+        algorithm: 'aes-256-gcm',
+        keyDerivation: {
+            algorithm: 'argon2d',
+            iterations: 3,
+            memory: 12,
+            parallelism: 1,
+        },
+        // If the data to be encrypted is text, you can also compress the data.
+        // Binary data (e.g. images, videos, etc.) can also be compressed,
+        // but the effect of compression is often small and is not recommended.
+        //compress: 'gzip',
+    }),
     outputStream,
     error => {
         if (error) {
@@ -130,10 +143,24 @@ const inputIterator = (async function*() {
         yield chunk;
     }
 })();
+const encryptor = encryptIterator(password, {
+    // These options are optional, but it is recommended that you specify the appropriate options for your application.
+    algorithm: 'aes-256-gcm',
+    keyDerivation: {
+        algorithm: 'argon2d',
+        iterations: 3,
+        memory: 12,
+        parallelism: 1,
+    },
+    // If the data to be encrypted is text, you can also compress the data.
+    // Binary data (e.g. images, videos, etc.) can also be compressed,
+    // but the effect of compression is often small and is not recommended.
+    //compress: 'gzip',
+});
 
 (async () => {
     try {
-        for await (const encryptedDataChunk of encryptIterator(password)(inputIterator)) {
+        for await (const encryptedDataChunk of encryptor(inputIterator)) {
             // ...
         }
     } catch (error) {
@@ -148,10 +175,11 @@ const inputEncryptedIterator = (async function*() {
         yield chunk;
     }
 })();
+const decryptor = decryptIterator(password);
 
 (async () => {
     try {
-        for await (const decryptedDataChunk of decryptIterator(password)(inputEncryptedIterator)) {
+        for await (const decryptedDataChunk of decryptor(inputEncryptedIterator)) {
             // ...
         }
     } catch (error) {
