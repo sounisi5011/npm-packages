@@ -192,8 +192,8 @@ const decryptor = decryptIterator(password);
 
 [`Buffer` object]: https://nodejs.org/api/buffer.html
 [`Duplex` stream]: https://nodejs.org/api/stream.html#stream_class_stream_duplex
-[`EncryptOptions`]: #encryptoptions
-[`IteratorConverter` function]: #iteratorconvertersource
+[`EncryptOptions`]: #type-encrypt-options
+[`IteratorConverter` function]: #type-iterator-converter
 
 ### `encrypt(cleartext, password, options?)`
 
@@ -263,7 +263,7 @@ Returns an [`IteratorConverter` function].
 
     Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
-### `IteratorConverter(source)`
+<h3 id="type-iterator-converter"><code>IteratorConverter(source)</code></h3>
 
 Returns an AsyncIterableIterator giving a [`Buffer` object].
 
@@ -276,17 +276,17 @@ Returns an AsyncIterableIterator giving a [`Buffer` object].
     | AsyncIterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
     ```
 
-### `EncryptOptions`
+<h3 id="type-encrypt-options"><code>EncryptOptions</code></h3>
 
 An object with the following properties:
 
-* [`algorithm`](#algorithm)
-* [`keyDerivation`](#keyderivation)
-* [`compress`](#compress)
+* [`algorithm`](#type-encrypt-options--algorithm)
+* [`keyDerivation`](#type-encrypt-options--key-derivation)
+* [`compress`](#type-encrypt-options--compress)
 
 All properties are optional.
 
-#### `algorithm`
+<h4 id="type-encrypt-options--algorithm"><code>algorithm</code></h4>
 
 Type: `CryptoAlgorithmName`
 
@@ -295,7 +295,7 @@ An encryption algorithm name string. Specify one of the following:
 * `"aes-256-gcm"`
 * `"chacha20-poly1305"` (default)
 
-#### `keyDerivation`
+<h4 id="type-encrypt-options--key-derivation"><code>keyDerivation</code></h4>
 
 Type: `KeyDerivationOptions`
 
@@ -329,7 +329,7 @@ Currently, the following key derivation functions are supported:
 
         desired parallelism. default: `1`
 
-#### `compress`
+<h4 id="type-encrypt-options--compress"><code>compress</code></h4>
 
 Type: `CompressOptionsWithString`
 
