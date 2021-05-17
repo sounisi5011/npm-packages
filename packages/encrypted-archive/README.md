@@ -165,7 +165,7 @@ const inputEncryptedIterator = (async function*() {
 [`Buffer` object]: https://nodejs.org/api/buffer.html
 [`Duplex` stream]: https://nodejs.org/api/stream.html#stream_class_stream_duplex
 [`EncryptOptions`]: #encryptoptions
-[`IteratorConvertFn` function]: #iteratorconvertfn
+[`IteratorConvertFn` function]: #iteratorconvertfnsource
 
 ### `encrypt(cleartext, password, options?)`
 
