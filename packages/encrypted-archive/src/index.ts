@@ -6,7 +6,7 @@ import { createDecryptorIterator } from './decrypt';
 import { createEncryptorIterator, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
 import type { InputDataType, IteratorConverter } from './types';
-import { asyncIterable2Buffer, createIterable } from './utils';
+import { asyncIterable2Buffer } from './utils';
 import gts from './utils/generator-transform-stream';
 
 export {
@@ -24,15 +24,15 @@ export async function encrypt(
     password: InputDataType,
     options: EncryptOptions = {},
 ): Promise<Buffer> {
-    const source = createIterable(cleartext);
-    const encryptorIterable = createEncryptorIterator(password, options)(source);
-    return await asyncIterable2Buffer(encryptorIterable);
+    const encryptor = createEncryptorIterator(password, options);
+    const encryptedDataIterable = encryptor([cleartext]);
+    return await asyncIterable2Buffer(encryptedDataIterable);
 }
 
 export async function decrypt(encryptedData: InputDataType, password: InputDataType): Promise<Buffer> {
-    const source = createIterable(encryptedData);
-    const decryptorIterable = createDecryptorIterator(password)(source);
-    return await asyncIterable2Buffer(decryptorIterable);
+    const decryptor = createDecryptorIterator(password);
+    const decryptedDataIterable = decryptor([encryptedData]);
+    return await asyncIterable2Buffer(decryptedDataIterable);
 }
 
 export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Duplex {

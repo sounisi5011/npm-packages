@@ -36,12 +36,6 @@ export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: 
     return findEntry ? findEntry[0] : null;
 }
 
-export function createIterable<T>(value: T): { [Symbol.iterator]: () => Iterator<T, void> } {
-    return (function*() {
-        yield value;
-    })();
-}
-
 /**
  * Normalize the input options to exclude properties with `undefined` values.
  * This is similar to copying an object with the spread syntax,
