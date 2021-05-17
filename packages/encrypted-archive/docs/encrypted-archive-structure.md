@@ -25,7 +25,8 @@ The "first chunk" is at the beginning of the data. This chunk contains the follo
 2. Header Length
 
     The data length of the Header encoded in [unsigned varint].
-    It has a length of 1 to 9 bytes.
+    The varint data is variable length, ranging from 1 to 9 bytes.
+    The parser implementation should look ahead to a maximum of 9 bytes of data and decode varint.
 
 3. Header
 
@@ -35,11 +36,13 @@ The "first chunk" is at the beginning of the data. This chunk contains the follo
 4. Ciphertext Length
 
     The data length of the Ciphertext encoded in [unsigned varint].
-    It has a length of 1 to 9 bytes.
+    The varint data is variable length, ranging from 1 to 9 bytes.
+    The parser implementation should look ahead to a maximum of 9 bytes of data and decode varint.
 
 5. Ciphertext
 
     Encrypted data.
+    If a compression algorithm is specified in the Header, then this data will be compressed *before* being encrypted.
 
 ## Subsequent chunk
 
@@ -50,7 +53,8 @@ The "subsequent chunk" exists after the "first chunk". This chunk contains the f
 1. SimpleHeader Length
 
     The data length of the SimpleHeader encoded in [unsigned varint].
-    It has a length of 1 to 9 bytes.
+    The varint data is variable length, ranging from 1 to 9 bytes.
+    The parser implementation should look ahead to a maximum of 9 bytes of data and decode varint.
 
 2. SimpleHeader
 
@@ -61,8 +65,10 @@ The "subsequent chunk" exists after the "first chunk". This chunk contains the f
 3. Ciphertext Length
 
     The data length of the Ciphertext encoded in [unsigned varint].
-    It has a length of 1 to 9 bytes.
+    The varint data is variable length, ranging from 1 to 9 bytes.
+    The parser implementation should look ahead to a maximum of 9 bytes of data and decode varint.
 
 4. Ciphertext
 
     Encrypted data.
+    If a compression algorithm is specified in the Header, then this data will be compressed *before* being encrypted.
