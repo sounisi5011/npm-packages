@@ -61,12 +61,16 @@ function createHeaderData(
 ): Uint8Array {
     if (!prevState) {
         return createHeader({
-            algorithmName,
-            salt: keyResult.salt,
-            keyLength: keyResult.key.byteLength,
-            keyDerivationOptions: keyResult.normalizedKeyDerivationOptions,
-            nonce,
-            authTag,
+            crypto: {
+                algorithmName,
+                nonce,
+                authTag,
+            },
+            key: {
+                length: keyResult.key.byteLength,
+                salt: keyResult.salt,
+                keyDerivationFunctionOptions: keyResult.normalizedKeyDerivationOptions,
+            },
             compressAlgorithmName,
             ciphertextLength,
         });
@@ -74,10 +78,12 @@ function createHeaderData(
 
     const nonceDiff = nonceState.getDiff(prevState.nonce, nonce);
     return createSimpleHeader({
-        nonce: 'fixedField' in nonceDiff
-            ? { addFixed: nonceDiff.fixedField, resetCounter: nonceDiff.resetInvocationCount }
-            : { addCounter: nonceDiff.invocationCount },
-        authTag,
+        crypto: {
+            nonceDiff: 'fixedField' in nonceDiff
+                ? { addFixed: nonceDiff.fixedField, resetCounter: nonceDiff.resetInvocationCount }
+                : { addCounter: nonceDiff.invocationCount },
+            authTag,
+        },
         ciphertextLength,
     });
 }

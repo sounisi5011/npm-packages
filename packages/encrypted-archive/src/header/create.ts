@@ -8,22 +8,28 @@ import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 
 export interface SimpleHeaderData {
-    nonce:
-        | { addCounter: bigint }
-        | {
-            addFixed: bigint;
-            resetCounter: bigint;
-        };
-    authTag: Uint8Array;
+    crypto: {
+        nonceDiff:
+            | { addCounter: bigint }
+            | {
+                addFixed: bigint;
+                resetCounter: bigint;
+            };
+        authTag: Uint8Array;
+    };
 }
 
 export interface HeaderData {
-    algorithmName: CryptoAlgorithmName;
-    nonce: Uint8Array;
-    authTag: Uint8Array;
-    keyLength: number;
-    salt: Uint8Array;
-    keyDerivationOptions: NormalizedKeyDerivationOptions;
+    crypto: {
+        algorithmName: CryptoAlgorithmName;
+        nonce: Uint8Array;
+        authTag: Uint8Array;
+    };
+    key: {
+        length: number;
+        salt: Uint8Array;
+        keyDerivationFunctionOptions: NormalizedKeyDerivationOptions;
+    };
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
 

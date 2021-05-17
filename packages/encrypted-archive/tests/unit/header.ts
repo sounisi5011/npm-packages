@@ -27,17 +27,21 @@ import { DummyStreamReader } from '../helpers/stream';
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
 const dummyHeaderData: HeaderDataWithCiphertextLength = {
-    algorithmName: 'aes-256-gcm',
-    salt: new Uint8Array(),
-    keyLength: 0,
-    keyDerivationOptions: {
-        algorithm: 'argon2d',
-        iterations: 0,
-        memory: 0,
-        parallelism: 0,
+    crypto: {
+        algorithmName: 'aes-256-gcm',
+        nonce: new Uint8Array(),
+        authTag: new Uint8Array(),
     },
-    nonce: new Uint8Array(),
-    authTag: new Uint8Array(),
+    key: {
+        length: 0,
+        salt: new Uint8Array(),
+        keyDerivationFunctionOptions: {
+            algorithm: 'argon2d',
+            iterations: 0,
+            memory: 0,
+            parallelism: 0,
+        },
+    },
     compressAlgorithmName: 'gzip',
     ciphertextLength: 123456,
 };
@@ -100,8 +104,10 @@ describe('createHeader()', () => {
 
 describe('createSimpleHeader()', () => {
     const dummyHeaderData: SimpleHeaderDataWithCiphertextLength = {
-        authTag: new Uint8Array([2, 6, 0, 8]),
-        nonce: { addCounter: BigInt(1) },
+        crypto: {
+            authTag: new Uint8Array([2, 6, 0, 8]),
+            nonceDiff: { addCounter: BigInt(1) },
+        },
         ciphertextLength: 4219,
     };
 
@@ -140,17 +146,23 @@ describe('createSimpleHeader()', () => {
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addCounter: safeValue },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addCounter: safeValue },
+                        },
                     })
                 ).not.toThrow();
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addCounter: outValue },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addCounter: outValue },
+                        },
                     })
                 ).toThrowWithMessageFixed(
                     RangeError,
-                    `The value of "simpleHeaderData.nonce.addCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                    `The value of "simpleHeaderData.crypto.nonceDiff.addCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
                 );
             });
         }
@@ -164,17 +176,23 @@ describe('createSimpleHeader()', () => {
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addFixed: safeValue, resetCounter: BigInt(0) },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addFixed: safeValue, resetCounter: BigInt(0) },
+                        },
                     })
                 ).not.toThrow();
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addFixed: outValue, resetCounter: BigInt(0) },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addFixed: outValue, resetCounter: BigInt(0) },
+                        },
                     })
                 ).toThrowWithMessageFixed(
                     RangeError,
-                    `The value of "simpleHeaderData.nonce.addFixed" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                    `The value of "simpleHeaderData.crypto.nonceDiff.addFixed" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
                 );
             });
         }
@@ -188,17 +206,23 @@ describe('createSimpleHeader()', () => {
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addFixed: BigInt(1), resetCounter: safeValue },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addFixed: BigInt(1), resetCounter: safeValue },
+                        },
                     })
                 ).not.toThrow();
                 expect(() =>
                     createSimpleHeader({
                         ...dummyHeaderData,
-                        nonce: { addFixed: BigInt(1), resetCounter: outValue },
+                        crypto: {
+                            ...dummyHeaderData.crypto,
+                            nonceDiff: { addFixed: BigInt(1), resetCounter: outValue },
+                        },
                     })
                 ).toThrowWithMessageFixed(
                     RangeError,
-                    `The value of "simpleHeaderData.nonce.resetCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
+                    `The value of "simpleHeaderData.crypto.nonceDiff.resetCounter" is out of range. It must be >= ${min} and <= ${max}. Received ${outValue}n`,
                 );
             });
         }
@@ -266,17 +290,21 @@ describe('parseHeaderLength()', () => {
 describe('parseHeaderData()', () => {
     describe('parse generated data by createHeader()', () => {
         const headerData: HeaderData = {
-            algorithmName: 'chacha20-poly1305',
-            salt: new Uint8Array([0, 1, 2]),
-            keyLength: 6,
-            keyDerivationOptions: {
-                algorithm: 'argon2d',
-                iterations: 2,
-                memory: 12,
-                parallelism: 4,
+            crypto: {
+                algorithmName: 'chacha20-poly1305',
+                nonce: new Uint8Array([9, 8, 7]),
+                authTag: new Uint8Array([4, 6, 8]),
             },
-            nonce: new Uint8Array([9, 8, 7]),
-            authTag: new Uint8Array([4, 6, 8]),
+            key: {
+                length: 6,
+                salt: new Uint8Array([0, 1, 2]),
+                keyDerivationFunctionOptions: {
+                    algorithm: 'argon2d',
+                    iterations: 2,
+                    memory: 12,
+                    parallelism: 4,
+                },
+            },
             compressAlgorithmName: 'gzip',
         };
         const headerDataBuffer = createHeader({ ...headerData, ciphertextLength: 0 });
@@ -338,102 +366,126 @@ describe('parseHeaderData()', () => {
             [
                 'header-message.basic.bin',
                 {
-                    algorithmName: 'aes-256-gcm',
-                    salt: new Uint8Array([9, 8, 7]),
-                    keyLength: 32,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2d',
-                        iterations: 3,
-                        memory: 12,
-                        parallelism: 1,
+                    crypto: {
+                        algorithmName: 'aes-256-gcm',
+                        nonce: new Uint8Array([4, 5, 6]),
+                        authTag: new Uint8Array([2, 3, 4]),
                     },
-                    nonce: new Uint8Array([4, 5, 6]),
-                    authTag: new Uint8Array([2, 3, 4]),
+                    key: {
+                        length: 32,
+                        salt: new Uint8Array([9, 8, 7]),
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2d',
+                            iterations: 3,
+                            memory: 12,
+                            parallelism: 1,
+                        },
+                    },
                     compressAlgorithmName: undefined,
                 },
             ],
             [
                 'header-message.full-length.bin',
                 {
-                    algorithmName: 'chacha20-poly1305',
-                    salt: new Uint8Array([...Array(128 / 8).keys()]),
-                    keyLength: 32,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2d',
-                        iterations: 3,
-                        memory: 12,
-                        parallelism: 1,
+                    crypto: {
+                        algorithmName: 'chacha20-poly1305',
+                        nonce: new Uint8Array([...Array(96 / 8).keys()]),
+                        authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
                     },
-                    nonce: new Uint8Array([...Array(96 / 8).keys()]),
-                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                    key: {
+                        length: 32,
+                        salt: new Uint8Array([...Array(128 / 8).keys()]),
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2d',
+                            iterations: 3,
+                            memory: 12,
+                            parallelism: 1,
+                        },
+                    },
                     compressAlgorithmName: 'brotli',
                 },
             ],
             [
                 'header-message.chacha20-poly1305.bin',
                 {
-                    algorithmName: 'chacha20-poly1305',
-                    salt: new Uint8Array([0, 1, 2]),
-                    keyLength: 96,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2d',
-                        iterations: 4,
-                        memory: 128,
-                        parallelism: 6,
+                    crypto: {
+                        algorithmName: 'chacha20-poly1305',
+                        nonce: new Uint8Array([3, 4]),
+                        authTag: new Uint8Array([5, 6, 7, 8]),
                     },
-                    nonce: new Uint8Array([3, 4]),
-                    authTag: new Uint8Array([5, 6, 7, 8]),
+                    key: {
+                        length: 96,
+                        salt: new Uint8Array([0, 1, 2]),
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2d',
+                            iterations: 4,
+                            memory: 128,
+                            parallelism: 6,
+                        },
+                    },
                     compressAlgorithmName: undefined,
                 },
             ],
             [
                 'header-message.argon2id.bin',
                 {
-                    algorithmName: 'aes-256-gcm',
-                    salt: new Uint8Array([0x42]),
-                    keyLength: 666,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2id',
-                        iterations: 1,
-                        memory: 6,
-                        parallelism: 99,
+                    crypto: {
+                        algorithmName: 'aes-256-gcm',
+                        nonce: new Uint8Array([255]),
+                        authTag: new Uint8Array([8]),
                     },
-                    nonce: new Uint8Array([255]),
-                    authTag: new Uint8Array([8]),
+                    key: {
+                        salt: new Uint8Array([0x42]),
+                        length: 666,
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2id',
+                            iterations: 1,
+                            memory: 6,
+                            parallelism: 99,
+                        },
+                    },
                     compressAlgorithmName: undefined,
                 },
             ],
             [
                 'header-message.compress-gzip.bin',
                 {
-                    algorithmName: 'aes-256-gcm',
-                    salt: new Uint8Array([9, 8, 7]),
-                    keyLength: 32,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2d',
-                        iterations: 3,
-                        memory: 12,
-                        parallelism: 1,
+                    crypto: {
+                        algorithmName: 'aes-256-gcm',
+                        nonce: new Uint8Array([4, 5, 6]),
+                        authTag: new Uint8Array([2, 3, 4]),
                     },
-                    nonce: new Uint8Array([4, 5, 6]),
-                    authTag: new Uint8Array([2, 3, 4]),
+                    key: {
+                        length: 32,
+                        salt: new Uint8Array([9, 8, 7]),
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2d',
+                            iterations: 3,
+                            memory: 12,
+                            parallelism: 1,
+                        },
+                    },
                     compressAlgorithmName: 'gzip',
                 },
             ],
             [
                 'header-message.compress-brotli.bin',
                 {
-                    algorithmName: 'aes-256-gcm',
-                    salt: new Uint8Array([9, 8, 7]),
-                    keyLength: 32,
-                    keyDerivationOptions: {
-                        algorithm: 'argon2d',
-                        iterations: 3,
-                        memory: 12,
-                        parallelism: 1,
+                    crypto: {
+                        algorithmName: 'aes-256-gcm',
+                        nonce: new Uint8Array([4, 5, 6]),
+                        authTag: new Uint8Array([2, 3, 4]),
                     },
-                    nonce: new Uint8Array([4, 5, 6]),
-                    authTag: new Uint8Array([2, 3, 4]),
+                    key: {
+                        length: 32,
+                        salt: new Uint8Array([9, 8, 7]),
+                        keyDerivationFunctionOptions: {
+                            algorithm: 'argon2d',
+                            iterations: 3,
+                            memory: 12,
+                            parallelism: 1,
+                        },
+                    },
                     compressAlgorithmName: 'brotli',
                 },
             ],
@@ -560,24 +612,30 @@ describe('parseSimpleHeaderData()', () => {
 
         describe.each<[string, SimpleHeaderData]>([
             ...intList.map<[string, SimpleHeaderData]>(({ label, value }) => [
-                `nonce.addCounter=${label ? `(${label})` : String(value)}`,
+                `crypto.nonceDiff.addCounter=${label ? `(${label})` : String(value)}`,
                 {
-                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
-                    nonce: { addCounter: value },
+                    crypto: {
+                        authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                        nonceDiff: { addCounter: value },
+                    },
                 },
             ]),
             ...intList.map<[string, SimpleHeaderData]>(({ label, value }) => [
-                `nonce.addFixed=${label ? `(${label})` : String(value)}`,
+                `crypto.nonceDiff.addFixed=${label ? `(${label})` : String(value)}`,
                 {
-                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
-                    nonce: { addFixed: value, resetCounter: BigInt(0) },
+                    crypto: {
+                        authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                        nonceDiff: { addFixed: value, resetCounter: BigInt(0) },
+                    },
                 },
             ]),
             ...[{ value: BigInt(0) }, ...intList].map<[string, SimpleHeaderData]>(({ label, value }) => [
-                `nonce.resetCounter=${label ? `(${label})` : String(value)}`,
+                `crypto.nonceDiff.resetCounter=${label ? `(${label})` : String(value)}`,
                 {
-                    authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
-                    nonce: { addFixed: BigInt(1), resetCounter: value },
+                    crypto: {
+                        authTag: new Uint8Array([9, 9, 8, 6, 0, 7]),
+                        nonceDiff: { addFixed: BigInt(1), resetCounter: value },
+                    },
                 },
             ]),
         ])('%s', (_, headerData) => {
@@ -640,57 +698,69 @@ describe('parseSimpleHeaderData()', () => {
             [
                 'simple-header-message.basic.bin',
                 {
-                    authTag: new Uint8Array([4, 5, 6]),
-                    nonce: {
-                        addCounter: BigInt(1),
+                    crypto: {
+                        authTag: new Uint8Array([4, 5, 6]),
+                        nonceDiff: {
+                            addCounter: BigInt(1),
+                        },
                     },
                 },
             ],
             [
                 'simple-header-message.add-nonce-counter.bin',
                 {
-                    authTag: new Uint8Array([0, 1, 0]),
-                    nonce: {
-                        addCounter: BigInt(2),
+                    crypto: {
+                        authTag: new Uint8Array([0, 1, 0]),
+                        nonceDiff: {
+                            addCounter: BigInt(2),
+                        },
                     },
                 },
             ],
             [
                 'simple-header-message.max-nonce-counter.bin',
                 {
-                    authTag: new Uint8Array([7, 1, 4]),
-                    nonce: {
-                        addCounter: MAX_UINT64,
+                    crypto: {
+                        authTag: new Uint8Array([7, 1, 4]),
+                        nonceDiff: {
+                            addCounter: MAX_UINT64,
+                        },
                     },
                 },
             ],
             [
                 'simple-header-message.add-nonce-fixed.bin',
                 {
-                    authTag: new Uint8Array([1, 3, 2]),
-                    nonce: {
-                        addFixed: BigInt(1),
-                        resetCounter: BigInt(0),
+                    crypto: {
+                        authTag: new Uint8Array([1, 3, 2]),
+                        nonceDiff: {
+                            addFixed: BigInt(1),
+                            resetCounter: BigInt(0),
+                        },
                     },
                 },
             ],
             [
                 'simple-header-message.full-length.bin',
                 {
-                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
-                    nonce: {
-                        addFixed: BigInt(8640000000000000),
-                        resetCounter: BigInt(2) ** (BigInt(5) * BigInt(8)) - BigInt(1),
+                    crypto: {
+                        authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                        nonceDiff: {
+                            addFixed: BigInt(8640000000000000),
+                            resetCounter: BigInt(2) ** (BigInt(5) * BigInt(8)) - BigInt(1),
+                        },
                     },
                 },
             ],
             [
                 'simple-header-message.max-length.bin',
                 {
-                    authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
-                    nonce: {
-                        addFixed: MAX_UINT64,
-                        resetCounter: MAX_UINT64,
+                    crypto: {
+                        authTag: new Uint8Array([...Array(128 / 8).keys()].reverse()),
+                        nonceDiff: {
+                            addFixed: MAX_UINT64,
+                            resetCounter: MAX_UINT64,
+                        },
                     },
                 },
             ],

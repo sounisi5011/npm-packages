@@ -7,25 +7,25 @@ const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
 export function createProtobufSimpleHeader(simpleHeaderData: SimpleHeaderData): SimpleHeader {
     const header = new SimpleHeader()
-        .setCryptoAuthTag(simpleHeaderData.authTag);
+        .setCryptoAuthTag(simpleHeaderData.crypto.authTag);
 
-    const { nonce } = simpleHeaderData;
+    const { nonceDiff } = simpleHeaderData.crypto;
     const validateNonceInput = (paramName: string, value: bigint, min: number): bigint =>
         validateNumberOptionInRange(
             value,
             { min, max: MAX_UINT64 },
-            { paramName: `simpleHeaderData.nonce.${paramName}` },
+            { paramName: `simpleHeaderData.crypto.nonceDiff.${paramName}` },
         );
-    if ('addCounter' in nonce) {
+    if ('addCounter' in nonceDiff) {
         header.setCryptoNonceCounterAddOrReset(String(
-            validateNonceInput('addCounter', nonce.addCounter, 1) - BigInt(1),
+            validateNonceInput('addCounter', nonceDiff.addCounter, 1) - BigInt(1),
         ));
     } else {
         header.setCryptoNonceFixedAdd(String(
-            validateNonceInput('addFixed', nonce.addFixed, 1),
+            validateNonceInput('addFixed', nonceDiff.addFixed, 1),
         ));
         header.setCryptoNonceCounterAddOrReset(String(
-            validateNonceInput('resetCounter', nonce.resetCounter, 0),
+            validateNonceInput('resetCounter', nonceDiff.resetCounter, 0),
         ));
     }
 
@@ -56,7 +56,7 @@ export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderDat
         header.getCryptoNonceFixedAdd(),
     );
 
-    const nonce = cryptoNonceFixedAdd > 0
+    const nonceDiff = cryptoNonceFixedAdd > 0
         ? {
             addFixed: cryptoNonceFixedAdd,
             resetCounter: cryptoNonceCounterAddOrReset(MAX_UINT64),
@@ -65,5 +65,5 @@ export function parseProtobufSimpleHeader(header: SimpleHeader): SimpleHeaderDat
             addCounter: cryptoNonceCounterAddOrReset(MAX_UINT64 - BigInt(1)) + BigInt(1),
         };
 
-    return { authTag, nonce };
+    return { crypto: { authTag, nonceDiff } };
 }

@@ -30,26 +30,26 @@ async function getAlgorithmAndKey(
     password: InputDataType,
     headerData: HeaderData,
 ): Promise<{ algorithm: CryptoAlgorithm; key: Uint8Array }> {
-    const algorithm = cryptoAlgorithmMap.get(headerData.algorithmName);
+    const algorithm = cryptoAlgorithmMap.get(headerData.crypto.algorithmName);
     if (!algorithm) {
-        throw new TypeError(`Unknown algorithm was received: ${headerData.algorithmName}`);
+        throw new TypeError(`Unknown algorithm was received: ${headerData.crypto.algorithmName}`);
     }
 
     /**
      * Generate key
      */
-    const key = await getKDF(headerData.keyDerivationOptions)
+    const key = await getKDF(headerData.key.keyDerivationFunctionOptions)
         .deriveKey(
             password,
-            headerData.salt,
-            headerData.keyLength,
+            headerData.key.salt,
+            headerData.key.length,
         );
 
     return { algorithm, key };
 }
 
 function createNonceFromDiff(
-    nonceDiff: SimpleHeaderData['nonce'],
+    nonceDiff: SimpleHeaderData['crypto']['nonceDiff'],
     prevNonce: Buffer | Uint8Array,
 ): Buffer | Uint8Array {
     if ('addFixed' in nonceDiff) {
@@ -93,7 +93,7 @@ async function parseHeader(
             decryptorMetadata: {
                 algorithm,
                 key,
-                nonce: headerData.nonce,
+                nonce: headerData.crypto.nonce,
                 compressAlgorithmName: headerData.compressAlgorithmName,
             },
         };
@@ -103,7 +103,7 @@ async function parseHeader(
          */
         const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
         const { headerData } = await parseSimpleHeaderData(reader, { headerByteLength });
-        const nonce = createNonceFromDiff(headerData.nonce, prevDecryptorMetadata.nonce);
+        const nonce = createNonceFromDiff(headerData.crypto.nonceDiff, prevDecryptorMetadata.nonce);
         return {
             headerData,
             decryptorMetadata: { ...prevDecryptorMetadata, nonce },
@@ -159,7 +159,7 @@ async function decryptChunk(
         algorithm: decryptorMetadata.algorithm,
         key: decryptorMetadata.key,
         nonce: decryptorMetadata.nonce,
-        authTag: headerData.authTag,
+        authTag: headerData.crypto.authTag,
     });
 
     return {

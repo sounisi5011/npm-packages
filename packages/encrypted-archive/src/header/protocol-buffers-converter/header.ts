@@ -11,7 +11,7 @@ const dataName = 'Header data';
 const {
     enum2value: cryptoAlgorithm2algorithmName,
     value2enum: algorithmName2cryptoAlgorithm,
-} = createEnum2value<HeaderData['algorithmName']>()(Header.CryptoAlgorithm)([
+} = createEnum2value<HeaderData['crypto']['algorithmName']>()(Header.CryptoAlgorithm)([
     [Header.CryptoAlgorithm.AES_256_GCM, 'aes-256-gcm'],
     [Header.CryptoAlgorithm.CHACHA20_POLY1305, 'chacha20-poly1305'],
 ]);
@@ -19,7 +19,7 @@ const {
 function getKeyDerivationOptions(
     header: Header,
     opts: { oneofFieldName: string; dataName: string },
-): HeaderData['keyDerivationOptions'] {
+): HeaderData['key']['keyDerivationFunctionOptions'] {
     const type = header.getKeyOptionsCase();
     if (type === Header.KeyOptionsCase.ARGON2_KEY_OPTIONS) {
         const keyOptions = header.getArgon2KeyOptions();
@@ -39,7 +39,7 @@ function getKeyDerivationOptions(
     );
 }
 
-const setKeyDerivationOptions = (header: Header, options: HeaderData['keyDerivationOptions']): Header =>
+const setKeyDerivationOptions = (header: Header, options: HeaderData['key']['keyDerivationFunctionOptions']): Header =>
     cond(options)
         .case(isArgon2Options, options => header.setArgon2KeyOptions(createProtobufArgon2Options(options)))
         .default((options: never) => {
@@ -58,13 +58,13 @@ const {
 export function createProtobufHeader(data: HeaderData): Header {
     return setKeyDerivationOptions(
         new Header()
-            .setCryptoAlgorithm(algorithmName2cryptoAlgorithm(data.algorithmName))
-            .setCryptoNonce(data.nonce)
-            .setCryptoAuthTag(data.authTag)
-            .setKeyLength(data.keyLength)
-            .setKeySalt(data.salt)
+            .setCryptoAlgorithm(algorithmName2cryptoAlgorithm(data.crypto.algorithmName))
+            .setCryptoNonce(data.crypto.nonce)
+            .setCryptoAuthTag(data.crypto.authTag)
+            .setKeyLength(data.key.length)
+            .setKeySalt(data.key.salt)
             .setCompressAlgorithm(compressAlgorithmName2CompressAlgorithm(data.compressAlgorithmName)),
-        data.keyDerivationOptions,
+        data.key.keyDerivationFunctionOptions,
     );
 }
 
@@ -73,16 +73,20 @@ const validateBytesFromProtobuf = (fieldName: string, value: Uint8Array): Uint8A
 
 export function parseProtobufHeader(header: Header): HeaderData {
     return {
-        algorithmName: cryptoAlgorithm2algorithmName(
-            header.getCryptoAlgorithm(),
-            true,
-            { fieldName: 'crypto_algorithm', dataName },
-        ),
-        nonce: validateBytesFromProtobuf('crypto_nonce', header.getCryptoNonce_asU8()),
-        authTag: validateBytesFromProtobuf('crypto_auth_tag', header.getCryptoAuthTag_asU8()),
-        keyLength: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
-        salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
-        keyDerivationOptions: getKeyDerivationOptions(header, { oneofFieldName: 'key_options', dataName }),
+        crypto: {
+            algorithmName: cryptoAlgorithm2algorithmName(
+                header.getCryptoAlgorithm(),
+                true,
+                { fieldName: 'crypto_algorithm', dataName },
+            ),
+            nonce: validateBytesFromProtobuf('crypto_nonce', header.getCryptoNonce_asU8()),
+            authTag: validateBytesFromProtobuf('crypto_auth_tag', header.getCryptoAuthTag_asU8()),
+        },
+        key: {
+            length: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
+            salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
+            keyDerivationFunctionOptions: getKeyDerivationOptions(header, { oneofFieldName: 'key_options', dataName }),
+        },
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
             header.getCompressAlgorithm(),
             true,
