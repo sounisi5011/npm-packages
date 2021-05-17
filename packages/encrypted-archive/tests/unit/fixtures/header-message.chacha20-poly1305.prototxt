@@ -1,12 +1,12 @@
 crypto_algorithm: ChaCha20_Poly1305
-key_salt: "\x00\x01\x02"
+crypto_nonce: "\x03\x04"
+crypto_auth_tag: "\x05\x06\x07\x08"
 key_length: 96
+key_salt: "\x00\x01\x02"
 argon2_key_options {
   type: Argon2d
   time_iterations: 4
   memory_kib: 128
   parallelism: 6
 }
-crypto_nonce: "\x03\x04"
-crypto_auth_tag: "\x05\x06\x07\x08"
 compress_algorithm: None

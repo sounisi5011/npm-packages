@@ -26,11 +26,11 @@ message Header {
     Brotli = 2;
   }
 
-  bytes crypto_nonce = 1;
-  bytes crypto_auth_tag = 2;
-  CryptoAlgorithm crypto_algorithm = 3;
-  bytes key_salt = 4;
-  uint32 key_length = 5;
+  CryptoAlgorithm crypto_algorithm = 1;
+  bytes crypto_nonce = 2;
+  bytes crypto_auth_tag = 3;
+  uint32 key_length = 4;
+  bytes key_salt = 5;
   oneof key_options {
     Argon2Options argon2_key_options = 15;
   }

@@ -1,12 +1,12 @@
 crypto_algorithm: AES_256_GCM
-key_salt: "\x42"
+crypto_nonce: "\xFF"
+crypto_auth_tag: "\x08"
 key_length: 666
+key_salt: "\x42"
 argon2_key_options {
   type: Argon2id
   time_iterations: 1
   memory_kib: 6
   parallelism: 99
 }
-crypto_nonce: "\xFF"
-crypto_auth_tag: "\x08"
 compress_algorithm: None

@@ -450,7 +450,7 @@ describe('parseHeaderData()', () => {
             [
                 'header-message.empty.bin',
                 Error,
-                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+                'The value of the crypto_nonce field in the Header data is 0 bytes. It must be >= 1',
             ],
             [
                 'simple-header-message.add-nonce-counter.bin',
@@ -460,12 +460,12 @@ describe('parseHeaderData()', () => {
             [
                 'simple-header-message.add-nonce-fixed.bin',
                 Error,
-                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+                'Assertion failed',
             ],
             [
                 'simple-header-message.basic.bin',
                 Error,
-                'The value of the key_salt field in the Header data is 0 bytes. It must be >= 1',
+                'Assertion failed',
             ],
             [
                 'simple-header-message.full-length.bin',

@@ -42,6 +42,8 @@ export namespace Argon2Options {
 }
 
 export class Header extends jspb.Message { 
+    getCryptoAlgorithm(): Header.CryptoAlgorithm;
+    setCryptoAlgorithm(value: Header.CryptoAlgorithm): Header;
     getCryptoNonce(): Uint8Array | string;
     getCryptoNonce_asU8(): Uint8Array;
     getCryptoNonce_asB64(): string;
@@ -50,14 +52,12 @@ export class Header extends jspb.Message {
     getCryptoAuthTag_asU8(): Uint8Array;
     getCryptoAuthTag_asB64(): string;
     setCryptoAuthTag(value: Uint8Array | string): Header;
-    getCryptoAlgorithm(): Header.CryptoAlgorithm;
-    setCryptoAlgorithm(value: Header.CryptoAlgorithm): Header;
+    getKeyLength(): number;
+    setKeyLength(value: number): Header;
     getKeySalt(): Uint8Array | string;
     getKeySalt_asU8(): Uint8Array;
     getKeySalt_asB64(): string;
     setKeySalt(value: Uint8Array | string): Header;
-    getKeyLength(): number;
-    setKeyLength(value: number): Header;
 
     hasArgon2KeyOptions(): boolean;
     clearArgon2KeyOptions(): void;
@@ -80,11 +80,11 @@ export class Header extends jspb.Message {
 
 export namespace Header {
     export type AsObject = {
+        cryptoAlgorithm: Header.CryptoAlgorithm,
         cryptoNonce: Uint8Array | string,
         cryptoAuthTag: Uint8Array | string,
-        cryptoAlgorithm: Header.CryptoAlgorithm,
-        keySalt: Uint8Array | string,
         keyLength: number,
+        keySalt: Uint8Array | string,
         argon2KeyOptions?: Argon2Options.AsObject,
         compressAlgorithm: Header.CompressAlgorithm,
     }

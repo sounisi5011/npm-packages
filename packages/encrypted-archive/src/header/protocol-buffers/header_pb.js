@@ -370,11 +370,11 @@ proto.Header.prototype.toObject = function(opt_includeInstance) {
  */
 proto.Header.toObject = function(includeInstance, msg) {
   var f, obj = {
+    cryptoAlgorithm: jspb.Message.getFieldWithDefault(msg, 1, 0),
     cryptoNonce: msg.getCryptoNonce_asB64(),
     cryptoAuthTag: msg.getCryptoAuthTag_asB64(),
-    cryptoAlgorithm: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    keyLength: jspb.Message.getFieldWithDefault(msg, 4, 0),
     keySalt: msg.getKeySalt_asB64(),
-    keyLength: jspb.Message.getFieldWithDefault(msg, 5, 0),
     argon2KeyOptions: (f = msg.getArgon2KeyOptions()) && proto.Argon2Options.toObject(includeInstance, f),
     compressAlgorithm: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
@@ -414,24 +414,24 @@ proto.Header.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setCryptoNonce(value);
-      break;
-    case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setCryptoAuthTag(value);
-      break;
-    case 3:
       var value = /** @type {!proto.Header.CryptoAlgorithm} */ (reader.readEnum());
       msg.setCryptoAlgorithm(value);
       break;
-    case 4:
+    case 2:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setKeySalt(value);
+      msg.setCryptoNonce(value);
       break;
-    case 5:
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setCryptoAuthTag(value);
+      break;
+    case 4:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setKeyLength(value);
+      break;
+    case 5:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setKeySalt(value);
       break;
     case 15:
       var value = new proto.Argon2Options;
@@ -471,37 +471,37 @@ proto.Header.prototype.serializeBinary = function() {
  */
 proto.Header.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getCryptoNonce_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
+  f = message.getCryptoAlgorithm();
+  if (f !== 0.0) {
+    writer.writeEnum(
       1,
       f
     );
   }
-  f = message.getCryptoAuthTag_asU8();
+  f = message.getCryptoNonce_asU8();
   if (f.length > 0) {
     writer.writeBytes(
       2,
       f
     );
   }
-  f = message.getCryptoAlgorithm();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      3,
-      f
-    );
-  }
-  f = message.getKeySalt_asU8();
+  f = message.getCryptoAuthTag_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      4,
+      3,
       f
     );
   }
   f = message.getKeyLength();
   if (f !== 0) {
     writer.writeUint32(
+      4,
+      f
+    );
+  }
+  f = message.getKeySalt_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
       5,
       f
     );
@@ -542,16 +542,34 @@ proto.Header.CompressAlgorithm = {
 };
 
 /**
- * optional bytes crypto_nonce = 1;
- * @return {!(string|Uint8Array)}
+ * optional CryptoAlgorithm crypto_algorithm = 1;
+ * @return {!proto.Header.CryptoAlgorithm}
  */
-proto.Header.prototype.getCryptoNonce = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.Header.prototype.getCryptoAlgorithm = function() {
+  return /** @type {!proto.Header.CryptoAlgorithm} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * optional bytes crypto_nonce = 1;
+ * @param {!proto.Header.CryptoAlgorithm} value
+ * @return {!proto.Header} returns this
+ */
+proto.Header.prototype.setCryptoAlgorithm = function(value) {
+  return jspb.Message.setProto3EnumField(this, 1, value);
+};
+
+
+/**
+ * optional bytes crypto_nonce = 2;
+ * @return {!(string|Uint8Array)}
+ */
+proto.Header.prototype.getCryptoNonce = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * optional bytes crypto_nonce = 2;
  * This is a type-conversion wrapper around `getCryptoNonce()`
  * @return {string}
  */
@@ -562,7 +580,7 @@ proto.Header.prototype.getCryptoNonce_asB64 = function() {
 
 
 /**
- * optional bytes crypto_nonce = 1;
+ * optional bytes crypto_nonce = 2;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getCryptoNonce()`
@@ -579,21 +597,21 @@ proto.Header.prototype.getCryptoNonce_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCryptoNonce = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
 /**
- * optional bytes crypto_auth_tag = 2;
+ * optional bytes crypto_auth_tag = 3;
  * @return {!(string|Uint8Array)}
  */
 proto.Header.prototype.getCryptoAuthTag = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
- * optional bytes crypto_auth_tag = 2;
+ * optional bytes crypto_auth_tag = 3;
  * This is a type-conversion wrapper around `getCryptoAuthTag()`
  * @return {string}
  */
@@ -604,7 +622,7 @@ proto.Header.prototype.getCryptoAuthTag_asB64 = function() {
 
 
 /**
- * optional bytes crypto_auth_tag = 2;
+ * optional bytes crypto_auth_tag = 3;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getCryptoAuthTag()`
@@ -621,39 +639,39 @@ proto.Header.prototype.getCryptoAuthTag_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setCryptoAuthTag = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 
 /**
- * optional CryptoAlgorithm crypto_algorithm = 3;
- * @return {!proto.Header.CryptoAlgorithm}
+ * optional uint32 key_length = 4;
+ * @return {number}
  */
-proto.Header.prototype.getCryptoAlgorithm = function() {
-  return /** @type {!proto.Header.CryptoAlgorithm} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+proto.Header.prototype.getKeyLength = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
- * @param {!proto.Header.CryptoAlgorithm} value
+ * @param {number} value
  * @return {!proto.Header} returns this
  */
-proto.Header.prototype.setCryptoAlgorithm = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+proto.Header.prototype.setKeyLength = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
 /**
- * optional bytes key_salt = 4;
+ * optional bytes key_salt = 5;
  * @return {!(string|Uint8Array)}
  */
 proto.Header.prototype.getKeySalt = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /**
- * optional bytes key_salt = 4;
+ * optional bytes key_salt = 5;
  * This is a type-conversion wrapper around `getKeySalt()`
  * @return {string}
  */
@@ -664,7 +682,7 @@ proto.Header.prototype.getKeySalt_asB64 = function() {
 
 
 /**
- * optional bytes key_salt = 4;
+ * optional bytes key_salt = 5;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getKeySalt()`
@@ -681,25 +699,7 @@ proto.Header.prototype.getKeySalt_asU8 = function() {
  * @return {!proto.Header} returns this
  */
 proto.Header.prototype.setKeySalt = function(value) {
-  return jspb.Message.setProto3BytesField(this, 4, value);
-};
-
-
-/**
- * optional uint32 key_length = 5;
- * @return {number}
- */
-proto.Header.prototype.getKeyLength = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.Header} returns this
- */
-proto.Header.prototype.setKeyLength = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3BytesField(this, 5, value);
 };
 
 

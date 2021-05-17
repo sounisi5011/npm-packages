@@ -21,8 +21,8 @@ export interface HeaderData {
     algorithmName: CryptoAlgorithmName;
     nonce: Uint8Array;
     authTag: Uint8Array;
-    salt: Uint8Array;
     keyLength: number;
+    salt: Uint8Array;
     keyDerivationOptions: NormalizedKeyDerivationOptions;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
