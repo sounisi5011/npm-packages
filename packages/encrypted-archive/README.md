@@ -273,7 +273,12 @@ Returns an AsyncIterableIterator giving a [`Buffer` object].
 
 #### `source`
 
-Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+Type:
+
+```ts
+  Iterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+| AsyncIterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+```
 
 ### `EncryptOptions`
 
