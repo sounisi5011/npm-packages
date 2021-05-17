@@ -19,7 +19,7 @@ type GetOptions<T extends (options?: never) => stream.Transform> = (
     T extends ((options?: infer U) => stream.Transform) ? U : never
 );
 
-const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info'] as const;
+const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info', 'maxOutputLength'] as const;
 type ZlibDisallowOptionName = (typeof zlibDisallowOptionNameList)[number];
 type GzipOptions = GetOptions<typeof createGzip>;
 type GzipDisallowedOptions = Omit<GzipOptions, ZlibDisallowOptionName>;

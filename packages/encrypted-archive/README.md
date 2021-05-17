@@ -352,6 +352,7 @@ Currently, the following compression algorithm are supported:
     * `finishFlush`
     * `dictionary`
     * `info`
+    * `maxOutputLength`
 * Brotli
     * `algorithm`
         * `"brotli"`
