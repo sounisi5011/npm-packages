@@ -71,15 +71,17 @@ importers:
   packages/encrypted-archive:
     dependencies:
       argon2-browser: 1.15.4
+      bl: 5.0.0
       capitalize: 2.0.3
       duplexify: 4.1.1
-      google-protobuf: 3.16.0
+      google-protobuf: 3.17.0
       varint: 6.0.0
     devDependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.12.0
+      '@types/bl': 5.0.1
       '@types/capitalize': 2.0.0
       '@types/duplexify': 3.6.0
       '@types/google-protobuf': 3.15.2
@@ -100,12 +102,14 @@ importers:
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/argon2-browser': 1.12.0
+      '@types/bl': 5.0.1
       '@types/capitalize': 2.0.0
       '@types/duplexify': 3.6.0
       '@types/google-protobuf': 3.15.2
       '@types/node': '*'
       '@types/varint': 6.0.0
       argon2-browser: ^1.15.4
+      bl: ^5.0.0
       bytefield-svg: 1.5.0
       capitalize: ^2.0.3
       combinate: 1.1.3
@@ -937,6 +941,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-kSjgDMZONiIfSH1Nxcr5JIRMwUetDki63FSQfpTCz8ogF3Ulqm8+mr5f78dUYs6vMiB6gBusQqfQmBvHZj/lwg==
+  /@types/bl/5.0.1:
+    dependencies:
+      '@types/node': 14.14.33
+      '@types/readable-stream': 2.3.9
+    dev: true
+    resolution:
+      integrity: sha512-hcjx0OAaT82pFU0bN2f6k4n6nyyIKsTe9PuXtY1zkANNPbUmJJmTtt98UebGHZuPwll7atG3UPXxYJ634cnLqg==
   /@types/capitalize/2.0.0:
     dev: true
     resolution:
@@ -1023,6 +1034,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-i99hy7Ki19EqVOl77WplDrvgNugHnsSjECVR/wUrzw2TJXz1zlUfT2ngGckR6xN7yFYaijsMAqPkOLx9HgUqHg==
+  /@types/readable-stream/2.3.9:
+    dependencies:
+      '@types/node': 14.14.33
+      safe-buffer: 5.2.1
+    dev: true
+    resolution:
+      integrity: sha512-sqsgQqFT7HmQz/V5jH1O0fvQQnXAJO46Gg9LRO/JPfjmVmGUlcx831TZZO3Y3HtWhIkzf3kTsNT0Z0kzIhIvZw==
   /@types/stack-utils/1.0.1:
     dev: true
     resolution:
@@ -1670,12 +1688,24 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-5T6P4xPgpp0YDFvSWwEZ4NoE3aM4QBQXDzmVbraCkFj8zHM+mba8SyqB5DbZWyR7mYHo6Y7BdQo3MoA4m0TeQg==
+  /base64-js/1.5.1:
+    dev: false
+    resolution:
+      integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
   /bcrypt-pbkdf/1.0.2:
     dependencies:
       tweetnacl: 0.14.5
     dev: true
     resolution:
       integrity: sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
+  /bl/5.0.0:
+    dependencies:
+      buffer: 6.0.3
+      inherits: 2.0.4
+      readable-stream: 3.6.0
+    dev: false
+    resolution:
+      integrity: sha512-8vxFNZ0pflFfi0WXA3WQXlj6CaMEwsmh63I1CNp0q+wWv8sD0ARx1KovSQd0l2GkwrMIOyedq0EF1FxI+RCZLQ==
   /boxen/4.2.0:
     dependencies:
       ansi-align: 3.0.0
@@ -1755,6 +1785,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
+  /buffer/6.0.3:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
+    resolution:
+      integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
   /bytefield-svg/1.5.0:
     dependencies:
       command-line-args: 5.1.1
@@ -3507,10 +3544,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-2jtfdqTaSxk0cuBJBtTTWsot4WtR9RVr2rXg7x7OoqiuOKopPrwXpM1G4dXIkLcUNRh3RKzz76C8IOkksZSeOw==
-  /google-protobuf/3.16.0:
+  /google-protobuf/3.17.0:
     dev: false
     resolution:
-      integrity: sha512-gBY66yYL1wbQMU2r1POkXSXkm035Ni0wFv3vx0K9IEUsJLP9G5rAcFVn0xUXfZneRu6MmDjaw93pt/DE56VOyw==
+      integrity: sha512-xuxzzx6FXmkmddRZci2SmGeZcx+vykmqG60yJf/Rz+NEKaUs+nLhaiUQAWa7Z00a7bHfRjRxSIX9FcELaxWIVA==
   /got/9.6.0:
     dependencies:
       '@sindresorhus/is': 0.14.0
@@ -3556,7 +3593,7 @@ packages:
       node: '>=0.4.7'
     hasBin: true
     optionalDependencies:
-      uglify-js: 3.13.5
+      uglify-js: 3.13.6
     resolution:
       integrity: sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
   /har-schema/2.0.0:
@@ -3714,6 +3751,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
+  /ieee754/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
   /ignore/4.0.6:
     dev: true
     engines:
@@ -7248,14 +7289,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==
-  /uglify-js/3.13.5:
+  /uglify-js/3.13.6:
     dev: true
     engines:
       node: '>=0.8.0'
     hasBin: true
     optional: true
     resolution:
-      integrity: sha512-xtB8yEqIkn7zmOyS2zUNBsYCBRhDkvlNxMMY2smuJ/qA8NCHeQvKCF3i9Z4k8FJH4+PJvZRtMrPynfZ75+CSZw==
+      integrity: sha512-rRprLwl8RVaS+Qvx3Wh5hPfPBn9++G6xkGlUupya0s5aDmNjI7z3lnRLB3u7sN4OmbB0pWgzhM9BEJyiWAwtAA==
   /uint8arrays/2.1.5:
     dependencies:
       multibase: 4.0.4

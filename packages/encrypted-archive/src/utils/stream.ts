@@ -1,6 +1,8 @@
 import { once } from 'events';
 import type * as stream from 'stream';
 
+import BufferListStream from 'bl';
+
 import { printObject } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
@@ -57,7 +59,7 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
 
 export class StreamReader implements StreamReaderInterface<Buffer> {
     private iterator: AsyncIterator<unknown> | undefined;
-    private buffer: Buffer = Buffer.alloc(0);
+    private readonly bufferList = new BufferListStream();
 
     constructor(
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
@@ -75,15 +77,13 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
 
     async read(size: number, offset = 0): Promise<Buffer> {
         const needByteLength = offset + size;
-        while (this.buffer.byteLength < needByteLength) {
+        while (this.bufferList.length < needByteLength) {
             const chunk = await this.tryReadChunk();
             if (!chunk) break;
 
-            // TODO: Buffer should not be merged every time a chunk is read.
-            //       Each chunk should be stored in an array and merged only when the Buffer is returned.
-            this.buffer = Buffer.concat([this.buffer, chunk]);
+            this.bufferList.append(chunk);
         }
-        return this.buffer.subarray(offset, needByteLength);
+        return this.bufferList.slice(offset, needByteLength);
     }
 
     async *readIterator(
@@ -96,30 +96,31 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         const requestedSize = size;
         let readedSize = 0;
 
-        if (readedSize < requestedSize && this.buffer.byteLength > 0) {
-            const [data, remainder] = this.splitBuffer(this.buffer, requestedSize, offset, true);
+        if (readedSize < requestedSize && this.bufferList.length > 0) {
+            const endOffset = offset + requestedSize;
+            const data = this.bufferList.slice(offset, endOffset);
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            this.buffer = remainder;
+            this.bufferList.consume(endOffset);
         }
 
         for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            if (remainder) this.buffer = remainder;
+            if (remainder) this.bufferList.append(remainder);
         }
 
         yield { requestedSize, offset, readedSize };
     }
 
     async seek(offset: number): Promise<void> {
-        await this.read(offset);
-        this.buffer = this.buffer.subarray(offset);
+        if (this.bufferList.length < offset) await this.read(offset);
+        this.bufferList.consume(offset);
     }
 
     async isEnd(): Promise<boolean> {
-        await this.read(1);
-        return this.buffer.byteLength < 1;
+        if (this.bufferList.length < 1) await this.read(1);
+        return this.bufferList.length < 1;
     }
 
     private async tryReadChunk(): Promise<Buffer | undefined> {
@@ -141,23 +142,11 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         }
     }
 
-    private splitBuffer(
-        buffer: Buffer,
-        size: number,
-        offset: number | undefined,
-        alwaysReturnTwoBuffer: true,
-    ): [Buffer, Buffer];
-    private splitBuffer(
-        buffer: Buffer,
-        size: number,
-        offset?: number,
-        alwaysReturnTwoBuffer?: false,
-    ): [Buffer, Buffer?];
-    private splitBuffer(buffer: Buffer, size: number, offset = 0, alwaysReturnTwoBuffer = false): [Buffer, Buffer?] {
+    private splitBuffer(buffer: Buffer, size: number, offset = 0): [Buffer, Buffer?] {
         const endOffset = offset + size;
         if (buffer.byteLength <= endOffset) {
             const firstBuffer = offset < 1 ? buffer : buffer.subarray(offset);
-            return alwaysReturnTwoBuffer ? [firstBuffer, Buffer.alloc(0)] : [firstBuffer];
+            return [firstBuffer];
         }
         return [
             buffer.subarray(offset, endOffset),

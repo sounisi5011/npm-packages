@@ -84,6 +84,7 @@
   },
   "dependencies": {
     "argon2-browser": "^1.15.4",
+    "bl": "^5.0.0",
     "capitalize": "^2.0.3",
     "duplexify": "^4.1.1",
     "google-protobuf": "^3.15.8",
@@ -94,6 +95,7 @@
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.12.0",
+    "@types/bl": "5.0.1",
     "@types/capitalize": "2.0.0",
     "@types/duplexify": "3.6.0",
     "@types/google-protobuf": "3.15.2",
