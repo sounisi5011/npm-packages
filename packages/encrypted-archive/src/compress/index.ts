@@ -1,9 +1,10 @@
 import type * as stream from 'stream';
-import { createBrotliCompress, createBrotliDecompress, createGunzip, createGzip } from 'zlib';
 
-import { fixNodePrimordialsErrorStackTrace, printObject } from './utils';
-import { writeFromIterableToStream } from './utils/stream';
-import type { AsyncIterableReturn, ObjectValue } from './utils/type';
+import { fixNodePrimordialsErrorStackTrace, printObject } from '../utils';
+import { writeFromIterableToStream } from '../utils/stream';
+import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
+import { createCompress as createBrotliCompress, createDecompress as createBrotliDecompress } from './brotli';
+import { createCompress as createGzipCompress, createDecompress as createGzipDecompress } from './gzip';
 
 interface CompressorTableEntry {
     createCompress: (options: never) => () => stream.Transform;
@@ -15,28 +16,17 @@ type Table2CompressOptions<T extends Record<string, CompressorTableEntry>> = Obj
         [P in keyof T]: { algorithm: P } & Exclude<Parameters<T[P]['createCompress']>[0], undefined>;
     }
 >;
-type GetOptions<T extends (options?: never) => stream.Transform> = (
+export type GetOptions<T extends (options?: never) => stream.Transform> = (
     T extends ((options?: infer U) => stream.Transform) ? U : never
 );
 
-const zlibDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info', 'maxOutputLength'] as const;
-type ZlibDisallowOptionName = (typeof zlibDisallowOptionNameList)[number];
-type GzipOptions = GetOptions<typeof createGzip>;
-type GzipDisallowedOptions = Omit<GzipOptions, ZlibDisallowOptionName>;
-
 const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record: T) => record)({
     gzip: {
-        createCompress: (zlibOptions: GzipDisallowedOptions) => {
-            const disallowOptionList = zlibDisallowOptionNameList.filter(optName => optName in zlibOptions);
-            if (disallowOptionList.length > 0) {
-                throw new Error(`The following compress options are not allowed: ${disallowOptionList.join(', ')}`);
-            }
-            return () => createGzip(zlibOptions);
-        },
-        createDecompress: createGunzip,
+        createCompress: createGzipCompress,
+        createDecompress: createGzipDecompress,
     },
     brotli: {
-        createCompress: (options: GetOptions<typeof createBrotliCompress>) => () => createBrotliCompress(options),
+        createCompress: createBrotliCompress,
         createDecompress: createBrotliDecompress,
     },
 });

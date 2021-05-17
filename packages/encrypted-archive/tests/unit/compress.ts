@@ -45,74 +45,126 @@ describe('createCompressor()', () => {
     });
 
     describe('not allowed options', () => {
-        it.each<[string, zlib.ZlibOptions]>([
-            ['info=true', { info: true }],
-            ['info=false', { info: false }],
-            ['info=undefined', { info: undefined }],
-        ])('%s', (_, options) => {
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: info`,
-            );
+        describe('gzip', () => {
+            const algorithm = 'gzip';
+
+            it.each<[string, zlib.ZlibOptions]>([
+                ['info=true', { info: true }],
+                ['info=false', { info: false }],
+                ['info=undefined', { info: undefined }],
+            ])('%s', (_, options) => {
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: info`,
+                );
+            });
+            it.each<[string, zlib.ZlibOptions]>([
+                ['flush=Z_FINISH', { flush: zlib.constants.Z_FINISH }],
+                ['flush=0', { flush: 0 }],
+                ['flush=undefined', { flush: undefined }],
+            ])('%s', (_, options) => {
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: flush`,
+                );
+            });
+            it.each<[string, zlib.ZlibOptions]>([
+                ['finishFlush=Z_BLOCK', { finishFlush: zlib.constants.Z_BLOCK }],
+                ['finishFlush=0', { finishFlush: 0 }],
+                ['finishFlush=undefined', { finishFlush: undefined }],
+            ])('%s', (_, options) => {
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: finishFlush`,
+                );
+            });
+            it('flush x finishFlush', () => {
+                const options: zlib.ZlibOptions = {
+                    flush: zlib.constants.Z_SYNC_FLUSH,
+                    finishFlush: undefined,
+                };
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: flush, finishFlush`,
+                );
+            });
+            it('flush x finishFlush x info', () => {
+                const options: zlib.ZlibOptions = {
+                    info: false,
+                    flush: zlib.constants.Z_SYNC_FLUSH,
+                    finishFlush: undefined,
+                };
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: flush, finishFlush, info`,
+                );
+            });
+            it('all', () => {
+                const options: zlib.ZlibOptions = {
+                    flush: undefined,
+                    finishFlush: undefined,
+                    chunkSize: undefined,
+                    windowBits: undefined,
+                    level: undefined,
+                    memLevel: undefined,
+                    strategy: undefined,
+                    dictionary: undefined,
+                    info: undefined,
+                    maxOutputLength: undefined,
+                };
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following gzip compress options are not allowed: flush, finishFlush, dictionary, info, maxOutputLength`,
+                );
+            });
         });
-        it.each<[string, zlib.ZlibOptions]>([
-            ['flush=Z_FINISH', { flush: zlib.constants.Z_FINISH }],
-            ['flush=0', { flush: 0 }],
-            ['flush=undefined', { flush: undefined }],
-        ])('%s', (_, options) => {
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: flush`,
-            );
-        });
-        it.each<[string, zlib.ZlibOptions]>([
-            ['finishFlush=Z_BLOCK', { finishFlush: zlib.constants.Z_BLOCK }],
-            ['finishFlush=0', { finishFlush: 0 }],
-            ['finishFlush=undefined', { finishFlush: undefined }],
-        ])('%s', (_, options) => {
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: finishFlush`,
-            );
-        });
-        it('flush x finishFlush', () => {
-            const options: zlib.ZlibOptions = {
-                flush: zlib.constants.Z_SYNC_FLUSH,
-                finishFlush: undefined,
-            };
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: flush, finishFlush`,
-            );
-        });
-        it('flush x finishFlush x info', () => {
-            const options: zlib.ZlibOptions = {
-                info: false,
-                flush: zlib.constants.Z_SYNC_FLUSH,
-                finishFlush: undefined,
-            };
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: flush, finishFlush, info`,
-            );
-        });
-        it('all', () => {
-            const options: zlib.ZlibOptions = {
-                flush: undefined,
-                finishFlush: undefined,
-                chunkSize: undefined,
-                windowBits: undefined,
-                level: undefined,
-                memLevel: undefined,
-                strategy: undefined,
-                dictionary: undefined,
-                info: undefined,
-                maxOutputLength: undefined,
-            };
-            expect(() => createCompressor({ ...options, algorithm: 'gzip' })).toThrowWithMessageFixed(
-                Error,
-                `The following compress options are not allowed: flush, finishFlush, dictionary, info, maxOutputLength`,
-            );
+
+        describe('brotli', () => {
+            const algorithm = 'brotli';
+
+            it.each<[string, zlib.BrotliOptions]>([
+                ['flush=BROTLI_OPERATION_PROCESS', { flush: zlib.constants.BROTLI_OPERATION_PROCESS }],
+                ['flush=0', { flush: 0 }],
+                ['flush=undefined', { flush: undefined }],
+            ])('%s', (_, options) => {
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following brotli compress options are not allowed: flush`,
+                );
+            });
+            it.each<[string, zlib.BrotliOptions]>([
+                ['finishFlush=BROTLI_OPERATION_FINISH', { finishFlush: zlib.constants.BROTLI_OPERATION_FINISH }],
+                ['finishFlush=0', { finishFlush: 0 }],
+                ['finishFlush=undefined', { finishFlush: undefined }],
+            ])('%s', (_, options) => {
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following brotli compress options are not allowed: finishFlush`,
+                );
+            });
+            it('flush x finishFlush', () => {
+                const options: zlib.BrotliOptions = {
+                    flush: zlib.constants.BROTLI_OPERATION_FLUSH,
+                    finishFlush: undefined,
+                };
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following brotli compress options are not allowed: flush, finishFlush`,
+                );
+            });
+            it('all', () => {
+                const options: zlib.BrotliOptions = {
+                    flush: undefined,
+                    finishFlush: undefined,
+                    chunkSize: undefined,
+                    params: undefined,
+                    maxOutputLength: undefined,
+                };
+                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
+                    Error,
+                    `The following brotli compress options are not allowed: flush, finishFlush, maxOutputLength`,
+                );
+            });
         });
     });
 });

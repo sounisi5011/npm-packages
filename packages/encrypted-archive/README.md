@@ -358,6 +358,10 @@ Currently, the following compression algorithm are supported:
         * `"brotli"`
 
     Other properties are passed to [brotli options].
+    However, the following properties are not allowed:
+    * `flush`
+    * `finishFlush`
+    * `maxOutputLength`
 
 ## Structure of the encrypted archive
 
