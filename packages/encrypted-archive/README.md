@@ -282,6 +282,86 @@ Type:
 
 ### `EncryptOptions`
 
+An object with the following properties:
+
+* [`algorithm`](#algorithm)
+* [`keyDerivation`](#keyderivation)
+* [`compress`](#compress)
+
+All properties are optional.
+
+#### `algorithm`
+
+Type: `CryptoAlgorithmName`
+
+An encryption algorithm name string. Specify one of the following:
+
+* `"aes-256-gcm"`
+* `"chacha20-poly1305"` (default)
+
+#### `keyDerivation`
+
+Type: `KeyDerivationOptions`
+
+[key derivation function]: https://en.wikipedia.org/wiki/Key_derivation_function
+
+An object with the [key derivation function] name and options.
+The key derivation function name is specified as a string in the `algorithm` property.
+The other properties are options for the key derivation function.
+
+Currently, the following key derivation functions are supported:
+
+[Argon2]: https://github.com/P-H-C/phc-winner-argon2
+
+* [Argon2]
+    * `algorithm`
+        * `"argon2d"` (default)
+        * `"argon2id"`
+    * `iterations`
+
+        Type: `number`
+
+        the number of iterations. default: `3`
+    * `memory`
+
+        Type: `number`
+
+        used memory, in KiB. default: `12`
+    * `parallelism`
+
+        Type: `number`
+
+        desired parallelism. default: `1`
+
+#### `compress`
+
+Type: `CompressOptionsWithString`
+
+A compression algorithm name string, or an options object for the compression algorithm.
+When specifying an object, the compression algorithm name is specified as a string in the `algorithm` property.
+The other properties are options for the compression algorithm.
+
+Currently, the following compression algorithm are supported:
+
+[zlib options]: https://nodejs.org/docs/latest/api/zlib.html#zlib_class_options
+[brotli options]: https://nodejs.org/docs/latest/api/zlib.html#zlib_class_brotlioptions
+
+* Gzip
+    * `algorithm`
+        * `"gzip"`
+
+    Other properties are passed to [zlib options].
+    However, the following properties are not allowed:
+    * `flush`
+    * `finishFlush`
+    * `dictionary`
+    * `info`
+* Brotli
+    * `algorithm`
+        * `"brotli"`
+
+    Other properties are passed to [brotli options].
+
 ## Structure of the encrypted archive
 
 see [`docs/encrypted-archive-structure.md`](./docs/encrypted-archive-structure.md)
