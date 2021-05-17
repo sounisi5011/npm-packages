@@ -12,6 +12,60 @@
 
 Convert data into a single encrypted archive data that contains all metadata needed for decryption.
 
+## Features
+
+* Only password and target data are required
+
+    Other data required for encryption (nonce, key derivation function, etc.) will be generated automatically.
+
+* Support for secure algorithms
+
+    This package supports only the following algorithms that are currently (2021) recommended.
+
+    * Encryption algorithm
+        * AES-GCM (256-bit)
+        * ChaCha20-Poly1305
+    * Key derivation function
+        * Argon2
+
+* A counter is used to generate the IV (Initialization Vector)
+
+    When encrypting with the same key, the **IV MUST NEVER be reused**.
+    However, there is a risk of generating the same IV when using random numbers.
+    In this package, IVs are counter-generated to avoid unintentional reuse of IVs.
+
+    See: [nonce-disrespect/nonce-disrespect: Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS](https://github.com/nonce-disrespect/nonce-disrespect)
+
+* Backward compatibility
+
+    [unsigned varint]: https://github.com/multiformats/unsigned-varint
+    [Protocol Buffers]: https://developers.google.com/protocol-buffers/
+
+    The data format uses [unsigned varint] and [Protocol Buffers].
+    High backward compatibility is maintained even when new features are added in the future.
+
+## Example of use
+
+* Generating a backup file
+* Private data files accessible through public URLs
+
+## Not recommended for use
+
+* Encryption of transmission data
+
+    If you encrypt a large amount of small data, there is a risk that the counter used to generate the IV will overflow.
+
+* Multi-processing and multi-threading
+
+    Currently, the counter used to generate IVs does not support different processes or threads. If used in multiple processes or threads, there is a danger of duplicate IVs.
+
+## Attention
+
+**I am not a security expert**.
+I have researched a lot of information in order to create this package.
+I believe that this package will be secure.
+However, there is a possibility that I am wrong.
+
 ## Installation
 
 ```sh
