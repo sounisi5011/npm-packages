@@ -3,13 +3,13 @@
  * This can be represented by 7 bytes of data.
  * @see https://262.ecma-international.org/10.0/#sec-time-values-and-time-range
  */
-const fixedFieldByteLength = 7;
+const FIXED_FIELD_BYTE_LENGTH = 7;
 
-const minCreateByteLength = fixedFieldByteLength + 2;
-const minUpdateByteLength = fixedFieldByteLength + 1;
-const maxByteLength = fixedFieldByteLength + 64 / 8;
+const MIN_CREATE_BYTE_LENGTH = FIXED_FIELD_BYTE_LENGTH + 2;
+const MIN_UPDATE_BYTE_LENGTH = FIXED_FIELD_BYTE_LENGTH + 1;
+const MAX_BYTE_LENGTH = FIXED_FIELD_BYTE_LENGTH + 64 / 8;
 
-const MAX_FIXED_FIELD_COUNT = BigInt(2) ** BigInt(fixedFieldByteLength * 8) - BigInt(1);
+const MAX_FIXED_FIELD_COUNT = BigInt(2) ** BigInt(FIXED_FIELD_BYTE_LENGTH * 8) - BigInt(1);
 
 /**
  * fixedFieldData (7 bytes unixtime) + invocationCount value ((byteLength - 7) bytes)
@@ -24,7 +24,7 @@ export class Nonce {
     }
 
     create(byteLength: number): Buffer {
-        this.validateLength({ byteLength }, minCreateByteLength, maxByteLength);
+        this.validateLength({ byteLength }, MIN_CREATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         return this.createNonceBytes({
             nonceByteLength: byteLength,
             fixedFieldData: this.fixedFieldData,
@@ -33,7 +33,7 @@ export class Nonce {
     }
 
     createFromInvocationCountDiff(prevNonce: Buffer | Uint8Array, addInvocationCount: bigint): Buffer {
-        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
+        this.validateLength({ prevNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         this.validateMore({ addInvocationCount }, 1);
 
         const { fixedFieldData, invocationCount } = this.parseNonceBytes(prevNonce);
@@ -49,7 +49,7 @@ export class Nonce {
         addFixedField: bigint,
         resetInvocationCount: bigint,
     ): Buffer {
-        this.validateLength({ prevNonce }, minUpdateByteLength, maxByteLength);
+        this.validateLength({ prevNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         this.validateMore({ addFixedField }, 1);
         this.validateMore({ resetInvocationCount }, 0);
 
@@ -65,7 +65,7 @@ export class Nonce {
         prevNonce: Buffer | Uint8Array,
         currentNonce: Buffer | Uint8Array,
     ): { invocationCount: bigint } | { fixedField: bigint; resetInvocationCount: bigint } {
-        this.validateLength({ prevNonce, currentNonce }, minUpdateByteLength, maxByteLength);
+        this.validateLength({ prevNonce, currentNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
 
         const { fixedFieldData: prevFixedFieldData, invocationCount: prevInvocationCount } = this.parseNonceBytes(
             prevNonce,
@@ -133,13 +133,13 @@ export class Nonce {
             invocationCount: bigint;
         },
     ): Buffer {
-        const invocationFieldByteLength = nonceByteLength - fixedFieldByteLength;
+        const invocationFieldByteLength = nonceByteLength - FIXED_FIELD_BYTE_LENGTH;
         const newInvocationCount = invocationCount & (BigInt(2) ** BigInt(invocationFieldByteLength * 8) - BigInt(1));
         const newFixedFieldData = fixedFieldData + (invocationCount >> BigInt(invocationFieldByteLength * 8));
         if (MAX_FIXED_FIELD_COUNT < newFixedFieldData) {
             throw new Error(
                 `Unable to create nonce. All bits are overflowing.${
-                    nonceByteLength < maxByteLength
+                    nonceByteLength < MAX_BYTE_LENGTH
                         ? ` Please increase the nonce bytes from current value. Received ${nonceByteLength}`
                         : ''
                 }`,
@@ -147,13 +147,13 @@ export class Nonce {
         }
 
         const newNonce = Buffer.alloc(nonceByteLength);
-        for (let index = 0; index < fixedFieldByteLength; index++) {
+        for (let index = 0; index < FIXED_FIELD_BYTE_LENGTH; index++) {
             newNonce[index] = Number(
                 newFixedFieldData >> BigInt(index * 8) & BigInt(0xFF),
             );
         }
         for (let index = 0; index < invocationFieldByteLength; index++) {
-            newNonce[fixedFieldByteLength + index] = Number(
+            newNonce[FIXED_FIELD_BYTE_LENGTH + index] = Number(
                 newInvocationCount >> BigInt(index * 8) & BigInt(0xFF),
             );
         }
@@ -167,10 +167,10 @@ export class Nonce {
         let invocationCount = BigInt(0);
 
         nonceBytes.forEach((byteCode, index) => {
-            if (index < fixedFieldByteLength) {
+            if (index < FIXED_FIELD_BYTE_LENGTH) {
                 fixedFieldData |= BigInt(byteCode) << BigInt(index * 8);
             } else {
-                invocationCount |= BigInt(byteCode) << BigInt((index - fixedFieldByteLength) * 8);
+                invocationCount |= BigInt(byteCode) << BigInt((index - FIXED_FIELD_BYTE_LENGTH) * 8);
             }
         });
 
