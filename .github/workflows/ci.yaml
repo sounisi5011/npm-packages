@@ -104,6 +104,13 @@ jobs:
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
+      - name: Check new files
+        if: ${{ always() }}
+        run: |
+          # Let "git diff" command recognize the new file.
+          # see https://stackoverflow.com/a/857696/4907315
+          git add -N .
+          git diff --name-only --exit-code
   unit-test:
     runs-on: ubuntu-latest
     strategy:
