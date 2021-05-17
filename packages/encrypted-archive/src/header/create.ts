@@ -1,7 +1,7 @@
 import { encode as varintEncode } from 'varint';
 
 import type { CryptoAlgorithmName } from '../cipher';
-import type { CompressAlgorithmName } from '../compress';
+import type { CompressOptions } from '../compress';
 import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
@@ -24,7 +24,7 @@ export interface HeaderData {
     salt: Uint8Array;
     keyLength: number;
     keyDerivationOptions: NormalizedKeyDerivationOptions;
-    compressAlgorithmName: CompressAlgorithmName | undefined;
+    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
 
 export interface HeaderDataWithCiphertextLength extends HeaderData {

@@ -1,7 +1,7 @@
 import type * as stream from 'stream';
 
 import type { CryptoAlgorithmName } from './cipher';
-import type { CompressAlgorithmName, CompressOptions, CompressOptionsWithString } from './compress';
+import type { CompressOptions } from './compress';
 import { createDecryptorIterator } from './decrypt';
 import { createEncryptorIterator, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
@@ -9,16 +9,7 @@ import type { InputDataType, IteratorConverter } from './types';
 import { asyncIterable2Buffer } from './utils';
 import gts from './utils/generator-transform-stream';
 
-export {
-    CompressAlgorithmName,
-    CompressOptions,
-    CompressOptionsWithString,
-    CryptoAlgorithmName,
-    EncryptOptions,
-    InputDataType,
-    IteratorConverter,
-    KeyDerivationOptions,
-};
+export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
 
 export async function encrypt(
     cleartext: InputDataType,

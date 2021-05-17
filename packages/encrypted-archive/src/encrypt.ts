@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
-import { CompressAlgorithmName, CompressOptionsWithString, createCompressor } from './compress';
+import { CompressOptions, createCompressor } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
@@ -13,7 +13,7 @@ import type { AsyncIterableReturn } from './utils/type';
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;
     keyDerivation?: KeyDerivationOptions;
-    compress?: CompressOptionsWithString;
+    compress?: CompressOptions | CompressOptions['algorithm'];
 }
 
 interface EncryptorState {
@@ -54,7 +54,7 @@ function createHeaderData(
         keyResult: KeyResult;
         nonce: Uint8Array;
         authTag: Uint8Array;
-        compressAlgorithmName: CompressAlgorithmName | undefined;
+        compressAlgorithmName: CompressOptions['algorithm'] | undefined;
         ciphertextLength: number;
         prevState: EncryptorState | undefined;
     },
@@ -90,7 +90,7 @@ async function* encryptChunk(compressedCleartext: Buffer, {
 }: {
     algorithm: CryptoAlgorithm;
     keyResult: KeyResult;
-    compressAlgorithmName: CompressAlgorithmName | undefined;
+    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
     prevState: EncryptorState | undefined;
 }): AsyncIterableReturn<Buffer, EncryptorState> {
     /**

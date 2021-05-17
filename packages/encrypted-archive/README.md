@@ -331,7 +331,7 @@ Currently, the following key derivation functions are supported:
 
 <h4 id="type-encrypt-options--compress"><code>compress</code></h4>
 
-Type: `CompressOptionsWithString`
+Type: `CompressOptions | CompressOptions['algorithm']`
 
 A compression algorithm name string, or an options object for the compression algorithm.
 When specifying an object, the compression algorithm name is specified as a string in the `algorithm` property.

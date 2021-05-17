@@ -1,5 +1,5 @@
 import { CryptoAlgorithm, cryptoAlgorithmMap } from './cipher';
-import { CompressAlgorithmName, decompressIterable } from './compress';
+import { CompressOptions, decompressIterable } from './compress';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -23,7 +23,7 @@ interface DecryptorMetadata {
     algorithm: CryptoAlgorithm;
     key: Uint8Array;
     nonce: Uint8Array | Buffer;
-    compressAlgorithmName: CompressAlgorithmName | undefined;
+    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
 
 async function getAlgorithmAndKey(

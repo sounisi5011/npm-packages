@@ -1,11 +1,6 @@
 import * as zlib from 'zlib';
 
-import {
-    CompressAlgorithmName,
-    CompressOptionsWithString,
-    createCompressor,
-    decompressIterable,
-} from '../../src/compress';
+import { CompressOptions, createCompressor, decompressIterable } from '../../src/compress';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 import '../helpers/jest-matchers';
@@ -14,11 +9,11 @@ describe('createCompressor()', () => {
     describe('compress data', () => {
         const data = Buffer.from('Hello World!'.repeat(20));
 
-        describe.each<CompressAlgorithmName>([
+        describe.each<CompressOptions['algorithm']>([
             'gzip',
             'brotli',
         ])('%s', algorithm => {
-            it.each<[string, CompressOptionsWithString]>([
+            it.each<[string, CompressOptions | CompressOptions['algorithm']]>([
                 ['string options', algorithm],
                 ['object options', { algorithm }],
             ])('%s', async (_, options) => {
@@ -42,7 +37,7 @@ describe('createCompressor()', () => {
     it('unknown algorithm', () => {
         const algorithm = 'foooooooooooooo';
 
-        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type 'CompressOptionsWithString | undefined'.
+        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli" | CompressOptions | undefined'.
         expect(() => createCompressor(algorithm)).toThrowWithMessageFixed(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
@@ -107,7 +102,7 @@ describe('createCompressor()', () => {
 describe('decompressIterable()', () => {
     describe('decompress data', () => {
         const data = Buffer.from('Hello World!'.repeat(20));
-        it.each<CompressAlgorithmName>([
+        it.each<CompressOptions['algorithm']>([
             'gzip',
             'brotli',
         ])('%s', async algorithm => {

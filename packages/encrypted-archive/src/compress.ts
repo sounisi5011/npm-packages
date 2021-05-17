@@ -42,11 +42,9 @@ const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record
 });
 
 export type CompressOptions = Table2CompressOptions<typeof compressorTable>;
-export type CompressAlgorithmName = CompressOptions['algorithm'];
-export type CompressOptionsWithString = CompressOptions | CompressAlgorithmName;
 
-export function createCompressor(options: CompressOptionsWithString | undefined): {
-    compressAlgorithmName: CompressAlgorithmName | undefined;
+export function createCompressor(options: CompressOptions | CompressOptions['algorithm'] | undefined): {
+    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
     compressIterable: (source: AsyncIterable<Buffer>) => AsyncIterableReturn<Buffer, void>;
 } {
     if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
@@ -77,7 +75,7 @@ export function createCompressor(options: CompressOptionsWithString | undefined)
 
 export async function* decompressIterable(
     data: Iterable<Buffer> | AsyncIterable<Buffer>,
-    algorithm: CompressAlgorithmName,
+    algorithm: CompressOptions['algorithm'],
 ): AsyncIterableReturn<Buffer, void> {
     const entry = compressorTable[algorithm];
     if (!entry) {

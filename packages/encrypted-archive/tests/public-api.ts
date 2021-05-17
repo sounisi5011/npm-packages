@@ -3,7 +3,7 @@ import * as stream from 'stream';
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 
 import {
-    CompressOptionsWithString,
+    CompressOptions,
     CryptoAlgorithmName,
     decrypt,
     encrypt,
@@ -135,7 +135,7 @@ describe('decrypt()', () => {
                 });
             });
             describe('compression', () => {
-                it.each<CompressOptionsWithString>([
+                it.each<CompressOptions | CompressOptions['algorithm']>([
                     'gzip',
                     'brotli',
                 ])('%s', async compressAlgorithm => {
