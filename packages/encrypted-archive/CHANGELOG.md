@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **encrypted-archive:** fix the settings and custom scripts for publishing ([#66](https://www.github.com/sounisi5011/npm-packages/issues/66)) ([4cf93e0](https://www.github.com/sounisi5011/npm-packages/commit/4cf93e0005d7d6e5db00c9e0ac57ec05c40e6eb7))
+
 ### 0.0.1 (2021-05-18)
 
 
