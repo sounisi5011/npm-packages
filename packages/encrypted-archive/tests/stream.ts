@@ -69,6 +69,7 @@ describe('encryptStream()', () => {
         it.each<[string, unknown]>([
             ['number', 42],
             ['object', { hoge: 'fuga' }],
+            // eslint-disable-next-line jest/no-identical-title
         ])('%s', async (_, chunk) => {
             const resultPromise = pipelineAsync(
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins
@@ -203,6 +204,7 @@ describe('decryptStream()', () => {
         it.each<[string, unknown]>([
             ['number', 42],
             ['object', { hoge: 'fuga' }],
+            // eslint-disable-next-line jest/no-identical-title
         ])('%s', async (_, chunk) => {
             const resultPromise = pipelineAsync(
                 // eslint-disable-next-line node/no-unsupported-features/node-builtins

@@ -62,6 +62,7 @@ describe('createCompressor()', () => {
                 ['flush=Z_FINISH', { flush: zlib.constants.Z_FINISH }],
                 ['flush=0', { flush: 0 }],
                 ['flush=undefined', { flush: undefined }],
+                // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
                 expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
                     Error,
@@ -72,6 +73,7 @@ describe('createCompressor()', () => {
                 ['finishFlush=Z_BLOCK', { finishFlush: zlib.constants.Z_BLOCK }],
                 ['finishFlush=0', { finishFlush: 0 }],
                 ['finishFlush=undefined', { finishFlush: undefined }],
+                // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
                 expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
                     Error,
@@ -136,6 +138,7 @@ describe('createCompressor()', () => {
                 ['finishFlush=BROTLI_OPERATION_FINISH', { finishFlush: zlib.constants.BROTLI_OPERATION_FINISH }],
                 ['finishFlush=0', { finishFlush: 0 }],
                 ['finishFlush=undefined', { finishFlush: undefined }],
+                // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
                 expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessageFixed(
                     Error,

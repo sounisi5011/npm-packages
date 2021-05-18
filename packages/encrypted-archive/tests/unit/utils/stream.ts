@@ -32,6 +32,7 @@ describe('class StreamReader', () => {
 
                 const expectedBuffer = Buffer.from(expected);
                 if (input.offset === undefined) {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     await expect(reader.read(input.size)).resolves
                         .toStrictEqual(expectedBuffer);
                 }
@@ -107,6 +108,7 @@ describe('class StreamReader', () => {
                 const reader = new StreamReader(targetStream);
 
                 const entryList: ReadEntry[] = [];
+                // eslint-disable-next-line jest/no-if
                 if (offset === undefined) {
                     for await (const entry of reader.readIterator(1)) {
                         entryList.push(entry);

@@ -1,11 +1,12 @@
 import { encode as varintEncode } from 'varint';
 
-import type { CryptoAlgorithmName } from '../cipher';
-import type { CompressOptions } from '../compress';
-import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
+
+import type { CryptoAlgorithmName } from '../cipher';
+import type { CompressOptions } from '../compress';
+import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
 
 export interface SimpleHeaderData {
     crypto: {

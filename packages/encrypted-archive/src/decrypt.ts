@@ -14,9 +14,10 @@ import {
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { StreamReader } from './utils/stream';
+
+import type { InputDataType, IteratorConverter } from './types';
 import type { AsyncIterableReturn } from './utils/type';
 
 interface DecryptorMetadata {
