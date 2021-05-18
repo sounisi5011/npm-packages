@@ -4,10 +4,6 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
-    // Node.js 12 and above almost supports features up to ES2019
-    // see https://node.green/#ES2019
-    // see https://www.staging-typescript.org/tsconfig#target
-    "target": "ES2019",
     "allowJs": true,
     "rootDir": "../",
     "noEmit": true,
