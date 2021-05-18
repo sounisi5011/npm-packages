@@ -62,11 +62,11 @@ importers:
       '@types/node': '*'
       '@vercel/ncc': 0.28.5
       find-git-root: ^1.0.4
-      workspace-tools: ^0.13.0
+      workspace-tools: ^0.15.0
     dependencies:
       '@actions/core': 1.2.6
       find-git-root: 1.0.4
-      workspace-tools: 0.13.0
+      workspace-tools: 0.15.0
     devDependencies:
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
@@ -879,7 +879,7 @@ packages:
     dependencies:
       '@pnpm/lockfile-types': 2.2.0
       ramda: 0.27.1
-      semver: 7.3.4
+      semver: 7.3.5
     dev: false
 
   /@pnpm/types/6.4.0:
@@ -6092,6 +6092,7 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
 
   /semver/7.3.5:
     resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
@@ -7060,8 +7061,8 @@ packages:
       typical: 5.2.0
     dev: true
 
-  /workspace-tools/0.13.0:
-    resolution: {integrity: sha512-z59TI9juILMp5NkdNbP3AGDz2ytgB+D1LlPImQfZJP4O9PWWkcyAmXviUPjhed4oKPF7YtZFH8Iv7pdLvzNvfA==}
+  /workspace-tools/0.15.0:
+    resolution: {integrity: sha512-KYSEKdqRJC3moABdCho03nSK4H9oqb6KtvGusGi5giR5oV1LilCRqem7STLRsZlnTJVTATv4nHnnioB+wSleDA==}
     dependencies:
       '@pnpm/lockfile-file': 3.2.1_@pnpm+logger@3.2.3
       '@pnpm/logger': 3.2.3
