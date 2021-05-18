@@ -140,15 +140,15 @@ importers:
 
   packages/ts-type-utils/has-own-property:
     specifiers:
-      tsd: 0.14.0
+      tsd: 0.15.1
     devDependencies:
-      tsd: 0.14.0
+      tsd: 0.15.1
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
-      tsd: 0.14.0
+      tsd: 0.15.1
     devDependencies:
-      tsd: 0.14.0
+      tsd: 0.15.1
 
   scripts/fix-flatbuffers-generated-ts:
     specifiers: {}
@@ -2652,9 +2652,9 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       ansi-escapes: 4.3.1
-      chalk: 4.1.0
+      chalk: 4.1.1
       eslint-rule-docs: 1.1.222
-      log-symbols: 4.0.0
+      log-symbols: 4.1.0
       plur: 4.0.0
       string-width: 4.2.2
       supports-hyperlinks: 2.1.0
@@ -3050,8 +3050,8 @@ packages:
       '@nodelib/fs.walk': 1.2.6
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.2
-      picomatch: 2.2.2
+      micromatch: 4.0.4
+      picomatch: 2.2.3
 
   /fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
@@ -3472,18 +3472,6 @@ packages:
       dir-glob: 3.0.1
       fast-glob: 3.2.5
       glob: 7.1.6
-      ignore: 5.1.8
-      merge2: 1.4.1
-      slash: 3.0.0
-    dev: true
-
-  /globby/11.0.2:
-    resolution: {integrity: sha512-2ZThXDvvV8fYFRVIxnrMQBipZQDr7MxKAmQK1vujaj9/7eF0efG7BPUKJ7jP7G5SLF37xKDXvO4S/KKLj/Z0og==}
-    engines: {node: '>=10'}
-    dependencies:
-      array-union: 2.1.0
-      dir-glob: 3.0.1
-      fast-glob: 3.2.5
       ignore: 5.1.8
       merge2: 1.4.1
       slash: 3.0.0
@@ -4918,13 +4906,6 @@ packages:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
-  /log-symbols/4.0.0:
-    resolution: {integrity: sha512-FN8JBzLx6CzeMrB0tg6pqlGU1wCrXW+ZXGH481kfsBqer0hToTIiHdjH4Mq8xJUbvATujKCvaREGWpGUionraA==}
-    engines: {node: '>=10'}
-    dependencies:
-      chalk: 4.1.0
-    dev: true
-
   /log-symbols/4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
@@ -5080,6 +5061,7 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.2.2
+    dev: true
 
   /micromatch/4.0.4:
     resolution: {integrity: sha512-pRmzw/XUcwXGpD9aI9q/0XOwLNygjETJ8y0ao0wdqprrzDa4YnxLcz7fQRZr8voh8V10kGhABbNcHVk5wHgWwg==}
@@ -5087,7 +5069,6 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.2.3
-    dev: true
 
   /mime-db/1.46.0:
     resolution: {integrity: sha512-svXaP8UQRZ5K7or+ZmfNhg2xX3yKDMUzqadsSqi4NCH/KomcH75MAMYAGVlvXn4+b/xOPhS3I2uHKRUzvjY7BQ==}
@@ -5678,11 +5659,11 @@ packages:
   /picomatch/2.2.2:
     resolution: {integrity: sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==}
     engines: {node: '>=8.6'}
+    dev: true
 
   /picomatch/2.2.3:
     resolution: {integrity: sha512-KpELjfwcCDUb9PeigTs2mBJzXUPzAuP2oPcA989He8Rte0+YUAjw1JVedDhuTKPkHjSYzMN3npC9luThGYEKdg==}
     engines: {node: '>=8.6'}
-    dev: true
 
   /pidtree/0.3.1:
     resolution: {integrity: sha512-qQbW94hLHEqCg7nhby4yRC7G2+jYHY4Rguc2bjw7Uug4GIJuu1tvf2uHaZv5Q8zdt+WKJ6qK1FOI6amaWUo5FA==}
@@ -6871,13 +6852,13 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd/0.14.0:
-    resolution: {integrity: sha512-fl1gS5orAwqIb0P2xMdppgCrwv1BfCJn67wBzRBCV9OUaWHVXHqiIqL6yX/519xFgT1ZOaLMhr5W9XDo8kuuRA==}
+  /tsd/0.15.1:
+    resolution: {integrity: sha512-8ADO2rPntfNiJV4KiqJiiiitfkXLxCbKEFN672JgwNiaEIuiyurTc1+w3InZ+0DqBz73B6Z3UflZcNGw5xMaDA==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
       eslint-formatter-pretty: 4.0.0
-      globby: 11.0.2
+      globby: 11.0.3
       meow: 7.1.1
       path-exists: 4.0.0
       read-pkg-up: 7.0.1
