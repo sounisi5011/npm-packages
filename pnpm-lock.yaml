@@ -60,7 +60,7 @@ importers:
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
-      '@vercel/ncc': 0.28.2
+      '@vercel/ncc': 0.28.5
       find-git-root: ^1.0.4
       workspace-tools: ^0.13.0
     dependencies:
@@ -71,7 +71,7 @@ importers:
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 14.14.33
-      '@vercel/ncc': 0.28.2
+      '@vercel/ncc': 0.28.5
 
   packages/encrypted-archive:
     specifiers:
@@ -1272,8 +1272,8 @@ packages:
       eslint-visitor-keys: 2.0.0
     dev: true
 
-  /@vercel/ncc/0.28.2:
-    resolution: {integrity: sha512-2ZBPviK9nFHzymu9POKGz50BRGGBIw7a8VcjgH73Xu2H4IvZx3KS0Qk/SS7S/N6iAalAGGxLSwFM1obeBGWXGg==}
+  /@vercel/ncc/0.28.5:
+    resolution: {integrity: sha512-ZSwD4EDCon2EsnPZ2/Qcigx4N2DiuBLV/rDnF04giEPFuDeBeUDdnSTyYYfX8KNic/prrJuS1vUEmAOHmj+fRg==}
     hasBin: true
     dev: true
 
