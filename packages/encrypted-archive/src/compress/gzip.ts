@@ -1,7 +1,8 @@
 import { createGunzip, createGzip } from 'zlib';
 
-import type { GetOptions } from '.';
 import { validateDisallowedOptions } from './utils';
+
+import type { GetOptions } from '.';
 
 const gzipDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info', 'maxOutputLength'] as const;
 type GzipDisallowOptionName = (typeof gzipDisallowOptionNameList)[number];

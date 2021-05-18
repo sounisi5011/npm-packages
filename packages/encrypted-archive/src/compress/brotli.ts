@@ -1,7 +1,8 @@
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
-import type { GetOptions } from '.';
 import { validateDisallowedOptions } from './utils';
+
+import type { GetOptions } from '.';
 
 const brotliDisallowOptionNameList = ['flush', 'finishFlush', 'maxOutputLength'] as const;
 type BrotliDisallowOptionName = (typeof brotliDisallowOptionNameList)[number];

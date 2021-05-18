@@ -1,10 +1,11 @@
 import { once } from 'events';
-import type * as stream from 'stream';
 
 import BufferListStream from 'bl';
 
 import { printObject } from '.';
+
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
+import type * as stream from 'stream';
 
 /**
  * Writes a value of type `Iterable` to a writable stream object.

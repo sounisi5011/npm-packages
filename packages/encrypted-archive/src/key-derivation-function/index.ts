@@ -1,8 +1,8 @@
-import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
-
-import type { InputDataType } from '../types';
 import { cond, printObject } from '../utils';
 import { Argon2Options, defaultOptions as defaultArgon2Options, getArgon2KDF, isArgon2Options } from './argon2';
+
+import type { InputDataType } from '../types';
+import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
 const defaultValue = {
     options: defaultArgon2Options,

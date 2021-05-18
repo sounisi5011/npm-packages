@@ -1,4 +1,5 @@
 import { getPropFromValue, printObject } from '../../utils';
+
 import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../utils/type';
 
 function reportNonDefinedField(opts: { fieldName: string; dataName: string }): never {

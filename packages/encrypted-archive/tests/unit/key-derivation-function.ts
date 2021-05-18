@@ -4,9 +4,11 @@ import * as util from 'util';
 import escapeStringRegexp from 'escape-string-regexp';
 
 import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
-import type { Argon2Options } from '../../src/key-derivation-function/argon2';
-import '../helpers/jest-matchers';
 import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
+
+import type { Argon2Options } from '../../src/key-derivation-function/argon2';
+
+import '../helpers/jest-matchers';
 
 /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L57 */
 const ARGON2_MIN_OUTLEN = 4;
@@ -198,6 +200,7 @@ describe('algorithm: Argon2', () => {
                 'zero': addNegativeNumber([0]),
                 'negative integer': [-1],
             }),
+            // eslint-disable-next-line jest/no-identical-title
         )('%s', (_, valueList) => {
             describe.each(valueList)('%p', value => {
                 it.each(optionNameList.map<[Argon2Opts, keyof Argon2Opts]>(optionName => [
