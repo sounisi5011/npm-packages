@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "allowJs": true,
+    "rootDir": "../",
+    "noEmit": true,
+
+    /* Module Resolution Options */
+    "types": ["node", "jest", "jest-extended"],
+
+    /* Advanced Options */
+    "resolveJsonModule": true
+  },
+  "include": ["./**/*", "../src/**/*", "../package.json"]
+}

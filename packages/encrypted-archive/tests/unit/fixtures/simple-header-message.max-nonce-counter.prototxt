@@ -1,0 +1,2 @@
+crypto_auth_tag: "\x07\x01\x04"
+crypto_nonce_counter_add_or_reset: 0xFFFFFFFFFFFFFFFE # It means +0xFFFFFFFFFFFFFFFF

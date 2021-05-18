@@ -88,19 +88,39 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run build
+      - name: Install flatbuffers
+        # https://snapcraft.io/flatbuffers
+        run: |
+          sudo snap install flatbuffers
+          flatc --version
+      - name: Setup Protocol Buffers compiler
+        uses: arduino/setup-protoc@v1
+        with:
+          version: 3.15.8
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show Protocol Buffers compiler version
+        run: protoc --version
+      - run: pnpx run-s build build-*
       - name: Check changes
+        if: ${{ always() }}
         run: git diff --name-only --exit-code
+      - name: Check new files
+        if: ${{ always() }}
+        run: |
+          # Let "git diff" command recognize the new file.
+          # see https://stackoverflow.com/a/857696/4907315
+          git add -N .
+          git diff --name-only --exit-code
   unit-test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node-version:
-          - 10.x
           - 12.x
           - 14.x
           - 15.x
+          - 16.x
     steps:
       - uses: actions/checkout@v2
       - name: Git Setting

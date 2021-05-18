@@ -7,7 +7,9 @@ extends:
   - plugin:promise/recommended
   - standard
 parserOptions:
-  ecmaVersion: 2018
+  # Node.js 12 and above almost supports features up to ES2019
+  # see https://node.green/#ES2019
+  ecmaVersion: 2019
 rules:
   import/newline-after-import: error
   import/no-extraneous-dependencies:
@@ -68,6 +70,11 @@ overrides:
         - config:
             <<: *dprint-config
             indentWidth: 4
+      # The "@typescript-eslint/no-floating-promises" rule requires a void operator to be used as a statement.
+      # see https://github.com/typescript-eslint/typescript-eslint/blob/v4.21.0/packages/eslint-plugin/docs/rules/no-floating-promises.md
+      no-void:
+        - error
+        - allowAsStatement: true
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
       node/no-missing-import: off
@@ -107,7 +114,12 @@ overrides:
       jest/prefer-todo: error
       jest/require-top-level-describe: error
       jest/valid-title: error
-  - files: scripts/*.js
+  - files: "**/examples/**"
+    rules:
+      node/no-missing-require: off
+  - files:
+      - .lintstagedrc.js
+      - scripts/*.js
     rules:
       import/no-extraneous-dependencies:
         - error

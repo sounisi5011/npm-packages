@@ -33,6 +33,7 @@ function getGlobbyOptions(globbyArgsSet) {
     absolute: globbyArgsSet.has('--absolute'),
     dot: globbyArgsSet.has('--dot'),
     gitignore: !globbyArgsSet.has('--no-gitignore'),
+    followSymbolicLinks: globbyArgsSet.has('--follow-symlink'),
   };
   if (globbyOptions.gitignore) {
     globbyOptions.ignore = (Array.isArray(globbyOptions.ignore) ? globbyOptions.ignore : []).concat('**/.git/**');
