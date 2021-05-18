@@ -36,6 +36,6 @@
     "test:tsd": "tsd"
   },
   "devDependencies": {
-    "tsd": "0.14.0"
+    "tsd": "0.15.1"
   }
 }
