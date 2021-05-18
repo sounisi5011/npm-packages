@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "find-git-root": "^1.0.4",
-    "workspace-tools": "^0.13.0"
+    "workspace-tools": "^0.15.0"
   },
   "devDependencies": {
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
