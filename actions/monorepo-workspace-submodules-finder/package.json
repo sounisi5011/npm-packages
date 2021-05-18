@@ -30,7 +30,7 @@
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/node": "*",
-    "@vercel/ncc": "0.28.2"
+    "@vercel/ncc": "0.28.5"
   },
   "engines": {
     "node": "12"
