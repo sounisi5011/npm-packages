@@ -96,7 +96,7 @@ importers:
       generator-transform-stream: ^1.0.1
       glob-exec: 0.1.1
       google-protobuf: ^3.15.8
-      grpc_tools_node_protoc_ts: 5.2.1
+      grpc_tools_node_protoc_ts: 5.2.2
       jest-extended: 0.11.5
       jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
@@ -126,7 +126,7 @@ importers:
       cpy-cli: 3.1.1
       escape-string-regexp: 4.0.0
       glob-exec: 0.1.1
-      grpc_tools_node_protoc_ts: 5.2.1
+      grpc_tools_node_protoc_ts: 5.2.2
       jest-extended: 0.11.5
       jest-matcher-utils: 26.6.2
       multicodec: 3.0.1
@@ -3535,16 +3535,16 @@ packages:
     dev: true
     optional: true
 
-  /grpc_tools_node_protoc_ts/5.2.1:
-    resolution: {integrity: sha512-6uXvrxHkl0ax2EZIqIGL7qcgIj9Nspi+gbuGPDN20/yS4a/jvWCCUxjF2XHwBK/AKdgL0pMpW0shnyhPNPiLsA==}
+  /grpc_tools_node_protoc_ts/5.2.2:
+    resolution: {integrity: sha512-j8waJdU9uzNSyYJfEAGFFJdxP2C3k7RNkgI1dXxLB/iaT+D54p/RX1Wo+cHH2wPhBSE8hnv+BUv7HuEVT/XLPw==}
     hasBin: true
     dependencies:
       google-protobuf: 3.15.8
-      handlebars: 4.7.6
+      handlebars: 4.7.7
     dev: true
 
-  /handlebars/4.7.6:
-    resolution: {integrity: sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==}
+  /handlebars/4.7.7:
+    resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}
     engines: {node: '>=0.4.7'}
     hasBin: true
     dependencies:
