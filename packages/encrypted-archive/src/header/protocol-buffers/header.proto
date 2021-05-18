@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+message Argon2Options {
+  enum Argon2Type {
+    Argon2d = 0;
+    Argon2id = 1;
+  }
+
+  Argon2Type type = 1;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
+  uint32 time_iterations = 2;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L300
+  uint32 memory_kib = 3;
+  // see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L301
+  uint32 parallelism = 4;
+}
+
+message Header {
+  enum CryptoAlgorithm {
+    AES_256_GCM = 0;
+    ChaCha20_Poly1305 = 1;
+  }
+  enum CompressAlgorithm {
+    None = 0;
+    Gzip = 1;
+    Brotli = 2;
+  }
+
+  CryptoAlgorithm crypto_algorithm = 1;
+  bytes crypto_nonce = 2;
+  bytes crypto_auth_tag = 3;
+  uint32 key_length = 4;
+  bytes key_salt = 5;
+  oneof key_options {
+    Argon2Options argon2_key_options = 15;
+  }
+  CompressAlgorithm compress_algorithm = 6;
+}
+
+message SimpleHeader {
+  bytes crypto_auth_tag = 1;
+
+  // The value to be added or reset to the counter included in the nonce.
+  // + If the "crypto_nonce_fixed_add" field does not exist or is zero, the value will be added to the previous counter.
+  //   The nonce must never be duplicated.
+  //   For this reason, the encryptor cannot specify a value that means "0".
+  //   Thus, the value is used as the count-up value with 1 added.
+  //   "0" (this is the default value) means increment, and "1" means add 2.
+  // + If the "crypto_nonce_fixed_add" field is greater than or equal to 1, the previous counter will be reset to this value.
+  //   If the fixed field is incremented, the counter can be reset to zero.
+  //   For this reason, the encryptor can specify a value that means "0".
+  uint64 crypto_nonce_counter_add_or_reset = 2 [jstype = JS_STRING];
+
+  // The value to be added to the fixed field included in the nonce.
+  // In most cases, there is no increase in the fixed field. The only exception is when a counter overflows.
+  // Therefore, unlike counters, the encryptor can specify a value that means "0" (this is the default value).
+  uint64 crypto_nonce_fixed_add = 3 [jstype = JS_STRING];
+}
