@@ -7,7 +7,9 @@ extends:
   - plugin:promise/recommended
   - standard
 parserOptions:
-  ecmaVersion: 2018
+  # Node.js 12 and above almost supports features up to ES2019
+  # see https://node.green/#ES2019
+  ecmaVersion: 2019
 rules:
   import/newline-after-import: error
   import/no-extraneous-dependencies:

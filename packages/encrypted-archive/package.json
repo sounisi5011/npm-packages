@@ -114,7 +114,7 @@
     "noop-stream": "0.1.0"
   },
   "engines": {
-    "node": "^12.3.0 || 14.x || 15.x || 16.x"
+    "node": "12.17.x || 14.x || 15.x || 16.x"
   },
   "runkitExampleFilename": "./examples/index.js"
 }
