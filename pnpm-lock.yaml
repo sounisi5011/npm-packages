@@ -89,7 +89,7 @@ importers:
       bl: ^5.0.0
       bytefield-svg: 1.5.0
       capitalize: ^2.0.3
-      combinate: 1.1.3
+      combinate: 1.1.4
       cpy-cli: 3.1.1
       duplexify: ^4.1.1
       escape-string-regexp: 4.0.0
@@ -122,7 +122,7 @@ importers:
       '@types/node': 14.14.33
       '@types/varint': 6.0.0
       bytefield-svg: 1.5.0
-      combinate: 1.1.3
+      combinate: 1.1.4
       cpy-cli: 3.1.1
       escape-string-regexp: 4.0.0
       glob-exec: 0.1.1
@@ -2058,8 +2058,8 @@ packages:
     resolution: {integrity: sha512-MKGMzyfeuutC/ZJ1cba9NqcNpfeqMUcYmyF1ZFY6/Cn7CNSAKx6a+s48sqLqyAiZuaP2TcqMhoo+dlwFnVxT9w==}
     dev: true
 
-  /combinate/1.1.3:
-    resolution: {integrity: sha512-wqYw7qFQSfFSIAaz5bjbqECn4VaHlgP9eK7ej+Oddft9yivphVE74bXKTAXzAEKUMIlJ8Jow120NLE6n1X3ceQ==}
+  /combinate/1.1.4:
+    resolution: {integrity: sha512-CPNH/aT1vPdHWCLNYRjzYmu7vHGQmpTmfQRiQEAT7tmnisFyhgTK37YxsaPU+l87D0ms4IGL7AmtWlra4poM3g==}
     dev: true
 
   /combined-stream/1.0.8:
