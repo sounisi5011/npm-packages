@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/scripts--globby-exec",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "bin": {
     "globby-exec": "index.js"
