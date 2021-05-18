@@ -172,6 +172,7 @@ describe('createSimpleHeader()', () => {
             it.each<[string, bigint, bigint]>([
                 ['addFixed must be greater than 0', min, min - BigInt(1)],
                 ['addFixed must be less than 2^64', max, max + BigInt(1)],
+                // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, safeValue, outValue) => {
                 expect(() =>
                     createSimpleHeader({
@@ -202,6 +203,7 @@ describe('createSimpleHeader()', () => {
             it.each<[string, bigint, bigint]>([
                 ['resetCounter must be greater than or equal to 0', min, min - BigInt(1)],
                 ['resetCounter must be less than 2^64', max, max + BigInt(1)],
+                // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, safeValue, outValue) => {
                 expect(() =>
                     createSimpleHeader({

@@ -1,11 +1,12 @@
 import { number2hex } from '../utils';
-import type { StreamReaderInterface } from '../utils/stream';
-import type { AsyncIterableReturn } from '../utils/type';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 import { Header, SimpleHeader } from './protocol-buffers/header_pb';
 import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
+
+import type { StreamReaderInterface } from '../utils/stream';
+import type { AsyncIterableReturn } from '../utils/type';
 
 export async function validateCID(reader: StreamReaderInterface): Promise<void> {
     const result = await readVarint(

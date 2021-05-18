@@ -4,10 +4,10 @@
 
     /* Basic Options */
     "incremental": true,
-    // Node.js 10 and above almost supports features up to ES2018
-    // see https://node.green/#ES2018
-    // see https://www.typescriptlang.org/v2/tsconfig#target
-    "target": "ES2018",
+    // Node.js 12 and above almost supports features up to ES2019
+    // see https://node.green/#ES2019
+    // see https://www.staging-typescript.org/tsconfig#target
+    "target": "ES2019",
     "module": "CommonJS",
     "declaration": true,
     "declarationMap": true,

@@ -1,6 +1,11 @@
 name: Find Workspace Submodules
 author: sounisi5011
 description: Get the path and package name of a node submodules in npm/yarn/pnpm workspaces
+inputs:
+  ignore-private:
+    description: If you want to exclude submodules whose "private" field is set to `true`, set this option to `true`
+    required: false
+    default: false
 outputs:
   result:
     description: JSON string of an array that includes the path and package name pairs of each submodule

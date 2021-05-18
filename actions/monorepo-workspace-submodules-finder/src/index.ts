@@ -1,11 +1,17 @@
 import { inspect } from 'util';
 
-import { setFailed, setOutput } from '@actions/core';
+import { getInput, setFailed, setOutput } from '@actions/core';
 
 import { getPackageDataList } from './main';
 
+function input2boolean(input: string): boolean {
+    return (input || 'false').toLowerCase() === 'true';
+}
+
 async function main(): Promise<void> {
-    const output = await getPackageDataList();
+    const ignorePrivate = input2boolean(getInput('ignore-private'));
+    const output = (await getPackageDataList())
+        .filter(data => !(ignorePrivate && data['is-private']));
     setOutput('result', output);
 }
 
