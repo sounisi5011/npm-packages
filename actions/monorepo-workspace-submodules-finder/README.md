@@ -9,6 +9,12 @@ All monorepos that are supported by [`workspace-tools@^0.12.3`](https://github.c
 * [pnpm workspaces](https://pnpm.js.org/workspaces/)
 * [rush](https://rushjs.io/)
 
+## Inputs
+
+### `ignore-private`
+
+If you want to exclude submodules whose [`"private"` field](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#private) is set to `true`, set this option to `true`.
+
 ## Outputs
 
 ### `result`
