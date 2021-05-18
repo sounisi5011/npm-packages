@@ -61,7 +61,7 @@
     "test": "./tests/"
   },
   "files": [
-    "./dist/"
+    "dist/"
   ],
   "scripts": {
     "build": "run-p build:*",
