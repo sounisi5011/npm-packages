@@ -4,8 +4,8 @@
 ![Supported Node.js version: ^12.17.x || 14.x || 15.x || 16.x](https://img.shields.io/node/v/@sounisi5011/encrypted-archive)
 [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-<!-- [![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/encrypted-archive)](https://bundlephobia.com/result?p=@sounisi5011/encrypted-archive) -->
-<!-- [![Install Size Details](https://packagephobia.com/badge?p=@sounisi5011/encrypted-archive)](https://packagephobia.com/result?p=@sounisi5011/encrypted-archive) -->
+[![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/encrypted-archive)](https://bundlephobia.com/result?p=@sounisi5011/encrypted-archive)
+[![Install Size Details](https://packagephobia.com/badge?p=@sounisi5011/encrypted-archive)](https://packagephobia.com/result?p=@sounisi5011/encrypted-archive)
 [![Dependencies Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fencrypted-archive)](https://david-dm.org/sounisi5011/npm-packages?path=packages/encrypted-archive)
 [![Build Status](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml/badge.svg)](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/26495b68302f7ff963c3/maintainability)](https://codeclimate.com/github/sounisi5011/npm-packages/maintainability)
