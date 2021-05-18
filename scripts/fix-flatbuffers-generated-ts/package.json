@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/scripts--fix-flatbuffers-generated-ts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "bin": {
     "fix-flatbuffers-generated-ts": "index.js"
