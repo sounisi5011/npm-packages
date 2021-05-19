@@ -138,6 +138,14 @@ importers:
     dependencies:
       '@sounisi5011/encrypted-archive': link:..
 
+  packages/stream-transform-from:
+    specifiers:
+      '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
+      '@types/node': 15.x
+    devDependencies:
+      '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
+      '@types/node': 15.3.0
+
   packages/ts-type-utils/has-own-property:
     specifiers:
       tsd: 0.15.1
@@ -1024,6 +1032,10 @@ packages:
 
   /@types/node/14.14.33:
     resolution: {integrity: sha512-oJqcTrgPUF29oUP8AsUqbXGJNuPutsetaa9kTQAQce5Lx5dTYWV02ScBiT/k1BX/Z7pKeqedmvp39Wu4zR7N7g==}
+
+  /@types/node/15.3.0:
+    resolution: {integrity: sha512-8/bnjSZD86ZfpBsDlCIkNXIvm+h6wi9g7IqL+kmFkQ+Wvu3JrasgLElfiPgoo8V8vVfnEi0QVS12gbl94h9YsQ==}
+    dev: true
 
   /@types/normalize-package-data/2.4.0:
     resolution: {integrity: sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==}
