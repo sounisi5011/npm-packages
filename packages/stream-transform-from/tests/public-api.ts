@@ -337,6 +337,84 @@ describe('break during transform', () => {
     });
 });
 
+describe('get data only when needed', () => {
+    interface LogType {
+        phase: number;
+        chunk: string;
+    }
+    const data = ['first', 'second', 'third', 'fourth', 'fifth'];
+    const outputData: readonly LogType[] = data.flatMap(chunk => [
+        { phase: -Infinity, chunk },
+        { phase: 1, chunk },
+        { phase: 2, chunk },
+        { phase: Infinity, chunk },
+    ]);
+
+    it('builtin Transform', async () => {
+        const loggerList: LogType[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            new stream.Transform({
+                transform(chunk, _encoding, done) {
+                    loggerList.push({ phase: -Infinity, chunk: chunk.toString('utf8') });
+                    done(null, chunk);
+                },
+            }),
+            new stream.Transform({
+                transform(chunk, _encoding, done) {
+                    loggerList.push({ phase: 1, chunk: chunk.toString('utf8') });
+                    done(null, chunk);
+                },
+            }),
+            new stream.Transform({
+                transform(chunk, _encoding, done) {
+                    loggerList.push({ phase: 2, chunk: chunk.toString('utf8') });
+                    done(null, chunk);
+                },
+            }),
+            new stream.Writable({
+                write(chunk, _, done) {
+                    loggerList.push({ phase: Infinity, chunk: chunk.toString('utf8') });
+                    done();
+                },
+            }),
+        );
+        expect(loggerList).toStrictEqual(outputData);
+    });
+
+    it('transformFrom()', async () => {
+        const loggerList: LogType[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            new stream.Transform({
+                transform(chunk, _encoding, done) {
+                    loggerList.push({ phase: -Infinity, chunk: chunk.toString('utf8') });
+                    done(null, chunk);
+                },
+            }),
+            transformFrom(async function*(source) {
+                for await (const chunk of source) {
+                    loggerList.push({ phase: 1, chunk: chunk.toString('utf8') });
+                    yield chunk;
+                }
+            }),
+            transformFrom(async function*(source) {
+                for await (const chunk of source) {
+                    loggerList.push({ phase: 2, chunk: chunk.toString('utf8') });
+                    yield chunk;
+                }
+            }),
+            new stream.Writable({
+                write(chunk, _, done) {
+                    loggerList.push({ phase: Infinity, chunk: chunk.toString('utf8') });
+                    done();
+                },
+            }),
+        );
+        expect(loggerList).toStrictEqual(outputData);
+    });
+});
+
 describe('throw error from Readable', () => {
     describe.each<[string, () => stream.Transform]>([
         [
