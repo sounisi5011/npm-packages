@@ -75,12 +75,12 @@ export class TransformFromAsyncIterable<
         })()
             // eslint-disable-next-line promise/always-return
             .then(() => {
-                this.callDoneFn();
                 this.isFinished = true;
+                this.callDoneFn();
             })
             .catch(error => {
-                this.pushError(error);
                 this.isFinished = true;
+                this.pushError(error);
             });
 
         return (this.source = source);
