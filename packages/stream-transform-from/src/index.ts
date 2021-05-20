@@ -59,16 +59,18 @@ export class TransformFromAsyncIterable<
 
         const source = createSource<InputChunkType<TOpts>>();
         const result = this.transformFn(source.iterator);
-        void (async () => {
-            try {
-                for await (const chunk of result) {
-                    this.pushChunk(chunk);
-                }
-                if (this.done) this.done();
-            } catch (error) {
-                this.pushError(error);
+        (async () => {
+            for await (const chunk of result) {
+                this.pushChunk(chunk);
             }
-        })();
+        })()
+            .then(() => {
+                // eslint-disable-next-line promise/always-return
+                if (this.done) this.done();
+            })
+            .catch(error => {
+                this.pushError(error);
+            });
 
         return (this.source = source);
     }
