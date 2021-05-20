@@ -3,6 +3,10 @@ import { promisify } from 'util';
 
 import { transformFrom } from '../src';
 
+function assertType<T>(_: T): void {
+    //
+}
+
 function createNoopWritable(opts?: Omit<stream.WritableOptions, 'write'>): stream.Writable {
     return new stream.Writable({
         ...opts,
@@ -189,6 +193,62 @@ describe('transforms objects', () => {
     });
 });
 
+describe('split chunks', () => {
+    const data = [
+        'line1',
+        'line2\nline3',
+        '',
+        'line4\n\nline5\n',
+        '\nline6\n\n',
+    ];
+    const outputData = [
+        Buffer.from('line1'),
+        Buffer.from('line2'),
+        Buffer.from('line3'),
+        Buffer.from('line4'),
+        Buffer.from('line5'),
+        Buffer.from('line6'),
+    ];
+
+    it.each<[string, () => stream.Transform]>([
+        [
+            'builtin Transform',
+            () =>
+                new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        const lineList = (chunk.toString('utf8') as string)
+                            .split(/\n+/)
+                            .filter(line => line !== '');
+                        for (const line of lineList) {
+                            this.push(line);
+                        }
+                        done();
+                    },
+                }),
+        ],
+        [
+            'transformFrom()',
+            () =>
+                transformFrom(async function*(source) {
+                    for await (const chunk of source) {
+                        const lineList = chunk.toString('utf8')
+                            .split(/\n+/)
+                            .filter(line => line !== '');
+                        yield* lineList;
+                    }
+                }),
+        ],
+    ])('%s', async (_, createTransform) => {
+        const outputChunkList: unknown[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            createTransform(),
+            createOutputWritable(outputChunkList),
+        );
+        expect(outputChunkList).toStrictEqual(outputData);
+    });
+});
+
 describe('break during transform', () => {
     const data = ['first', 'second', 'third', 'fourth', 'fifth'];
     const outputData = [Buffer.from('first'), Buffer.from('second'), Buffer.from('third')];
@@ -327,6 +387,132 @@ describe('throw error from Transform', () => {
     });
 });
 
+describe('source iterator contains only Buffer objects', () => {
+    describe.each(
+        [
+            {},
+            {
+                objectMode: false,
+                readableObjectMode: false,
+                writableObjectMode: false,
+            },
+            {
+                objectMode: false,
+                readableObjectMode: true,
+                writableObjectMode: false,
+            },
+        ] as const,
+    )('options: %p', options => {
+        const data = ['first', 'second', 'third'];
+
+        it('builtin Transform', async () => {
+            expect.assertions(data.length);
+            await promisify(stream.pipeline)(
+                stream.Readable.from(data),
+                new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        expect(chunk).toBeInstanceOf(Buffer);
+                        done(null, '');
+                    },
+                    ...options,
+                }),
+                createNoopWritable(),
+            );
+        });
+
+        it('transformFrom()', async () => {
+            expect.assertions(data.length);
+            await promisify(stream.pipeline)(
+                stream.Readable.from(data),
+                transformFrom(
+                    async function*(source) {
+                        for await (const chunk of source) {
+                            assertType<Buffer>(chunk);
+                            expect(chunk).toBeInstanceOf(Buffer);
+                            yield '';
+                        }
+                    },
+                    options,
+                ),
+                createNoopWritable(),
+            );
+        });
+    });
+});
+
+describe('source iterator contains more than just Buffer objects', () => {
+    describe.each(
+        [
+            {
+                objectMode: false,
+                readableObjectMode: false,
+                writableObjectMode: true,
+            },
+            {
+                objectMode: false,
+                readableObjectMode: true,
+                writableObjectMode: true,
+            },
+            {
+                objectMode: true,
+                readableObjectMode: false,
+                writableObjectMode: false,
+            },
+            {
+                objectMode: true,
+                readableObjectMode: true,
+                writableObjectMode: false,
+            },
+            {
+                objectMode: true,
+                readableObjectMode: false,
+                writableObjectMode: true,
+            },
+            {
+                objectMode: true,
+                readableObjectMode: true,
+                writableObjectMode: true,
+            },
+        ] as const,
+    )('options: %p', options => {
+        const data = ['first', 'second', 'third'];
+
+        it('builtin Transform', async () => {
+            expect.assertions(data.length);
+            await promisify(stream.pipeline)(
+                stream.Readable.from(data),
+                new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        expect(chunk).not.toBeInstanceOf(Buffer);
+                        done(null, '');
+                    },
+                    ...options,
+                }),
+                createNoopWritable(),
+            );
+        });
+
+        it('transformFrom()', async () => {
+            expect.assertions(data.length);
+            await promisify(stream.pipeline)(
+                stream.Readable.from(data),
+                transformFrom(
+                    async function*(source) {
+                        for await (const chunk of source) {
+                            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Buffer'.
+                            assertType<Buffer>(chunk);
+                            expect(chunk).not.toBeInstanceOf(Buffer);
+                            yield '';
+                        }
+                    },
+                    options,
+                ),
+                createNoopWritable(),
+            );
+        });
+    });
+});
+
 describe('can return non-buffer value', () => {
     describe.each(
         [
@@ -413,6 +599,9 @@ describe('can return non-buffer value', () => {
 describe('can not return non-buffer value', () => {
     describe.each(
         [
+            {},
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            {} as { objectMode: true },
             {
                 objectMode: false,
                 readableObjectMode: false,
