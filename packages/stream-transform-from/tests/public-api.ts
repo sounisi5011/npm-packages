@@ -249,6 +249,49 @@ describe('split chunks', () => {
     });
 });
 
+describe('merge chunks', () => {
+    const data = ['first', 'second', 'third'];
+    const outputData = [Buffer.from(data.join('\n'))];
+
+    it.each<[string, () => stream.Transform]>([
+        [
+            'builtin Transform',
+            () => {
+                const chunkList: Buffer[] = [];
+                return new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        chunkList.push(chunk);
+                        done();
+                    },
+                    flush(done) {
+                        this.push(chunkList.join('\n'));
+                        done();
+                    },
+                });
+            },
+        ],
+        [
+            'transformFrom()',
+            () =>
+                transformFrom(async function*(source) {
+                    const chunkList: Buffer[] = [];
+                    for await (const chunk of source) {
+                        chunkList.push(chunk);
+                    }
+                    yield chunkList.join('\n');
+                }),
+        ],
+    ])('%s', async (_, createTransform) => {
+        const outputChunkList: unknown[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            createTransform(),
+            createOutputWritable(outputChunkList),
+        );
+        expect(outputChunkList).toStrictEqual(outputData);
+    });
+});
+
 describe('break during transform', () => {
     const data = ['first', 'second', 'third', 'fourth', 'fifth'];
     const outputData = [Buffer.from('first'), Buffer.from('second'), Buffer.from('third')];
