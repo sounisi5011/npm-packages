@@ -4,13 +4,14 @@ import { createSource, SourceResult } from './utils';
 
 import type * as stream from 'stream';
 
+type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undefined;
+
 /**
  * If the `objectMode` and `writableObjectMode` options is not `true`,
  * the chunk value is always an instance of Buffer.
  */
 type InputChunkType<T extends stream.TransformOptions> = (
-    T extends ({ objectMode: true } | { writableObjectMode: true }) ? unknown
-        : Buffer
+    true extends (GetPropValue<T, 'objectMode'> | GetPropValue<T, 'writableObjectMode'>) ? unknown : Buffer
 );
 
 type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
@@ -30,7 +31,7 @@ type TransformFunction<TOpts extends stream.TransformOptions> = (
 ) => Iterable<OutputChunkType<TOpts>> | AsyncIterable<OutputChunkType<TOpts>>;
 
 export class TransformFromAsyncIterable<
-    TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'>
+    TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
 > extends Transform {
     private source: SourceResult<InputChunkType<TOpts>> | undefined;
     private transformCallback: stream.TransformCallback | undefined;
@@ -107,7 +108,9 @@ export class TransformFromAsyncIterable<
     }
 }
 
-export function transformFrom<TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'>>(
+export function transformFrom<
+    TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
+>(
     transformFn: TransformFunction<TOpts>,
     options?: TOpts,
 ): stream.Transform {
