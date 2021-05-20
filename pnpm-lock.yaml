@@ -148,6 +148,12 @@ importers:
       '@types/node': 15.3.0
       tsd: 0.15.1
 
+  packages/stream-transform-from/examples:
+    specifiers:
+      '@sounisi5011/stream-transform-from': link:..
+    dependencies:
+      '@sounisi5011/stream-transform-from': link:..
+
   packages/ts-type-utils/has-own-property:
     specifiers:
       tsd: 0.15.1
