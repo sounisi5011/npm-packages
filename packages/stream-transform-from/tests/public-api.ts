@@ -1,26 +1,6 @@
 import * as stream from 'stream';
 import { promisify } from 'util';
 
-async function createPipeline(
-    opts: {
-        readableInput: Iterable<unknown> | AsyncIterable<unknown> | (() => Iterable<unknown> | AsyncIterable<unknown>);
-        transform: stream.Transform;
-        writable?: stream.Writable;
-    },
-): Promise<void> {
-    const readableInput = typeof opts.readableInput === 'function' ? opts.readableInput() : opts.readableInput;
-    return opts.writable
-        ? await promisify(stream.pipeline)(
-            stream.Readable.from(readableInput),
-            opts.transform,
-            opts.writable,
-        )
-        : await promisify(stream.pipeline)(
-            stream.Readable.from(readableInput),
-            opts.transform,
-        );
-}
-
 function createNoopWritable(opts?: Omit<stream.WritableOptions, 'write'>): stream.Writable {
     return new stream.Writable({
         ...opts,
@@ -59,11 +39,11 @@ describe('passes though chunks', () => {
         ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
-        await createPipeline({
-            readableInput: data,
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
             transform,
-            writable: createOutputWritable(outputChunkList),
-        });
+            createOutputWritable(outputChunkList),
+        );
         expect(outputChunkList).toStrictEqual(outputData);
     });
 });
@@ -88,11 +68,11 @@ describe('transforms chunks', () => {
         ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
-        await createPipeline({
-            readableInput: data,
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
             transform,
-            writable: createOutputWritable(outputChunkList),
-        });
+            createOutputWritable(outputChunkList),
+        );
         expect(outputChunkList).toStrictEqual(outputData);
     });
 });
@@ -113,11 +93,11 @@ describe('passes through objects', () => {
         ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
-        await createPipeline({
-            readableInput: data,
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
             transform,
-            writable: createOutputWritable(outputChunkList, { objectMode: true }),
-        });
+            createOutputWritable(outputChunkList, { objectMode: true }),
+        );
         expect(outputChunkList).toStrictEqual(data);
     });
 });
@@ -139,11 +119,11 @@ describe('transforms objects', () => {
         ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
-        await createPipeline({
-            readableInput: data,
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
             transform,
-            writable: createOutputWritable(outputChunkList, { objectMode: true }),
-        });
+            createOutputWritable(outputChunkList, { objectMode: true }),
+        );
         expect(outputChunkList).toStrictEqual(outputData);
     });
 });
@@ -168,18 +148,18 @@ describe('throw error from Readable', () => {
         it.each<[string, Promise<void>]>([
             [
                 'pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(readableInput()),
                     transform,
-                    writable: createNoopWritable(),
-                }),
+                    createNoopWritable(),
+                ),
             ],
             [
                 'not pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(readableInput()),
                     transform,
-                }),
+                ),
             ],
         ])('%s', async (_, resultPromise) => {
             await expect(resultPromise).rejects.toThrow(Error);
@@ -199,23 +179,23 @@ describe('throw error from Transform', () => {
             }),
         ],
     ])('%s', (_, transform) => {
-        const readableInput = [''];
+        const data = [''];
 
         it.each<[string, Promise<void>]>([
             [
                 'pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                    writable: createNoopWritable(),
-                }),
+                    createNoopWritable(),
+                ),
             ],
             [
                 'not pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                }),
+                ),
             ],
         ])('%s', async (_, resultPromise) => {
             await expect(resultPromise).rejects.toThrow(Error);
@@ -299,23 +279,23 @@ describe('can return non-buffer value', () => {
             }),
         ],
     ])('%s', (_, transform) => {
-        const readableInput = [''];
+        const data = [''];
 
         it.each<[string, Promise<void>]>([
             [
                 'pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                    writable: createNoopWritable({ objectMode: true }),
-                }),
+                    createNoopWritable({ objectMode: true }),
+                ),
             ],
             [
                 'not pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                }),
+                ),
             ],
         ])('%s', async (_, resultPromise) => {
             await expect(resultPromise).resolves.not.toThrow();
@@ -350,23 +330,23 @@ describe('can not return non-buffer value', () => {
             }),
         ],
     ])('%s', (_, transform) => {
-        const readableInput = [''];
+        const data = [''];
 
         it.each<[string, Promise<void>]>([
             [
                 'pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                    writable: createNoopWritable({ objectMode: true }),
-                }),
+                    createNoopWritable({ objectMode: true }),
+                ),
             ],
             [
                 'not pipe to WritableStream',
-                createPipeline({
-                    readableInput,
+                promisify(stream.pipeline)(
+                    stream.Readable.from(data),
                     transform,
-                }),
+                ),
             ],
         ])('%s', async (_, resultPromise) => {
             await expect(resultPromise).rejects.toThrow(
