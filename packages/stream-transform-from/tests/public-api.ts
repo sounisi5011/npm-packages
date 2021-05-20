@@ -29,27 +29,29 @@ describe('passes though chunks', () => {
     const data = ['first', 'second', 'third'];
     const outputData = data.map(str => Buffer.from(str));
 
-    it.each<[string, stream.Transform]>([
+    it.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(chunk, encoding, done) {
-                    this.push(chunk, encoding);
-                    done();
-                },
-            }),
+            () =>
+                new stream.Transform({
+                    transform(chunk, encoding, done) {
+                        this.push(chunk, encoding);
+                        done();
+                    },
+                }),
         ],
         [
             'transformFrom()',
-            transformFrom(async function*(source) {
-                yield* source;
-            }),
+            () =>
+                transformFrom(async function*(source) {
+                    yield* source;
+                }),
         ],
-    ])('%s', async (_, transform) => {
+    ])('%s', async (_, createTransform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
             stream.Readable.from(data),
-            transform,
+            createTransform(),
             createOutputWritable(outputChunkList),
         );
         expect(outputChunkList).toStrictEqual(outputData);
@@ -60,37 +62,39 @@ describe('transforms chunks', () => {
     const data = ['first', 'second', 'third'];
     const outputData = data.map(str => Buffer.from(`(${str})`));
 
-    it.each<[string, stream.Transform]>([
+    it.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(chunk, _encoding, done) {
-                    this.push(Buffer.concat([
-                        Buffer.from('('),
-                        chunk,
-                        Buffer.from(')'),
-                    ]));
-                    done();
-                },
-            }),
+            () =>
+                new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        this.push(Buffer.concat([
+                            Buffer.from('('),
+                            chunk,
+                            Buffer.from(')'),
+                        ]));
+                        done();
+                    },
+                }),
         ],
         [
             'transformFrom()',
-            transformFrom(async function*(source) {
-                for await (const chunk of source) {
-                    yield Buffer.concat([
-                        Buffer.from('('),
-                        chunk,
-                        Buffer.from(')'),
-                    ]);
-                }
-            }),
+            () =>
+                transformFrom(async function*(source) {
+                    for await (const chunk of source) {
+                        yield Buffer.concat([
+                            Buffer.from('('),
+                            chunk,
+                            Buffer.from(')'),
+                        ]);
+                    }
+                }),
         ],
-    ])('%s', async (_, transform) => {
+    ])('%s', async (_, createTransform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
             stream.Readable.from(data),
-            transform,
+            createTransform(),
             createOutputWritable(outputChunkList),
         );
         expect(outputChunkList).toStrictEqual(outputData);
@@ -100,31 +104,33 @@ describe('transforms chunks', () => {
 describe('passes through objects', () => {
     const data = [{ name: 'first' }, { name: 'second' }, { name: 'third' }];
 
-    it.each<[string, stream.Transform]>([
+    it.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(obj, _encoding, done) {
-                    this.push(obj);
-                    done();
-                },
-                objectMode: true,
-            }),
+            () =>
+                new stream.Transform({
+                    transform(obj, _encoding, done) {
+                        this.push(obj);
+                        done();
+                    },
+                    objectMode: true,
+                }),
         ],
         [
             'transformFrom()',
-            transformFrom(
-                async function*(source) {
-                    yield* source;
-                },
-                { objectMode: true },
-            ),
+            () =>
+                transformFrom(
+                    async function*(source) {
+                        yield* source;
+                    },
+                    { objectMode: true },
+                ),
         ],
-    ])('%s', async (_, transform) => {
+    ])('%s', async (_, createTransform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
             stream.Readable.from(data),
-            transform,
+            createTransform(),
             createOutputWritable(outputChunkList, { objectMode: true }),
         );
         expect(outputChunkList).toStrictEqual(data);
@@ -135,46 +141,48 @@ describe('transforms objects', () => {
     const data = [{ name: 'first' }, { name: 'second' }, { name: 'third' }];
     const outputData = [['first'], ['second'], ['third']];
 
-    it.each<[string, stream.Transform]>([
+    it.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(obj, _encoding, done) {
-                    this.push([obj.name]);
-                    done();
-                },
-                objectMode: true,
-            }),
+            () =>
+                new stream.Transform({
+                    transform(obj, _encoding, done) {
+                        this.push([obj.name]);
+                        done();
+                    },
+                    objectMode: true,
+                }),
         ],
         [
             'transformFrom()',
-            transformFrom(
-                async function*(source) {
-                    // eslint-disable-next-line @typescript-eslint/ban-types
-                    function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
-                        return propName in obj;
-                    }
-                    function validateChunk(chunk: unknown): chunk is { name: string } {
-                        if (typeof chunk !== 'object' || chunk === null) return false;
-                        if (!hasProp(chunk, 'name')) return false;
-                        return typeof chunk.name === 'string';
-                    }
-
-                    for await (const obj of source) {
-                        if (!validateChunk(obj)) {
-                            throw new Error('Invalid chunk!');
+            () =>
+                transformFrom(
+                    async function*(source) {
+                        // eslint-disable-next-line @typescript-eslint/ban-types
+                        function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
+                            return propName in obj;
                         }
-                        yield [obj.name];
-                    }
-                },
-                { objectMode: true },
-            ),
+                        function validateChunk(chunk: unknown): chunk is { name: string } {
+                            if (typeof chunk !== 'object' || chunk === null) return false;
+                            if (!hasProp(chunk, 'name')) return false;
+                            return typeof chunk.name === 'string';
+                        }
+
+                        for await (const obj of source) {
+                            if (!validateChunk(obj)) {
+                                throw new Error('Invalid chunk!');
+                            }
+                            yield [obj.name];
+                        }
+                    },
+                    { objectMode: true },
+                ),
         ],
-    ])('%s', async (_, transform) => {
+    ])('%s', async (_, createTransform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
             stream.Readable.from(data),
-            transform,
+            createTransform(),
             createOutputWritable(outputChunkList, { objectMode: true }),
         );
         expect(outputChunkList).toStrictEqual(outputData);
@@ -182,23 +190,25 @@ describe('transforms objects', () => {
 });
 
 describe('throw error from Readable', () => {
-    describe.each<[string, stream.Transform]>([
+    describe.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(chunk, encoding, done) {
-                    this.push(chunk, encoding);
-                    done();
-                },
-            }),
+            () =>
+                new stream.Transform({
+                    transform(chunk, encoding, done) {
+                        this.push(chunk, encoding);
+                        done();
+                    },
+                }),
         ],
         [
             'transformFrom()',
-            transformFrom(async function*(source) {
-                yield* source;
-            }),
+            () =>
+                transformFrom(async function*(source) {
+                    yield* source;
+                }),
         ],
-    ])('%s', (_, transform) => {
+    ])('%s', (_, createTransform) => {
         const readableInput = function*(): Iterable<unknown> {
             yield '';
             throw new Error('foo');
@@ -209,7 +219,7 @@ describe('throw error from Readable', () => {
                 'pipe to WritableStream',
                 promisify(stream.pipeline)(
                     stream.Readable.from(readableInput()),
-                    transform,
+                    createTransform(),
                     createNoopWritable(),
                 ),
             ],
@@ -217,7 +227,7 @@ describe('throw error from Readable', () => {
                 'not pipe to WritableStream',
                 promisify(stream.pipeline)(
                     stream.Readable.from(readableInput()),
-                    transform,
+                    createTransform(),
                 ),
             ],
         ])('%s', async (_, resultPromise) => {
@@ -228,23 +238,25 @@ describe('throw error from Readable', () => {
 });
 
 describe('throw error from Transform', () => {
-    describe.each<[string, stream.Transform]>([
+    describe.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    done(new Error('bar'));
-                },
-            }),
+            () =>
+                new stream.Transform({
+                    transform(_chunk, _encoding, done) {
+                        done(new Error('bar'));
+                    },
+                }),
         ],
         [
             'transformFrom()',
-            // eslint-disable-next-line require-yield
-            transformFrom(async function*() {
-                throw new Error('bar');
-            }),
+            () =>
+                // eslint-disable-next-line require-yield
+                transformFrom(async function*() {
+                    throw new Error('bar');
+                }),
         ],
-    ])('%s', (_, transform) => {
+    ])('%s', (_, createTransform) => {
         const data = [''];
 
         it.each<[string, Promise<void>]>([
@@ -252,7 +264,7 @@ describe('throw error from Transform', () => {
                 'pipe to WritableStream',
                 promisify(stream.pipeline)(
                     stream.Readable.from(data),
-                    transform,
+                    createTransform(),
                     createNoopWritable(),
                 ),
             ],
@@ -260,7 +272,7 @@ describe('throw error from Transform', () => {
                 'not pipe to WritableStream',
                 promisify(stream.pipeline)(
                     stream.Readable.from(data),
-                    transform,
+                    createTransform(),
                 ),
             ],
         ])('%s', async (_, resultPromise) => {
@@ -271,259 +283,150 @@ describe('throw error from Transform', () => {
 });
 
 describe('can return non-buffer value', () => {
-    describe.each<[string, stream.Transform]>([
+    describe.each(
         [
-            'builtin Transform / only readableObjectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            {
                 objectMode: false,
                 readableObjectMode: true,
                 writableObjectMode: false,
-            }),
-        ],
-        [
-            'transformFrom() / only readableObjectMode=true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: false,
-                    readableObjectMode: true,
-                    writableObjectMode: false,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / readableObjectMode=true writableObjectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: false,
                 readableObjectMode: true,
                 writableObjectMode: true,
-            }),
-        ],
-        [
-            'transformFrom() / readableObjectMode=true writableObjectMode=true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: false,
-                    readableObjectMode: true,
-                    writableObjectMode: true,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / only objectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: true,
                 readableObjectMode: false,
                 writableObjectMode: false,
-            }),
-        ],
-        [
-            'transformFrom() / only objectMode=true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: true,
-                    readableObjectMode: false,
-                    writableObjectMode: false,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / objectMode=true readableObjectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: true,
                 readableObjectMode: true,
                 writableObjectMode: false,
-            }),
-        ],
-        [
-            'transformFrom() / objectMode=true readableObjectMode=true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: true,
-                    readableObjectMode: true,
-                    writableObjectMode: false,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / objectMode=true writableObjectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: true,
                 readableObjectMode: false,
                 writableObjectMode: true,
-            }),
-        ],
-        [
-            'transformFrom() / objectMode=true writableObjectMode=true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: true,
-                    readableObjectMode: false,
-                    writableObjectMode: true,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / all true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: true,
                 readableObjectMode: true,
                 writableObjectMode: true,
-            }),
-        ],
-        [
-            'transformFrom() / all true',
-            transformFrom(
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: true,
-                    readableObjectMode: true,
-                    writableObjectMode: true,
-                },
-            ),
-        ],
-    ])('%s', (_, transform) => {
-        const data = [''];
+            },
+        ] as const,
+    )('options: %p', options => {
+        describe.each<[string, () => stream.Transform]>([
+            [
+                'builtin Transform',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            this.push(42);
+                            done();
+                        },
+                        ...options,
+                    }),
+            ],
+            [
+                'transformFrom()',
+                () =>
+                    transformFrom(
+                        async function*() {
+                            yield 42;
+                        },
+                        options,
+                    ),
+            ],
+        ])('%s', (_, createTransform) => {
+            const data = [''];
 
-        it.each<[string, Promise<void>]>([
-            [
-                'pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    transform,
-                    createNoopWritable({ objectMode: true }),
-                ),
-            ],
-            [
-                'not pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    transform,
-                ),
-            ],
-        ])('%s', async (_, resultPromise) => {
-            await expect(resultPromise).resolves.not.toThrow();
+            it.each<[string, Promise<void>]>([
+                [
+                    'pipe to WritableStream',
+                    promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        createTransform(),
+                        createNoopWritable({ objectMode: true }),
+                    ),
+                ],
+                [
+                    'not pipe to WritableStream',
+                    promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        createTransform(),
+                    ),
+                ],
+            ])('%s', async (_, resultPromise) => {
+                await expect(resultPromise).resolves.not.toThrow();
+            });
         });
     });
 });
 
 describe('can not return non-buffer value', () => {
-    describe.each<[string, stream.Transform]>([
+    describe.each(
         [
-            'builtin Transform / all false',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            {
                 objectMode: false,
                 readableObjectMode: false,
                 writableObjectMode: false,
-            }),
-        ],
-        [
-            'transformFrom() / all false',
-            transformFrom(
-                // @ts-expect-error TS2345: Argument of type '() => AsyncGenerator<number, void, any>' is not assignable to parameter of type '(source: AsyncIterableIterator<unknown>) => Iterable<string | Buffer | Uint8Array> | AsyncIterable<string | Buffer | Uint8Array>'.
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: false,
-                    readableObjectMode: false,
-                    writableObjectMode: false,
-                },
-            ),
-        ],
-        [
-            'builtin Transform / only writableObjectMode=true',
-            new stream.Transform({
-                transform(_chunk, _encoding, done) {
-                    this.push(42);
-                    done();
-                },
+            },
+            {
                 objectMode: false,
                 readableObjectMode: false,
                 writableObjectMode: true,
-            }),
-        ],
-        [
-            'transformFrom() / only writableObjectMode=true',
-            transformFrom(
-                // @ts-expect-error TS2345: Argument of type '() => AsyncGenerator<number, void, any>' is not assignable to parameter of type '(source: AsyncIterableIterator<unknown>) => Iterable<string | Buffer | Uint8Array> | AsyncIterable<string | Buffer | Uint8Array>'.
-                async function*() {
-                    yield 42;
-                },
-                {
-                    objectMode: false,
-                    readableObjectMode: false,
-                    writableObjectMode: true,
-                },
-            ),
-        ],
-    ])('%s', (_, transform) => {
-        const data = [''];
+            },
+        ] as const,
+    )('options: %p', options => {
+        describe.each<[string, () => stream.Transform]>([
+            [
+                'builtin Transform',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            this.push(42);
+                            done();
+                        },
+                        ...options,
+                    }),
+            ],
+            [
+                'transformFrom()',
+                () =>
+                    transformFrom(
+                        // @ts-expect-error TS2345: Argument of type '() => AsyncGenerator<number, void, any>' is not assignable to parameter of type '(source: AsyncIterableIterator<unknown>) => Iterable<string | Buffer | Uint8Array> | AsyncIterable<string | Buffer | Uint8Array>'.
+                        async function*() {
+                            yield 42;
+                        },
+                        options,
+                    ),
+            ],
+        ])('%s', (_, createTransform) => {
+            const data = [''];
 
-        it.each<[string, Promise<void>]>([
-            [
-                'pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    transform,
-                    createNoopWritable({ objectMode: true }),
-                ),
-            ],
-            [
-                'not pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    transform,
-                ),
-            ],
-        ])('%s', async (_, resultPromise) => {
-            await expect(resultPromise).rejects.toThrow(
-                /^The "chunk" argument must be of type string or an instance of Buffer or Uint8Array\. Received type number \(42\)$/,
-            );
+            it.each<[string, Promise<void>]>([
+                [
+                    'pipe to WritableStream',
+                    promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        createTransform(),
+                        createNoopWritable({ objectMode: true }),
+                    ),
+                ],
+                [
+                    'not pipe to WritableStream',
+                    promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        createTransform(),
+                    ),
+                ],
+            ])('%s', async (_, resultPromise) => {
+                await expect(resultPromise).rejects.toThrow(
+                    /^The "chunk" argument must be of type string or an instance of Buffer or Uint8Array\. Received type number \(42\)$/,
+                );
+            });
         });
     });
 });
