@@ -1,6 +1,8 @@
 import * as stream from 'stream';
 import { promisify } from 'util';
 
+import { transformFrom } from '../src';
+
 function createNoopWritable(opts?: Omit<stream.WritableOptions, 'write'>): stream.Writable {
     return new stream.Writable({
         ...opts,
@@ -37,6 +39,12 @@ describe('passes though chunks', () => {
                 },
             }),
         ],
+        [
+            'transformFrom()',
+            transformFrom(async function*(source) {
+                yield* source;
+            }),
+        ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
@@ -66,6 +74,18 @@ describe('transforms chunks', () => {
                 },
             }),
         ],
+        [
+            'transformFrom()',
+            transformFrom(async function*(source) {
+                for await (const chunk of source) {
+                    yield Buffer.concat([
+                        Buffer.from('('),
+                        chunk,
+                        Buffer.from(')'),
+                    ]);
+                }
+            }),
+        ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
@@ -90,6 +110,15 @@ describe('passes through objects', () => {
                 },
                 objectMode: true,
             }),
+        ],
+        [
+            'transformFrom()',
+            transformFrom(
+                async function*(source) {
+                    yield* source;
+                },
+                { objectMode: true },
+            ),
         ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
@@ -117,6 +146,30 @@ describe('transforms objects', () => {
                 objectMode: true,
             }),
         ],
+        [
+            'transformFrom()',
+            transformFrom(
+                async function*(source) {
+                    // eslint-disable-next-line @typescript-eslint/ban-types
+                    function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
+                        return propName in obj;
+                    }
+                    function validateChunk(chunk: unknown): chunk is { name: string } {
+                        if (typeof chunk !== 'object' || chunk === null) return false;
+                        if (!hasProp(chunk, 'name')) return false;
+                        return typeof chunk.name === 'string';
+                    }
+
+                    for await (const obj of source) {
+                        if (!validateChunk(obj)) {
+                            throw new Error('Invalid chunk!');
+                        }
+                        yield [obj.name];
+                    }
+                },
+                { objectMode: true },
+            ),
+        ],
     ])('%s', async (_, transform) => {
         const outputChunkList: unknown[] = [];
         await promisify(stream.pipeline)(
@@ -137,6 +190,12 @@ describe('throw error from Readable', () => {
                     this.push(chunk, encoding);
                     done();
                 },
+            }),
+        ],
+        [
+            'transformFrom()',
+            transformFrom(async function*(source) {
+                yield* source;
             }),
         ],
     ])('%s', (_, transform) => {
@@ -176,6 +235,13 @@ describe('throw error from Transform', () => {
                 transform(_chunk, _encoding, done) {
                     done(new Error('bar'));
                 },
+            }),
+        ],
+        [
+            'transformFrom()',
+            // eslint-disable-next-line require-yield
+            transformFrom(async function*() {
+                throw new Error('bar');
             }),
         ],
     ])('%s', (_, transform) => {
@@ -219,6 +285,19 @@ describe('can return non-buffer value', () => {
             }),
         ],
         [
+            'transformFrom() / only readableObjectMode=true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: false,
+                    readableObjectMode: true,
+                    writableObjectMode: false,
+                },
+            ),
+        ],
+        [
             'builtin Transform / readableObjectMode=true writableObjectMode=true',
             new stream.Transform({
                 transform(_chunk, _encoding, done) {
@@ -229,6 +308,19 @@ describe('can return non-buffer value', () => {
                 readableObjectMode: true,
                 writableObjectMode: true,
             }),
+        ],
+        [
+            'transformFrom() / readableObjectMode=true writableObjectMode=true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: false,
+                    readableObjectMode: true,
+                    writableObjectMode: true,
+                },
+            ),
         ],
         [
             'builtin Transform / only objectMode=true',
@@ -243,6 +335,19 @@ describe('can return non-buffer value', () => {
             }),
         ],
         [
+            'transformFrom() / only objectMode=true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: true,
+                    readableObjectMode: false,
+                    writableObjectMode: false,
+                },
+            ),
+        ],
+        [
             'builtin Transform / objectMode=true readableObjectMode=true',
             new stream.Transform({
                 transform(_chunk, _encoding, done) {
@@ -253,6 +358,19 @@ describe('can return non-buffer value', () => {
                 readableObjectMode: true,
                 writableObjectMode: false,
             }),
+        ],
+        [
+            'transformFrom() / objectMode=true readableObjectMode=true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: true,
+                    readableObjectMode: true,
+                    writableObjectMode: false,
+                },
+            ),
         ],
         [
             'builtin Transform / objectMode=true writableObjectMode=true',
@@ -267,6 +385,19 @@ describe('can return non-buffer value', () => {
             }),
         ],
         [
+            'transformFrom() / objectMode=true writableObjectMode=true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: true,
+                    readableObjectMode: false,
+                    writableObjectMode: true,
+                },
+            ),
+        ],
+        [
             'builtin Transform / all true',
             new stream.Transform({
                 transform(_chunk, _encoding, done) {
@@ -277,6 +408,19 @@ describe('can return non-buffer value', () => {
                 readableObjectMode: true,
                 writableObjectMode: true,
             }),
+        ],
+        [
+            'transformFrom() / all true',
+            transformFrom(
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: true,
+                    readableObjectMode: true,
+                    writableObjectMode: true,
+                },
+            ),
         ],
     ])('%s', (_, transform) => {
         const data = [''];
@@ -318,6 +462,20 @@ describe('can not return non-buffer value', () => {
             }),
         ],
         [
+            'transformFrom() / all false',
+            transformFrom(
+                // @ts-expect-error TS2345: Argument of type '() => AsyncGenerator<number, void, any>' is not assignable to parameter of type '(source: AsyncIterableIterator<unknown>) => Iterable<string | Buffer | Uint8Array> | AsyncIterable<string | Buffer | Uint8Array>'.
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: false,
+                    readableObjectMode: false,
+                    writableObjectMode: false,
+                },
+            ),
+        ],
+        [
             'builtin Transform / only writableObjectMode=true',
             new stream.Transform({
                 transform(_chunk, _encoding, done) {
@@ -328,6 +486,20 @@ describe('can not return non-buffer value', () => {
                 readableObjectMode: false,
                 writableObjectMode: true,
             }),
+        ],
+        [
+            'transformFrom() / only writableObjectMode=true',
+            transformFrom(
+                // @ts-expect-error TS2345: Argument of type '() => AsyncGenerator<number, void, any>' is not assignable to parameter of type '(source: AsyncIterableIterator<unknown>) => Iterable<string | Buffer | Uint8Array> | AsyncIterable<string | Buffer | Uint8Array>'.
+                async function*() {
+                    yield 42;
+                },
+                {
+                    objectMode: false,
+                    readableObjectMode: false,
+                    writableObjectMode: true,
+                },
+            ),
         ],
     ])('%s', (_, transform) => {
         const data = [''];
