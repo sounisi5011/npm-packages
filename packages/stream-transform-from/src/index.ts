@@ -13,15 +13,17 @@ type InputChunkType<T extends stream.TransformOptions> = (
         : Buffer
 );
 
+type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
+
 /**
  * If the `objectMode` and `readableObjectMode` options is not `true`,
  * the chunk value must be of type string or an instance of Buffer or Uint8Array.
  * @see https://github.com/nodejs/node/blob/v12.17.0/lib/_stream_readable.js#L226-L244
  */
-type OutputChunkType<T extends stream.TransformOptions> = (
-    T extends ({ objectMode: true } | { readableObjectMode: true }) ? unknown
+type OutputChunkType<T extends stream.TransformOptions> = IfNeverThenUnknown<
+    T extends ({ objectMode: true } | { readableObjectMode: true }) ? never
         : string | Buffer | Uint8Array
-);
+>;
 
 type TransformFunction<TOpts extends stream.TransformOptions> = (
     source: AsyncIterableIterator<InputChunkType<TOpts>>,
