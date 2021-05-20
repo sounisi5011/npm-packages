@@ -189,6 +189,51 @@ describe('transforms objects', () => {
     });
 });
 
+describe('break during transform', () => {
+    const data = ['first', 'second', 'third', 'fourth', 'fifth'];
+    const outputData = [Buffer.from('first'), Buffer.from('second'), Buffer.from('third')];
+
+    it.each<[string, () => stream.Transform]>([
+        [
+            'builtin Transform',
+            () => {
+                let finished = false;
+                return new stream.Transform({
+                    transform(chunk, _encoding, done) {
+                        if (!finished) {
+                            this.push(chunk);
+                        }
+                        if (chunk.toString('utf8') === 'third') {
+                            finished = true;
+                        }
+                        done();
+                    },
+                });
+            },
+        ],
+        [
+            'transformFrom()',
+            () =>
+                transformFrom(async function*(source) {
+                    for await (const chunk of source) {
+                        yield chunk;
+                        if (chunk.toString('utf8') === 'third') {
+                            break;
+                        }
+                    }
+                }),
+        ],
+    ])('%s', async (_, createTransform) => {
+        const outputChunkList: unknown[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            createTransform(),
+            createOutputWritable(outputChunkList),
+        );
+        expect(outputChunkList).toStrictEqual(outputData);
+    });
+});
+
 describe('throw error from Readable', () => {
     describe.each<[string, () => stream.Transform]>([
         [
