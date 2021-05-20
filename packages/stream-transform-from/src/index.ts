@@ -1,5 +1,7 @@
 import { Transform } from 'stream';
 
+import { createSource, SourceResult } from './utils';
+
 import type * as stream from 'stream';
 
 /**
@@ -25,15 +27,11 @@ type TransformFunction<TOpts extends stream.TransformOptions> = (
     source: AsyncIterableIterator<InputChunkType<TOpts>>,
 ) => Iterable<OutputChunkType<TOpts>> | AsyncIterable<OutputChunkType<TOpts>>;
 
-type InputData<TOpts extends stream.TransformOptions> =
-    | { chunk: InputChunkType<TOpts>; done?: false }
-    | { done: true };
-
 export class TransformFromAsyncIterable<
     TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'>
 > extends Transform {
+    private source: SourceResult<InputChunkType<TOpts>> | undefined;
     private done: stream.TransformCallback | undefined;
-    private transformInput: ((data: InputData<TOpts>) => void) | undefined;
 
     constructor(
         private readonly transformFn: TransformFunction<TOpts>,
@@ -48,52 +46,31 @@ export class TransformFromAsyncIterable<
         callback: stream.TransformCallback,
     ): void {
         this.done = callback;
-        this.setInput({ chunk });
+        this.getSource().emit(chunk);
     }
 
     _flush(callback: stream.TransformCallback): void {
         this.done = callback;
-        this.setInput({ done: true });
+        this.getSource().end();
     }
 
-    private setInput(inputData: InputData<TOpts>): void {
-        if (this.transformInput) {
-            this.transformInput(inputData);
-            return;
-        }
+    private getSource(): SourceResult<InputChunkType<TOpts>> {
+        if (this.source) return this.source;
 
-        const source = this.createSource(inputData);
-        const result = this.transformFn(source);
+        const source = createSource<InputChunkType<TOpts>>();
+        const result = this.transformFn(source.iterator);
         void (async () => {
             try {
                 for await (const chunk of result) {
                     this.pushChunk(chunk);
                 }
+                if (this.done) this.done();
             } catch (error) {
                 this.pushError(error);
             }
         })();
-    }
 
-    private async *createSource(
-        parentInputData: InputData<TOpts> | undefined,
-    ): AsyncIterableIterator<InputChunkType<TOpts>> {
-        while (true) {
-            const inputPromise = new Promise<InputData<TOpts>>(resolve => {
-                this.transformInput = resolve;
-            });
-
-            if (parentInputData) {
-                const inputData = parentInputData;
-                parentInputData = undefined;
-                if (inputData.done) break;
-                yield inputData.chunk;
-            }
-
-            const inputData = await inputPromise;
-            if (inputData.done) break;
-            yield inputData.chunk;
-        }
+        return (this.source = source);
     }
 
     private pushChunk(chunk: OutputChunkType<TOpts>): void {
