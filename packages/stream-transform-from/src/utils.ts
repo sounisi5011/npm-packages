@@ -8,7 +8,7 @@ export interface SourceResult<T> {
     iterator: AsyncIterableIterator<T>;
 }
 
-export function createSource<T>(): SourceResult<T> {
+export function createSource<T>(requestValueCallback?: () => void): SourceResult<T> {
     let resolver: ((data: Data<T>) => void) | undefined;
     const dataList: Array<Data<T>> = [];
 
@@ -33,6 +33,7 @@ export function createSource<T>(): SourceResult<T> {
             while (true) {
                 const data = dataList.shift() ?? await new Promise<Data<T>>(resolve => {
                     resolver = resolve;
+                    if (requestValueCallback) requestValueCallback();
                 });
                 if (data.done) break;
                 yield data.value;

@@ -68,23 +68,19 @@ export class TransformFromAsyncIterable<
     private getSource(): SourceResult<InputChunkType<TOpts>> {
         if (this.source) return this.source;
 
-        const source = createSource<InputChunkType<TOpts>>();
+        const source = createSource<InputChunkType<TOpts>>(
+            this.callTransformCallback.bind(this),
+        );
         const result = this.transformFn(source.iterator);
         (async () => {
             for await (const chunk of result) {
-                this.pushChunk(chunk);
+                this.push(chunk);
             }
         })()
             .then(() => this.finish())
             .catch(error => this.finish(error));
 
         return (this.source = source);
-    }
-
-    private pushChunk(chunk: OutputChunkType<TOpts>): void {
-        if (!this.callTransformCallback(null, chunk)) {
-            this.push(chunk);
-        }
     }
 
     private finish(error?: Error): void {
