@@ -142,9 +142,11 @@ importers:
     specifiers:
       '@sounisi5011/scripts--run-if-supported-node': workspace:^0.0.0
       '@types/node': 15.x
+      tsd: 0.15.1
     devDependencies:
       '@sounisi5011/scripts--run-if-supported-node': link:../../scripts/run-if-supported-node
       '@types/node': 15.3.0
+      tsd: 0.15.1
 
   packages/ts-type-utils/has-own-property:
     specifiers:
