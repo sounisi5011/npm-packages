@@ -32,6 +32,7 @@ export class TransformFromAsyncIterable<
 > extends Transform {
     private source: SourceResult<InputChunkType<TOpts>> | undefined;
     private done: stream.TransformCallback | undefined;
+    private isFinished = false;
 
     constructor(
         private readonly transformFn: TransformFunction<TOpts>,
@@ -45,13 +46,21 @@ export class TransformFromAsyncIterable<
         _encoding: BufferEncoding,
         callback: stream.TransformCallback,
     ): void {
-        this.done = callback;
-        this.getSource().emit(chunk);
+        if (this.isFinished) {
+            callback();
+        } else {
+            this.done = callback;
+            this.getSource().emit(chunk);
+        }
     }
 
     _flush(callback: stream.TransformCallback): void {
-        this.done = callback;
-        this.getSource().end();
+        if (this.isFinished) {
+            callback();
+        } else {
+            this.done = callback;
+            this.getSource().end();
+        }
     }
 
     private getSource(): SourceResult<InputChunkType<TOpts>> {
@@ -64,31 +73,39 @@ export class TransformFromAsyncIterable<
                 this.pushChunk(chunk);
             }
         })()
+            // eslint-disable-next-line promise/always-return
             .then(() => {
-                // eslint-disable-next-line promise/always-return
-                if (this.done) this.done();
+                this.callDoneFn();
+                this.isFinished = true;
             })
             .catch(error => {
                 this.pushError(error);
+                this.isFinished = true;
             });
 
         return (this.source = source);
     }
 
     private pushChunk(chunk: OutputChunkType<TOpts>): void {
-        if (this.done) {
-            this.done(null, chunk);
-        } else {
+        if (!this.callDoneFn(null, chunk)) {
             this.push(chunk);
         }
     }
 
     private pushError(error: Error): void {
-        if (this.done) {
-            this.done(error);
-        } else {
+        if (!this.callDoneFn(error)) {
             this.destroy(error);
         }
+    }
+
+    private callDoneFn(...args: Parameters<stream.TransformCallback>): boolean {
+        const { done } = this;
+        if (done) {
+            this.done = undefined;
+            done(...args);
+            return true;
+        }
+        return false;
     }
 }
 
