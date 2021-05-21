@@ -33,15 +33,24 @@ type TransformFunction<TOpts extends stream.TransformOptions> = (
 export class TransformFromAsyncIterable<
     TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
 > extends Transform {
-    private source: SourceResult<InputChunkType<TOpts>> | undefined;
+    private readonly source: SourceResult<InputChunkType<TOpts>>;
     private transformCallback: stream.TransformCallback | undefined;
     private isFinished = false;
 
-    constructor(
-        private readonly transformFn: TransformFunction<TOpts>,
-        opts?: TOpts,
-    ) {
+    constructor(transformFn: TransformFunction<TOpts>, opts?: TOpts) {
         super(opts);
+
+        this.source = createSource(() => {
+            this.callTransformCallback();
+        });
+        const result = transformFn(this.source.iterator);
+        (async () => {
+            for await (const chunk of result) {
+                this.push(chunk);
+            }
+        })()
+            .then(() => this.finish())
+            .catch(error => this.finish(error));
     }
 
     _transform(
@@ -53,7 +62,7 @@ export class TransformFromAsyncIterable<
             callback();
         } else {
             this.transformCallback = callback;
-            this.getSource().emit(chunk);
+            this.source.emit(chunk);
         }
     }
 
@@ -62,26 +71,8 @@ export class TransformFromAsyncIterable<
             callback();
         } else {
             this.transformCallback = callback;
-            this.getSource().end();
+            this.source.end();
         }
-    }
-
-    private getSource(): SourceResult<InputChunkType<TOpts>> {
-        if (this.source) return this.source;
-
-        const source = createSource<InputChunkType<TOpts>>(
-            this.callTransformCallback.bind(this),
-        );
-        const result = this.transformFn(source.iterator);
-        (async () => {
-            for await (const chunk of result) {
-                this.push(chunk);
-            }
-        })()
-            .then(() => this.finish())
-            .catch(error => this.finish(error));
-
-        return (this.source = source);
     }
 
     private finish(error?: Error): void {
