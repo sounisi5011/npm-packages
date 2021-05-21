@@ -83,9 +83,8 @@ export class TransformFromAsyncIterable<
                 this.destroy(error);
             }
         } else {
-            if (!this.callTransformCallback(null, null)) {
-                this.push(null);
-            }
+            this.push(null);
+            this.callTransformCallback();
         }
     }
 
