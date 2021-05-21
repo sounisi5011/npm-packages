@@ -25,11 +25,11 @@ type OutputChunkType<T extends stream.TransformOptions> = IfNeverThenUnknown<
 >;
 
 type TransformFunction<TOpts extends stream.TransformOptions> = (
-    source: AsyncIterableIterator<InputChunkType<TOpts>>,
+    source: AsyncIterableIterator<{ chunk: InputChunkType<TOpts>; encoding: BufferEncoding }>,
 ) => Iterable<OutputChunkType<TOpts>> | AsyncIterable<OutputChunkType<TOpts>>;
 
 type ReceivedData<TOpts extends stream.TransformOptions> =
-    | { chunk: InputChunkType<TOpts>; done?: false }
+    | { chunk: InputChunkType<TOpts>; encoding: BufferEncoding; done?: false }
     | { done: true };
 
 export class TransformFromAsyncIterable<
@@ -56,14 +56,14 @@ export class TransformFromAsyncIterable<
 
     _transform(
         chunk: InputChunkType<TOpts>,
-        _encoding: BufferEncoding,
+        encoding: BufferEncoding,
         callback: stream.TransformCallback,
     ): void {
         if (this.isFinished) {
             callback();
         } else {
             this.transformCallback = callback;
-            this.emitToSource({ chunk });
+            this.emitToSource({ chunk, encoding });
         }
     }
 
@@ -98,14 +98,15 @@ export class TransformFromAsyncIterable<
         return false;
     }
 
-    private async *createSource(): AsyncIterableIterator<InputChunkType<TOpts>> {
+    private async *createSource(): AsyncIterableIterator<{ chunk: InputChunkType<TOpts>; encoding: BufferEncoding }> {
         while (true) {
             const data = this.receivedDataList.shift() ?? await new Promise<ReceivedData<TOpts>>(resolve => {
                 this.receiveData = resolve;
                 this.callTransformCallback();
             });
             if (data.done) break;
-            yield data.chunk;
+            const { done: _, ...chunkData } = data;
+            yield chunkData;
         }
     }
 

@@ -5,9 +5,10 @@ import { transformFrom } from '../src';
 import type * as stream from 'stream';
 
 expectType<stream.Transform>(transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
-    for await (const chunk of source) {
+    expectType<AsyncIterableIterator<{ chunk: Buffer; encoding: BufferEncoding }>>(source);
+    for await (const { chunk, encoding } of source) {
         expectType<Buffer>(chunk);
+        expectType<BufferEncoding>(encoding);
     }
     yield '';
 }));
@@ -17,95 +18,95 @@ expectType<stream.Transform>(transformFrom(async function*(source) {
  */
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { objectMode: false });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<unknown>>(source);
+    for await (const { chunk } of source) expectType<unknown>(chunk);
     yield '';
 }, { objectMode: true });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { objectMode: undefined });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { readableObjectMode: false });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { readableObjectMode: true });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { readableObjectMode: undefined });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { writableObjectMode: false });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<unknown>>(source);
+    for await (const { chunk } of source) expectType<unknown>(chunk);
     yield '';
 }, { writableObjectMode: true });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { writableObjectMode: undefined });
 
 declare const transformOpts: stream.TransformOptions;
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<unknown>>(source);
+    for await (const { chunk } of source) expectType<unknown>(chunk);
     yield '';
 }, transformOpts);
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { ...transformOpts, objectMode: false, writableObjectMode: false });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { ...transformOpts, objectMode: undefined, writableObjectMode: undefined });
 
 declare const boolTypeObjectMode: { objectMode: boolean };
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<unknown>>(source);
+    for await (const { chunk } of source) expectType<unknown>(chunk);
     yield '';
 }, boolTypeObjectMode);
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { ...boolTypeObjectMode, objectMode: false });
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, { ...boolTypeObjectMode, objectMode: undefined });
 
 declare const boolIndexSignature: Record<string, boolean>;
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<unknown>>(source);
+    for await (const { chunk } of source) expectType<unknown>(chunk);
     yield '';
 }, boolIndexSignature);
 
 declare const falseIndexSignature: Record<string, false>;
 
 transformFrom(async function*(source) {
-    expectType<AsyncIterableIterator<Buffer>>(source);
+    for await (const { chunk } of source) expectType<Buffer>(chunk);
     yield '';
 }, falseIndexSignature);
 

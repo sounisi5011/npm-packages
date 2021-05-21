@@ -7,7 +7,7 @@ stream.pipeline(
   // Convert a number to a Buffer object.
   transformFrom(
     async function*(source) {
-      for await (const inputChunk of source) {
+      for await (const { chunk: inputChunk } of source) {
         console.log({ inputChunk });
 
         if (typeof inputChunk === 'number') {
@@ -20,7 +20,7 @@ stream.pipeline(
   ),
   // Transform a Buffer object.
   transformFrom(async function*(source) {
-    for await (const chunk of source) {
+    for await (const { chunk } of source) {
       yield Buffer.concat([
         Buffer.from([0xF0]),
         chunk,

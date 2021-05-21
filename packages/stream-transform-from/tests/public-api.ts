@@ -38,8 +38,8 @@ describe('passes though chunks', () => {
             'builtin Transform',
             () =>
                 new stream.Transform({
-                    transform(chunk, encoding, done) {
-                        this.push(chunk, encoding);
+                    transform(chunk, _encoding, done) {
+                        this.push(chunk);
                         done();
                     },
                 }),
@@ -48,7 +48,9 @@ describe('passes though chunks', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    yield* source;
+                    for await (const { chunk } of source) {
+                        yield chunk;
+                    }
                 }),
         ],
     ])('%s', async (_, createTransform) => {
@@ -85,7 +87,7 @@ describe('transforms chunks', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    for await (const chunk of source) {
+                    for await (const { chunk } of source) {
                         yield Buffer.concat([
                             Buffer.from('('),
                             chunk,
@@ -125,7 +127,9 @@ describe('passes through objects', () => {
             () =>
                 transformFrom(
                     async function*(source) {
-                        yield* source;
+                        for await (const { chunk } of source) {
+                            yield chunk;
+                        }
                     },
                     { objectMode: true },
                 ),
@@ -172,7 +176,7 @@ describe('transforms objects', () => {
                             return typeof chunk.name === 'string';
                         }
 
-                        for await (const obj of source) {
+                        for await (const { chunk: obj } of source) {
                             if (!validateChunk(obj)) {
                                 throw new Error('Invalid chunk!');
                             }
@@ -217,9 +221,9 @@ describe('transforms string with passed encoding', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    for await (const chunk of source) {
+                    for await (const { chunk, encoding } of source) {
                         if (typeof chunk === 'string') {
-                            yield Buffer.from(chunk);
+                            yield Buffer.from(chunk, encoding);
                         }
                     }
                 }, { writableObjectMode: true }),
@@ -278,7 +282,7 @@ describe('split chunks', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    for await (const chunk of source) {
+                    for await (const { chunk } of source) {
                         const lineList = chunk.toString('utf8')
                             .split(/\n+/)
                             .filter(line => line !== '');
@@ -323,7 +327,7 @@ describe('merge chunks', () => {
             () =>
                 transformFrom(async function*(source) {
                     const chunkList: Buffer[] = [];
-                    for await (const chunk of source) {
+                    for await (const { chunk } of source) {
                         chunkList.push(chunk);
                     }
                     yield chunkList.join('\n');
@@ -366,7 +370,7 @@ describe('break during transform', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    for await (const chunk of source) {
+                    for await (const { chunk } of source) {
                         yield chunk;
                         if (chunk.toString('utf8') === 'third') {
                             break;
@@ -437,13 +441,13 @@ describe('get data only when needed', () => {
         await promisify(stream.pipeline)(
             stream.Readable.from(data),
             transformFrom(async function*(source) {
-                for await (const chunk of source) {
+                for await (const { chunk } of source) {
                     loggerList.push({ phase: 1, chunk: chunk.toString('utf8') });
                     yield chunk;
                 }
             }),
             transformFrom(async function*(source) {
-                for await (const chunk of source) {
+                for await (const { chunk } of source) {
                     loggerList.push({ phase: 2, chunk: chunk.toString('utf8') });
                     yield chunk;
                 }
@@ -475,7 +479,9 @@ describe('throw error from Readable', () => {
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
-                    yield* source;
+                    for await (const { chunk } of source) {
+                        yield chunk;
+                    }
                 }),
         ],
     ])('%s', (_, createTransform) => {
@@ -587,7 +593,7 @@ describe('source iterator contains only Buffer objects', () => {
                 stream.Readable.from(data),
                 transformFrom(
                     async function*(source) {
-                        for await (const chunk of source) {
+                        for await (const { chunk } of source) {
                             assertType<Buffer>(chunk);
                             expect(chunk).toBeInstanceOf(Buffer);
                             yield '';
