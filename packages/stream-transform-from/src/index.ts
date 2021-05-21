@@ -8,7 +8,7 @@ type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undef
  * If the `objectMode` and `writableObjectMode` options is not `true`,
  * the chunk value is always an instance of Buffer.
  */
-type InputChunkType<T extends stream.TransformOptions> = (
+export type InputChunkType<T extends stream.TransformOptions> = (
     true extends (GetPropValue<T, 'objectMode'> | GetPropValue<T, 'writableObjectMode'>) ? unknown : Buffer
 );
 
@@ -19,14 +19,23 @@ type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
  * the chunk value must be of type string or an instance of Buffer or Uint8Array.
  * @see https://github.com/nodejs/node/blob/v12.17.0/lib/_stream_readable.js#L226-L244
  */
-type OutputChunkType<T extends stream.TransformOptions> = IfNeverThenUnknown<
+export type OutputChunkType<T extends stream.TransformOptions> = IfNeverThenUnknown<
     T extends ({ objectMode: true } | { readableObjectMode: true }) ? never
         : string | Buffer | Uint8Array
 >;
 
-type TransformFunction<TOpts extends stream.TransformOptions> = (
-    source: AsyncIterableIterator<{ chunk: InputChunkType<TOpts>; encoding: BufferEncoding }>,
-) => Iterable<OutputChunkType<TOpts>> | AsyncIterable<OutputChunkType<TOpts>>;
+export type SourceIterator<TOpts extends stream.TransformOptions> = (
+    AsyncIterableIterator<{
+        chunk: InputChunkType<TOpts>;
+        encoding: BufferEncoding;
+    }>
+);
+
+export type TransformFunction<TOpts extends stream.TransformOptions> = (
+    (source: SourceIterator<TOpts>) =>
+        | Iterable<OutputChunkType<TOpts>>
+        | AsyncIterable<OutputChunkType<TOpts>>
+);
 
 type ReceivedData<TOpts extends stream.TransformOptions> =
     | { chunk: InputChunkType<TOpts>; encoding: BufferEncoding; done?: false }
@@ -98,7 +107,7 @@ export class TransformFromAsyncIterable<
         return false;
     }
 
-    private async *createSource(): AsyncIterableIterator<{ chunk: InputChunkType<TOpts>; encoding: BufferEncoding }> {
+    private async *createSource(): SourceIterator<TOpts> {
         while (true) {
             const data = this.receivedDataList.shift() ?? await new Promise<ReceivedData<TOpts>>(resolve => {
                 this.receiveData = resolve;
