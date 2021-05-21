@@ -459,23 +459,21 @@ describe('throw error from Readable', () => {
             throw new Error('foo');
         };
 
-        it.each<[string, Promise<void>]>([
+        it.each<[string, (() => stream.Writable) | undefined]>([
             [
                 'pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(readableInput()),
-                    createTransform(),
-                    createNoopWritable(),
-                ),
+                createNoopWritable,
             ],
             [
                 'not pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(readableInput()),
-                    createTransform(),
-                ),
+                undefined,
             ],
-        ])('%s', async (_, resultPromise) => {
+        ])('%s', async (_, createWritable) => {
+            const resultPromise = promisify(stream.pipeline)(
+                stream.Readable.from(readableInput()),
+                createTransform(),
+                ...createWritable ? [createWritable()] : [],
+            );
             await expect(resultPromise).rejects.toThrow(Error);
             await expect(resultPromise).rejects.toThrow(/^foo$/);
         });
@@ -504,23 +502,21 @@ describe('throw error from Transform', () => {
     ])('%s', (_, createTransform) => {
         const data = [''];
 
-        it.each<[string, Promise<void>]>([
+        it.each<[string, (() => stream.Writable) | undefined]>([
             [
                 'pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    createTransform(),
-                    createNoopWritable(),
-                ),
+                createNoopWritable,
             ],
             [
                 'not pipe to WritableStream',
-                promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    createTransform(),
-                ),
+                undefined,
             ],
-        ])('%s', async (_, resultPromise) => {
+        ])('%s', async (_, createWritable) => {
+            const resultPromise = promisify(stream.pipeline)(
+                stream.Readable.from(data),
+                createTransform(),
+                ...createWritable ? [createWritable()] : [],
+            );
             await expect(resultPromise).rejects.toThrow(Error);
             await expect(resultPromise).rejects.toThrow(/^bar$/);
         });
@@ -713,23 +709,21 @@ describe('can return non-buffer value', () => {
         ])('%s', (_, createTransform) => {
             const data = [''];
 
-            it.each<[string, Promise<void>]>([
+            it.each<[string, (() => stream.Writable) | undefined]>([
                 [
                     'pipe to WritableStream',
-                    promisify(stream.pipeline)(
-                        stream.Readable.from(data),
-                        createTransform(),
-                        createNoopWritable({ objectMode: true }),
-                    ),
+                    () => createNoopWritable({ objectMode: true }),
                 ],
                 [
                     'not pipe to WritableStream',
-                    promisify(stream.pipeline)(
-                        stream.Readable.from(data),
-                        createTransform(),
-                    ),
+                    undefined,
                 ],
-            ])('%s', async (_, resultPromise) => {
+            ])('%s', async (_, createWritable) => {
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    createTransform(),
+                    ...createWritable ? [createWritable()] : [],
+                );
                 await expect(resultPromise).resolves.not.toThrow();
             });
         });
@@ -780,23 +774,21 @@ describe('can not return non-buffer value', () => {
         ])('%s', (_, createTransform) => {
             const data = [''];
 
-            it.each<[string, Promise<void>]>([
+            it.each<[string, (() => stream.Writable) | undefined]>([
                 [
                     'pipe to WritableStream',
-                    promisify(stream.pipeline)(
-                        stream.Readable.from(data),
-                        createTransform(),
-                        createNoopWritable({ objectMode: true }),
-                    ),
+                    () => createNoopWritable({ objectMode: true }),
                 ],
                 [
                     'not pipe to WritableStream',
-                    promisify(stream.pipeline)(
-                        stream.Readable.from(data),
-                        createTransform(),
-                    ),
+                    undefined,
                 ],
-            ])('%s', async (_, resultPromise) => {
+            ])('%s', async (_, createWritable) => {
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    createTransform(),
+                    ...createWritable ? [createWritable()] : [],
+                );
                 await expect(resultPromise).rejects.toThrow(
                     /^The "chunk" argument must be of type string or an instance of Buffer or Uint8Array\. Received type number \(42\)$/,
                 );
