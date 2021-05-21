@@ -2,7 +2,32 @@ import * as stream from 'stream';
 import { promisify } from 'util';
 
 import { transformFrom } from '../src';
-import { assertType, createNoopWritable, createOutputWritable } from './helpers';
+
+function assertType<T>(_: T): void {
+    //
+}
+
+function createNoopWritable(opts?: Omit<stream.WritableOptions, 'write'>): stream.Writable {
+    return new stream.Writable({
+        ...opts,
+        write(_chunk, _, done) {
+            done();
+        },
+    });
+}
+
+function createOutputWritable(
+    outputChunkList: unknown[],
+    opts?: Omit<stream.WritableOptions, 'write'>,
+): stream.Writable {
+    return new stream.Writable({
+        ...opts,
+        write(chunk, _, done) {
+            outputChunkList.push(chunk);
+            done();
+        },
+    });
+}
 
 describe('passes though chunks', () => {
     const data = ['first', 'second', 'third'];
