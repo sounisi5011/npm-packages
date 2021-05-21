@@ -343,12 +343,27 @@ describe('get data only when needed', () => {
         chunk: string;
     }
     const data = ['first', 'second', 'third', 'fourth', 'fifth'];
-    const outputData: readonly LogType[] = data.flatMap(chunk => [
-        { phase: -Infinity, chunk },
-        { phase: 1, chunk },
-        { phase: 2, chunk },
-        { phase: Infinity, chunk },
-    ]);
+    const outputData: readonly LogType[] = [
+        { phase: -Infinity, chunk: 'first' },
+        { phase: 1, chunk: 'first' },
+        { phase: -Infinity, chunk: 'second' },
+        { phase: -Infinity, chunk: 'third' },
+        { phase: -Infinity, chunk: 'fourth' },
+        { phase: -Infinity, chunk: 'fifth' },
+        ...data.flatMap<LogType>((chunk, index) => {
+            const nextChunk = data[index + 1];
+            return nextChunk
+                ? [
+                    { phase: 2, chunk },
+                    { phase: 1, chunk: nextChunk },
+                    { phase: Infinity, chunk },
+                ]
+                : [
+                    { phase: 2, chunk },
+                    { phase: Infinity, chunk },
+                ];
+        }),
+    ];
 
     it('builtin Transform', async () => {
         const loggerList: LogType[] = [];
@@ -363,13 +378,17 @@ describe('get data only when needed', () => {
             new stream.Transform({
                 transform(chunk, _encoding, done) {
                     loggerList.push({ phase: 1, chunk: chunk.toString('utf8') });
-                    done(null, chunk);
+                    setImmediate(() => {
+                        done(null, chunk);
+                    });
                 },
             }),
             new stream.Transform({
                 transform(chunk, _encoding, done) {
                     loggerList.push({ phase: 2, chunk: chunk.toString('utf8') });
-                    done(null, chunk);
+                    setImmediate(() => {
+                        done(null, chunk);
+                    });
                 },
             }),
             new stream.Writable({
