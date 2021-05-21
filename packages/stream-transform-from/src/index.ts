@@ -1,7 +1,5 @@
 import { Transform } from 'stream';
 
-import { createSource, SourceResult } from './utils';
-
 import type * as stream from 'stream';
 
 type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undefined;
@@ -30,20 +28,23 @@ type TransformFunction<TOpts extends stream.TransformOptions> = (
     source: AsyncIterableIterator<InputChunkType<TOpts>>,
 ) => Iterable<OutputChunkType<TOpts>> | AsyncIterable<OutputChunkType<TOpts>>;
 
+type ReceivedData<TOpts extends stream.TransformOptions> =
+    | { chunk: InputChunkType<TOpts>; done?: false }
+    | { done: true };
+
 export class TransformFromAsyncIterable<
     TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
 > extends Transform {
-    private readonly source: SourceResult<InputChunkType<TOpts>>;
     private transformCallback: stream.TransformCallback | undefined;
     private isFinished = false;
+    private receiveData?: (data: ReceivedData<TOpts>) => void;
+    private readonly receivedDataList: Array<ReceivedData<TOpts>> = [];
 
     constructor(transformFn: TransformFunction<TOpts>, opts?: TOpts) {
         super(opts);
 
-        this.source = createSource(() => {
-            this.callTransformCallback();
-        });
-        const result = transformFn(this.source.iterator);
+        const source = this.createSource();
+        const result = transformFn(source);
         (async () => {
             for await (const chunk of result) {
                 this.push(chunk);
@@ -62,7 +63,7 @@ export class TransformFromAsyncIterable<
             callback();
         } else {
             this.transformCallback = callback;
-            this.source.emit(chunk);
+            this.emitToSource({ chunk });
         }
     }
 
@@ -71,7 +72,7 @@ export class TransformFromAsyncIterable<
             callback();
         } else {
             this.transformCallback = callback;
-            this.source.end();
+            this.emitToSource({ done: true });
         }
     }
 
@@ -96,6 +97,27 @@ export class TransformFromAsyncIterable<
             return true;
         }
         return false;
+    }
+
+    private async *createSource(): AsyncIterableIterator<InputChunkType<TOpts>> {
+        while (true) {
+            const data = this.receivedDataList.shift() ?? await new Promise<ReceivedData<TOpts>>(resolve => {
+                this.receiveData = resolve;
+                this.callTransformCallback();
+            });
+            if (data.done) break;
+            yield data.chunk;
+        }
+    }
+
+    private emitToSource(data: ReceivedData<TOpts>): void {
+        const { receiveData } = this;
+        if (receiveData) {
+            this.receiveData = undefined;
+            receiveData(data);
+        } else {
+            this.receivedDataList.push(data);
+        }
     }
 }
 
