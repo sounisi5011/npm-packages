@@ -193,6 +193,54 @@ describe('transforms objects', () => {
     });
 });
 
+describe('transforms string with passed encoding', () => {
+    const data = Buffer.from([0x1F, 0x20]);
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.17.0/lib/buffer.js#L601-L719
+     */
+    const encodingList: BufferEncoding[] = ['utf8', 'ucs2', 'utf16le', 'latin1', 'ascii', 'base64', 'hex'];
+    const outputData = Array.from({ length: encodingList.length }).fill(data);
+
+    it.each<[string, () => stream.Transform]>([
+        [
+            'builtin Transform',
+            () =>
+                new stream.Transform({
+                    transform(chunk, encoding, done) {
+                        this.push(Buffer.from(chunk, encoding));
+                        done();
+                    },
+                    writableObjectMode: true,
+                }),
+        ],
+        [
+            'transformFrom()',
+            () =>
+                transformFrom(async function*(source) {
+                    for await (const chunk of source) {
+                        if (typeof chunk === 'string') {
+                            yield Buffer.from(chunk);
+                        }
+                    }
+                }, { writableObjectMode: true }),
+        ],
+    ])('%s', async (_, createTransform) => {
+        const transform = createTransform();
+        const outputChunkList: unknown[] = [];
+
+        for (const encoding of encodingList) {
+            transform.write(data.toString(encoding), encoding);
+        }
+        transform.end();
+
+        await promisify(stream.pipeline)(
+            transform,
+            createOutputWritable(outputChunkList),
+        );
+        expect(outputChunkList).toStrictEqual(outputData);
+    });
+});
+
 describe('split chunks', () => {
     const data = [
         'line1',
