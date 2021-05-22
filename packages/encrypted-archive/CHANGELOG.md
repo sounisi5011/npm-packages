@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.2...encrypted-archive-v0.0.3) (2021-05-22)
+
+
+### Bug Fixes
+
+* **encrypted-archive:** replace `generator-transform-stream` package with `@sounisi5011/stream-transform-from` package ([#73](https://www.github.com/sounisi5011/npm-packages/issues/73)) ([dce2edc](https://www.github.com/sounisi5011/npm-packages/commit/dce2edcec971222b67cf51e5563ad202c2de8257))
+
 ### [0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)
 
 
