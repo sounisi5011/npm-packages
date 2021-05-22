@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/stream-transform-from",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Create a transform stream from an async iterator",
   "keywords": [
     "async",
@@ -51,7 +51,8 @@
   },
   "files": [
     "dist/",
-    "src/"
+    "src/",
+    "examples/index.js"
   ],
   "scripts": {
     "build": "tsc",
