@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
-    "@types/node": "15.x",
+    "@types/node": "15.6.0",
     "tsd": "0.15.1"
   },
   "engines": {
