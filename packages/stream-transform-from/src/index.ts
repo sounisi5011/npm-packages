@@ -1,6 +1,5 @@
 import { version as nodeVersion } from 'process';
 import { Transform } from 'stream';
-
 import type * as stream from 'stream';
 
 type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undefined;

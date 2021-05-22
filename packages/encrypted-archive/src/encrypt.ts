@@ -6,9 +6,8 @@ import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import { bufferFrom, convertIterableValue } from './utils';
-
 import type { InputDataType, IteratorConverter } from './types';
+import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
