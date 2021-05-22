@@ -51,7 +51,8 @@
   },
   "files": [
     "dist/",
-    "src/"
+    "src/",
+    "examples/index.js"
   ],
   "scripts": {
     "build": "tsc",
