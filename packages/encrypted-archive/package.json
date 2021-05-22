@@ -61,7 +61,8 @@
     "test": "./tests/"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "runkit-example.js"
   ],
   "scripts": {
     "build": "run-p build:*",
@@ -114,5 +115,5 @@
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
   },
-  "runkitExampleFilename": "./examples/index.js"
+  "runkitExampleFilename": "./runkit-example.js"
 }
