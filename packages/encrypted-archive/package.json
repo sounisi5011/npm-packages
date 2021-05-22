@@ -61,7 +61,8 @@
     "test": "./tests/"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "runkit-example.js"
   ],
   "scripts": {
     "build": "run-p build:*",
@@ -79,7 +80,7 @@
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported-node run-p test:*",
     "test:examples": "run-s build test:examples:*",
-    "test:examples:index": "node ./examples/index.js",
+    "test:examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest"
   },
   "dependencies": {
@@ -114,5 +115,5 @@
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
   },
-  "runkitExampleFilename": "./examples/index.js"
+  "runkitExampleFilename": "./runkit-example.js"
 }
