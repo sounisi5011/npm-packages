@@ -3,6 +3,7 @@
 version: 2 # required to adjust maintainability checks
 
 exclude_patterns:
+  - "**/examples/*.js"
   - "scripts/"
   - "**/scripts/*.js"
   # Jest configuration file ( https://jestjs.io/ )
