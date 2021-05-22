@@ -2,6 +2,7 @@
 **/flatbuffers/*_generated.ts
 **/protocol-buffers/*_pb.js
 **/protocol-buffers/*_pb.d.ts
+**/runkit-example.js
 coverage/
 node_modules/
 dist/
