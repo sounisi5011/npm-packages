@@ -690,6 +690,103 @@ describe('throw error from Transform', () => {
     });
 });
 
+describe('options that affect functionality should be ignored', () => {
+    const data = ['first', 'second', 'third'];
+    const outputData = data.map(str => Buffer.from(`:${str}.`));
+
+    it.each<stream.TransformOptions>([
+        {
+            read(_size) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+            },
+        },
+        {
+            write(_chunk, _encoding, done) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+                done();
+            },
+        },
+        {
+            writev(_chunks, done) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+                done();
+            },
+        },
+        {
+            final(done) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+                done();
+            },
+        },
+        {
+            transform(_chunk, _encoding, done) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+                done();
+            },
+        },
+        {
+            flush(done) {
+                this.push(Buffer.from([255]));
+                this.push(null);
+                done();
+            },
+        },
+    ])('%p', async options => {
+        const outputChunkList: unknown[] = [];
+        await promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            transformFrom(
+                async function*(source) {
+                    for await (const { chunk } of source) {
+                        if (!Buffer.isBuffer(chunk)) continue;
+                        yield Buffer.concat([
+                            Buffer.from(':'),
+                            chunk,
+                            Buffer.from('.'),
+                        ]);
+                    }
+                },
+                options,
+            ),
+            createOutputWritable(outputChunkList),
+        );
+        expect(outputChunkList).toStrictEqual(outputData);
+    });
+    it.each<stream.TransformOptions>([
+        {
+            // This field has been added in Node v15.0.0
+            construct(done) {
+                console.log({ done });
+                done(new Error('!!!'));
+            },
+        },
+        {
+            destroy(_error, done) {
+                done(new Error('???'));
+            },
+        },
+        // eslint-disable-next-line jest/no-identical-title
+    ])('%p', async options => {
+        const resultPromise = promisify(stream.pipeline)(
+            stream.Readable.from(data),
+            transformFrom(
+                // eslint-disable-next-line require-yield
+                async function*() {
+                    throw new Error('qux');
+                },
+                options,
+            ),
+        );
+        await expect(resultPromise).rejects.toThrow(Error);
+        await expect(resultPromise).rejects.toThrow(/^qux$/);
+    });
+});
+
 describe('source iterator contains only Buffer objects', () => {
     describe.each(
         [
