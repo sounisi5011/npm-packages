@@ -126,7 +126,16 @@ const transformStream = transformFrom(
 
   // The second argument is an options for the Transform stream.
   // The options are passed to the constructor function of the Transform class.
-  // However, the `transform` and `flush` fields are not allowed.
+  // However, the following fields are not allowed:
+  // + `construct`
+  // + `read`
+  // + `write`
+  // + `writev`
+  // + `final`
+  // + `destroy`
+  // + `transform`
+  // + `flush`
+  // The fields listed above will be ignored if specified.
   {}
 );
 ```
