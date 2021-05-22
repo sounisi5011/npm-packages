@@ -630,8 +630,13 @@ describe('throw error from Transform', () => {
             });
         });
 
+        /**
+         * @see https://github.com/nodejs/node/pull/34314
+         */
+        const isBugFixed = Number(/^\d+/.exec(process.versions.node)?.[0]) >= 15;
+
         // eslint-disable-next-line jest/no-identical-title
-        describe.each(table.filter(([, , isAsync]) => !isAsync))('%s', (_, createTransform) => {
+        describe.each(table.filter(([, , isAsync]) => isBugFixed || !isAsync))('%s', (_, createTransform) => {
             it('not pipe to WritableStream', async () => {
                 const resultPromise = promisify(stream.pipeline)(
                     stream.Readable.from(data),
@@ -642,30 +647,32 @@ describe('throw error from Transform', () => {
             });
         });
 
-        // eslint-disable-next-line jest/no-identical-title
-        describe.each(table.filter(([, , isAsync]) => isAsync))('%s', (_, createTransform) => {
-            it('not pipe to WritableStream (error cannot be detected)', async () => {
-                const transform = createTransform();
+        if (!isBugFixed) {
+            // eslint-disable-next-line jest/no-identical-title
+            describe.each(table.filter(([, , isAsync]) => isAsync))('%s', (_, createTransform) => {
+                it('not pipe to WritableStream (error cannot be detected)', async () => {
+                    const transform = createTransform();
 
-                const errorPromise = (async () => (await events.once(transform, 'error'))[0])();
-                const resultPromise = promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    transform,
-                );
+                    const errorPromise = (async () => (await events.once(transform, 'error'))[0])();
+                    const resultPromise = promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        transform,
+                    );
 
-                // If the flush process is completed asynchronously, the `finish` event will be fired before the `error` event is fired.
-                // For this reason, `stream.pipeline()` will not get an error and will exit normally.
-                // see https://github.com/nodejs/node/issues/34274
-                await expect(resultPromise).resolves.toBeUndefined();
+                    // If the flush process is completed asynchronously, the `finish` event will be fired before the `error` event is fired.
+                    // For this reason, `stream.pipeline()` will not get an error and will exit normally.
+                    // see https://github.com/nodejs/node/issues/34274
+                    await expect(resultPromise).resolves.toBeUndefined();
 
-                // However, errors are thrown.
-                // And the `error` event is also fired.
-                await expect(errorPromise).resolves.toBeInstanceOf(Error);
-                await expect(errorPromise).resolves.toStrictEqual(expect.objectContaining({
-                    message: 'baz',
-                }));
+                    // However, errors are thrown.
+                    // And the `error` event is also fired.
+                    await expect(errorPromise).resolves.toBeInstanceOf(Error);
+                    await expect(errorPromise).resolves.toStrictEqual(expect.objectContaining({
+                        message: 'baz',
+                    }));
+                });
             });
-        });
+        }
     });
 });
 
