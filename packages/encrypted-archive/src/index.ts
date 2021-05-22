@@ -38,7 +38,7 @@ function transformSource2buffer<T, U extends BufferEncoding>(
     );
 }
 
-export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Duplex {
+export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Transform {
     const encryptor = createEncryptorIterator(password, options);
     return transformFrom(
         source => encryptor(transformSource2buffer(source)),
@@ -46,7 +46,7 @@ export function encryptStream(password: InputDataType, options: EncryptOptions =
     );
 }
 
-export function decryptStream(password: InputDataType): stream.Duplex {
+export function decryptStream(password: InputDataType): stream.Transform {
     const decryptor = createDecryptorIterator(password);
     return transformFrom(
         source => decryptor(transformSource2buffer(source)),
