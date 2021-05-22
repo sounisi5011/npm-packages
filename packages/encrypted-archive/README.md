@@ -245,7 +245,7 @@ const decryptor = decryptIterator(password);
 ## API
 
 [`Buffer` object]: https://nodejs.org/api/buffer.html
-[`Duplex` stream]: https://nodejs.org/api/stream.html#stream_class_stream_duplex
+[`Transform` stream]: https://nodejs.org/api/stream.html#stream_class_stream_transform
 [`EncryptOptions`]: #type-encrypt-options
 [`IteratorConverter` function]: #type-iterator-converter
 
@@ -279,7 +279,7 @@ Returns a Promise giving a [`Buffer` object].
 
 ### `encryptStream(password, options?)`
 
-Returns a [`Duplex` stream].
+Returns a [`Transform` stream].
 
 * `password`
 
@@ -291,7 +291,7 @@ Returns a [`Duplex` stream].
 
 ### `decryptStream(password)`
 
-Returns a [`Duplex` stream].
+Returns a [`Transform` stream].
 
 * `password`
 
