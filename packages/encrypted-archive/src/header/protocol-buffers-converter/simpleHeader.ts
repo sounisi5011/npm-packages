@@ -1,7 +1,6 @@
+import type { SimpleHeaderData } from '../create';
 import { SimpleHeader } from '../protocol-buffers/header_pb';
 import { validateBytesField, validateNumberFieldInRange, validateNumberOptionInRange } from './utils';
-
-import type { SimpleHeaderData } from '../create';
 
 const dataName = 'SimpleHeader data';
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);

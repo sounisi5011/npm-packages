@@ -1,8 +1,8 @@
+import type * as stream from 'stream';
+
 import { expectType } from 'tsd';
 
 import { transformFrom } from '../src';
-
-import type * as stream from 'stream';
 
 expectType<stream.Transform>(transformFrom(async function*(source) {
     expectType<AsyncIterableIterator<{ chunk: Buffer; encoding: BufferEncoding }>>(source);

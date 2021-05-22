@@ -1,10 +1,10 @@
+import type * as stream from 'stream';
+
 import { fixNodePrimordialsErrorStackTrace, printObject } from '../utils';
 import { writeFromIterableToStream } from '../utils/stream';
+import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
 import { createCompress as createBrotliCompress, createDecompress as createBrotliDecompress } from './brotli';
 import { createCompress as createGzipCompress, createDecompress as createGzipDecompress } from './gzip';
-
-import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
-import type * as stream from 'stream';
 
 interface CompressorTableEntry {
     createCompress: (options: never) => () => stream.Transform;
