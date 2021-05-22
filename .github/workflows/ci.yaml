@@ -36,6 +36,7 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
+      - run: pnpm run build
       - run: pnpm run lint
   format:
     runs-on: ubuntu-latest
