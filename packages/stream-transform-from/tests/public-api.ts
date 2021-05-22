@@ -578,47 +578,53 @@ describe('throw error from Transform', () => {
     });
 
     describe('when flush', () => {
-        const table: Array<[string, () => stream.Transform, boolean]> = [
+        const table: Array<[string, { createTransform: () => stream.Transform; hasBug: boolean }]> = [
             [
                 'builtin Transform',
-                () =>
-                    new stream.Transform({
-                        transform(_chunk, _encoding, done) {
-                            done();
-                        },
-                        flush(done) {
-                            done(new Error('baz'));
-                        },
-                    }),
-                false,
+                {
+                    createTransform: () =>
+                        new stream.Transform({
+                            transform(_chunk, _encoding, done) {
+                                done();
+                            },
+                            flush(done) {
+                                done(new Error('baz'));
+                            },
+                        }),
+                    hasBug: false,
+                },
             ],
             [
                 'builtin Transform (async done)',
-                () =>
-                    new stream.Transform({
-                        transform(_chunk, _encoding, done) {
-                            done();
-                        },
-                        flush(done) {
-                            setImmediate(() => done(new Error('baz')));
-                        },
-                    }),
-                true,
+                {
+                    createTransform: () =>
+                        new stream.Transform({
+                            transform(_chunk, _encoding, done) {
+                                done();
+                            },
+                            flush(done) {
+                                setImmediate(() => done(new Error('baz')));
+                            },
+                        }),
+                    hasBug: true,
+                },
             ],
             [
                 'transformFrom()',
-                () =>
-                    // eslint-disable-next-line require-yield
-                    transformFrom(async function*(source) {
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        for await (const _ of source);
-                        throw new Error('baz');
-                    }),
-                true,
+                {
+                    createTransform: () =>
+                        // eslint-disable-next-line require-yield
+                        transformFrom(async function*(source) {
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                            for await (const _ of source);
+                            throw new Error('baz');
+                        }),
+                    hasBug: false,
+                },
             ],
         ];
 
-        describe.each(table)('%s', (_, createTransform) => {
+        describe.each(table)('%s', (_, { createTransform }) => {
             it('pipe to WritableStream', async () => {
                 const resultPromise = promisify(stream.pipeline)(
                     stream.Readable.from(data),
@@ -635,8 +641,10 @@ describe('throw error from Transform', () => {
          */
         const isBugFixed = Number(/^\d+/.exec(process.versions.node)?.[0]) >= 15;
 
-        // eslint-disable-next-line jest/no-identical-title
-        describe.each(table.filter(([, , isAsync]) => isBugFixed || !isAsync))('%s', (_, createTransform) => {
+        describe.each(
+            table.filter(([, { hasBug }]) => isBugFixed || !hasBug),
+            // eslint-disable-next-line jest/no-identical-title
+        )('%s', (_, { createTransform }) => {
             it('not pipe to WritableStream', async () => {
                 const resultPromise = promisify(stream.pipeline)(
                     stream.Readable.from(data),
@@ -648,8 +656,10 @@ describe('throw error from Transform', () => {
         });
 
         if (!isBugFixed) {
-            // eslint-disable-next-line jest/no-identical-title
-            describe.each(table.filter(([, , isAsync]) => isAsync))('%s', (_, createTransform) => {
+            describe.each(
+                table.filter(([, { hasBug }]) => hasBug),
+                // eslint-disable-next-line jest/no-identical-title
+            )('%s', (_, { createTransform }) => {
                 it('not pipe to WritableStream (error cannot be detected)', async () => {
                     const transform = createTransform();
 
