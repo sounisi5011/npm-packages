@@ -150,12 +150,26 @@ describe('transforms objects', () => {
     const data = [{ name: 'first' }, { name: 'second' }, { name: 'third' }];
     const outputData = [['first'], ['second'], ['third']];
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
+        return propName in obj;
+    }
+    function validateChunk(chunk: unknown): chunk is { name: string } {
+        if (typeof chunk !== 'object' || chunk === null) return false;
+        if (!hasProp(chunk, 'name')) return false;
+        return typeof chunk.name === 'string';
+    }
+
     it.each<[string, () => stream.Transform]>([
         [
             'builtin Transform',
             () =>
                 new stream.Transform({
                     transform(obj, _encoding, done) {
+                        if (!validateChunk(obj)) {
+                            done(new Error('Invalid chunk!'));
+                            return;
+                        }
                         this.push([obj.name]);
                         done();
                     },
@@ -167,16 +181,6 @@ describe('transforms objects', () => {
             () =>
                 transformFrom(
                     async function*(source) {
-                        // eslint-disable-next-line @typescript-eslint/ban-types
-                        function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
-                            return propName in obj;
-                        }
-                        function validateChunk(chunk: unknown): chunk is { name: string } {
-                            if (typeof chunk !== 'object' || chunk === null) return false;
-                            if (!hasProp(chunk, 'name')) return false;
-                            return typeof chunk.name === 'string';
-                        }
-
                         for await (const { chunk: obj } of source) {
                             if (!validateChunk(obj)) {
                                 throw new Error('Invalid chunk!');
@@ -470,8 +474,8 @@ describe('throw error from Readable', () => {
             'builtin Transform',
             () =>
                 new stream.Transform({
-                    transform(chunk, encoding, done) {
-                        this.push(chunk, encoding);
+                    transform(chunk, _encoding, done) {
+                        this.push(chunk);
                         done();
                     },
                 }),
@@ -480,9 +484,9 @@ describe('throw error from Readable', () => {
             'builtin Transform (async done)',
             () =>
                 new stream.Transform({
-                    transform(chunk, encoding, done) {
+                    transform(chunk, _encoding, done) {
                         setImmediate(() => {
-                            this.push(chunk, encoding);
+                            this.push(chunk);
                             done();
                         });
                     },
@@ -498,8 +502,8 @@ describe('throw error from Readable', () => {
                 }),
         ],
     ])('%s', (_, createTransform) => {
+        // eslint-disable-next-line require-yield
         const readableInput = function*(): Iterable<unknown> {
-            yield '';
             throw new Error('foo');
         };
 
@@ -724,11 +728,11 @@ describe('source iterator contains only Buffer objects', () => {
             await promisify(stream.pipeline)(
                 stream.Readable.from(data),
                 transformFrom(
+                    // eslint-disable-next-line require-yield
                     async function*(source) {
                         for await (const { chunk } of source) {
                             assertType<Buffer>(chunk);
                             expect(chunk).toBeInstanceOf(Buffer);
-                            yield '';
                         }
                     },
                     options,
@@ -796,12 +800,12 @@ describe('source iterator contains more than just Buffer objects', () => {
             await promisify(stream.pipeline)(
                 stream.Readable.from(data),
                 transformFrom(
+                    // eslint-disable-next-line require-yield
                     async function*(source) {
                         for await (const chunk of source) {
                             // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Buffer'.
                             assertType<Buffer>(chunk);
                             expect(chunk).not.toBeInstanceOf(Buffer);
-                            yield '';
                         }
                     },
                     options,
