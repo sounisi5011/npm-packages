@@ -4,9 +4,6 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
-    "declarationMap": false,
-
-    /* Source Map Options */
-    "inlineSources": true
+    "declarationMap": false
   }
 }
