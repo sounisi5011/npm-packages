@@ -62,7 +62,14 @@ stream.pipeline(
       yield chunk.toString('utf8').toUpperCase();
     }
   }),
-  fs.createWriteStream('output.txt')
+  fs.createWriteStream('output.txt'),
+  error => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('done!');
+    }
+  }
 );
 ```
 
@@ -84,6 +91,13 @@ stream.pipeline(
     { objectMode: true }
   ),
   // ...
+  error => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('done!');
+    }
+  }
 );
 ```
 
@@ -107,6 +121,13 @@ stream.pipeline(
     { writableObjectMode: true }
   ),
   // ...
+  error => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('done!');
+    }
+  }
 );
 ```
 
