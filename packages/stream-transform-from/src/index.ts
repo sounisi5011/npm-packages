@@ -49,8 +49,28 @@ type ReceivedData<TOpts extends stream.TransformOptions> =
  */
 const HAS_FLUSH_BUG = !(Number(process.versions.node.match(/^\d+/)?.[0]) >= 15);
 
+const DISALLOW_OPTION_NAMES = ['read', 'write', 'writev', 'final', 'destroy', 'transform', 'flush'] as const;
+
+function removeProp<T>(obj: T, props: readonly never[]): T;
+function removeProp<T, K extends PropertyKey>(obj: T | undefined, props: readonly K[]): Omit<T, K> | undefined;
+function removeProp<T, K extends PropertyKey>(obj: T | null, props: readonly K[]): Omit<T, K> | null;
+function removeProp<T, K extends PropertyKey>(
+    obj: T | null | undefined,
+    props: readonly K[],
+): Omit<T, K> | null | undefined;
+function removeProp(
+    obj: Record<PropertyKey, unknown> | null | undefined,
+    props: readonly PropertyKey[],
+): Record<PropertyKey, unknown> | null | undefined {
+    if (obj === null || obj === undefined) return obj;
+    return Object.fromEntries(
+        Object.entries(obj)
+            .filter(([p]) => !props.includes(p)),
+    );
+}
+
 export class TransformFromAsyncIterable<
-    TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
+    TOpts extends stream.TransformOptions = Record<string, never>
 > extends Transform {
     private transformCallback: stream.TransformCallback | undefined;
     private isFinished = false;
@@ -58,7 +78,7 @@ export class TransformFromAsyncIterable<
     private readonly receivedDataList: Array<ReceivedData<TOpts>> = [];
 
     constructor(transformFn: TransformFunction<TOpts>, opts?: TOpts) {
-        super(opts);
+        super(removeProp(opts, DISALLOW_OPTION_NAMES));
 
         const source = this.createSource();
         const result = transformFn(source);
@@ -168,7 +188,7 @@ export class TransformFromAsyncIterable<
 }
 
 export function transformFrom<
-    TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
+    TOpts extends stream.TransformOptions = Record<string, never>
 >(
     transformFn: TransformFunction<TOpts>,
     options?: TOpts,
