@@ -1,13 +1,15 @@
 import type * as stream from 'stream';
 
+import { transformFrom } from '@sounisi5011/stream-transform-from';
+
 import type { CryptoAlgorithmName } from './cipher';
 import type { CompressOptions } from './compress';
 import { createDecryptorIterator } from './decrypt';
 import { createEncryptorIterator, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
+import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
-import { asyncIterable2Buffer } from './utils';
-import gts from './utils/generator-transform-stream';
+import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './utils';
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
 
@@ -28,15 +30,23 @@ export async function decrypt(encryptedData: InputDataType, password: InputDataT
 }
 
 export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Duplex {
-    return gts(
-        createEncryptorIterator(password, options),
+    const encryptor = createEncryptorIterator(password, options);
+    return transformFrom(
+        source =>
+            encryptor(
+                convertIterableValue(source, ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding)),
+            ),
         { readableObjectMode: true, writableObjectMode: true },
     );
 }
 
 export function decryptStream(password: InputDataType): stream.Duplex {
-    return gts(
-        createDecryptorIterator(password),
+    const decryptor = createDecryptorIterator(password);
+    return transformFrom(
+        source =>
+            decryptor(
+                convertIterableValue(source, ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding)),
+            ),
         { readableObjectMode: true, writableObjectMode: true },
     );
 }
