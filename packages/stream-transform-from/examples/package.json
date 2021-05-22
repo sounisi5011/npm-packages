@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "dependencies": {
+    "@sounisi5011/stream-transform-from": "link:.."
+  },
+  "engines": {
+    "node": "^12.3.x"
+  }
+}

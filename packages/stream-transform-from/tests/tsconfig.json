@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "rootDir": "../",
+    "noEmit": true,
+
+    /* Module Resolution Options */
+    "types": ["node", "jest"]
+  },
+  "include": ["./**/*", "../src/**/*"]
+}

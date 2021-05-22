@@ -1,0 +1,86 @@
+{
+  "name": "@sounisi5011/stream-transform-from",
+  "version": "0.0.0",
+  "description": "Create a transform stream from an async iterator",
+  "keywords": [
+    "async",
+    "asyncgenerator",
+    "asyncgeneratorfunction",
+    "asyncgeneratorfunctions",
+    "asyncgenerators",
+    "asynciterable",
+    "asynciterables",
+    "asynciterator",
+    "asynciterators",
+    "from",
+    "generator",
+    "generatorfunction",
+    "generatorfunctions",
+    "generators",
+    "iterable",
+    "iterables",
+    "iterator",
+    "iterators",
+    "stream",
+    "transform",
+    "util",
+    "utility"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/stream-transform-from#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/stream-transform-from"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "directories": {
+    "lib": "./src/",
+    "example": "./examples/",
+    "test": "./tests/"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
+    "test": "run-if-supported-node run-p test:*",
+    "test:examples": "run-s build test:examples:*",
+    "test:examples:index": "node ./examples/index.js",
+    "test:jest": "jest",
+    "test:tsd": "run-s build test:tsd:*",
+    "test:tsd:exec": "tsd"
+  },
+  "devDependencies": {
+    "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
+    "@types/node": "15.x",
+    "tsd": "0.15.1"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  },
+  "runkitExampleFilename": "./examples/index.js",
+  "tsd": {
+    "compilerOptions": {
+      "lib": [
+        "es2019"
+      ],
+      "rootDir": "./"
+    }
+  }
+}
