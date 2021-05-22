@@ -578,6 +578,11 @@ describe('throw error from Transform', () => {
     });
 
     describe('when flush', () => {
+        /**
+         * @see https://github.com/nodejs/node/pull/34314
+         */
+        const isBugFixed = Number(/^\d+/.exec(process.versions.node)?.[0]) >= 15;
+
         const table: Array<[string, { createTransform: () => stream.Transform; hasBug: boolean }]> = [
             [
                 'builtin Transform',
@@ -606,7 +611,7 @@ describe('throw error from Transform', () => {
                                 setImmediate(() => done(new Error('baz')));
                             },
                         }),
-                    hasBug: true,
+                    hasBug: !isBugFixed,
                 },
             ],
             [
@@ -636,30 +641,25 @@ describe('throw error from Transform', () => {
             });
         });
 
-        /**
-         * @see https://github.com/nodejs/node/pull/34314
-         */
-        const isBugFixed = Number(/^\d+/.exec(process.versions.node)?.[0]) >= 15;
-
-        describe.each(
-            table.filter(([, { hasBug }]) => isBugFixed || !hasBug),
+        const noBugTable = table.filter(([, { hasBug }]) => !hasBug);
+        if (noBugTable.length >= 1) {
             // eslint-disable-next-line jest/no-identical-title
-        )('%s', (_, { createTransform }) => {
-            it('not pipe to WritableStream', async () => {
-                const resultPromise = promisify(stream.pipeline)(
-                    stream.Readable.from(data),
-                    createTransform(),
-                );
-                await expect(resultPromise).rejects.toThrow(Error);
-                await expect(resultPromise).rejects.toThrow(/^baz$/);
+            describe.each(noBugTable)('%s', (_, { createTransform }) => {
+                it('not pipe to WritableStream', async () => {
+                    const resultPromise = promisify(stream.pipeline)(
+                        stream.Readable.from(data),
+                        createTransform(),
+                    );
+                    await expect(resultPromise).rejects.toThrow(Error);
+                    await expect(resultPromise).rejects.toThrow(/^baz$/);
+                });
             });
-        });
+        }
 
-        if (!isBugFixed) {
-            describe.each(
-                table.filter(([, { hasBug }]) => hasBug),
-                // eslint-disable-next-line jest/no-identical-title
-            )('%s', (_, { createTransform }) => {
+        const hasBugTable = table.filter(([, { hasBug }]) => hasBug);
+        if (hasBugTable.length >= 1) {
+            // eslint-disable-next-line jest/no-identical-title
+            describe.each(hasBugTable)('%s', (_, { createTransform }) => {
                 it('not pipe to WritableStream (error cannot be detected)', async () => {
                     const transform = createTransform();
 
