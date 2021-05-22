@@ -12,7 +12,7 @@ type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
  * the chunk value is always an instance of Buffer.
  */
 export type InputChunkType<T extends stream.TransformOptions> = (
-    true extends (GetPropValue<T, 'objectMode'> | GetPropValue<T, 'writableObjectMode'>) ? unknown : Buffer
+    true extends GetPropValue<T, 'objectMode' | 'writableObjectMode'> ? unknown : Buffer
 );
 
 /**
@@ -62,8 +62,14 @@ const DISALLOW_OPTION_NAMES = [
 ] as const;
 
 function removeProp<T>(obj: T, props: readonly never[]): T;
-function removeProp<T, K extends PropertyKey>(obj: T | undefined, props: readonly K[]): Omit<T, K> | undefined;
-function removeProp<T, K extends PropertyKey>(obj: T | null, props: readonly K[]): Omit<T, K> | null;
+function removeProp<T, K extends PropertyKey>(
+    obj: T | undefined,
+    props: readonly K[],
+): Omit<T, K> | undefined;
+function removeProp<T, K extends PropertyKey>(
+    obj: T | null,
+    props: readonly K[],
+): Omit<T, K> | null;
 function removeProp<T, K extends PropertyKey>(
     obj: T | null | undefined,
     props: readonly K[],
@@ -137,7 +143,9 @@ export class TransformFromAsyncIterable<
         }
     }
 
-    private callTransformCallback(...args: Parameters<stream.TransformCallback>): boolean {
+    private callTransformCallback(
+        ...args: Parameters<stream.TransformCallback>
+    ): boolean {
         const { transformCallback } = this;
         if (transformCallback) {
             this.transformCallback = undefined;
@@ -149,10 +157,13 @@ export class TransformFromAsyncIterable<
 
     private async *createSource(): SourceIterator<TOpts> {
         while (true) {
-            const data = this.receivedDataList.shift() ?? await new Promise<ReceivedData<TOpts>>(resolve => {
-                this.receiveData = resolve;
-                this.callTransformCallback();
-            });
+            const data: ReceivedData<TOpts> = (
+                this.receivedDataList.shift()
+                    ?? await new Promise(resolve => {
+                        this.receiveData = resolve;
+                        this.callTransformCallback();
+                    })
+            );
             if (data.done) break;
             const { done: _, ...chunkData } = data;
             yield chunkData;
@@ -169,7 +180,9 @@ export class TransformFromAsyncIterable<
         }
     }
 
-    private emitFinishEventAfterCallback(flushCallback: stream.TransformCallback): stream.TransformCallback {
+    private emitFinishEventAfterCallback(
+        flushCallback: stream.TransformCallback,
+    ): stream.TransformCallback {
         const finishEventName = 'finish';
         const finishEventList: unknown[][] = [];
 
