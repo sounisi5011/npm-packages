@@ -41,6 +41,14 @@ type ReceivedData<TOpts extends stream.TransformOptions> =
     | { chunk: InputChunkType<TOpts>; encoding: BufferEncoding; done?: false }
     | { done: true };
 
+/**
+ * Prior to Node.js v14, there is a bug where the `finish` event is fired before the callback passed to the `transform._flush()` method is called.
+ * This bug has been fixed in Node.js v15.
+ * @see https://github.com/nodejs/node/issues/34274
+ * @see https://github.com/nodejs/node/pull/34314
+ */
+const HAS_FLUSH_BUG = !(Number(process.versions.node.match(/^\d+/)?.[0]) >= 15);
+
 export class TransformFromAsyncIterable<
     TOpts extends Omit<stream.TransformOptions, 'transform' | 'flush'> = Record<string, never>
 > extends Transform {
@@ -80,7 +88,9 @@ export class TransformFromAsyncIterable<
         if (this.isFinished) {
             callback();
         } else {
-            this.transformCallback = callback;
+            this.transformCallback = HAS_FLUSH_BUG
+                ? this.emitFinishEventAfterCallback(callback)
+                : callback;
             this.emitToSource({ done: true });
         }
     }
@@ -127,6 +137,33 @@ export class TransformFromAsyncIterable<
         } else {
             this.receivedDataList.push(data);
         }
+    }
+
+    private emitFinishEventAfterCallback(flushCallback: stream.TransformCallback): stream.TransformCallback {
+        const finishEventName = 'finish';
+        const finishEventList: unknown[][] = [];
+
+        this.emit = (event: string | symbol, ...args: unknown[]) => {
+            if (finishEventName === event) {
+                finishEventList.push(args);
+                return false;
+            }
+            return super.emit(event, ...args);
+        };
+
+        return (...args) => {
+            flushCallback(...args);
+
+            // @ts-expect-error TS2790: The operand of a 'delete' operator must be optional.
+            delete this.emit;
+
+            const [error] = args;
+            if (!error) {
+                for (const args of finishEventList) {
+                    this.emit(finishEventName, ...args);
+                }
+            }
+        };
     }
 }
 
