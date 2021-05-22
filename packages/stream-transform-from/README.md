@@ -14,6 +14,7 @@
 [`Buffer` object]: https://nodejs.org/api/buffer.html
 
 Create a [transform stream][`stream.Transform` class] from an async iterator.
+This is [the last piece](https://github.com/nodejs/node/issues/27140#issuecomment-533266638) needed to convert between streams and async iterators/generators.
 
 ## Features
 
@@ -108,3 +109,28 @@ stream.pipeline(
   // ...
 );
 ```
+
+## API
+
+```js
+const { transformFrom } = require('@sounisi5011/stream-transform-from');
+
+// The return value is a Transform stream.
+const transformStream = transformFrom(
+  async function*(source) {
+    // `source` is `AsyncIterableIterator<{ chunk: Buffer, encoding: BufferEncoding }>`
+    //          or `AsyncIterableIterator<{ chunk: unknown, encoding: BufferEncoding }>` type
+
+    // The value returned by `yield` keyword will be passed as the first argument of `transform.push()` method.
+  },
+
+  // The second argument is an options for the Transform stream.
+  // The options are passed to the constructor function of the Transform class.
+  // However, the `transform` and `flush` fields are not allowed.
+  {}
+);
+```
+
+## Related
+
+* [generator-transform-stream](https://github.com/bealearts/generator-transform-stream)
