@@ -1,3 +1,4 @@
+import events from 'events';
 import * as stream from 'stream';
 import { promisify } from 'util';
 
@@ -476,6 +477,18 @@ describe('throw error from Readable', () => {
                 }),
         ],
         [
+            'builtin Transform (async done)',
+            () =>
+                new stream.Transform({
+                    transform(chunk, encoding, done) {
+                        setImmediate(() => {
+                            this.push(chunk, encoding);
+                            done();
+                        });
+                    },
+                }),
+        ],
+        [
             'transformFrom()',
             () =>
                 transformFrom(async function*(source) {
@@ -512,44 +525,146 @@ describe('throw error from Readable', () => {
 });
 
 describe('throw error from Transform', () => {
-    describe.each<[string, () => stream.Transform]>([
-        [
-            'builtin Transform',
-            () =>
-                new stream.Transform({
-                    transform(_chunk, _encoding, done) {
-                        done(new Error('bar'));
-                    },
-                }),
-        ],
-        [
-            'transformFrom()',
-            () =>
-                // eslint-disable-next-line require-yield
-                transformFrom(async function*() {
-                    throw new Error('bar');
-                }),
-        ],
-    ])('%s', (_, createTransform) => {
-        const data = [''];
+    const data = [''];
 
-        it.each<[string, (() => stream.Writable) | undefined]>([
+    describe('when transforming', () => {
+        describe.each<[string, () => stream.Transform]>([
             [
-                'pipe to WritableStream',
-                createNoopWritable,
+                'builtin Transform',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            done(new Error('bar'));
+                        },
+                    }),
             ],
             [
-                'not pipe to WritableStream',
-                undefined,
+                'builtin Transform (async done)',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            setImmediate(() => done(new Error('bar')));
+                        },
+                    }),
             ],
-        ])('%s', async (_, createWritable) => {
-            const resultPromise = promisify(stream.pipeline)(
-                stream.Readable.from(data),
-                createTransform(),
-                ...createWritable ? [createWritable()] : [],
-            );
-            await expect(resultPromise).rejects.toThrow(Error);
-            await expect(resultPromise).rejects.toThrow(/^bar$/);
+            [
+                'transformFrom()',
+                () =>
+                    // eslint-disable-next-line require-yield
+                    transformFrom(async function*() {
+                        throw new Error('bar');
+                    }),
+            ],
+        ])('%s', (_, createTransform) => {
+            it.each<[string, (() => stream.Writable) | undefined]>([
+                [
+                    'pipe to WritableStream',
+                    createNoopWritable,
+                ],
+                [
+                    'not pipe to WritableStream',
+                    undefined,
+                ],
+            ])('%s', async (_, createWritable) => {
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    createTransform(),
+                    ...createWritable ? [createWritable()] : [],
+                );
+                await expect(resultPromise).rejects.toThrow(Error);
+                await expect(resultPromise).rejects.toThrow(/^bar$/);
+            });
+        });
+    });
+
+    describe('when flush', () => {
+        const table: Array<[string, () => stream.Transform, boolean]> = [
+            [
+                'builtin Transform',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            done();
+                        },
+                        flush(done) {
+                            done(new Error('baz'));
+                        },
+                    }),
+                false,
+            ],
+            [
+                'builtin Transform (async done)',
+                () =>
+                    new stream.Transform({
+                        transform(_chunk, _encoding, done) {
+                            done();
+                        },
+                        flush(done) {
+                            setImmediate(() => done(new Error('baz')));
+                        },
+                    }),
+                true,
+            ],
+            [
+                'transformFrom()',
+                () =>
+                    // eslint-disable-next-line require-yield
+                    transformFrom(async function*(source) {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        for await (const _ of source);
+                        throw new Error('baz');
+                    }),
+                true,
+            ],
+        ];
+
+        describe.each(table)('%s', (_, createTransform) => {
+            it('pipe to WritableStream', async () => {
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    createTransform(),
+                    createNoopWritable(),
+                );
+                await expect(resultPromise).rejects.toThrow(Error);
+                await expect(resultPromise).rejects.toThrow(/^baz$/);
+            });
+        });
+
+        // eslint-disable-next-line jest/no-identical-title
+        describe.each(table.filter(([, , isAsync]) => !isAsync))('%s', (_, createTransform) => {
+            it('not pipe to WritableStream', async () => {
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    createTransform(),
+                );
+                await expect(resultPromise).rejects.toThrow(Error);
+                await expect(resultPromise).rejects.toThrow(/^baz$/);
+            });
+        });
+
+        // eslint-disable-next-line jest/no-identical-title
+        describe.each(table.filter(([, , isAsync]) => isAsync))('%s', (_, createTransform) => {
+            it('not pipe to WritableStream (error cannot be detected)', async () => {
+                const transform = createTransform();
+
+                const errorPromise = (async () => (await events.once(transform, 'error'))[0])();
+                const resultPromise = promisify(stream.pipeline)(
+                    stream.Readable.from(data),
+                    transform,
+                );
+
+                // If the flush process is completed asynchronously, the `finish` event will be fired before the `error` event is fired.
+                // For this reason, `stream.pipeline()` will not get an error and will exit normally.
+                // see https://github.com/nodejs/node/issues/34274
+                await expect(resultPromise).resolves.toBeUndefined();
+
+                // However, errors are thrown.
+                // And the `error` event is also fired.
+                await expect(errorPromise).resolves.toBeInstanceOf(Error);
+                await expect(errorPromise).resolves.toStrictEqual(expect.objectContaining({
+                    message: 'baz',
+                }));
+            });
         });
     });
 });
