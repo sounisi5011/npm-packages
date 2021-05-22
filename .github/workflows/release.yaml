@@ -58,8 +58,14 @@ jobs:
         run: |
           readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
           pnpm install
+
+          # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
+          # Therefore, build the entire project.
+          # TODO: Build only the submodules included in the required dependencies.
+          pnpm run build
+
           cd '${{ matrix.path-git-relative }}'
-          pnpm run build --if-present
+          # pnpm run build --if-present
           if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
             GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             matrix_package_name='${{ matrix.package-name }}'
