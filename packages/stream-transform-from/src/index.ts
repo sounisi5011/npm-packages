@@ -5,6 +5,8 @@ import type * as stream from 'stream';
 
 type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undefined;
 
+type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
+
 /**
  * If the `objectMode` and `writableObjectMode` options is not `true`,
  * the chunk value is always an instance of Buffer.
@@ -12,8 +14,6 @@ type GetPropValue<T, K extends PropertyKey> = K extends (keyof T) ? T[K] : undef
 export type InputChunkType<T extends stream.TransformOptions> = (
     true extends (GetPropValue<T, 'objectMode'> | GetPropValue<T, 'writableObjectMode'>) ? unknown : Buffer
 );
-
-type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
 
 /**
  * If the `objectMode` and `readableObjectMode` options is not `true`,
