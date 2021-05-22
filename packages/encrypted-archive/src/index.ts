@@ -29,13 +29,19 @@ export async function decrypt(encryptedData: InputDataType, password: InputDataT
     return await asyncIterable2Buffer(decryptedDataIterable);
 }
 
+function transformSource2buffer<T, U extends BufferEncoding>(
+    source: AsyncIterable<{ chunk: T; encoding: U }>,
+): AsyncIterable<Buffer> {
+    return convertIterableValue(
+        source,
+        ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding),
+    );
+}
+
 export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Duplex {
     const encryptor = createEncryptorIterator(password, options);
     return transformFrom(
-        source =>
-            encryptor(
-                convertIterableValue(source, ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding)),
-            ),
+        source => encryptor(transformSource2buffer(source)),
         { readableObjectMode: true, writableObjectMode: true },
     );
 }
@@ -43,10 +49,7 @@ export function encryptStream(password: InputDataType, options: EncryptOptions =
 export function decryptStream(password: InputDataType): stream.Duplex {
     const decryptor = createDecryptorIterator(password);
     return transformFrom(
-        source =>
-            decryptor(
-                convertIterableValue(source, ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding)),
-            ),
+        source => decryptor(transformSource2buffer(source)),
         { readableObjectMode: true, writableObjectMode: true },
     );
 }
