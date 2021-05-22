@@ -1,3 +1,4 @@
+import { version as nodeVersion } from 'process';
 import { Transform } from 'stream';
 
 import type * as stream from 'stream';
@@ -47,7 +48,7 @@ type ReceivedData<TOpts extends stream.TransformOptions> =
  * @see https://github.com/nodejs/node/issues/34274
  * @see https://github.com/nodejs/node/pull/34314
  */
-const HAS_FLUSH_BUG = !(Number(process.versions.node.match(/^\d+/)?.[0]) >= 15);
+const HAS_FLUSH_BUG = !(Number(nodeVersion.match(/(?<=^v)\d+/)?.[0]) >= 15);
 
 const DISALLOW_OPTION_NAMES = [
     'construct',
