@@ -49,7 +49,16 @@ type ReceivedData<TOpts extends stream.TransformOptions> =
  */
 const HAS_FLUSH_BUG = !(Number(process.versions.node.match(/^\d+/)?.[0]) >= 15);
 
-const DISALLOW_OPTION_NAMES = ['read', 'write', 'writev', 'final', 'destroy', 'transform', 'flush'] as const;
+const DISALLOW_OPTION_NAMES = [
+    'construct',
+    'read',
+    'write',
+    'writev',
+    'final',
+    'destroy',
+    'transform',
+    'flush',
+] as const;
 
 function removeProp<T>(obj: T, props: readonly never[]): T;
 function removeProp<T, K extends PropertyKey>(obj: T | undefined, props: readonly K[]): Omit<T, K> | undefined;
