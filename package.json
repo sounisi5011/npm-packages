@@ -11,8 +11,9 @@
   "license": "MIT",
   "author": "sounisi5011",
   "scripts": {
-    "build": "pnpm recursive run build --filter '*'",
+    "build-all": "ultra --recursive build",
     "build-flatbuffers": "pnpm recursive run build-flatbuffers --filter '*'",
+    "build-only-packages": "ultra --recursive --filter 'packages/**' build",
     "build-protobuf": "pnpm recursive run build-protobuf --filter '*'",
     "fmt": "run-p fmt:*",
     "fmt-check": "run-p fmt-check:*",
