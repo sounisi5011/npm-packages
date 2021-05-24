@@ -52,20 +52,27 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - uses: ./actions/setup-pnpm
         if: ${{ steps.release.outputs.release_created }}
+      - run: pnpm install
+        if: ${{ steps.release.outputs.release_created }}
+      - run: pnpx ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
+        # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
+        # Therefore, build only the submodules included in the required dependencies.
+        #
+        # Note: If the "build" script does not exist in the npm-scripts, the ultra-runner will attempt to execute the "build" command.
+        #       And since the "build" command does not exist, the execution will fail.
+        #       For this reason, use the "pnpm run" command and always run "build" in npm-scripts.
+        #       If the "--if-present" option is added, no error will occur even if the "build" script does not exist.
+        #
+        # Note: DO NOT add the "--if-present" option to the end of the command.
+        #       Execution by ultra-runner will fail.
+        if: ${{ steps.release.outputs.release_created }}
       - name: publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
-          pnpm install
-
-          # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
-          # Therefore, build the entire project.
-          # TODO: Build only the submodules included in the required dependencies.
-          pnpm run build
 
           cd '${{ matrix.path-git-relative }}'
-          # pnpm run build --if-present
           if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
             GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             matrix_package_name='${{ matrix.package-name }}'
