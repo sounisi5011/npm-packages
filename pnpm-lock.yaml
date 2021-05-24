@@ -80,6 +80,7 @@ importers:
       '@types/cross-spawn': 6.0.2
       '@types/node': '*'
       '@types/parse-json': ^4.0.0
+      command-join: ^3.0.0
       cross-spawn: ^7.0.3
       execa: 5.0.0
       npm-install-checks: ^4.0.0
@@ -87,6 +88,7 @@ importers:
       pkg-up: ^3.1.0
       ultra-runner: 3.10.5
     dependencies:
+      command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
       parse-json: 5.2.0
@@ -580,6 +582,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@improved/node/1.1.1:
+    resolution: {integrity: sha512-ePDxG9UuU9Kobk90ZUjtmDW8IT9U7aRb1/Rl9683MRNM+ur0ocHL2v7TPH2ajTiVSBUFbbeW8vKIt9jrb0JIAA==}
+    dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
@@ -1906,6 +1912,14 @@ packages:
     dependencies:
       delayed-stream: 1.0.0
     dev: true
+
+  /command-join/3.0.0:
+    resolution: {integrity: sha512-areSrJRrc9cbaA+Hxhs+QP4y+lkWXClAyOmxd79NvGEqUw1uLLaMKa2Tmuc1AkaER9XzmGTzpFWzwucYottMKw==}
+    engines: {node: '>=4.0.0'}
+    requiresBuild: true
+    dependencies:
+      '@improved/node': 1.1.1
+    dev: false
 
   /command-line-args/5.1.1:
     resolution: {integrity: sha512-hL/eG8lrll1Qy1ezvkant+trihbGnaKaeEjj6Scyr3DN+RC7iQ5Rz84IeLERfAWDGo0HBSNAakczwgCilDXnWg==}

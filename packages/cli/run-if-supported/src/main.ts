@@ -1,6 +1,7 @@
 import { promises as fsAsync } from 'fs';
 import { dirname, resolve as resolvePath } from 'path';
 
+import { commandJoin } from 'command-join';
 import parseJson from 'parse-json';
 import pkgUp from 'pkg-up';
 
@@ -116,7 +117,10 @@ export async function main(input: {
         return;
     }
 
-    if (isVerbose) console.error(`> $ ${command}${commandArgs.map(arg => ` ${arg}`).join('')}`);
+    if (isVerbose) {
+        const argsText = commandJoin(commandArgs);
+        console.error(`> $ ${command}${argsText ? ` ${argsText}` : ''}`);
+    }
     const { exitCode } = await input.spawnAsync(command, commandArgs);
     process.exitCode = exitCode ?? 0;
 }
