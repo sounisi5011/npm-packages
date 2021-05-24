@@ -1,0 +1,52 @@
+{
+  "name": "@sounisi5011/run-if-supported",
+  "version": "0.0.0",
+  "description": "Execute the command only if you are running on a supported version of Node and platform",
+  "keywords": [
+    "ci",
+    "cli",
+    "command",
+    "commandline",
+    "node",
+    "os",
+    "platform",
+    "run",
+    "support",
+    "supported",
+    "tool",
+    "version"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/cli/run-if-supported#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/cli/run-if-supported"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "bin": {
+    "run-if-supported": "./dist/index.js"
+  },
+  "directories": {
+    "lib": "./src/",
+    "test": "./tests/"
+  },
+  "files": [
+    "dist/",
+    "!*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  }
+}
