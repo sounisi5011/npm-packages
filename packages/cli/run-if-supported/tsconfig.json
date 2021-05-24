@@ -11,6 +11,10 @@
     "noEmit": true,
 
     /* Module Resolution Options */
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./types.node_modules/*"]
+    },
     "types": ["node"],
 
     /* Source Map Options */
