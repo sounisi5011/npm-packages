@@ -13,5 +13,5 @@ main({
     spawnAsync,
 }).catch(error => {
     process.exitCode = 1;
-    console.dir(error);
+    console.error(error);
 });
