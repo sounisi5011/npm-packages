@@ -81,9 +81,11 @@ importers:
       '@types/node': '*'
       '@types/parse-json': ^4.0.0
       cross-spawn: ^7.0.3
+      execa: 5.0.0
       npm-install-checks: ^4.0.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
+      ultra-runner: 3.10.5
     dependencies:
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
@@ -93,6 +95,8 @@ importers:
       '@types/cross-spawn': 6.0.2
       '@types/node': 15.6.0
       '@types/parse-json': 4.0.0
+      execa: 5.0.0
+      ultra-runner: 3.10.5
 
   packages/encrypted-archive:
     specifiers:

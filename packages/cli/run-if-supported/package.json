@@ -55,7 +55,9 @@
   "devDependencies": {
     "@types/cross-spawn": "6.0.2",
     "@types/node": "*",
-    "@types/parse-json": "^4.0.0"
+    "@types/parse-json": "^4.0.0",
+    "execa": "5.0.0",
+    "ultra-runner": "3.10.5"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"

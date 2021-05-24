@@ -8,4 +8,8 @@ module.exports = {
   },
   testEnvironment: 'node',
   testMatch: ['<rootDir>/tests/**/*.ts'],
+  testPathIgnorePatterns: [
+    '<rootDir>/tests/fixtures/',
+    '<rootDir>/tests/helpers/',
+  ],
 };

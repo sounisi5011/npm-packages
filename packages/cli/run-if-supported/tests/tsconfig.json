@@ -4,7 +4,10 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Module Resolution Options */
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+
+    /* Advanced Options */
+    "resolveJsonModule": true
   },
-  "include": ["./**/*", "../src/**/*"]
+  "include": ["./**/*", "../src/**/*", "../package.json"]
 }
