@@ -95,7 +95,7 @@ describe('cli', () => {
                 stderr: `> $ echo 'foo  bar'`,
                 all: [
                     `> $ echo 'foo  bar'`,
-                    'foo',
+                    'foo  bar',
                 ].join('\n'),
             }));
     });
@@ -141,8 +141,8 @@ describe('cli', () => {
                     '  cpu:',
                     `    current: ${process.arch}`,
                     '    required:',
-                    '      - z80',
                     '      - i8080',
+                    '      - z80',
                 ].join('\n'),
             ],
         ])('%s', (_, subpath, skipMessage) => {
