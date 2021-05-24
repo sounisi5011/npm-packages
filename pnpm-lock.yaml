@@ -80,25 +80,19 @@ importers:
       '@types/cross-spawn': 6.0.2
       '@types/node': '*'
       '@types/parse-json': ^4.0.0
-      '@types/semver': 7.3.6
-      cac: ^6.7.3
       cross-spawn: ^7.0.3
       npm-install-checks: ^4.0.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
-      semver: ^7.3.5
     dependencies:
-      cac: 6.7.3
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
-      semver: 7.3.5
     devDependencies:
       '@types/cross-spawn': 6.0.2
       '@types/node': 15.6.0
       '@types/parse-json': 4.0.0
-      '@types/semver': 7.3.6
 
   packages/encrypted-archive:
     specifiers:
@@ -1025,10 +1019,6 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
-  /@types/semver/7.3.6:
-    resolution: {integrity: sha512-0caWDWmpCp0uifxFh+FaqK3CuZ2SkRR/ZRxAV5+zNdC3QVUi6wyOJnefhPvtNt8NQWXB5OA93BUvZsXpWat2Xw==}
-    dev: true
-
   /@types/stack-utils/1.0.1:
     resolution: {integrity: sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==}
     dev: true
@@ -1673,11 +1663,6 @@ packages:
       command-line-args: 5.1.1
       command-line-usage: 6.1.1
     dev: true
-
-  /cac/6.7.3:
-    resolution: {integrity: sha512-ECVqVZh74qgSuZG9YOt2OJPI3wGcf+EwwuF/XIOYqZBD0KZYLtgPWqFPxmDPQ6joxI1nOlvVgRV6VT53Ooyocg==}
-    engines: {node: '>=8'}
-    dev: false
 
   /cache-base/1.0.1:
     resolution: {integrity: sha512-AKcdTnFSWATd5/GCPRxr2ChwIJ85CeyrEyjRHlKxQ56d4XJMGym0uAiKn0xbLOGOl3+yRpOTi484dVCEc5AUzQ==}
