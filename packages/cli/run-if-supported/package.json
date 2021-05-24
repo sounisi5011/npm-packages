@@ -46,6 +46,17 @@
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "jest"
   },
+  "dependencies": {
+    "cac": "^6.7.3",
+    "cross-spawn": "^7.0.3",
+    "npm-install-checks": "^4.0.0",
+    "semver": "^7.3.5"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "6.0.2",
+    "@types/node": "*",
+    "@types/semver": "7.3.6"
+  },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
   }
