@@ -45,6 +45,7 @@
   },
   "files": [
     "dist/",
+    "!*.d.ts",
     "!*.tsbuildinfo"
   ],
   "scripts": {
