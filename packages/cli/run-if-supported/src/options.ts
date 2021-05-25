@@ -13,35 +13,28 @@ function mergeOptionValue<T extends string>(
 }
 
 function parseLongOption(
-    arg: string,
+    option: string,
     callbackFn: (
         optionName: string,
         optionValue: string | undefined,
     ) => void,
-): boolean {
-    const longOptionMatch = arg.match(/^--+([^=]*)(?:=(.*))?$/s);
-    if (longOptionMatch) {
-        const [, optionName, optionValue] = longOptionMatch;
-        if (!optionName) throw new Error(`Invalid option \`${arg}\``);
+): void {
+    const equalsSignIndex = option.indexOf('=');
+    if (equalsSignIndex < 0) {
+        const optionName = option;
+        callbackFn(`--${optionName}`, undefined);
+    } else {
+        const optionName = option.substring(0, equalsSignIndex);
+        const optionValue = option.substring(equalsSignIndex + 1);
         callbackFn(`--${optionName}`, optionValue);
-        return true;
     }
-    return false;
 }
 
 function parseShortOption(
-    arg: string,
+    option: string,
     callbackFn: (optionName: string) => void,
-): boolean {
-    const shortOptionMatch = arg.match(/^-(.*)$/s);
-    if (shortOptionMatch) {
-        const [, optionNameChars] = shortOptionMatch;
-        if (!optionNameChars) throw new Error(`Invalid option \`${arg}\``);
-
-        for (const optionName of optionNameChars) callbackFn(`-${optionName}`);
-        return true;
-    }
-    return false;
+): void {
+    for (const optionNameChar of option) callbackFn(`-${optionNameChar}`);
 }
 
 function processOption(
@@ -50,8 +43,18 @@ function processOption(
         optionName: string,
         optionValue?: string,
     ) => void,
-): boolean {
-    return parseLongOption(arg, callback) || parseShortOption(arg, callback);
+): void {
+    const match = arg.match(/^(-+)(.*)$/s);
+    if (!match) throw new Error(`Invalid option \`${arg}\``);
+
+    const [, hyphen, option] = match;
+    if (!hyphen || !option) throw new Error(`Invalid option \`${arg}\``);
+
+    if (hyphen.length === 1) {
+        parseShortOption(option, callback);
+    } else {
+        parseLongOption(option, callback);
+    }
 }
 
 export function parseOptions(
@@ -62,13 +65,11 @@ export function parseOptions(
         ({ options, command, commandArgs, waitValueOptionName }, arg) => {
             if (command !== undefined) {
                 commandArgs.push(arg);
-            } else if (
+            } else if (arg.startsWith('-')) {
                 processOption(arg, (optionName, optionValue) => {
                     options.set(optionName, mergeOptionValue(options.get(optionName), optionValue));
                     waitValueOptionName = typeof optionValue === 'string' ? undefined : optionName;
-                })
-            ) {
-                //
+                });
             } else if (waitValueOptionName !== undefined && hasValueOptions.includes(waitValueOptionName)) {
                 const optionName = waitValueOptionName;
                 const optionValue = arg;
