@@ -4,7 +4,7 @@ export interface ParsedArgs {
     commandArgs: string[];
 }
 
-function mergeOptionValue<T>(
+function mergeOptionValue<T extends string>(
     prevValue: T[] | undefined,
     newValue?: T,
 ): T[] {
@@ -44,6 +44,16 @@ function parseShortOption(
     return false;
 }
 
+function processOption(
+    arg: string,
+    callback: (
+        optionName: string,
+        optionValue?: string,
+    ) => void,
+): boolean {
+    return parseLongOption(arg, callback) || parseShortOption(arg, callback);
+}
+
 export function parseOptions(
     argv: readonly string[],
     hasValueOptions: readonly string[] = [],
@@ -53,16 +63,9 @@ export function parseOptions(
             if (command !== undefined) {
                 commandArgs.push(arg);
             } else if (
-                parseLongOption(arg, (optionName, optionValue) => {
+                processOption(arg, (optionName, optionValue) => {
                     options.set(optionName, mergeOptionValue(options.get(optionName), optionValue));
                     waitValueOptionName = typeof optionValue === 'string' ? undefined : optionName;
-                })
-            ) {
-                //
-            } else if (
-                parseShortOption(arg, optionName => {
-                    options.set(optionName, mergeOptionValue(options.get(optionName)));
-                    waitValueOptionName = optionName;
                 })
             ) {
                 //
