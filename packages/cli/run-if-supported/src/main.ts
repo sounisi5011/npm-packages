@@ -51,16 +51,8 @@ function createHelpText(opts: {
     description: string;
 }): string {
     const helpTextLines: string[][] = [];
-    if (opts.binName && opts.version) {
-        helpTextLines.push([
-            `${opts.binName} v${opts.version}`,
-        ]);
-    }
-    if (opts.description) {
-        helpTextLines.push([
-            opts.description,
-        ]);
-    }
+    if (opts.binName && opts.version) helpTextLines.push([`${opts.binName} v${opts.version}`]);
+    if (opts.description) helpTextLines.push([opts.description]);
     if (opts.binName) {
         helpTextLines.push([
             'Usage:',
