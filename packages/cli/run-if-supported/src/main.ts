@@ -7,17 +7,18 @@ import pkgUp from 'pkg-up';
 
 import { isNotSupported } from './is-supported';
 import { parseOptions } from './options';
-import { isRecordLike } from './utils';
+import { filterObjectEntry, isRecordLike, isString } from './utils';
 
 function getBinName(pkg: Record<PropertyKey, unknown>, entryFilepath: string): string | undefined {
     if (isRecordLike(pkg['bin'])) {
-        for (const [binName, binPath] of Object.entries(pkg['bin'])) {
-            if (typeof binPath !== 'string') continue;
-            const binFullpath = resolvePath(dirname(entryFilepath), '..', binPath);
-            if (binFullpath === entryFilepath) {
-                return binName;
-            }
-        }
+        const binEntry = Object.entries(pkg['bin'])
+            .filter(filterObjectEntry(isString))
+            .map(([binName, binPath]) => ({ binName, binPath }))
+            .find(({ binPath }) => {
+                const binFullpath = resolvePath(dirname(entryFilepath), '..', binPath);
+                return binFullpath === entryFilepath;
+            });
+        if (binEntry) return binEntry.binName;
     }
     if (typeof pkg['bin'] === 'string' && typeof pkg['name'] === 'string') {
         return pkg['name'].replace(/^@[^/]+\//, '');
