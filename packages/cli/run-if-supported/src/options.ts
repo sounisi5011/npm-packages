@@ -48,46 +48,36 @@ export function parseOptions(
     argv: readonly string[],
     hasValueOptions: readonly string[] = [],
 ): ParsedArgs {
-    const options: ParsedArgs['options'] = new Map();
-    let command: ParsedArgs['command'];
-    const commandArgs: ParsedArgs['commandArgs'] = [];
-
-    let waitValueOptionName: string | undefined;
-    for (const arg of argv) {
-        if (command !== undefined) {
-            commandArgs.push(arg);
-            continue;
-        }
-
-        if (
-            parseLongOption(arg, (optionName, optionValue) => {
+    const { options, command, commandArgs } = argv.reduce<ParsedArgs & { waitValueOptionName?: string }>(
+        ({ options, command, commandArgs, waitValueOptionName }, arg) => {
+            if (command !== undefined) {
+                commandArgs.push(arg);
+            } else if (
+                parseLongOption(arg, (optionName, optionValue) => {
+                    options.set(optionName, mergeOptionValue(options.get(optionName), optionValue));
+                    waitValueOptionName = typeof optionValue === 'string' ? undefined : optionName;
+                })
+            ) {
+                //
+            } else if (
+                parseShortOption(arg, optionName => {
+                    options.set(optionName, mergeOptionValue(options.get(optionName)));
+                    waitValueOptionName = optionName;
+                })
+            ) {
+                //
+            } else if (waitValueOptionName !== undefined && hasValueOptions.includes(waitValueOptionName)) {
+                const optionName = waitValueOptionName;
+                const optionValue = arg;
                 options.set(optionName, mergeOptionValue(options.get(optionName), optionValue));
-                waitValueOptionName = typeof optionValue === 'string' ? undefined : optionName;
-            })
-        ) {
-            continue;
-        }
-
-        if (
-            parseShortOption(arg, optionName => {
-                options.set(optionName, mergeOptionValue(options.get(optionName)));
-                waitValueOptionName = optionName;
-            })
-        ) {
-            continue;
-        }
-
-        if (waitValueOptionName !== undefined && hasValueOptions.includes(waitValueOptionName)) {
-            const optionName = waitValueOptionName;
-            const optionValue = arg;
-            options.set(optionName, mergeOptionValue(options.get(optionName), optionValue));
-            waitValueOptionName = undefined;
-            continue;
-        }
-
-        command = arg;
-        waitValueOptionName = undefined;
-    }
-
+                waitValueOptionName = undefined;
+            } else {
+                command = arg;
+                waitValueOptionName = undefined;
+            }
+            return { options, command, commandArgs, waitValueOptionName };
+        },
+        { options: new Map(), commandArgs: [] },
+    );
     return { options, command, commandArgs };
 }
