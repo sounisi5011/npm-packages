@@ -73,7 +73,7 @@
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
-    "test": "run-if-supported-node run-p test:*",
+    "test": "run-if-supported --verbose run-p test:*",
     "test:examples": "run-s build test:examples:*",
     "test:examples:index": "node ./examples/index.js",
     "test:jest": "jest",
@@ -81,7 +81,7 @@
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
-    "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
+    "@sounisi5011/run-if-supported": "workspace:^0.0.0 || ^1.0.0",
     "@types/node": "15.6.0",
     "tsd": "0.15.1"
   },
