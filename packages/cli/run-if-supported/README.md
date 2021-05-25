@@ -1,11 +1,11 @@
 # @sounisi5011/run-if-supported
 
-<!-- [![Go to the latest release page on npm](https://img.shields.io/npm/v/@sounisi5011/run-if-supported.svg)](https://www.npmjs.com/package/@sounisi5011/run-if-supported) -->
-<!-- ![Supported Node.js version: ^12.17.x || 14.x || 15.x || 16.x](https://img.shields.io/node/v/@sounisi5011/run-if-supported) -->
+[![Go to the latest release page on npm](https://img.shields.io/npm/v/@sounisi5011/run-if-supported.svg)](https://www.npmjs.com/package/@sounisi5011/run-if-supported)
+![Supported Node.js version: ^12.17.x || 14.x || 15.x || 16.x](https://img.shields.io/node/v/@sounisi5011/run-if-supported)
 [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-<!-- [![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/run-if-supported)](https://bundlephobia.com/result?p=@sounisi5011/run-if-supported) -->
-<!-- [![Install Size Details](https://packagephobia.com/badge?p=@sounisi5011/run-if-supported)](https://packagephobia.com/result?p=@sounisi5011/run-if-supported) -->
+[![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/run-if-supported)](https://bundlephobia.com/result?p=@sounisi5011/run-if-supported)
+[![Install Size Details](https://packagephobia.com/badge?p=@sounisi5011/run-if-supported)](https://packagephobia.com/result?p=@sounisi5011/run-if-supported)
 [![Dependencies Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcli%2Frun-if-supported)](https://david-dm.org/sounisi5011/npm-packages?path=packages/cli/run-if-supported)
 [![Build Status](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml/badge.svg)](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/26495b68302f7ff963c3/maintainability)](https://codeclimate.com/github/sounisi5011/npm-packages/maintainability)
