@@ -1,0 +1,75 @@
+{
+  "name": "@sounisi5011/run-if-supported",
+  "version": "0.0.0",
+  "description": "Execute the command only if you are running on a supported version of Node and platform",
+  "keywords": [
+    "ci",
+    "cli",
+    "command",
+    "commandline",
+    "cpu",
+    "exec",
+    "execute",
+    "execution",
+    "node",
+    "os",
+    "platform",
+    "platforms",
+    "run",
+    "support",
+    "supported",
+    "supports",
+    "tool",
+    "tools",
+    "version",
+    "versions"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/cli/run-if-supported#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/cli/run-if-supported"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "bin": {
+    "run-if-supported": "./dist/index.js"
+  },
+  "directories": {
+    "lib": "./src/",
+    "test": "./tests/"
+  },
+  "files": [
+    "dist/",
+    "!*.d.ts",
+    "!*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "command-join": "^3.0.0",
+    "cross-spawn": "^7.0.3",
+    "npm-install-checks": "^4.0.0",
+    "parse-json": "^5.2.0",
+    "pkg-up": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "6.0.2",
+    "@types/node": "*",
+    "@types/parse-json": "^4.0.0",
+    "execa": "5.0.0",
+    "ultra-runner": "3.10.5"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  }
+}

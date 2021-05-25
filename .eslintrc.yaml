@@ -56,7 +56,10 @@ overrides:
     parserOptions:
       sourceType: module
       project:
-        - ./{packages{,/ts-type-utils},actions}/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/cli/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/ts-type-utils/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./actions/*{,/tests{,/helpers},/test-d}/tsconfig.json
     settings:
       node:
         # see https://github.com/mysticatea/eslint-plugin-node/blob/v11.1.0/docs/rules/shebang.md
