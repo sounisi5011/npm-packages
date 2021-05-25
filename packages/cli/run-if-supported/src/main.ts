@@ -102,6 +102,11 @@ function printHelpAndVersion(opts: { options: Map<string, unknown>; entryFilepat
     return false;
 }
 
+function validateCommandName(command: string | undefined): asserts command is string {
+    if (command === undefined) throw new Error(`The "<command>" argument is required`);
+    if (!command) throw new Error(`Invalid command: \`${command}\``);
+}
+
 function printSkipMessage(opts: { isPrint: boolean; reasonMessage: string }): void {
     if (opts.isPrint) console.error(`Skipped command execution. ${opts.reasonMessage}`);
 }
@@ -129,11 +134,8 @@ export async function main(input: {
     spawnAsync: SpawnAsyncFn;
 }): Promise<void> {
     const { options, command, commandArgs } = parseOptions(input.argv);
-
     if (printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
-
-    if (command === undefined) throw new Error(`The "<command>" argument is required`);
-    if (!command) throw new Error(`Invalid command: \`${command}\``);
+    validateCommandName(command);
 
     const pkg = await readPkg({ cwd: input.cwd });
     const isPrintSkipMessage = options.has('--print-skip-message');
