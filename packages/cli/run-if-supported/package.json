@@ -7,14 +7,22 @@
     "cli",
     "command",
     "commandline",
+    "cpu",
+    "exec",
+    "execute",
+    "execution",
     "node",
     "os",
     "platform",
+    "platforms",
     "run",
     "support",
     "supported",
+    "supports",
     "tool",
-    "version"
+    "tools",
+    "version",
+    "versions"
   ],
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/cli/run-if-supported#readme",
   "bugs": {
