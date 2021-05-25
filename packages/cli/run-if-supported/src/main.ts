@@ -45,6 +45,17 @@ function getCliData(entryFilepath: string): {
     return { binName, version, description };
 }
 
+async function readPkg(opts: { cwd: string }): Promise<Record<PropertyKey, unknown>> {
+    const pkgPath = await pkgUp({ cwd: opts.cwd });
+    if (!pkgPath) throw new Error(`"package.json" file is not found`);
+
+    const pkgText = await fsAsync.readFile(pkgPath, 'utf8');
+    const pkg: unknown = parseJson(pkgText, pkgPath);
+    if (!isRecordLike(pkg)) throw new Error(`Invalidly structured file: ${pkgPath}`);
+
+    return pkg;
+}
+
 function createHelpText(opts: {
     binName: string | undefined;
     version: string | undefined;
@@ -76,48 +87,73 @@ function createHelpText(opts: {
     return helpTextLines.map(lines => lines.join('\n')).join('\n\n');
 }
 
+function printHelpAndVersion(opts: { options: Map<string, unknown>; entryFilepath: string }): boolean {
+    if (opts.options.has('-h') || opts.options.has('--help')) {
+        const { binName, version, description } = getCliData(opts.entryFilepath);
+        console.log(createHelpText({ binName, version, description }));
+        return true;
+    }
+    if (opts.options.has('-v') || opts.options.has('-V') || opts.options.has('--version')) {
+        const { version } = getCliData(opts.entryFilepath);
+        console.log(version ?? 'unknown');
+        return true;
+    }
+
+    return false;
+}
+
+function printSkipMessage(opts: { isPrint: boolean; reasonMessage: string }): void {
+    if (opts.isPrint) console.error(`Skipped command execution. ${opts.reasonMessage}`);
+}
+
+type SpawnAsyncFn = (
+    command: string,
+    args: readonly string[],
+    options: { cwd: string },
+) => Promise<{ exitCode: number | null }>;
+
+async function execCommand(
+    opts: { cwd: string; command: string; args: readonly string[]; isVerbose: boolean; spawnAsync: SpawnAsyncFn },
+): Promise<{ exitCode: number | null }> {
+    if (opts.isVerbose) {
+        console.error(`> $ ${commandJoin([opts.command, ...opts.args])}`);
+    }
+    return await opts.spawnAsync(opts.command, opts.args, { cwd: opts.cwd });
+}
+
 export async function main(input: {
     cwd: string;
     entryFilepath: string;
     argv: readonly string[];
     nodeVersion: string;
-    spawnAsync: (command: string, args: readonly string[]) => Promise<{ exitCode: number | null }>;
+    spawnAsync: SpawnAsyncFn;
 }): Promise<void> {
-    const { binName, version, description } = getCliData(input.entryFilepath);
     const { options, command, commandArgs } = parseOptions(input.argv);
 
-    if (options.has('-h') || options.has('--help')) {
-        console.log(createHelpText({ binName, version, description }));
-        return;
-    }
-    if (options.has('-v') || options.has('-V') || options.has('--version')) {
-        console.log(version ?? 'unknown');
-        return;
-    }
+    if (printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
 
     if (command === undefined) throw new Error(`The "<command>" argument is required`);
     if (!command) throw new Error(`Invalid command: \`${command}\``);
 
-    const pkgPath = await pkgUp({ cwd: input.cwd });
-    if (!pkgPath) throw new Error(`"package.json" file is not found`);
-
-    const pkgText = await fsAsync.readFile(pkgPath, 'utf8');
-    const pkg: unknown = parseJson(pkgText, pkgPath);
-    if (!isRecordLike(pkg)) throw new Error(`Invalidly structured file: ${pkgPath}`);
-
+    const pkg = await readPkg({ cwd: input.cwd });
     const isPrintSkipMessage = options.has('--print-skip-message');
     const isVerbose = options.has('--verbose');
 
     const reasonMessage = isNotSupported(pkg, input.nodeVersion);
     if (reasonMessage) {
-        if (isPrintSkipMessage || isVerbose) console.error(`Skipped command execution. ${reasonMessage}`);
+        printSkipMessage({
+            isPrint: isPrintSkipMessage || isVerbose,
+            reasonMessage,
+        });
         return;
     }
 
-    if (isVerbose) {
-        const argsText = commandJoin(commandArgs);
-        console.error(`> $ ${command}${argsText ? ` ${argsText}` : ''}`);
-    }
-    const { exitCode } = await input.spawnAsync(command, commandArgs);
+    const { exitCode } = await execCommand({
+        cwd: input.cwd,
+        command,
+        args: commandArgs,
+        isVerbose,
+        spawnAsync: input.spawnAsync,
+    });
     process.exitCode = exitCode ?? 0;
 }
