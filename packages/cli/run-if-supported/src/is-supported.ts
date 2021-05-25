@@ -16,23 +16,23 @@ function readProp<T>(
 
 function createRequiredPlatformText(error: Error & Record<PropertyKey, unknown>): string {
     if (!isRecordLike(error['current']) || !isRecordLike(error['required'])) return '';
-    const requiredPlatformTextList: string[] = [];
-    for (const [prop, currentPlatform] of Object.entries(error['current'])) {
-        if (!isString(currentPlatform)) continue;
-        const requiredPlatformList = (
-            readProp(error['required'], prop, Array.isArray)
-                ?? [readProp(error['required'], prop, isString)]
-        ).filter(isString);
-        if (requiredPlatformList.length >= 1) {
-            requiredPlatformTextList.push(
+    return Object.entries(error['current'])
+        .flatMap(([prop, currentPlatform]): string[] => {
+            if (!isString(currentPlatform)) return [];
+            const requiredPlatformList = (
+                readProp(error['required'], prop, Array.isArray)
+                    ?? [readProp(error['required'], prop, isString)]
+            ).filter(isString);
+            if (requiredPlatformList.length < 1) return [];
+            return [
                 `${prop}:`,
                 `  current: ${currentPlatform}`,
                 `  required:`,
                 ...requiredPlatformList.map(platform => `    - ${/\s|^$/.test(platform) ? `"${platform}"` : platform}`),
-            );
-        }
-    }
-    return requiredPlatformTextList.map(line => `  ${line}`).join('\n');
+            ];
+        })
+        .map(line => `  ${line}`)
+        .join('\n');
 }
 
 export function isNotSupported(
