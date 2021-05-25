@@ -14,6 +14,11 @@ function readProp<T>(
     return null;
 }
 
+function validateError<T>(error: unknown, fn: (error: Error & Record<PropertyKey, unknown>) => T): T {
+    if (error instanceof Error && isRecordLike(error)) return fn(error);
+    throw error;
+}
+
 function createRequiredPlatformText(error: Error & Record<PropertyKey, unknown>): string {
     if (!isRecordLike(error['current']) || !isRecordLike(error['required'])) return '';
     return Object.entries(error['current'])
@@ -41,19 +46,23 @@ export function isNotSupported(
 ): string | false {
     try {
         checkEngine(pkg, null, nodeVersion);
-    } catch (error) {
-        if (!(error instanceof Error && isRecordLike(error) && error['code'] === 'EBADENGINE')) throw error;
-
-        const nodeRange = readProp(error['required'], 'node', isString);
-        return `Node ${nodeVersion} is not included in supported range${nodeRange ? `: ${nodeRange}` : ''}`;
+    } catch (error: unknown) {
+        return validateError(error, error => {
+            if (error['code'] !== 'EBADENGINE') throw error;
+            const nodeRange = readProp(error['required'], 'node', isString);
+            return `Node ${nodeVersion} is not included in supported range${nodeRange ? `: ${nodeRange}` : ''}`;
+        });
     }
     try {
         checkPlatform(pkg);
-    } catch (error) {
-        if (!(error instanceof Error && isRecordLike(error) && error['code'] === 'EBADPLATFORM')) throw error;
-
-        const requiredPlatform = createRequiredPlatformText(error);
-        return `Current platform is not included in supported list${requiredPlatform ? `:\n${requiredPlatform}` : ''}`;
+    } catch (error: unknown) {
+        return validateError(error, error => {
+            if (error['code'] !== 'EBADPLATFORM') throw error;
+            const requiredPlatform = createRequiredPlatformText(error);
+            return `Current platform is not included in supported list${
+                requiredPlatform ? `:\n${requiredPlatform}` : ''
+            }`;
+        });
     }
     return false;
 }
