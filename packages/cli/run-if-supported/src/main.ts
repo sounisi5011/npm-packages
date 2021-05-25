@@ -9,6 +9,22 @@ import { isNotSupported } from './is-supported';
 import { parseOptions } from './options';
 import { isRecordLike } from './utils';
 
+function getBinName(pkg: Record<PropertyKey, unknown>, entryFilepath: string): string | undefined {
+    if (isRecordLike(pkg['bin'])) {
+        for (const [binName, binPath] of Object.entries(pkg['bin'])) {
+            if (typeof binPath !== 'string') continue;
+            const binFullpath = resolvePath(dirname(entryFilepath), '..', binPath);
+            if (binFullpath === entryFilepath) {
+                return binName;
+            }
+        }
+    }
+    if (typeof pkg['bin'] === 'string' && typeof pkg['name'] === 'string') {
+        return pkg['name'].replace(/^@[^/]+\//, '');
+    }
+    return undefined;
+}
+
 function getCliData(entryFilepath: string): {
     binName: string | undefined;
     version: string | undefined;
@@ -16,26 +32,14 @@ function getCliData(entryFilepath: string): {
 } {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const PKG: unknown = require('../package.json');
-    let binName: string | undefined;
     let version: string | undefined;
     let description = '';
 
-    if (isRecordLike(PKG)) {
-        if (isRecordLike(PKG['bin'])) {
-            for (const [binName_, binPath] of Object.entries(PKG['bin'])) {
-                if (typeof binPath !== 'string') continue;
-                const binFullpath = resolvePath(dirname(entryFilepath), '..', binPath);
-                if (binFullpath === entryFilepath) {
-                    binName = binName_;
-                    break;
-                }
-            }
-        } else if (typeof PKG['bin'] === 'string' && typeof PKG['name'] === 'string') {
-            binName = PKG['name'].replace(/^@[^/]+\//, '');
-        }
-        if (typeof PKG['version'] === 'string') version = PKG['version'];
-        if (typeof PKG['description'] === 'string') description = PKG['description'];
-    }
+    if (!isRecordLike(PKG)) return { binName: undefined, version, description };
+
+    const binName = getBinName(PKG, entryFilepath);
+    if (typeof PKG['version'] === 'string') version = PKG['version'];
+    if (typeof PKG['description'] === 'string') description = PKG['description'];
 
     return { binName, version, description };
 }
