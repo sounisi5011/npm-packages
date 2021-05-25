@@ -62,7 +62,7 @@ importers:
       '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
-      '@vercel/ncc': 0.28.5
+      '@vercel/ncc': 0.28.6
       find-git-root: ^1.0.4
       workspace-tools: ^0.15.0
     dependencies:
@@ -73,7 +73,7 @@ importers:
       '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 15.6.0
-      '@vercel/ncc': 0.28.5
+      '@vercel/ncc': 0.28.6
 
   packages/cli/run-if-supported:
     specifiers:
@@ -1278,8 +1278,8 @@ packages:
       eslint-visitor-keys: 2.1.0
     dev: true
 
-  /@vercel/ncc/0.28.5:
-    resolution: {integrity: sha512-ZSwD4EDCon2EsnPZ2/Qcigx4N2DiuBLV/rDnF04giEPFuDeBeUDdnSTyYYfX8KNic/prrJuS1vUEmAOHmj+fRg==}
+  /@vercel/ncc/0.28.6:
+    resolution: {integrity: sha512-t4BoSSuyK8BZaUE0gV18V6bkFs4st7baumtFGa50dv1tMu2GDBEBF8sUZaKBdKiL6DzJ2D2+XVCwYWWDcQOYdQ==}
     hasBin: true
     dev: true
 
