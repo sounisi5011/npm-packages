@@ -59,7 +59,7 @@ importers:
   actions/monorepo-workspace-submodules-finder:
     specifiers:
       '@actions/core': ^1.2.6
-      '@sounisi5011/run-if-supported': workspace:^0.0.0 || ^1.0.0
+      '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
       '@vercel/ncc': 0.28.5
@@ -70,7 +70,7 @@ importers:
       find-git-root: 1.0.4
       workspace-tools: 0.15.1
     devDependencies:
-      '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 15.6.0
       '@vercel/ncc': 0.28.5
@@ -103,7 +103,7 @@ importers:
   packages/encrypted-archive:
     specifiers:
       '@jorgeferrero/stream-to-buffer': 2.0.6
-      '@sounisi5011/run-if-supported': workspace:^0.0.0 || ^1.0.0
+      '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/argon2-browser': 1.12.0
@@ -136,7 +136,7 @@ importers:
       varint: 6.0.0
     devDependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
-      '@sounisi5011/run-if-supported': link:../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.0.0
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.12.0
       '@types/bl': 5.0.1
@@ -163,11 +163,11 @@ importers:
 
   packages/stream-transform-from:
     specifiers:
-      '@sounisi5011/run-if-supported': workspace:^0.0.0 || ^1.0.0
+      '@sounisi5011/run-if-supported': 1.0.0
       '@types/node': 15.6.0
       tsd: 0.15.1
     devDependencies:
-      '@sounisi5011/run-if-supported': link:../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.0.0
       '@types/node': 15.6.0
       tsd: 0.15.1
 
@@ -577,7 +577,6 @@ packages:
 
   /@improved/node/1.1.1:
     resolution: {integrity: sha512-ePDxG9UuU9Kobk90ZUjtmDW8IT9U7aRb1/Rl9683MRNM+ur0ocHL2v7TPH2ajTiVSBUFbbeW8vKIt9jrb0JIAA==}
-    dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
@@ -872,6 +871,18 @@ packages:
     resolution: {integrity: sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA==}
     dependencies:
       '@sinonjs/commons': 1.8.3
+    dev: true
+
+  /@sounisi5011/run-if-supported/1.0.0:
+    resolution: {integrity: sha512-mes3zh2if1DLMsLB4ja2juDGEya/f+y/oYNBYY4BfprAeN0m0WOld50ZjESr8vTIqznidfCSVTfc1sZss3SZ0w==}
+    engines: {node: ^12.17.x || 14.x || 15.x || 16.x}
+    hasBin: true
+    dependencies:
+      command-join: 3.0.0
+      cross-spawn: 7.0.3
+      npm-install-checks: 4.0.0
+      parse-json: 5.2.0
+      pkg-up: 3.1.0
     dev: true
 
   /@szmarczak/http-timer/1.1.2:
@@ -1971,7 +1982,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@improved/node': 1.1.1
-    dev: false
 
   /command-line-args/5.1.1:
     resolution: {integrity: sha512-hL/eG8lrll1Qy1ezvkant+trihbGnaKaeEjj6Scyr3DN+RC7iQ5Rz84IeLERfAWDGo0HBSNAakczwgCilDXnWg==}
@@ -3001,7 +3011,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       locate-path: 3.0.0
-    dev: false
 
   /find-up/4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
@@ -4679,7 +4688,6 @@ packages:
     dependencies:
       p-locate: 3.0.0
       path-exists: 3.0.0
-    dev: false
 
   /locate-path/5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
@@ -5077,7 +5085,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       semver: 7.3.5
-    dev: false
 
   /npm-run-all/4.1.5:
     resolution: {integrity: sha512-Oo82gJDAVcaMdi3nuoKFavkIHBRVqQ1qvMb+9LHk/cF4P6B2m8aP04hGf7oL6wZ9BuGwX1onlLhpuoofSyoQDQ==}
@@ -5278,7 +5285,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       p-limit: 2.3.0
-    dev: false
 
   /p-locate/4.1.0:
     resolution: {integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==}
@@ -5498,7 +5504,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 3.0.0
-    dev: false
 
   /please-upgrade-node/3.2.0:
     resolution: {integrity: sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==}
