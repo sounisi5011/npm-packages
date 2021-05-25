@@ -19,7 +19,7 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "run-if-supported-node jest"
+    "test": "run-if-supported --verbose jest"
   },
   "dependencies": {
     "@actions/core": "^1.2.6",
@@ -27,7 +27,7 @@
     "workspace-tools": "^0.15.0"
   },
   "devDependencies": {
-    "@sounisi5011/scripts--run-if-supported-node": "workspace:^0.0.0",
+    "@sounisi5011/run-if-supported": "1.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/node": "*",
     "@vercel/ncc": "0.28.5"
