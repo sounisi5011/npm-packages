@@ -79,7 +79,7 @@ importers:
     specifiers:
       '@types/cross-spawn': 6.0.2
       '@types/node': '*'
-      '@types/parse-json': ^4.0.0
+      '@types/parse-json': 4.0.0
       command-join: ^3.0.0
       cross-spawn: ^7.0.3
       execa: 5.0.0
