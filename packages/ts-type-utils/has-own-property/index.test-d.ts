@@ -136,13 +136,6 @@ if ((Object.prototype.hasOwnProperty.call as hasOwnProperty)(obj1, 'nonExistent'
     expectType<number | undefined>(obj1.union_undef);
 }
 
-/**
- * Note: Currently, the `dot-notation` rule for `@typescript-eslint/eslint-plugin@4.17.0` conflicts with TypeScript's `noPropertyAccessFromIndexSignature` option
- *       see https://github.com/typescript-eslint/typescript-eslint/issues/3104
- * @todo If `@typescript-eslint/eslint-plugin` supports the `noPropertyAccessFromIndexSignature` option, remove this comment.
- */
-/* eslint-disable @typescript-eslint/dot-notation */
-
 const obj2: Record<string, boolean> = {};
 
 /**

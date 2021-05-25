@@ -177,7 +177,6 @@ function isErrorConstructor(value: unknown): value is ErrorConstructor {
 }
 
 export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
-    /* eslint-disable @typescript-eslint/dot-notation */
     if (
         isObject(oldError)
         && !(oldError instanceof Error)
@@ -195,7 +194,6 @@ export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
         throw newError;
     }
     throw oldError;
-    /* eslint-enable */
 }
 
 /**
@@ -205,7 +203,7 @@ export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
  * This function will fix the stack trace of the pseudo Error object to the proper one.
  */
 export function fixNodePrimordialsErrorStackTrace(oldError: unknown): never {
-    /* eslint-disable @typescript-eslint/no-throw-literal, @typescript-eslint/dot-notation */
+    /* eslint-disable @typescript-eslint/no-throw-literal */
     if (!(isObject(oldError) && !(oldError instanceof Error))) throw oldError;
     const oldErrorStackTrace = oldError['stack'];
 
