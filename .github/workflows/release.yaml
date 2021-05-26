@@ -35,7 +35,7 @@ jobs:
         #
         # Commit to PR
         #
-      - name: Get PR ref
+      - name: Commit to Release PR / Get PR ref
         id: release-pr
         shell: bash
         env:
@@ -46,12 +46,13 @@ jobs:
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
           echo "::set-output name=ref::${ref}"
         if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
-      - uses: actions/checkout@v2
+      - name: Commit to Release PR / Checkout
+        uses: actions/checkout@v2
         with:
           ref: ${{ steps.release-pr.outputs.ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
         if: ${{ steps.release-pr.outputs.ref }}
-      - name: Push to PR
+      - name: Commit to Release PR / Push to PR
         run: |
           git config user.name  'GitHub'
           git config user.email 'noreply@github.com'
@@ -62,16 +63,18 @@ jobs:
         #
         # Publish
         #
-      - uses: actions/checkout@v2
+      - name: Publish / Checkout
+        uses: actions/checkout@v2
         if: ${{ steps.release.outputs.release_created }}
-      - uses: actions/setup-node@v2
+      - name: Publish / Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 12.x
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.release_created }}
-      - name: Cache .pnpm-store
+      - name: Publish / Cache .pnpm-store
         uses: actions/cache@v2
         with:
           path: ~/.pnpm-store
@@ -81,11 +84,14 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
         if: ${{ steps.release.outputs.release_created }}
-      - uses: ./actions/setup-pnpm
+      - name: Publish / Setup pnpm
+        uses: ./actions/setup-pnpm
         if: ${{ steps.release.outputs.release_created }}
-      - run: pnpm install
+      - name: Publish / Install Dependencies
+        run: pnpm install
         if: ${{ steps.release.outputs.release_created }}
-      - run: pnpx ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
+      - name: Publish / Build
+        run: pnpx ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
         # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
         # Therefore, build only the submodules included in the required dependencies.
         #
@@ -97,7 +103,7 @@ jobs:
         # Note: DO NOT add the "--if-present" option to the end of the command.
         #       Execution by ultra-runner will fail.
         if: ${{ steps.release.outputs.release_created }}
-      - name: publish
+      - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
