@@ -40,7 +40,7 @@ jobs:
         id: release-pr
         shell: bash
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
@@ -50,12 +50,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ steps.release-pr.outputs.ref }}
+          token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Push to PR
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'release-workflow+github-actions[bot]@users.noreply.github.com'
-          git commit --allow-empty -m 'chore: empty commit'
+          git config user.name  'GitHub'
+          git config user.email 'noreply@github.com'
+          git commit --allow-empty --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' -m 'chore: trigger tests'
           git push
         if: ${{ steps.release-pr.outputs.ref }}
 
