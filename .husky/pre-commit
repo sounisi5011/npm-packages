@@ -1,6 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+# Note: This file should be POSIX compliant.
+#       If you edit this file, use "checkbashisms" to check it does not contain bash, zsh, or other features.
+
 # see https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
 pnpx ultra --recursive --raw pwd | while read -r dirpath; do
   if [ -d "${dirpath}" ]; then
