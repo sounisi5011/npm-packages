@@ -56,7 +56,7 @@ jobs:
         run: |
           git config user.name  'GitHub'
           git config user.email 'noreply@github.com'
-          git commit --allow-empty --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' -m 'chore: empty commit'
+          git commit --allow-empty --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' -m 'chore: trigger tests'
           git push
         if: ${{ steps.release-pr.outputs.ref }}
 
