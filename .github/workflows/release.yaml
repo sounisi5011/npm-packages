@@ -5,6 +5,7 @@ on:
       - main
     tags-ignore:
       - "**"
+  workflow_dispatch:
 jobs:
   submodules-finder:
     runs-on: ubuntu-latest
