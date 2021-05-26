@@ -53,11 +53,43 @@ jobs:
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Push to PR
+        # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
+        # https://fumiyas.github.io/2016/12/15/positional-parameters.sh-advent-calendar.html
         run: |
+          readonly CUSTOM_RELEASE_SCRIPT_PATH='.github/workflows/post-release.sh'
+          readonly CUSTOM_RELEASE_SCRIPT_FULLPATH="${{ matrix.path-git-relative }}/${CUSTOM_RELEASE_SCRIPT_PATH}"
+
+          readonly origGit="$(command -v git)"
+          git() {
+            if [ "$1" = 'commit' ]; then
+              shift
+              "${origGit}" commit --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' "$@"
+            else
+              "${origGit}" "$@"
+            fi
+          }
           git config user.name  'GitHub'
           git config user.email 'noreply@github.com'
-          git commit --allow-empty --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' -m 'chore: trigger tests'
-          git push
+
+          readonly beforeCommitHash="$(git log --format=%H -n 1)"
+          if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
+            (
+              echo '::group::' loading "${CUSTOM_RELEASE_SCRIPT_FULLPATH}"
+              cd '${{ matrix.path-git-relative }}'
+              . "${CUSTOM_RELEASE_SCRIPT_PATH}"
+              echo '::endgroup::'
+            )
+          fi
+
+          if [ "${beforeCommitHash}" = "$(git log --format=%H -n 1)" ]; then
+            echo '::group::$' git commit --allow-empty -m '"chore: trigger tests"'
+                              git commit --allow-empty -m  'chore: trigger tests'
+            echo '::endgroup::'
+          fi
+
+          echo '::group::$' git push
+                            git push
+          echo '::endgroup::'
         if: ${{ steps.release-pr.outputs.ref }}
 
         #
