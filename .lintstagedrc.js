@@ -4,20 +4,6 @@ const path = require('path');
 const findUp = require('find-up');
 
 /**
- * @param {string} fullPath
- * @param {string} searchPath
- * @returns {boolean}
- */
-function startsWith(fullPath, searchPath) {
-  return fullPath.startsWith(
-    (
-      path.resolve(searchPath)
-        .replace(new RegExp(`\\${path.sep}+$`), '')
-    ) + path.sep,
-  );
-}
-
-/**
  * @param {string|RegExp} basename
  * @returns {function(string): boolean}
  */
@@ -129,13 +115,6 @@ module.exports = {
           ...generatedJsFiles,
           ...generatedDtsFiles,
         ].join(' '),
-      );
-    }
-
-    if (filenames.some(filename => startsWith(filename, 'actions'))) {
-      commands.push(
-        `ultra --recursive --filter 'actions/**' build`,
-        'git add ./actions/*/dist/**',
       );
     }
 
