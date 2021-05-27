@@ -106,7 +106,7 @@ export class TransformFromAsyncIterable<
             .catch(error => this.finish(error));
     }
 
-    override _transform(
+    _transform(
         chunk: InputChunkType<TOpts>,
         encoding: BufferEncoding,
         callback: stream.TransformCallback,
@@ -119,7 +119,7 @@ export class TransformFromAsyncIterable<
         }
     }
 
-    override _flush(callback: stream.TransformCallback): void {
+    _flush(callback: stream.TransformCallback): void {
         if (this.isFinished) {
             callback();
         } else {

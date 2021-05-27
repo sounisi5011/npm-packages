@@ -23,7 +23,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
+    // Note: tsd@0.15.1 does not yet support the override keyword.
+    // TODO: If tsd supports the `override` keyword, enable the `noImplicitOverride` option.
+    // "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
 
     /* Module Resolution Options */
