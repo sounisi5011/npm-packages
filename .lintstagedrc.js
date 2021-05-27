@@ -1,4 +1,5 @@
 // @ts-check
+const fs = require('fs');
 const path = require('path');
 
 /**
@@ -56,7 +57,8 @@ module.exports = {
         .filter(baseFilter('README.md', 'package.json'))
         .filter(filename => path.dirname(path.resolve(filename)) !== __dirname)
         .map(filename => path.join(path.dirname(filename), 'README.md')),
-    );
+    )
+      .filter(filename => fs.existsSync(filename));
     if (submoduleReadmeFiles.length >= 1) {
       commands.push(
         `node ./scripts/update-readme-badge.js ${submoduleReadmeFiles.join(' ')}`,
