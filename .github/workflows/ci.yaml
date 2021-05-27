@@ -64,7 +64,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run fmt-check
-      - run: pnpm run fmt
+      - run: pnpx run-p fmt:!(xs)
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
