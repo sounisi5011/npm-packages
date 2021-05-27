@@ -135,6 +135,9 @@ jobs:
         # Note: DO NOT add the "--if-present" option to the end of the command.
         #       Execution by ultra-runner will fail.
         if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Update README
+        run: node ./scripts/publish-convert-readme.js '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
+        if: ${{ steps.release.outputs.release_created }}
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -156,7 +159,8 @@ jobs:
             echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
             source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
           else
-            pnpm publish --access=public
+            # see https://stackoverflow.com/a/62675843/4907315
+            pnpm publish --access=public --no-git-checks
           fi
         shell: bash
         if: ${{ steps.release.outputs.release_created }}

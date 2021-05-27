@@ -4,8 +4,6 @@
 readonly DIR_PATH="$(cd "$(dirname "${BASH_SOURCE:-${(%):-%N}}")"; pwd)"
 
 rm "${DIR_PATH}/../../examples/package.json"
-outputs_tag_name="${outputs_tag_name}" \
-  node "${DIR_PATH}/../../scripts/publish-convert-readme.js"
 
 # see https://stackoverflow.com/a/62675843/4907315
 pnpm publish --access=public --no-git-checks
