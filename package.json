@@ -21,6 +21,8 @@
     "fmt-check:prettier": "prettier --check .",
     "fmt:config": "prettier --write .",
     "fmt:pkg": "globby-exec node ./scripts/format-package-json.js --write '{{**/package.json}}'",
+    "fmt:readme": "run-s fmt:readme:*",
+    "fmt:readme:update-badge": "globby-exec node ./scripts/update-readme-badge.js '{{*/**/README.md}}'",
     "fmt:xs": "run-s fmt:xs:eslint",
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
     "preinstall": "npx only-allow pnpm",
