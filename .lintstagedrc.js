@@ -1,12 +1,13 @@
 // @ts-check
+const fs = require('fs');
 const path = require('path');
 
 /**
- * @param {Array<string>} basenameList
+ * @param {string} basename
  * @returns {function(string): boolean}
  */
-function baseFilter(...basenameList) {
-  return filename => basenameList.includes(path.basename(filename));
+function baseFilter(basename) {
+  return filename => path.basename(filename) === basename;
 }
 
 /**
@@ -51,12 +52,21 @@ module.exports = {
       );
     }
 
+    const readmeFiles = filenames.filter(baseFilter('README.md'));
+    const packageListFiles = filenames.filter(baseFilter('.package-list.js'));
+    if (pkgFiles.length >= 1 || readmeFiles.length >= 1 || packageListFiles.length >= 1) {
+      commands.push(
+        'run-s build:package-list',
+        'git add ./README.md',
+      );
+    }
+
     const submoduleReadmeFiles = unique(
-      filenames
-        .filter(baseFilter('README.md', 'package.json'))
+      [...readmeFiles, ...pkgFiles]
         .filter(filename => path.dirname(path.resolve(filename)) !== __dirname)
         .map(filename => path.join(path.dirname(filename), 'README.md')),
-    );
+    )
+      .filter(filename => fs.existsSync(filename));
     if (submoduleReadmeFiles.length >= 1) {
       commands.push(
         `node ./scripts/update-readme-badge.js ${submoduleReadmeFiles.join(' ')}`,

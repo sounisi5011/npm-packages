@@ -52,7 +52,29 @@ jobs:
           ref: ${{ steps.release-pr.outputs.ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
         if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-12.x-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Setup pnpm
+        uses: ./actions/setup-pnpm
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Install Dependencies
+        run: pnpm install
+        if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Push to PR
+        shell: bash
         # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
         # https://fumiyas.github.io/2016/12/15/positional-parameters.sh-advent-calendar.html
         run: |
@@ -72,6 +94,13 @@ jobs:
           git config user.email 'noreply@github.com'
 
           readonly beforeCommitHash="$(git log --format=%H -n 1)"
+
+          echo '::group::' update package list
+          pnpm run build:package-list || true
+          git add ./README.md || true
+          git commit -m 'chore: update package list' || true
+          echo '::endgroup::'
+
           if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
             (
               echo '::group::' loading "${CUSTOM_RELEASE_SCRIPT_FULLPATH}"

@@ -11,10 +11,12 @@
   "license": "MIT",
   "author": "sounisi5011",
   "scripts": {
-    "build-all": "ultra --recursive build",
+    "build-all": "npm-run-all --parallel 'build:!(submodule)' --sequential build:submodule",
     "build-flatbuffers": "pnpm recursive run build-flatbuffers --filter '*'",
     "build-only-packages": "ultra --recursive --filter 'packages/**' build",
     "build-protobuf": "pnpm recursive run build-protobuf --filter '*'",
+    "build:package-list": "node ./scripts/update-package-list.js ./README.md",
+    "build:submodule": "ultra --recursive build",
     "fmt": "run-p fmt:*",
     "fmt-check": "run-p fmt-check:*",
     "fmt-check:pkg": "globby-exec node ./scripts/format-package-json.js --check '{{**/package.json}}'",
