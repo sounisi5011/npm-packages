@@ -42,6 +42,15 @@ module.exports = {
       );
     }
 
+    const submoduleReadmeFiles = filenames
+      .filter(baseFilter('README.md'))
+      .filter(filename => path.dirname(path.resolve(filename)) !== __dirname);
+    if (submoduleReadmeFiles.length >= 1) {
+      commands.push(
+        `node ./scripts/update-readme-badge.js ${submoduleReadmeFiles.join(' ')}`,
+      );
+    }
+
     return commands;
   },
 };
