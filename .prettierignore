@@ -4,6 +4,9 @@
 !*.yaml
 !*.yml
 
+# Ultra Runner cache
+.ultra.cache.json
+
 coverage/
 node_modules/
 dist/
