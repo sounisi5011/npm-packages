@@ -64,6 +64,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - run: pnpm run fmt-check
+      - run: pnpm run fmt
+      - name: Check changes
+        if: ${{ always() }}
+        run: git diff --name-only --exit-code
   build:
     runs-on: ubuntu-latest
     strategy:
