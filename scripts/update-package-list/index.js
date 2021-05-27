@@ -79,14 +79,37 @@ function headerText2markdownAnchor(header) {
 }
 
 /**
+ * @typedef {Object} UtilFuncs
+ * @property {typeof strictUriEncode} strictUriEncode
+ *
+ * @typedef {Object} HeaderData
+ * @property {string} header
+ * @property {function(PackageInfo, UtilFuncs): string} getVersionLink
+ * @property {function(PackageInfo, UtilFuncs): string} getDependenciesLink
+ *
+ * @typedef {Object<string, string | Partial<HeaderData>>} HeaderTable
+ *
+ * @param {HeaderTable} headerTable
  * @param {string} relativePackagePath
- * @returns {{ header: string, getVersionLink: function(object): string }}
+ * @returns {HeaderData}
  */
-function getHeaderData(relativePackagePath) {
+function getHeaderData(headerTable, relativePackagePath) {
+  /** @type {HeaderData} */
   const defaultHeaderData = {
     header: 'Packages',
     getVersionLink(data) {
-      return `[![npm](https://img.shields.io/npm/v/${data.name}.svg)](https://www.npmjs.com/package/${data.name})`;
+      const releaseTag = `${data.noScopeName}-v${data.version}`;
+      return `[\`v${data.version}\`](${data.repoData.browse(data.packagePathURL, { committish: releaseTag })})`;
+    },
+    getDependenciesLink(data) {
+      const repoName = `${data.repoData.user}/${data.repoData.project}`;
+      const davidDmBadge = `![Dependency Status](https://status.david-dm.org/gh/${repoName}.svg?path=${
+        strictUriEncode(data.packagePathURL)
+      })`;
+      const davidDmLink = `[${davidDmBadge}](https://david-dm.org/${repoName}?path=${
+        strictUriEncode(data.packagePathURL)
+      })`;
+      return davidDmLink;
     },
   };
   do {
@@ -115,27 +138,56 @@ function getHeaderData(relativePackagePath) {
 async function updateMarkdown(filepath, rootPackageList, packageRoot) {
   const filedir = path.dirname(filepath);
 
+  /** @type {Object<string, string | { header?: string, getVersionLink?: function(object): string }>} */
+  let headerTable = {};
+  try {
+    headerTable = require(path.resolve(filedir, '.package-list.js'));
+  } catch {}
+
   const packageList = rootPackageList
     .filter(({ name, path: packagePath }) => name && pathStartsWith(packagePath, filedir))
     .filter(({ packageJson }) => !packageJson.private)
     .map(data => {
       const relativePackagePath = path.relative(packageRoot, data.path);
-      const { header: headerText, getVersionLink } = getHeaderData(relativePackagePath);
+      const { header: headerText, getVersionLink, getDependenciesLink } = getHeaderData(
+        headerTable,
+        relativePackagePath,
+      );
 
-      return {
+      /**
+       * @typedef {Object} PackageInfo
+       * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
+       * @property {import('workspace-tools').WorkspaceInfo[number]['path']} path
+       * @property {import('workspace-tools').WorkspaceInfo[number]['packageJson']} packageJson
+       * @property {string} version
+       * @property {string} versionLink
+       * @property {string} localURL
+       * @property {string} noScopeName
+       * @property {hostedGitInfo} repoData
+       * @property {string} packagePathURL
+       * @property {string} headerText
+       * @property {string} headerText
+       * @property {string} depsLink
+       */
+      /** @type {PackageInfo} */
+      const packageInfo = {
         ...data,
         version: data.packageJson.version,
         get versionLink() {
-          return getVersionLink(this);
+          return getVersionLink(this, { strictUriEncode });
         },
         localURL: path2url(path.relative(filedir, data.path)),
         noScopeName: omitScopeName(data.name),
         repoData: getRepoData(data.packageJson),
         packagePathURL: path2url(relativePackagePath),
         headerText,
+        get depsLink() {
+          return getDependenciesLink(this, { strictUriEncode });
+        },
       };
+      return packageInfo;
     });
-  /** @type {Map<string, typeof packageList>} */
+  /** @type {Map<string, PackageInfo[]>} */
   const packageMap = new Map();
   for (const data of packageList) {
     const prevList = packageMap.get(data.headerText);
@@ -160,17 +212,7 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
         '|-|-|-|',
         ...dataList.sort(({ name: a }, { name: b }) => a.localeCompare(b)).map(data => {
           const packageLink = `[\`${data.name}\`](./${data.localURL})`;
-
-          const davidDmBadge =
-            `![Dependency Status](https://status.david-dm.org/gh/${data.repoData.user}/${data.repoData.project}.svg?path=${
-              strictUriEncode(data.packagePathURL)
-            })`;
-          const davidDmLink =
-            `[${davidDmBadge}](https://david-dm.org/${data.repoData.user}/${data.repoData.project}?path=${
-              strictUriEncode(data.packagePathURL)
-            })`;
-
-          return `| ${packageLink} | ${data.versionLink} | ${davidDmLink} |`;
+          return `| ${packageLink} | ${data.versionLink} | ${data.depsLink} |`;
         }),
       ].join('\n');
     })
@@ -221,19 +263,6 @@ async function main() {
     }
   }
 }
-
-const headerTable = {
-  'packages': 'Packages',
-  'packages/cli': 'CLI',
-  'packages/ts-type-utils': 'TypeScript Type Utilities',
-  'actions': {
-    header: 'GitHub Actions',
-    getVersionLink(data) {
-      const releaseTag = `${data.noScopeName}-v${data.version}`;
-      return `[\`v${data.version}\`](${data.repoData.browse(data.packagePathURL, { committish: releaseTag })})`;
-    },
-  },
-};
 
 main().catch(error => {
   process.exitCode = 1;
