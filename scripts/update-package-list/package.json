@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "dependencies": {
+    "hosted-git-info": "^4.0.2",
+    "strict-uri-encode": "^2.0.0",
+    "validate-npm-package-name": "^3.0.0",
+    "workspace-tools": "^0.16.0"
+  },
+  "engines": {
+    "node": ">=12.17.x"
+  }
+}
