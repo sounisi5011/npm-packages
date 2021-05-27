@@ -96,7 +96,7 @@ jobs:
           readonly beforeCommitHash="$(git log --format=%H -n 1)"
 
           echo '::group::' update package list
-          pnpm run fmt:readme:update-package-list || true
+          pnpm run build:package-list || true
           git add ./README.md || true
           git commit -m 'chore: update package list' || true
           echo '::endgroup::'

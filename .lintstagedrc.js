@@ -56,7 +56,7 @@ module.exports = {
     const packageListFiles = filenames.filter(baseFilter('.package-list.js'));
     if (pkgFiles.length >= 1 || readmeFiles.length >= 1 || packageListFiles.length >= 1) {
       commands.push(
-        'run-s fmt:readme:update-package-list',
+        'run-s build:package-list',
         'git add ./README.md',
       );
     }
