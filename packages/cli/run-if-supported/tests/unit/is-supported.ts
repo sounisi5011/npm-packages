@@ -25,7 +25,9 @@ describe('isNotSupported()', () => {
         ])('nodeVersion: %s', (nodeVersion: string) => {
             it.each<[Record<string, unknown>, ReturnType<typeof isNotSupported>]>([
                 [{ engines: {} }, false],
+                [{ engines: undefined }, false],
                 [{ engines: { node: '' } }, false],
+                [{ engines: { node: undefined } }, false],
                 [{ engines: { node: '*' } }, false],
                 [{ engines: { node: '8.x' } }, false],
                 [{ engines: { node: '8 || 12 || 14 || 16' } }, false],
@@ -41,17 +43,17 @@ describe('isNotSupported()', () => {
                     { engines: { node: '12 || 14 || 16' } },
                     `Node ${nodeVersion} is not included in supported range: 12 || 14 || 16`,
                 ],
-            ])('%j', (pkg, expected) => {
+            ])('%o', (pkg, expected) => {
                 expect(isNotSupported(pkg, nodeVersion)).toStrictEqual(expected);
             });
         });
         describe('invalid value', () => {
             it.each<{ engines: unknown }>([
                 ...anyValues
-                    .filter(v => !isPlainObject(v))
+                    .filter(v => !isPlainObject(v) && v !== undefined)
                     .map(v => ({ engines: v })),
                 ...anyValues
-                    .filter(v => typeof v !== 'string')
+                    .filter(v => typeof v !== 'string' && v !== undefined)
                     .map(v => ({ engines: { node: v } })),
             ])('%o', value => {
                 expect(() => isNotSupported(value, '1.0.0')).toThrow();
@@ -68,6 +70,7 @@ describe('isNotSupported()', () => {
                  * os
                  */
                 [{ os: '' }, false],
+                [{ os: undefined }, false],
                 ...[curOS, 'any'].flatMap<TableItem>(reqOS => [
                     [{ os: reqOS }, false],
                     [{ os: [reqOS] }, false],
@@ -126,6 +129,7 @@ describe('isNotSupported()', () => {
                  * cpu
                  */
                 [{ cpu: '' }, false],
+                [{ cpu: undefined }, false],
                 ...[curCPU, 'any'].flatMap<TableItem>(reqCPU => [
                     [{ cpu: reqCPU }, false],
                     [{ cpu: [reqCPU] }, false],
@@ -312,14 +316,14 @@ describe('isNotSupported()', () => {
                         '      - z80',
                     ].join('\n'),
                 ],
-            ])('%j', (pkg, expected) => {
+            ])('%o', (pkg, expected) => {
                 expect(isNotSupported(pkg, '1.0.0')).toStrictEqual(expected);
             });
         });
         describe('invalid value', () => {
             const testOsValues: Array<{ os: unknown }> = [
                 ...anyValues
-                    .filter(v => typeof v !== 'string' && !Array.isArray(v))
+                    .filter(v => typeof v !== 'string' && !Array.isArray(v) && v !== undefined)
                     .flatMap(v => ({ os: v })),
                 ...anyValues
                     .filter(v => typeof v !== 'string')
@@ -327,7 +331,7 @@ describe('isNotSupported()', () => {
             ];
             const testCpuValues: Array<{ cpu: unknown }> = [
                 ...anyValues
-                    .filter(v => typeof v !== 'string' && !Array.isArray(v))
+                    .filter(v => typeof v !== 'string' && !Array.isArray(v) && v !== undefined)
                     .flatMap(v => ({ cpu: v })),
                 ...anyValues
                     .filter(v => typeof v !== 'string')
