@@ -41,21 +41,19 @@ function createRequiredPlatformText(error: Error & Record<PropertyKey, unknown>)
         .join('\n');
 }
 
+const validatePkgPredicate = ow.object.plain.partialShape({
+    engines: ow.optional.object.plain.partialShape({
+        node: ow.optional.string,
+    }),
+    os: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
+    cpu: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
+});
+
 export function isNotSupported(
     pkg: unknown,
     nodeVersion: string,
 ): string | false {
-    ow(
-        pkg,
-        '',
-        ow.object.plain.partialShape({
-            engines: ow.optional.object.plain.partialShape({
-                node: ow.optional.string,
-            }),
-            os: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
-            cpu: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
-        }),
-    );
+    ow(pkg, '', validatePkgPredicate);
 
     try {
         checkEngine(pkg, null, nodeVersion);
