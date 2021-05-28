@@ -108,6 +108,26 @@ function validateCommandName(command: string | undefined): asserts command is st
     if (!command) throw new Error(`Invalid command: \`${command}\``);
 }
 
+function isSupported(
+    opts: {
+        pkgPath: string;
+        pkg: unknown;
+        nodeVersion: string;
+    },
+): ReturnType<typeof isNotSupported> {
+    try {
+        return isNotSupported(opts.pkg, opts.nodeVersion);
+    } catch (err: unknown) {
+        const error = err instanceof ArgumentError
+            ? new Error(err.message)
+            : err;
+        if (error instanceof Error) {
+            error.message = `Invalidly structured file: ${opts.pkgPath}\n${error.message.replace(/^(?!$)/gm, '  ')}`;
+        }
+        throw error;
+    }
+}
+
 function printSkipMessage(opts: { isPrint: boolean; reasonMessage: string }): void {
     if (opts.isPrint) console.error(`Skipped command execution. ${opts.reasonMessage}`);
 }
@@ -142,18 +162,7 @@ export async function main(input: {
     const isPrintSkipMessage = options.has('--print-skip-message');
     const isVerbose = options.has('--verbose');
 
-    let reasonMessage: false | string;
-    try {
-        reasonMessage = isNotSupported(pkg, input.nodeVersion);
-    } catch (err: unknown) {
-        const error = err instanceof ArgumentError
-            ? new Error(err.message)
-            : err;
-        if (error instanceof Error) {
-            error.message = `Invalidly structured file: ${pkgPath}\n${error.message.replace(/^(?!$)/gm, '  ')}`;
-        }
-        throw error;
-    }
+    const reasonMessage = isSupported({ pkgPath, pkg, nodeVersion: input.nodeVersion });
     if (reasonMessage) {
         printSkipMessage({
             isPrint: isPrintSkipMessage || isVerbose,
