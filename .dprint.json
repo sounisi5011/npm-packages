@@ -4,6 +4,11 @@
   "incremental": true,
   "typescript": {},
   "includes": ["**/*.ts"],
-  "excludes": ["**/node_modules"],
+  "excludes": [
+    "**/node_modules",
+    "**/flatbuffers/*_generated.ts",
+    "**/protocol-buffers/*_pb.d.ts",
+    "/packages/ts-type-utils/**/*.d.ts"
+  ],
   "plugins": ["https://plugins.dprint.dev/typescript-0.46.0.wasm"]
 }
