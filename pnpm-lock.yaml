@@ -57,7 +57,7 @@ importers:
   actions/monorepo-workspace-submodules-finder:
     specifiers:
       '@actions/core': ^1.2.6
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
       '@vercel/ncc': 0.28.6
@@ -68,7 +68,7 @@ importers:
       find-git-root: 1.0.4
       workspace-tools: 0.16.0
     devDependencies:
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 15.6.0
       '@vercel/ncc': 0.28.6
@@ -107,7 +107,7 @@ importers:
   packages/encrypted-archive:
     specifiers:
       '@jorgeferrero/stream-to-buffer': 2.0.6
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/argon2-browser': 1.12.0
@@ -140,7 +140,7 @@ importers:
       varint: 6.0.0
     devDependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.12.0
       '@types/bl': 5.0.1
@@ -167,11 +167,11 @@ importers:
 
   packages/stream-transform-from:
     specifiers:
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@types/node': 15.6.0
       tsd: 0.16.0
     devDependencies:
-      '@sounisi5011/run-if-supported': 1.0.0
+      '@sounisi5011/run-if-supported': 1.0.1
       '@types/node': 15.6.0
       tsd: 0.16.0
 
@@ -900,7 +900,6 @@ packages:
   /@sindresorhus/is/4.0.1:
     resolution: {integrity: sha512-Qm9hBEBu18wt1PO2flE7LPb30BHMQt1eQgbV76YntdNk73XZGpn3izvGTYxbGgzXKgbCjiia0uxTd3aTNQrY/g==}
     engines: {node: '>=10'}
-    dev: false
 
   /@sinonjs/commons/1.8.3:
     resolution: {integrity: sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==}
@@ -914,14 +913,15 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@sounisi5011/run-if-supported/1.0.0:
-    resolution: {integrity: sha512-mes3zh2if1DLMsLB4ja2juDGEya/f+y/oYNBYY4BfprAeN0m0WOld50ZjESr8vTIqznidfCSVTfc1sZss3SZ0w==}
+  /@sounisi5011/run-if-supported/1.0.1:
+    resolution: {integrity: sha512-+F4aaUZB6QlUYkfH3CVLUCcMLIdAxXC8j1Z32+wi2QnDedfATkKowyNGUY54VMRcDGIwRp+5hoj+0NsYVNNw4g==}
     engines: {node: ^12.17.x || 14.x || 15.x || 16.x}
     hasBin: true
     dependencies:
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
+      ow: 0.23.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
     dev: true
@@ -2414,7 +2414,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       is-obj: 2.0.0
-    dev: false
 
   /duplexer3/0.1.4:
     resolution: {integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=}
@@ -4761,7 +4760,6 @@ packages:
 
   /lodash.isequal/4.5.0:
     resolution: {integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=}
-    dev: false
 
   /lodash.map/4.6.0:
     resolution: {integrity: sha1-dx7Hg540c9nEzeKLGTlMNWL09tM=}
@@ -5265,7 +5263,6 @@ packages:
       lodash.isequal: 4.5.0
       type-fest: 0.20.2
       vali-date: 1.0.0
-    dev: false
 
   /p-all/2.1.0:
     resolution: {integrity: sha512-HbZxz5FONzz/z2gJfk6bFca0BCiSRF8jU3yCsWOen/vR6lZjfPOu/e7L3uFzTW1i0H8TlC3vqQstEJPQL4/uLA==}
@@ -6781,7 +6778,6 @@ packages:
   /vali-date/1.0.0:
     resolution: {integrity: sha1-G5BKWWCfsyjvB4E4Qgk09rhnCaY=}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
