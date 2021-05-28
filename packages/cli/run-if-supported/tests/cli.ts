@@ -8,7 +8,7 @@ import { getFixturesPath, PACKAGE_ROOT } from './helpers';
 describe('cli', () => {
     beforeAll(async () => {
         await execa('pnpx', ['ultra', 'build'], { cwd: PACKAGE_ROOT });
-    });
+    }, 60 * 1000);
 
     const CLI_PATH = path.resolve(PACKAGE_ROOT, 'dist/index.js');
     const binName = Object.keys(pkg.bin)[0] ?? 'run-if-supported';
