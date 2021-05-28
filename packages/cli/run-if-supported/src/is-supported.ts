@@ -1,4 +1,5 @@
 import { checkEngine, checkPlatform } from 'npm-install-checks';
+import ow from 'ow';
 
 import { isRecordLike, isString } from './utils';
 
@@ -44,6 +45,17 @@ export function isNotSupported(
     pkg: Record<string, unknown>,
     nodeVersion: string,
 ): string | false {
+    ow(
+        pkg,
+        ow.object.plain.partialShape({
+            engines: ow.optional.object.plain.partialShape({
+                node: ow.optional.string,
+            }),
+            os: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
+            cpu: ow.optional.any(ow.string, ow.array.ofType(ow.string)),
+        }),
+    );
+
     try {
         checkEngine(pkg, null, nodeVersion);
     } catch (error: unknown) {
