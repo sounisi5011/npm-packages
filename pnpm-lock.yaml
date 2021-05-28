@@ -10,6 +10,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 4.25.0
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
+      dprint: 0.14.1
       eslint: 7.27.0
       eslint-config-standard: 16.0.3
       eslint-config-standard-with-typescript: 20.0.0
@@ -35,6 +36,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
+      dprint: 0.14.1
       eslint: 7.27.0
       eslint-config-standard: 16.0.3_54a118fc6338897394bb0683ed693a07
       eslint-config-standard-with-typescript: 20.0.0_1077a3d64150105249030f3258161a0d
@@ -2414,6 +2416,12 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       is-obj: 2.0.0
+
+  /dprint/0.14.1:
+    resolution: {integrity: sha512-NMASoZR6L4JSL2fh+o31KSIwXlS5JW8L/vbBkBUZmLyQnUOiq5cCaAdemTdFmli0osdKu627hIzlOc6N7tM/yA==}
+    hasBin: true
+    requiresBuild: true
+    dev: true
 
   /duplexer3/0.1.4:
     resolution: {integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=}
