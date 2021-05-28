@@ -2,8 +2,10 @@ import { promises as fsAsync } from 'fs';
 import { dirname, resolve as resolvePath } from 'path';
 
 import { commandJoin } from 'command-join';
+import { ArgumentError } from 'ow';
 import parseJson from 'parse-json';
 import pkgUp from 'pkg-up';
+import type { JsonValue } from 'type-fest';
 
 import { isNotSupported } from './is-supported';
 import { parseOptions } from './options';
@@ -45,15 +47,14 @@ function getCliData(entryFilepath: string): {
     return { binName, version, description };
 }
 
-async function readPkg(opts: { cwd: string }): Promise<Record<PropertyKey, unknown>> {
+async function readPkg(opts: { cwd: string }): Promise<{ pkgPath: string; pkg: JsonValue }> {
     const pkgPath = await pkgUp({ cwd: opts.cwd });
     if (!pkgPath) throw new Error(`"package.json" file is not found`);
 
     const pkgText = await fsAsync.readFile(pkgPath, 'utf8');
-    const pkg: unknown = parseJson(pkgText, pkgPath);
-    if (!isRecordLike(pkg)) throw new Error(`Invalidly structured file: ${pkgPath}`);
+    const pkg: JsonValue = parseJson(pkgText, pkgPath);
 
-    return pkg;
+    return { pkgPath, pkg };
 }
 
 function createHelpText(opts: {
@@ -107,6 +108,26 @@ function validateCommandName(command: string | undefined): asserts command is st
     if (!command) throw new Error(`Invalid command: \`${command}\``);
 }
 
+function isSupported(
+    opts: {
+        pkgPath: string;
+        pkg: unknown;
+        nodeVersion: string;
+    },
+): ReturnType<typeof isNotSupported> {
+    try {
+        return isNotSupported(opts.pkg, opts.nodeVersion);
+    } catch (err: unknown) {
+        const error = err instanceof ArgumentError
+            ? new Error(err.message)
+            : err;
+        if (error instanceof Error) {
+            error.message = `Invalidly structured file: ${opts.pkgPath}\n${error.message.replace(/^(?!$)/gm, '  ')}`;
+        }
+        throw error;
+    }
+}
+
 function printSkipMessage(opts: { isPrint: boolean; reasonMessage: string }): void {
     if (opts.isPrint) console.error(`Skipped command execution. ${opts.reasonMessage}`);
 }
@@ -137,11 +158,11 @@ export async function main(input: {
     if (printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
     validateCommandName(command);
 
-    const pkg = await readPkg({ cwd: input.cwd });
+    const { pkgPath, pkg } = await readPkg({ cwd: input.cwd });
     const isPrintSkipMessage = options.has('--print-skip-message');
     const isVerbose = options.has('--verbose');
 
-    const reasonMessage = isNotSupported(pkg, input.nodeVersion);
+    const reasonMessage = isSupported({ pkgPath, pkg, nodeVersion: input.nodeVersion });
     if (reasonMessage) {
         printSkipMessage({
             isPrint: isPrintSkipMessage || isVerbose,
