@@ -67,6 +67,7 @@
     "@types/node": "*",
     "@types/parse-json": "4.0.0",
     "execa": "5.0.0",
+    "is-plain-obj": "3.0.0",
     "ultra-runner": "3.10.5"
   },
   "engines": {

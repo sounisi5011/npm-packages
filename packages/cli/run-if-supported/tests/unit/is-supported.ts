@@ -1,4 +1,19 @@
+import isPlainObject from 'is-plain-obj';
+
 import { isNotSupported } from '../../src/is-supported';
+
+const anyValues: Array<undefined | null | boolean | number | string | Record<PropertyKey, unknown> | unknown[]> = [
+    undefined,
+    null,
+    true,
+    false,
+    0,
+    1,
+    '',
+    'foo',
+    {},
+    [],
+];
 
 describe('isNotSupported()', () => {
     it('empty pkg', () => {
@@ -10,6 +25,7 @@ describe('isNotSupported()', () => {
         ])('nodeVersion: %s', (nodeVersion: string) => {
             it.each<[Record<string, unknown>, ReturnType<typeof isNotSupported>]>([
                 [{ engines: {} }, false],
+                [{ engines: { node: '' } }, false],
                 [{ engines: { node: '*' } }, false],
                 [{ engines: { node: '8.x' } }, false],
                 [{ engines: { node: '8 || 12 || 14 || 16' } }, false],
@@ -29,6 +45,18 @@ describe('isNotSupported()', () => {
                 expect(isNotSupported(pkg, nodeVersion)).toStrictEqual(expected);
             });
         });
+        describe('invalid value', () => {
+            it.each<{ engines: unknown }>([
+                ...anyValues
+                    .filter(v => !isPlainObject(v))
+                    .map(v => ({ engines: v })),
+                ...anyValues
+                    .filter(v => typeof v !== 'string')
+                    .map(v => ({ engines: { node: v } })),
+            ])('%o', value => {
+                expect(() => isNotSupported(value, '1.0.0')).toThrow();
+            });
+        });
     });
     describe('platform', () => {
         const curOS = process.platform;
@@ -39,10 +67,12 @@ describe('isNotSupported()', () => {
                 /**
                  * os
                  */
+                [{ os: '' }, false],
                 ...[curOS, 'any'].flatMap<TableItem>(reqOS => [
                     [{ os: reqOS }, false],
                     [{ os: [reqOS] }, false],
                 ]),
+                [{ os: [] }, false],
                 [{ os: [curOS, 'b-tron'] }, false],
                 [{ os: ['TRON', curOS, 'b-tron'] }, false],
                 ...['b-tron', 'TRON', `!${curOS}`].flatMap<TableItem>(reqOS => {
@@ -95,10 +125,12 @@ describe('isNotSupported()', () => {
                 /**
                  * cpu
                  */
+                [{ cpu: '' }, false],
                 ...[curCPU, 'any'].flatMap<TableItem>(reqCPU => [
                     [{ cpu: reqCPU }, false],
                     [{ cpu: [reqCPU] }, false],
                 ]),
+                [{ cpu: [] }, false],
                 [{ cpu: [curCPU, 'z80'] }, false],
                 [{ cpu: ['i8080', curCPU, 'z80'] }, false],
                 ...['z80', 'i8080', `!${curCPU}`].flatMap<TableItem>(reqCPU => {
@@ -151,6 +183,10 @@ describe('isNotSupported()', () => {
                 /**
                  * os & cpu
                  */
+                [{ os: '', cpu: '' }, false],
+                [{ os: [], cpu: '' }, false],
+                [{ os: '', cpu: [] }, false],
+                [{ os: [], cpu: [] }, false],
                 ...[curOS, 'any'].flatMap(reqOS =>
                     [curCPU, 'any'].flatMap<TableItem>(reqCPU => [
                         [{ os: reqOS, cpu: reqCPU }, false],
@@ -278,6 +314,39 @@ describe('isNotSupported()', () => {
                 ],
             ])('%j', (pkg, expected) => {
                 expect(isNotSupported(pkg, '1.0.0')).toStrictEqual(expected);
+            });
+        });
+        describe('invalid value', () => {
+            const testOsValues: Array<{ os: unknown }> = [
+                ...anyValues
+                    .filter(v => typeof v !== 'string' && !Array.isArray(v))
+                    .flatMap(v => ({ os: v })),
+                ...anyValues
+                    .filter(v => typeof v !== 'string')
+                    .map(v => ({ os: [v] })),
+            ];
+            const testCpuValues: Array<{ cpu: unknown }> = [
+                ...anyValues
+                    .filter(v => typeof v !== 'string' && !Array.isArray(v))
+                    .flatMap(v => ({ cpu: v })),
+                ...anyValues
+                    .filter(v => typeof v !== 'string')
+                    .map(v => ({ cpu: [v] })),
+            ];
+
+            it.each<{ os: unknown } | { cpu: unknown }>([
+                ...testOsValues,
+                ...testCpuValues,
+                ...testOsValues
+                    .flatMap(osValue =>
+                        testCpuValues
+                            .map(cpuValue => ({
+                                ...osValue,
+                                ...cpuValue,
+                            }))
+                    ),
+            ])('%o', value => {
+                expect(() => isNotSupported(value, '1.0.0')).toThrow();
             });
         });
     });
