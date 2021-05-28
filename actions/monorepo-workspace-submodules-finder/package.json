@@ -27,7 +27,7 @@
     "workspace-tools": "^0.16.0"
   },
   "devDependencies": {
-    "@sounisi5011/run-if-supported": "1.0.0",
+    "@sounisi5011/run-if-supported": "1.0.1",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/node": "*",
     "@vercel/ncc": "0.28.6"

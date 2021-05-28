@@ -81,7 +81,7 @@
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
-    "@sounisi5011/run-if-supported": "1.0.0",
+    "@sounisi5011/run-if-supported": "1.0.1",
     "@types/node": "15.6.0",
     "tsd": "0.16.0"
   },
