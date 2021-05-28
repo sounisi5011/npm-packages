@@ -42,11 +42,12 @@ function createRequiredPlatformText(error: Error & Record<PropertyKey, unknown>)
 }
 
 export function isNotSupported(
-    pkg: Record<string, unknown>,
+    pkg: unknown,
     nodeVersion: string,
 ): string | false {
     ow(
         pkg,
+        '',
         ow.object.plain.partialShape({
             engines: ow.optional.object.plain.partialShape({
                 node: ow.optional.string,
