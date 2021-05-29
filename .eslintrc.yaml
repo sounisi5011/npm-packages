@@ -31,28 +31,12 @@ rules:
         order: asc
         caseInsensitive: true
 overrides:
-  - files: "*.js"
-    extends:
-      - plugin:dprint/recommended
-    rules:
-      dprint/dprint:
-        - error
-        - config: &dprint-config
-            indentWidth: 2
-            quoteStyle: preferSingle
-            singleBodyPosition: sameLine
-            typeParameters.trailingCommas: never
-            arrowFunction.useParentheses: preferNone
-            constructorType.spaceAfterNewKeyword: true
-            taggedTemplate.spaceBeforeLiteral: false
-            typeAssertion.spaceBeforeExpression: false
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
       - plugin:@typescript-eslint/recommended
       - plugin:import/typescript
       - standard-with-typescript
-      - plugin:dprint/recommended
     parserOptions:
       sourceType: module
       project:
@@ -68,11 +52,6 @@ overrides:
             - ^src/(.+?)\.ts$
             - dist/$1.js
     rules:
-      dprint/dprint:
-        - error
-        - config:
-            <<: *dprint-config
-            indentWidth: 4
       # The "@typescript-eslint/no-floating-promises" rule requires a void operator to be used as a statement.
       # see https://github.com/typescript-eslint/typescript-eslint/blob/v4.21.0/packages/eslint-plugin/docs/rules/no-floating-promises.md
       no-void:
