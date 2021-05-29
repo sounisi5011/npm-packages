@@ -3,11 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * @param {string} basename
+ * @param {string|RegExp} basename
  * @returns {function(string): boolean}
  */
 function baseFilter(basename) {
-  return filename => path.basename(filename) === basename;
+  return typeof basename === 'string'
+    ? filename => path.basename(filename) === basename
+    : filename => basename.test(path.basename(filename));
 }
 
 /**
@@ -42,6 +44,16 @@ module.exports = {
     if (pkgFiles.length >= 1) {
       commands.push(
         `node ./scripts/format-package-json.js --write ${pkgFiles.join(' ')}`,
+      );
+    }
+
+    if (
+      filenames.some(baseFilter('.eslintignore'))
+      || filenames.some(baseFilter(/^(?:dprint|\.dprint)(?:-.*)?\.json$/))
+    ) {
+      commands.push(
+        'pnpm run build:dprint-config',
+        'git add ./.dprint.json ./.dprint-*.json',
       );
     }
 
