@@ -70,28 +70,50 @@ jobs:
         shell: bash
         run: |
           echo '::group::' ls -alp ./node_modules/.bin/dprint
-                           ls -alp ./node_modules/.bin/dprint
+                          ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
 
-          echo '::group::' Detect dprint version
-          readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
-          echo dprint version':' "${dprintVersion}"
-          echo '::endgroup::'
+          echo '::group::' pnpx dprint '[npm installed]'
+          pnpx dprint || {
+            echo '::endgroup::'
 
-          echo '::group::' Install dprint
-          curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
-          echo '::endgroup::'
+            echo '::group::' rm -rf ./node_modules/.bin/dprint
+                            rm -rf ./node_modules/.bin/dprint
+            echo '::endgroup::'
 
-          echo '::group::' rm -rf ./node_modules/.bin/dprint
-                           rm -rf ./node_modules/.bin/dprint
-          echo '::endgroup::'
+            echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
+                            mv ./node_modules/dprint/dprint ./node_modules/.bin/
+            echo '::endgroup::'
 
-          echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-                           mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-          echo '::endgroup::'
+            echo '::group::' ls -alp ./node_modules/.bin/dprint
+                            ls -alp ./node_modules/.bin/dprint
+            echo '::endgroup::'
 
-          echo '::group::' ls -alp ./node_modules/.bin/dprint
-                           ls -alp ./node_modules/.bin/dprint
+            echo '::group::' pnpx dprint '[npm binary]'
+            pnpx dprint || {
+              echo '::endgroup::'
+
+              echo '::group::' Detect dprint version
+              readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
+              echo dprint version':' "${dprintVersion}"
+              echo '::endgroup::'
+
+              echo '::group::' Install dprint
+              curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
+              echo '::endgroup::'
+
+              echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                               mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+              echo '::endgroup::'
+
+              echo '::group::' ls -alp ./node_modules/.bin/dprint
+                               ls -alp ./node_modules/.bin/dprint
+              echo '::endgroup::'
+
+              echo '::group::' pnpx dprint '[download from official with version]'
+              pnpx dprint
+            }
+          }
           echo '::endgroup::'
       - run: pnpm run build-only-packages
       - run: pnpm run fmt-check
