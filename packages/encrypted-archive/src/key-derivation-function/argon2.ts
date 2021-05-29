@@ -1,9 +1,9 @@
 import argon2 from 'argon2-browser';
 import capitalize from 'capitalize';
 
-import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
-import { bufferFrom, ifFuncThenExec, isNotUndefined, isObject, normalizeOptions, printObject } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
+import { bufferFrom, ifFuncThenExec, isNotUndefined, isObject, normalizeOptions, printObject } from '../utils';
+import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 
 const argon2TypeRecord = {
     argon2d: argon2.ArgonType.Argon2d,

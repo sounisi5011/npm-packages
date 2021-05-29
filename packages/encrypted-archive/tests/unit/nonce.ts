@@ -1,6 +1,6 @@
 import { Nonce } from '../../src/nonce';
-import { padEndArray, rangeArray } from '../helpers';
 import '../helpers/jest-matchers';
+import { padEndArray, rangeArray } from '../helpers';
 
 const tooSmallFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 const tooLargeFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01];

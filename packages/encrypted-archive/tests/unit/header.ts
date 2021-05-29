@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as multicodec from 'multicodec';
 import * as varint from 'varint';
 
+import { cidByteList } from '../../src/header/content-identifier';
 import {
     createHeader,
     createSimpleHeader,
@@ -19,10 +20,9 @@ import {
     SimpleHeaderDataWithCiphertextLength,
     validateCID,
 } from '../../src/header';
-import { cidByteList } from '../../src/header/content-identifier';
-import { iterable2buffer, padStartArray } from '../helpers';
 import '../helpers/jest-matchers';
 import { DummyStreamReader } from '../helpers/stream';
+import { iterable2buffer, padStartArray } from '../helpers';
 
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 

@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto';
 
+import type { AsyncIterableReturn } from './utils/type';
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressOptions, createCompressor } from './compress';
 import { createHeader, createSimpleHeader } from './header';
@@ -8,7 +9,6 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, convertIterableValue } from './utils';
-import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName;

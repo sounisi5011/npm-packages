@@ -1,3 +1,5 @@
+import { StreamReader } from './utils/stream';
+import type { AsyncIterableReturn } from './utils/type';
 import { CryptoAlgorithm, cryptoAlgorithmMap } from './cipher';
 import { CompressOptions, decompressIterable } from './compress';
 import {
@@ -16,8 +18,6 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
-import { StreamReader } from './utils/stream';
-import type { AsyncIterableReturn } from './utils/type';
 
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithm;
