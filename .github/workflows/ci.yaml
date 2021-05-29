@@ -88,6 +88,7 @@ jobs:
           echo '::group::' ls -alp ./node_modules/.bin/dprint
                            ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
+      - run: pnpm run build-only-packages
       - run: pnpm run fmt-check
       - run: pnpx run-p 'fmt:!(xs)'
       - name: Check changes
