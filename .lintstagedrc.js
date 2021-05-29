@@ -45,10 +45,24 @@ module.exports = {
       );
     }
 
-    const tsOrJsFiles = filenames.filter(extFilter('ts', 'js'));
+    const tsFiles = filenames.filter(extFilter('ts'));
+    if (tsFiles.length >= 1) {
+      commands.push(
+        `pnpm run fmt:ts:dprint -- ${tsFiles.join(' ')}`,
+      );
+    }
+
+    const jsFiles = filenames.filter(extFilter('js'));
+    if (jsFiles.length >= 1) {
+      commands.push(
+        `pnpm run fmt:js:dprint -- ${jsFiles.join(' ')}`,
+      );
+    }
+
+    const tsOrJsFiles = [...tsFiles, ...jsFiles];
     if (tsOrJsFiles.length >= 1) {
       commands.push(
-        `eslint --fix ${tsOrJsFiles.join(' ')}`,
+        `eslint --cache --fix ${tsOrJsFiles.join(' ')}`,
       );
     }
 
