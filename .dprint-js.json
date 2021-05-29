@@ -8,11 +8,14 @@
   },
   "includes": ["**/*.js"],
   "excludes": [
-    "**/node_modules",
-    "coverage/",
-    "dist/",
+    "**/flatbuffers/*_generated.ts",
     "**/protocol-buffers/*_pb.js",
+    "**/protocol-buffers/*_pb.d.ts",
     "**/runkit-example.js",
-    "/packages/ts-type-utils/**/*.js"
+    "**/coverage/",
+    "**/node_modules/",
+    "**/dist/",
+    "/packages/ts-type-utils/**/*.js",
+    "/packages/ts-type-utils/**/*.d.ts"
   ]
 }
