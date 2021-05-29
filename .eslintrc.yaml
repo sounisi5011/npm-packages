@@ -57,6 +57,10 @@ overrides:
       no-void:
         - error
         - allowAsStatement: true
+      # dprint will sort the import statement.
+      # Note: dprint does not sort CommonJS-style `require()` statements.
+      #       For this reason, this rule should only be disabled for TypeScript.
+      import/order: off
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
       node/no-missing-import: off
