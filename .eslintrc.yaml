@@ -110,3 +110,6 @@ overrides:
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x
+  - files: "*"
+    extends:
+      - prettier
