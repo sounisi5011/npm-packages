@@ -9,6 +9,8 @@
   "includes": ["**/*.ts"],
   "excludes": [
     "**/node_modules",
+    "coverage/",
+    "dist/",
     "**/flatbuffers/*_generated.ts",
     "**/protocol-buffers/*_pb.d.ts",
     "/packages/ts-type-utils/**/*.d.ts"
