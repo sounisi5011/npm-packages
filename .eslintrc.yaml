@@ -31,28 +31,12 @@ rules:
         order: asc
         caseInsensitive: true
 overrides:
-  - files: "*.js"
-    extends:
-      - plugin:dprint/recommended
-    rules:
-      dprint/dprint:
-        - error
-        - config: &dprint-config
-            indentWidth: 2
-            quoteStyle: preferSingle
-            singleBodyPosition: sameLine
-            typeParameters.trailingCommas: never
-            arrowFunction.useParentheses: preferNone
-            constructorType.spaceAfterNewKeyword: true
-            taggedTemplate.spaceBeforeLiteral: false
-            typeAssertion.spaceBeforeExpression: false
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
       - plugin:@typescript-eslint/recommended
       - plugin:import/typescript
       - standard-with-typescript
-      - plugin:dprint/recommended
     parserOptions:
       sourceType: module
       project:
@@ -68,16 +52,15 @@ overrides:
             - ^src/(.+?)\.ts$
             - dist/$1.js
     rules:
-      dprint/dprint:
-        - error
-        - config:
-            <<: *dprint-config
-            indentWidth: 4
       # The "@typescript-eslint/no-floating-promises" rule requires a void operator to be used as a statement.
       # see https://github.com/typescript-eslint/typescript-eslint/blob/v4.21.0/packages/eslint-plugin/docs/rules/no-floating-promises.md
       no-void:
         - error
         - allowAsStatement: true
+      # dprint will sort the import statement.
+      # Note: dprint does not sort CommonJS-style `require()` statements.
+      #       For this reason, this rule should only be disabled for TypeScript.
+      import/order: off
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
       node/no-missing-import: off
@@ -131,3 +114,6 @@ overrides:
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x
+  - files: "*"
+    extends:
+      - prettier

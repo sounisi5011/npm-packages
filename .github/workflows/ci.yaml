@@ -63,6 +63,85 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
+      - name: Setup dprint
+        # The dprint command may fail to deserialize the wasm module.
+        # This only happens on CI, and in some cases no error occurs.
+        # Since we cannot identify the condition under which the error occurred,
+        # we will set up the dprint command in multiple ways and start the next step in a way that does not cause the error.
+        #
+        # 1. Try to run the dprint command installed from npm
+        # 2. If failed, directly execute the dprint binary file extracted in the npm package
+        # 3. If failed, download and set up dprint from the official website.
+        #    The version should be the one we are using in our project.
+        #    see https://dprint.dev/ci/
+        # 4. If failed, download and set up dprint from the official website.
+        #    Without specifying the version, download the latest version of dprint.
+        shell: bash
+        run: |
+          echo '::group::' ls -alp ./node_modules/.bin/dprint
+                           ls -alp ./node_modules/.bin/dprint
+          echo '::endgroup::'
+
+          echo '::group::' pnpx dprint '[npm installed]'
+          pnpx dprint || {
+            echo '::endgroup::'
+
+            echo '::group::' rm -rf ./node_modules/.bin/dprint
+                             rm -rf ./node_modules/.bin/dprint
+            echo '::endgroup::'
+
+            echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
+                             mv ./node_modules/dprint/dprint ./node_modules/.bin/
+            echo '::endgroup::'
+
+            echo '::group::' ls -alp ./node_modules/.bin/dprint
+                             ls -alp ./node_modules/.bin/dprint
+            echo '::endgroup::'
+
+            echo '::group::' pnpx dprint '[npm binary]'
+            pnpx dprint || {
+              echo '::endgroup::'
+
+              echo '::group::' Detect dprint version
+              readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
+              echo dprint version':' "${dprintVersion}"
+              echo '::endgroup::'
+
+              echo '::group::' Install dprint
+              curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
+              echo '::endgroup::'
+
+              echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                               mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+              echo '::endgroup::'
+
+              echo '::group::' ls -alp ./node_modules/.bin/dprint
+                               ls -alp ./node_modules/.bin/dprint
+              echo '::endgroup::'
+
+              echo '::group::' pnpx dprint '[download from official with version]'
+              pnpx dprint || {
+                echo '::endgroup::'
+
+                echo '::group::' Install dprint
+                curl -fsSL https://dprint.dev/install.sh | sh -s
+                echo '::endgroup::'
+
+                echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                                 mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                echo '::endgroup::'
+
+                echo '::group::' ls -alp ./node_modules/.bin/dprint
+                                 ls -alp ./node_modules/.bin/dprint
+                echo '::endgroup::'
+
+                echo '::group::' pnpx dprint '[download from official with latest version]'
+                pnpx dprint
+              }
+            }
+          }
+          echo '::endgroup::'
+      - run: pnpm run build-only-packages
       - run: pnpm run fmt-check
       - run: pnpx run-p 'fmt:!(xs)'
       - name: Check changes

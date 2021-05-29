@@ -1,7 +1,7 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import pkg from '../package.json';
 import { getPackageDataList, PackageData } from '../src/main';
+import pkg from '../package.json';
 
 describe('getPackageDataList()', () => {
     it('package data should be included', async () => {

@@ -3,11 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * @param {string} basename
+ * @param {string|RegExp} basename
  * @returns {function(string): boolean}
  */
 function baseFilter(basename) {
-  return filename => path.basename(filename) === basename;
+  return typeof basename === 'string'
+    ? filename => path.basename(filename) === basename
+    : filename => basename.test(path.basename(filename));
 }
 
 /**
@@ -45,10 +47,34 @@ module.exports = {
       );
     }
 
-    const tsOrJsFiles = filenames.filter(extFilter('ts', 'js'));
+    if (
+      filenames.some(baseFilter('.eslintignore'))
+      || filenames.some(baseFilter(/^(?:dprint|\.dprint)(?:-.*)?\.json$/))
+    ) {
+      commands.push(
+        'pnpm run build:dprint-config',
+        'git add ./.dprint.json ./.dprint-*.json',
+      );
+    }
+
+    const tsFiles = filenames.filter(extFilter('ts'));
+    if (tsFiles.length >= 1) {
+      commands.push(
+        `pnpm run fmt:ts:dprint -- ${tsFiles.join(' ')}`,
+      );
+    }
+
+    const jsFiles = filenames.filter(extFilter('js'));
+    if (jsFiles.length >= 1) {
+      commands.push(
+        `pnpm run fmt:js:dprint -- ${jsFiles.join(' ')}`,
+      );
+    }
+
+    const tsOrJsFiles = [...tsFiles, ...jsFiles];
     if (tsOrJsFiles.length >= 1) {
       commands.push(
-        `eslint --fix ${tsOrJsFiles.join(' ')}`,
+        `eslint --cache --fix ${tsOrJsFiles.join(' ')}`,
       );
     }
 

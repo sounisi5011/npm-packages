@@ -3,8 +3,8 @@ import * as util from 'util';
 
 import escapeStringRegexp from 'escape-string-regexp';
 
-import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
 import type { Argon2Options } from '../../src/key-derivation-function/argon2';
+import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
 import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
 
 import '../helpers/jest-matchers';
