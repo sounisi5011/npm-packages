@@ -65,24 +65,19 @@ jobs:
         run: pnpm install
       - name: Setup dprint
         # The execution of the dprint command installed from npm will fail only on CI.
-        # So, set up dprint according to the instructions on the official site, and replace the dprint installed from npm.
-        # https://dprint.dev/ci/
+        # So, to make the downloaded binary file run directly, move it to the `node_modules/.bin` directory.
         shell: bash
         run: |
           echo '::group::' ls -alp ./node_modules/.bin/dprint
                            ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
 
-          echo '::group::' Install dprint
-          curl -fsSL https://dprint.dev/install.sh | sh -s
-          echo '::endgroup::'
-
           echo '::group::' rm -rf ./node_modules/.bin/dprint
                            rm -rf ./node_modules/.bin/dprint
           echo '::endgroup::'
 
-          echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-                           mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+          echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
+                           mv ./node_modules/dprint/dprint ./node_modules/.bin/
           echo '::endgroup::'
 
           echo '::group::' ls -alp ./node_modules/.bin/dprint
