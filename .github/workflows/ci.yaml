@@ -73,8 +73,13 @@ jobs:
                            ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
 
+          echo '::group::' Detect dprint version
+          readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
+          echo dprint version':' "${dprintVersion}"
+          echo '::endgroup::'
+
           echo '::group::' Install dprint
-          curl -fsSL https://dprint.dev/install.sh | sh -s
+          curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
           echo '::endgroup::'
 
           echo '::group::' rm -rf ./node_modules/.bin/dprint
