@@ -23,7 +23,7 @@
     "fmt-check:prettier": "prettier --check .",
     "fmt:config": "prettier --write .",
     "fmt:js": "run-s fmt:js:dprint fmt:js:eslint",
-    "fmt:js:dprint": "dprint fmt -c ./.dprint.js.json",
+    "fmt:js:dprint": "dprint fmt -c ./.dprint-js.json",
     "fmt:js:eslint": "eslint --cache --fix --ext .js ./",
     "fmt:pkg": "globby-exec node ./scripts/format-package-json.js --write '{{**/package.json}}'",
     "fmt:readme": "run-s fmt:readme:*",
