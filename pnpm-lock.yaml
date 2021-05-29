@@ -195,6 +195,12 @@ importers:
     devDependencies:
       tsd: 0.16.0
 
+  packages/ts-utils/is-property-accessible:
+    specifiers:
+      tsd: 0.16.0
+    devDependencies:
+      tsd: 0.16.0
+
   scripts/fix-flatbuffers-generated-ts:
     specifiers: {}
 

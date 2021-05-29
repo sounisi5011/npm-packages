@@ -1,0 +1,72 @@
+{
+  "name": "@sounisi5011/ts-utils-is-property-accessible",
+  "version": "0.0.0",
+  "description": "Check if a value is property accessible",
+  "keywords": [
+    "assert",
+    "assertion",
+    "check",
+    "check-type",
+    "checking",
+    "define-type",
+    "guard",
+    "guards",
+    "is",
+    "nullable",
+    "property",
+    "test",
+    "ts",
+    "type",
+    "type-check",
+    "type-checker",
+    "type-checking",
+    "typechecker",
+    "typed",
+    "typeguard",
+    "typeguards",
+    "typeof",
+    "types",
+    "typescript",
+    "util",
+    "utility",
+    "validate",
+    "validation",
+    "verify"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-utils/is-property-accessible#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/ts-utils/is-property-accessible"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "!*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
+    "test": "run-p test:*",
+    "test:jest": "jest",
+    "test:tsd": "run-s build test:tsd:*",
+    "test:tsd:exec": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "0.16.0"
+  }
+}

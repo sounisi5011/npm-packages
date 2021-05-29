@@ -40,9 +40,7 @@ overrides:
     parserOptions:
       sourceType: module
       project:
-        - ./packages/*{,/tests{,/helpers},/test-d}/tsconfig.json
-        - ./packages/cli/*{,/tests{,/helpers},/test-d}/tsconfig.json
-        - ./packages/ts-type-utils/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/{*,*/*}{,/tests{,/helpers},/test-d}/tsconfig.json
         - ./actions/*{,/tests{,/helpers},/test-d}/tsconfig.json
     settings:
       node:
