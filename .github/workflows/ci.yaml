@@ -79,7 +79,7 @@ jobs:
         shell: bash
         run: |
           echo '::group::' ls -alp ./node_modules/.bin/dprint
-                          ls -alp ./node_modules/.bin/dprint
+                           ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
 
           echo '::group::' pnpx dprint '[npm installed]'
@@ -87,15 +87,15 @@ jobs:
             echo '::endgroup::'
 
             echo '::group::' rm -rf ./node_modules/.bin/dprint
-                            rm -rf ./node_modules/.bin/dprint
+                             rm -rf ./node_modules/.bin/dprint
             echo '::endgroup::'
 
             echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
-                            mv ./node_modules/dprint/dprint ./node_modules/.bin/
+                             mv ./node_modules/dprint/dprint ./node_modules/.bin/
             echo '::endgroup::'
 
             echo '::group::' ls -alp ./node_modules/.bin/dprint
-                            ls -alp ./node_modules/.bin/dprint
+                             ls -alp ./node_modules/.bin/dprint
             echo '::endgroup::'
 
             echo '::group::' pnpx dprint '[npm binary]'
@@ -128,11 +128,11 @@ jobs:
                 echo '::endgroup::'
 
                 echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-                                mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                                 mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
                 echo '::endgroup::'
 
                 echo '::group::' ls -alp ./node_modules/.bin/dprint
-                                ls -alp ./node_modules/.bin/dprint
+                                 ls -alp ./node_modules/.bin/dprint
                 echo '::endgroup::'
 
                 echo '::group::' pnpx dprint '[download from official with latest version]'
