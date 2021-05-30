@@ -68,10 +68,5 @@
   },
   "devDependencies": {
     "tsd": "0.16.0"
-  },
-  "tsd": {
-    "compilerOptions": {
-      "rootDir": "./"
-    }
   }
 }
