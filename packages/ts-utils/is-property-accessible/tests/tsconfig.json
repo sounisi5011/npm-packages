@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Module Resolution Options */
+    "types": ["jest"]
+  },
+  "include": ["./**/*", "../src/**/*"]
+}

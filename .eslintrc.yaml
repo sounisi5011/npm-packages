@@ -31,6 +31,17 @@ rules:
         order: asc
         caseInsensitive: true
 overrides:
+  - files: "*.cjs"
+  - files:
+      - "*.mjs"
+      - "**/rollup.config.js"
+    parserOptions:
+      sourceType: module
+    rules:
+      node/no-unsupported-features/es-syntax:
+        - error
+        - ignores:
+            - modules
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
@@ -40,9 +51,7 @@ overrides:
     parserOptions:
       sourceType: module
       project:
-        - ./packages/*{,/tests{,/helpers},/test-d}/tsconfig.json
-        - ./packages/cli/*{,/tests{,/helpers},/test-d}/tsconfig.json
-        - ./packages/ts-type-utils/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/{*,*/*}{,/tests{,/helpers},/test-d}/tsconfig.json
         - ./actions/*{,/tests{,/helpers},/test-d}/tsconfig.json
     settings:
       node:
@@ -114,6 +123,11 @@ overrides:
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x
+  - files: "**/rollup.config.js"
+    rules:
+      import/no-extraneous-dependencies:
+        - error
+        - devDependencies: true
   - files: "*"
     extends:
       - prettier

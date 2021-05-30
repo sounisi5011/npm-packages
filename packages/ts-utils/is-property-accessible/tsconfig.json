@@ -1,0 +1,15 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "module": "ESNext",
+    "declarationMap": false,
+    "noEmit": true,
+
+    /* Source Map Options */
+    "inlineSources": true
+  },
+  "include": ["./**/*"]
+}

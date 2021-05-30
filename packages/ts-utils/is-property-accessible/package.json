@@ -1,0 +1,83 @@
+{
+  "name": "@sounisi5011/ts-utils-is-property-accessible",
+  "version": "0.0.0",
+  "description": "Check if a value is property accessible",
+  "keywords": [
+    "assert",
+    "assertion",
+    "check",
+    "check-type",
+    "checking",
+    "define-type",
+    "guard",
+    "guards",
+    "is",
+    "nullable",
+    "property",
+    "test",
+    "ts",
+    "type",
+    "type-check",
+    "type-checker",
+    "type-checking",
+    "typechecker",
+    "typed",
+    "typeguard",
+    "typeguards",
+    "typeof",
+    "types",
+    "typescript",
+    "util",
+    "utility",
+    "validate",
+    "validation",
+    "verify"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/ts-utils/is-property-accessible#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/ts-utils/is-property-accessible"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "!*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "run-p build:*",
+    "build:cjs": "rollup --config",
+    "build:mjs": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
+    "test": "npm-run-all build --parallel 'test:!(examples|tsd)' test:examples:run test:tsd:exec",
+    "test:examples": "run-s build test:examples:*",
+    "test:examples:run": "glob-exec --foreach 'examples/*.{js,cjs,mjs}' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
+    "test:jest": "jest",
+    "test:tsd": "run-s build:mjs test:tsd:*",
+    "test:tsd:exec": "tsd"
+  },
+  "devDependencies": {
+    "@betit/rollup-plugin-rename-extensions": "0.1.0",
+    "@rollup/plugin-typescript": "8.2.1",
+    "glob-exec": "0.1.1",
+    "rollup": "2.50.4",
+    "tsd": "0.16.0"
+  }
+}

@@ -7,6 +7,7 @@
 
 - [Packages](#packages)
 - [CLI](#cli)
+- [TypeScript Utilities](#typescript-utilities)
 - [TypeScript Type Utilities](#typescript-type-utilities)
 - [GitHub Actions](#github-actions)
 
@@ -22,6 +23,12 @@
 | Package | Version | Dependencies |
 |-|-|-|
 | [`@sounisi5011/run-if-supported`](./packages/cli/run-if-supported) | [![npm](https://img.shields.io/npm/v/@sounisi5011/run-if-supported.svg)](https://www.npmjs.com/package/@sounisi5011/run-if-supported) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcli%2Frun-if-supported)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fcli%2Frun-if-supported) |
+
+### TypeScript Utilities
+
+| Package | Version | Dependencies |
+|-|-|-|
+| [`@sounisi5011/ts-utils-is-property-accessible`](./packages/ts-utils/is-property-accessible) | [![npm](https://img.shields.io/npm/v/@sounisi5011/ts-utils-is-property-accessible.svg)](https://www.npmjs.com/package/@sounisi5011/ts-utils-is-property-accessible) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fts-utils%2Fis-property-accessible)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fts-utils%2Fis-property-accessible) |
 
 ### TypeScript Type Utilities
 
