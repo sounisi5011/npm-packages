@@ -112,6 +112,17 @@ overrides:
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x
+  - files: "**/rollup.config.js"
+    parserOptions:
+      sourceType: module
+    rules:
+      import/no-extraneous-dependencies:
+        - error
+        - devDependencies: true
+      node/no-unsupported-features/es-syntax:
+        - error
+        - ignores:
+            - modules
   - files: "*"
     extends:
       - prettier

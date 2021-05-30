@@ -44,29 +44,37 @@
   },
   "license": "MIT",
   "author": "sounisi5011",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
     "!*.tsbuildinfo"
   ],
   "scripts": {
-    "build": "tsc -p ./src/",
+    "build": "run-p build:*",
+    "build:cjs": "rollup --config",
+    "build:mjs": "tsc -p ./src/",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
     "test": "run-p test:*",
     "test:jest": "jest",
-    "test:tsd": "run-s build test:tsd:*",
+    "test:tsd": "run-s build:mjs test:tsd:*",
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
+    "@betit/rollup-plugin-rename-extensions": "0.1.0",
+    "@rollup/plugin-typescript": "8.2.1",
+    "rollup": "2.50.4",
     "tsd": "0.16.0"
   }
 }
