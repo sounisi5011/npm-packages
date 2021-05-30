@@ -6,7 +6,7 @@
   "typescript": {
     "indentWidth": 2
   },
-  "includes": ["**/*.js"],
+  "includes": ["**/*.js", "**/*.cjs", "**/*.mjs"],
   "excludes": [
     "**/flatbuffers/*_generated.ts",
     "**/protocol-buffers/*_pb.js",

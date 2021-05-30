@@ -64,7 +64,7 @@ module.exports = {
       );
     }
 
-    const jsFiles = filenames.filter(extFilter('js'));
+    const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
     if (jsFiles.length >= 1) {
       commands.push(
         `pnpm run fmt:js:dprint -- ${jsFiles.join(' ')}`,

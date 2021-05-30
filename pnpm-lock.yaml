@@ -199,13 +199,21 @@ importers:
     specifiers:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.2.1
+      glob-exec: 0.1.1
       rollup: 2.50.4
       tsd: 0.16.0
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.2.1_rollup@2.50.4
+      glob-exec: 0.1.1
       rollup: 2.50.4
       tsd: 0.16.0
+
+  packages/ts-utils/is-property-accessible/examples:
+    specifiers:
+      '@sounisi5011/ts-utils-is-property-accessible': link:..
+    dependencies:
+      '@sounisi5011/ts-utils-is-property-accessible': link:..
 
   scripts/fix-flatbuffers-generated-ts:
     specifiers: {}

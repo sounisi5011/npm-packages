@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "dependencies": {
+    "@sounisi5011/ts-utils-is-property-accessible": "link:.."
+  }
+}

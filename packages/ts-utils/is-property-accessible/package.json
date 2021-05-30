@@ -66,7 +66,9 @@
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
-    "test": "run-p test:*",
+    "test": "npm-run-all build --parallel 'test:!(examples|tsd)' test:examples:run test:tsd:exec",
+    "test:examples": "run-s build test:examples:*",
+    "test:examples:run": "glob-exec --foreach 'examples/*.{js,cjs,mjs}' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest",
     "test:tsd": "run-s build:mjs test:tsd:*",
     "test:tsd:exec": "tsd"
@@ -74,6 +76,7 @@
   "devDependencies": {
     "@betit/rollup-plugin-rename-extensions": "0.1.0",
     "@rollup/plugin-typescript": "8.2.1",
+    "glob-exec": "0.1.1",
     "rollup": "2.50.4",
     "tsd": "0.16.0"
   }

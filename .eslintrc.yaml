@@ -31,6 +31,17 @@ rules:
         order: asc
         caseInsensitive: true
 overrides:
+  - files: "*.cjs"
+  - files:
+      - "*.mjs"
+      - "**/rollup.config.js"
+    parserOptions:
+      sourceType: module
+    rules:
+      node/no-unsupported-features/es-syntax:
+        - error
+        - ignores:
+            - modules
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
@@ -113,16 +124,10 @@ overrides:
         - error
         - version: 12.x
   - files: "**/rollup.config.js"
-    parserOptions:
-      sourceType: module
     rules:
       import/no-extraneous-dependencies:
         - error
         - devDependencies: true
-      node/no-unsupported-features/es-syntax:
-        - error
-        - ignores:
-            - modules
   - files: "*"
     extends:
       - prettier
