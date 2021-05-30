@@ -45,7 +45,7 @@ declare const strValue: string;
 expectType<number>(strValue.length);
 
 // @ts-expect-error TS2339: Property 'foo' does not exist on type 'string'.
-empty(strValue.foo);
+strValue.foo;
 
 if (isPropertyAccessible(strValue)) {
     expectType<string & Record<PropertyKey, unknown>>(strValue);
