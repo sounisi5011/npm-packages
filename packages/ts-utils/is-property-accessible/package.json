@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/ts-utils-is-property-accessible",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Check if a value is property accessible",
   "keywords": [
     "assert",
