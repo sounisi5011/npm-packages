@@ -6,10 +6,10 @@
     /* Basic Options */
     "module": "ESNext",
     "declarationMap": false,
+    "rootDir": "./",
     "noEmit": true,
 
     /* Source Map Options */
     "inlineSources": true
-  },
-  "include": ["./**/*"]
+  }
 }
