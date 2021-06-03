@@ -88,13 +88,5 @@
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
   },
-  "runkitExampleFilename": "./examples/index.js",
-  "tsd": {
-    "compilerOptions": {
-      "lib": [
-        "es2019"
-      ],
-      "rootDir": "./"
-    }
-  }
+  "runkitExampleFilename": "./examples/index.js"
 }
