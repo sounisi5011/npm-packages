@@ -78,6 +78,6 @@
     "@rollup/plugin-typescript": "8.2.1",
     "glob-exec": "0.1.1",
     "rollup": "2.50.4",
-    "tsd": "0.16.0"
+    "tsd": "0.17.0"
   }
 }
