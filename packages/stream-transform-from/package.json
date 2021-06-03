@@ -83,18 +83,10 @@
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.0.1",
     "@types/node": "15.6.0",
-    "tsd": "0.16.0"
+    "tsd": "0.17.0"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
   },
-  "runkitExampleFilename": "./examples/index.js",
-  "tsd": {
-    "compilerOptions": {
-      "lib": [
-        "es2019"
-      ],
-      "rootDir": "./"
-    }
-  }
+  "runkitExampleFilename": "./examples/index.js"
 }

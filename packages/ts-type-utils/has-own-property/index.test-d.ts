@@ -1,8 +1,6 @@
-import { expectNotType, expectType } from 'tsd';
+import { expectType } from 'tsd';
 
 import type { hasOwnProperty } from '.';
-
-declare const expectTypeTscOnly: <T>(value: T) => void;
 
 const hasOwnProp = Object.prototype.hasOwnProperty.call as hasOwnProperty;
 
@@ -138,85 +136,30 @@ if ((Object.prototype.hasOwnProperty.call as hasOwnProperty)(obj1, 'nonExistent'
 
 const obj2: Record<string, boolean> = {};
 
-/**
- * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
- *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
- * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
- *       expectType<boolean | undefined>(obj2['other']);
- */
-expectNotType<boolean | undefined>(obj2['other']);
-expectTypeTscOnly<boolean | undefined>(obj2['other']);
+expectType<boolean | undefined>(obj2['other']);
 
 if (hasOwnProp(obj2, 'prop')) {
     expectType<boolean>(obj2.prop);
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['other']);
-     */
-    expectNotType<boolean | undefined>(obj2['other']);
-    expectTypeTscOnly<boolean | undefined>(obj2['other']);
+    expectType<boolean | undefined>(obj2['other']);
 } else {
     /**
      * The `hasOwnProperty()` method checks that the specified object has its own properties.
      * However, it does not check if it has any inherited properties.
      * Even if the `hasOwnProperty()` method returns `false`, there is still a possibility that the specified object has the checked property.
      */
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['prop']);
-     */
-    expectNotType<boolean | undefined>(obj2['prop']);
-    expectTypeTscOnly<boolean | undefined>(obj2['prop']);
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['other']);
-     */
-    expectNotType<boolean | undefined>(obj2['other']);
-    expectTypeTscOnly<boolean | undefined>(obj2['other']);
+    expectType<boolean | undefined>(obj2['prop']);
+    expectType<boolean | undefined>(obj2['other']);
 }
 
 if ((Object.prototype.hasOwnProperty.call as hasOwnProperty)(obj2, 'prop')) {
     expectType<boolean>(obj2.prop);
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['other']);
-     */
-    expectNotType<boolean | undefined>(obj2['other']);
-    expectTypeTscOnly<boolean | undefined>(obj2['other']);
+    expectType<boolean | undefined>(obj2['other']);
 } else {
     /**
      * The `hasOwnProperty()` method checks that the specified object has its own properties.
      * However, it does not check if it has any inherited properties.
      * Even if the `hasOwnProperty()` method returns `false`, there is still a possibility that the specified object has the checked property.
      */
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['prop']);
-     */
-    expectNotType<boolean | undefined>(obj2['prop']);
-    expectTypeTscOnly<boolean | undefined>(obj2['prop']);
-
-    /**
-     * Note: Since TypeScript's `noUncheckedIndexedAccess` option is enabled, THIS TEST SHOULD FAIL.
-     *       However, `tsd@0.14.0` probably does not support the `noUncheckedIndexedAccess` option.
-     * @todo If `tsd` supports the `noUncheckedIndexedAccess` option, change this tests to the following code:
-     *       expectType<boolean | undefined>(obj2['other']);
-     */
-    expectNotType<boolean | undefined>(obj2['other']);
-    expectTypeTscOnly<boolean | undefined>(obj2['other']);
+    expectType<boolean | undefined>(obj2['prop']);
+    expectType<boolean | undefined>(obj2['other']);
 }
