@@ -10,5 +10,5 @@
     /* Module Resolution Options */
     "types": ["node"]
   },
-  "include": ["./**/*", "../src/**/*"]
+  "include": ["./**/*"]
 }
