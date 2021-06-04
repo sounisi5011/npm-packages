@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "declarationMap": false,
+    "noEmit": true,
+
+    /* Module Resolution Options */
+    "types": ["node"],
+
+    /* Source Map Options */
+    "inlineSources": true
+  }
+}

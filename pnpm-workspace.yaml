@@ -1,6 +1,7 @@
 packages:
   - packages/*
   - packages/cli/*
+  - packages/utils/*
   - packages/ts-utils/*
   - packages/ts-type-utils/*
   - actions/*
