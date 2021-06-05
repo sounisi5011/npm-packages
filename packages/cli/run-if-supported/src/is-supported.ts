@@ -1,14 +1,15 @@
+import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { checkEngine, checkPlatform } from 'npm-install-checks';
 import ow from 'ow';
 
-import { isRecordLike, isString } from './utils';
+import { isString } from './utils';
 
 function readProp<T>(
     obj: unknown,
     prop: string,
     validate: (value: unknown) => value is T,
 ): T | null {
-    if (isRecordLike(obj)) {
+    if (isPropAccessible(obj)) {
         const value = obj[prop];
         if (validate(value)) return value;
     }
@@ -16,12 +17,12 @@ function readProp<T>(
 }
 
 function validateError<T>(error: unknown, fn: (error: Error & Record<PropertyKey, unknown>) => T): T {
-    if (error instanceof Error && isRecordLike(error)) return fn(error);
+    if (error instanceof Error && isPropAccessible(error)) return fn(error);
     throw error;
 }
 
 function createRequiredPlatformText(error: Error & Record<PropertyKey, unknown>): string {
-    if (!isRecordLike(error['current']) || !isRecordLike(error['required'])) return '';
+    if (!isPropAccessible(error['current']) || !isPropAccessible(error['required'])) return '';
     return Object.entries(error['current'])
         .flatMap(([prop, currentPlatform]): string[] => {
             if (!isString(currentPlatform)) return [];

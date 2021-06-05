@@ -1,6 +1,7 @@
 import { promises as fsAsync } from 'fs';
 import { dirname, resolve as resolvePath } from 'path';
 
+import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
 import { ArgumentError } from 'ow';
 import parseJson from 'parse-json';
@@ -9,10 +10,10 @@ import type { JsonValue } from 'type-fest';
 
 import { isNotSupported } from './is-supported';
 import { parseOptions } from './options';
-import { filterObjectEntry, isRecordLike, isString } from './utils';
+import { filterObjectEntry, isString } from './utils';
 
 function getBinName(pkg: Record<PropertyKey, unknown>, entryFilepath: string): string | undefined {
-    if (isRecordLike(pkg['bin'])) {
+    if (isPropAccessible(pkg['bin'])) {
         const binEntry = Object.entries(pkg['bin'])
             .filter(filterObjectEntry(isString))
             .map(([binName, binPath]) => ({ binName, binPath }))
@@ -38,7 +39,7 @@ function getCliData(entryFilepath: string): {
     let version: string | undefined;
     let description = '';
 
-    if (!isRecordLike(PKG)) return { binName: undefined, version, description };
+    if (!isPropAccessible(PKG)) return { binName: undefined, version, description };
 
     const binName = getBinName(PKG, entryFilepath);
     if (typeof PKG['version'] === 'string') version = PKG['version'];

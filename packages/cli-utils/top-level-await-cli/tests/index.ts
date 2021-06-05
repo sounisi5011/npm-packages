@@ -1,6 +1,6 @@
-import execa from 'execa';
-
 import * as path from 'path';
+
+import execa from 'execa';
 
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
 
