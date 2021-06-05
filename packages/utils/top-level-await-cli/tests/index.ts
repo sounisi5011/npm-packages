@@ -75,3 +75,25 @@ describe('awaitMainFn()', () => {
         },
     );
 });
+
+describe('process.exitCode', () => {
+    it.each<[number, number]>([
+        [0, 0],
+        [1, 1],
+        [99, 99],
+        [255, 255],
+        [256, 0],
+        [257, 1],
+        [-1, 255],
+        [-255, 1],
+        [-256, 0],
+        [-257, 255],
+        [NaN, 0],
+    ])('%o', async (code, expected) => {
+        const result = await execa('node', [
+            '-e',
+            `require('.').awaitMainFn(async () => { process.exitCode = ${String(code)} })`,
+        ], { reject: false });
+        expect(result.exitCode).toBe(expected);
+    });
+});
