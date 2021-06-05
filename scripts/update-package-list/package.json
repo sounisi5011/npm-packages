@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "hosted-git-info": "^4.0.2",
     "strict-uri-encode": "^2.0.0",
     "validate-npm-package-name": "^3.0.0",

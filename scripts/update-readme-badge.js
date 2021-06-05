@@ -3,6 +3,8 @@
 const { promises: fsAsync } = require('fs');
 const path = require('path');
 
+const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
+
 /**
  * @param {string} str
  */
@@ -176,11 +178,4 @@ async function main() {
   }
 }
 
-(async () => {
-  try {
-    await main();
-  } catch (error) {
-    process.exitCode = 1;
-    console.error(error);
-  }
-})();
+awaitMainFn(main);

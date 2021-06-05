@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // @ts-check
 
+const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
 const spawn = require('cross-spawn');
 const globby = require('globby');
 
@@ -90,11 +91,4 @@ async function main() {
   await spawnAsync(subCommand, globReplacedArgs, { stdio: 'inherit' });
 }
 
-(async () => {
-  try {
-    await main();
-  } catch (error) {
-    process.exitCode = 1;
-    console.dir(error);
-  }
-})();
+awaitMainFn(main);

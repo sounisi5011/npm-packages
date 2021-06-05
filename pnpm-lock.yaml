@@ -87,6 +87,7 @@ importers:
 
   packages/cli/run-if-supported:
     specifiers:
+      '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       '@types/cross-spawn': 6.0.2
       '@types/node': '*'
       '@types/parse-json': 4.0.0
@@ -101,6 +102,7 @@ importers:
       type-fest: 1.2.0
       ultra-runner: 3.10.5
     dependencies:
+      '@sounisi5011/cli-utils-top-level-await': link:../../cli-utils/top-level-await-cli
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
@@ -225,24 +227,37 @@ importers:
     dependencies:
       '@sounisi5011/ts-utils-is-property-accessible': link:..
 
+  scripts:
+    specifiers:
+      '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
+    dependencies:
+      '@sounisi5011/cli-utils-top-level-await': link:../packages/cli-utils/top-level-await-cli
+
   scripts/fix-flatbuffers-generated-ts:
-    specifiers: {}
+    specifiers:
+      '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
+    dependencies:
+      '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
 
   scripts/globby-exec:
     specifiers:
+      '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       cross-spawn: ^7.0.3
       globby: ^11.0.3
     dependencies:
+      '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       cross-spawn: 7.0.3
       globby: 11.0.3
 
   scripts/update-package-list:
     specifiers:
+      '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       hosted-git-info: ^4.0.2
       strict-uri-encode: ^2.0.0
       validate-npm-package-name: ^3.0.0
       workspace-tools: ^0.16.0
     dependencies:
+      '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       hosted-git-info: 4.0.2
       strict-uri-encode: 2.0.0
       validate-npm-package-name: 3.0.0
