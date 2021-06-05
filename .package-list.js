@@ -20,8 +20,8 @@ const list = {
     header: 'CLI',
     getVersionLink: createNpmBadge,
   },
-  'packages/utils': {
-    header: 'Utilities',
+  'packages/cli-utils': {
+    header: 'CLI Utilities',
     getVersionLink: createNpmBadge,
   },
   'packages/ts-utils': {

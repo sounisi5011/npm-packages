@@ -1,15 +1,15 @@
 {
-  "name": "@sounisi5011/utils-top-level-await-cli",
+  "name": "@sounisi5011/cli-utils-top-level-await",
   "version": "0.0.0",
   "description": "If the async function fails, set the process exit code to 1 and output the error to stderr",
-  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/utils/top-level-await-cli#readme",
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/cli-utils/top-level-await-cli#readme",
   "bugs": {
     "url": "https://github.com/sounisi5011/npm-packages/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sounisi5011/npm-packages.git",
-    "directory": "packages/utils/top-level-await-cli"
+    "directory": "packages/cli-utils/top-level-await-cli"
   },
   "license": "MIT",
   "author": "sounisi5011",

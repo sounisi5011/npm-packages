@@ -75,6 +75,18 @@ importers:
       '@types/node': 15.6.0
       '@vercel/ncc': 0.28.6
 
+  packages/cli-utils/top-level-await-cli:
+    specifiers:
+      '@sounisi5011/run-if-supported': 1.0.1
+      '@types/node': 12.x
+      execa: 5.1.1
+      ultra-runner: 3.10.5
+    devDependencies:
+      '@sounisi5011/run-if-supported': 1.0.1
+      '@types/node': 12.20.14
+      execa: 5.1.1
+      ultra-runner: 3.10.5
+
   packages/cli/run-if-supported:
     specifiers:
       '@types/cross-spawn': 6.0.2
@@ -214,18 +226,6 @@ importers:
       '@sounisi5011/ts-utils-is-property-accessible': link:..
     dependencies:
       '@sounisi5011/ts-utils-is-property-accessible': link:..
-
-  packages/utils/top-level-await-cli:
-    specifiers:
-      '@sounisi5011/run-if-supported': 1.0.1
-      '@types/node': 12.x
-      execa: 5.1.1
-      ultra-runner: 3.10.5
-    devDependencies:
-      '@sounisi5011/run-if-supported': 1.0.1
-      '@types/node': 12.20.14
-      execa: 5.1.1
-      ultra-runner: 3.10.5
 
   scripts/fix-flatbuffers-generated-ts:
     specifiers: {}

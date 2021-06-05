@@ -7,7 +7,7 @@
 
 - [Packages](#packages)
 - [CLI](#cli)
-- [Utilities](#utilities)
+- [CLI Utilities](#cli-utilities)
 - [TypeScript Utilities](#typescript-utilities)
 - [TypeScript Type Utilities](#typescript-type-utilities)
 - [GitHub Actions](#github-actions)
@@ -25,11 +25,11 @@
 |-|-|-|
 | [`@sounisi5011/run-if-supported`](./packages/cli/run-if-supported) | [![npm](https://img.shields.io/npm/v/@sounisi5011/run-if-supported.svg)](https://www.npmjs.com/package/@sounisi5011/run-if-supported) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcli%2Frun-if-supported)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fcli%2Frun-if-supported) |
 
-### Utilities
+### CLI Utilities
 
 | Package | Version | Dependencies |
 |-|-|-|
-| [`@sounisi5011/utils-top-level-await-cli`](./packages/utils/top-level-await-cli) | [![npm](https://img.shields.io/npm/v/@sounisi5011/utils-top-level-await-cli.svg)](https://www.npmjs.com/package/@sounisi5011/utils-top-level-await-cli) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Futils%2Ftop-level-await-cli)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Futils%2Ftop-level-await-cli) |
+| [`@sounisi5011/cli-utils-top-level-await`](./packages/cli-utils/top-level-await-cli) | [![npm](https://img.shields.io/npm/v/@sounisi5011/cli-utils-top-level-await.svg)](https://www.npmjs.com/package/@sounisi5011/cli-utils-top-level-await) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcli-utils%2Ftop-level-await-cli)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fcli-utils%2Ftop-level-await-cli) |
 
 ### TypeScript Utilities
 
