@@ -212,13 +212,13 @@ importers:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.2.1
       glob-exec: 0.1.1
-      rollup: 2.50.4
+      rollup: 2.50.6
       tsd: 0.17.0
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.2.1_rollup@2.50.4
+      '@rollup/plugin-typescript': 8.2.1_rollup@2.50.6
       glob-exec: 0.1.1
-      rollup: 2.50.4
+      rollup: 2.50.6
       tsd: 0.17.0
 
   packages/ts-utils/is-property-accessible/examples:
@@ -943,7 +943,7 @@ packages:
       '@nodelib/fs.scandir': 2.1.4
       fastq: 1.11.0
 
-  /@rollup/plugin-typescript/8.2.1_rollup@2.50.4:
+  /@rollup/plugin-typescript/8.2.1_rollup@2.50.6:
     resolution: {integrity: sha512-Qd2E1pleDR4bwyFxqbjt4eJf+wB0UKVMLc7/BAFDGVdAXQMCsD4DUv5/7/ww47BZCYxWtJqe1Lo0KVNswBJlRw==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -951,12 +951,12 @@ packages:
       tslib: '*'
       typescript: '>=3.7.0'
     dependencies:
-      '@rollup/pluginutils': 3.1.0_rollup@2.50.4
+      '@rollup/pluginutils': 3.1.0_rollup@2.50.6
       resolve: 1.20.0
-      rollup: 2.50.4
+      rollup: 2.50.6
     dev: true
 
-  /@rollup/pluginutils/3.1.0_rollup@2.50.4:
+  /@rollup/pluginutils/3.1.0_rollup@2.50.6:
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
@@ -965,7 +965,7 @@ packages:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.0
-      rollup: 2.50.4
+      rollup: 2.50.6
     dev: true
 
   /@sindresorhus/is/4.0.1:
@@ -5708,8 +5708,8 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup/2.50.4:
-    resolution: {integrity: sha512-mBQa9O6bdqur7a6R+TXcbdYgfO2arXlDG+rSrWfwAvsiumpJjD4OS23R9QuhItuz8ysWb8mZ91CFFDQUhJY+8Q==}
+  /rollup/2.50.6:
+    resolution: {integrity: sha512-6c5CJPLVgo0iNaZWWliNu1Kl43tjP9LZcp6D/tkf2eLH2a9/WeHxg9vfTFl8QV/2SOyaJX37CEm9XuGM0rviUg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
