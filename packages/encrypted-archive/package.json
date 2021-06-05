@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/encrypted-archive",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Convert data into a single encrypted archive data that contains all metadata needed for decryption",
   "keywords": [
     "AES",
