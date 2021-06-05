@@ -5,7 +5,11 @@ export async function awaitMainFn(mainFnOrValue: (() => PromiseLike<void> | void
     try {
         await mainFn();
     } catch (error) {
-        if (typeof process.exitCode !== 'number' || process.exitCode === 0) {
+        if (
+            typeof process.exitCode !== 'number'
+            || Number.isNaN(process.exitCode)
+            || process.exitCode % 256 === 0
+        ) {
             process.exitCode = 1;
         }
         console.error(error);
