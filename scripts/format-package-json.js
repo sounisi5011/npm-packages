@@ -2,7 +2,10 @@
 
 const { promises } = require('fs');
 
+const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-require
 const prettierPackageJson = require('prettier-package-json');
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-require
 const sortPackageJson = require('sort-package-json');
 
 /**
@@ -111,11 +114,4 @@ async function main() {
   }
 }
 
-(async () => {
-  try {
-    await main();
-  } catch (error) {
-    process.exitCode = 1;
-    console.dir(error);
-  }
-})();
+awaitMainFn(main);

@@ -3,6 +3,7 @@
 const { promises: fsAsync } = require('fs');
 const path = require('path');
 
+const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
 const hostedGitInfo = require('hosted-git-info');
 const strictUriEncode = require('strict-uri-encode');
 const validateNpmPkgName = require('validate-npm-package-name');
@@ -264,7 +265,4 @@ async function main() {
   }
 }
 
-main().catch(error => {
-  process.exitCode = 1;
-  console.error(error);
-});
+awaitMainFn(main);

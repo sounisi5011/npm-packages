@@ -5,5 +5,6 @@ packages:
   - packages/ts-utils/*
   - packages/ts-type-utils/*
   - actions/*
+  - scripts
   - scripts/*
   - "**/examples"

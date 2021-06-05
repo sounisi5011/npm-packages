@@ -4,5 +4,8 @@
   "private": true,
   "bin": {
     "fix-flatbuffers-generated-ts": "index.js"
+  },
+  "dependencies": {
+    "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0"
   }
 }
