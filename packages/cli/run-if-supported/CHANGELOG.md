@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.1...run-if-supported-v1.0.2) (2021-06-05)
+
+
+### Bug Fixes
+
+* introduce `@sounisi5011/cli-utils-top-level-await` ([#130](https://www.github.com/sounisi5011/npm-packages/issues/130)) ([75c5002](https://www.github.com/sounisi5011/npm-packages/commit/75c500258f09b19ba045c1e3da1a135d274ed296))
+* introduce `@sounisi5011/ts-utils-is-property-accessible` ([#133](https://www.github.com/sounisi5011/npm-packages/issues/133)) ([c88a772](https://www.github.com/sounisi5011/npm-packages/commit/c88a772b3c8327d7c983aefb1f3cdbd3499b5f11))
+
 ### [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.0...run-if-supported-v1.0.1) (2021-05-28)
 
 

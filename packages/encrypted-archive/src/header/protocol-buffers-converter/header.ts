@@ -1,8 +1,8 @@
 import { isArgon2Options } from '../../key-derivation-function/argon2';
-import { assertType } from '../../utils/type';
 import { cond, getPropFromValue, printObject } from '../../utils';
-import { Header } from '../protocol-buffers/header_pb';
+import { assertType } from '../../utils/type';
 import type { HeaderData } from '../create';
+import { Header } from '../protocol-buffers/header_pb';
 import { createProtobufArgon2Options, parseProtobufArgon2Options } from './argon2Options';
 import { createEnum2value, validateBytesField, validateNumberField } from './utils';
 
