@@ -20,9 +20,6 @@
     "build:scripts": "ultra --recursive --filter '+scripts/**' build",
     "build:submodule": "ultra --recursive build",
     "fmt": "run-p 'fmt:!(ts|js)'",
-    "fmt-check": "run-p fmt-check:*",
-    "fmt-check:pkg": "globby-exec node ./scripts/format-package-json.js --check '{{**/package.json}}'",
-    "fmt-check:prettier": "prettier --check .",
     "fmt:config": "prettier --write .",
     "fmt:js": "run-s fmt:js:dprint fmt:js:eslint",
     "fmt:js:dprint": "dprint fmt -c ./.dprint-js.json",
@@ -40,7 +37,7 @@
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "pnpm recursive run lint:tsc --filter '*'",
     "prepare": "husky install",
-    "test": "run-s lint test-only fmt-check",
+    "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
     "test:unit-test": "pnpm recursive test --filter '*'"
   },

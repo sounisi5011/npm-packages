@@ -142,7 +142,6 @@ jobs:
           }
           echo '::endgroup::'
       - run: pnpm run build-only-packages
-      - run: pnpm run fmt-check
       - run: pnpx run-p 'fmt:!(xs)'
       - name: Check changes
         if: ${{ always() }}
