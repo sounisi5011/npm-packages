@@ -1,4 +1,4 @@
-export default async function awaitMainFn(mainFn: (() => Promise<void>) | Promise<void>): Promise<void> {
+export async function awaitMainFn(mainFn: (() => Promise<void>) | Promise<void>): Promise<void> {
     const mainResult = typeof mainFn === 'function' ? mainFn() : mainFn;
     return await mainResult.catch(error => {
         if (typeof process.exitCode !== 'number' || process.exitCode === 0) {
@@ -9,7 +9,6 @@ export default async function awaitMainFn(mainFn: (() => Promise<void>) | Promis
 }
 
 export {
-    awaitMainFn,
     awaitMainFn as awaitFn,
     awaitMainFn as awaitFunc,
     awaitMainFn as awaitFunction,
