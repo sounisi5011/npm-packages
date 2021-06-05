@@ -32,6 +32,11 @@ jobs:
           package-name: ${{ matrix.package-name }}
           path: ${{ matrix.path-git-relative }}
           monorepo-tags: true
+          token:
+            ${{ secrets.GITHUB_TOKEN }}
+            # The "token" parameter is optional.
+            # However, it may cause an error due to the rate limit of GitHub API.
+            # Therefore, it should be specified explicitly.
 
         #
         # Commit to PR
