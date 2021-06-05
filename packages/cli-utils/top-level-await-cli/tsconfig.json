@@ -8,9 +8,6 @@
     "noEmit": true,
 
     /* Module Resolution Options */
-    "types": ["node"],
-
-    /* Source Map Options */
-    "inlineSources": true
+    "types": ["node"]
   }
 }
