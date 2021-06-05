@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.0.1",
-    "@types/node": "12.x",
+    "@types/node": "12.20.14",
     "execa": "5.1.1",
     "ultra-runner": "3.10.5"
   },
