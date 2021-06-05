@@ -1,5 +1,5 @@
-import { SimpleHeader } from '../protocol-buffers/header_pb';
 import type { SimpleHeaderData } from '../create';
+import { SimpleHeader } from '../protocol-buffers/header_pb';
 import { validateBytesField, validateNumberFieldInRange, validateNumberOptionInRange } from './utils';
 
 const dataName = 'SimpleHeader data';
