@@ -5,11 +5,11 @@ on:
       - main
     tags-ignore:
       - "**"
-  pull_request:
-    branches:
-      - "**"
-    tags-ignore:
-      - "**"
+  # pull_request:
+  #   branches:
+  #     - "**"
+  #   tags-ignore:
+  #     - "**"
 jobs:
   lint:
     runs-on: ubuntu-latest
