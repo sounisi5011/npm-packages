@@ -1,10 +1,9 @@
-export async function awaitMainFn(mainFn: (() => PromiseLike<void> | void) | PromiseLike<void>): Promise<void> {
+export async function awaitMainFn(mainFnOrValue: (() => PromiseLike<void> | void) | PromiseLike<void>): Promise<void> {
+    const mainFn = typeof mainFnOrValue === 'function'
+        ? mainFnOrValue
+        : () => mainFnOrValue;
     try {
-        if (typeof mainFn === 'function') {
-            await mainFn();
-        } else {
-            await mainFn;
-        }
+        await mainFn();
     } catch (error) {
         if (typeof process.exitCode !== 'number' || process.exitCode === 0) {
             process.exitCode = 1;
