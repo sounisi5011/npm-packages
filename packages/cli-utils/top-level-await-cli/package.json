@@ -1,0 +1,46 @@
+{
+  "name": "@sounisi5011/cli-utils-top-level-await",
+  "version": "0.0.0",
+  "description": "If the async function fails, set the process exit code to 1 and output the error to stderr",
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/cli-utils/top-level-await-cli#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/cli-utils/top-level-await-cli"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "!*.tsbuildinfo",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "run-if-supported --verbose run-p test:*",
+    "test:jest": "jest"
+  },
+  "devDependencies": {
+    "@sounisi5011/run-if-supported": "1.0.1",
+    "@types/node": "12.x",
+    "execa": "5.1.1",
+    "ultra-runner": "3.10.5"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  }
+}
