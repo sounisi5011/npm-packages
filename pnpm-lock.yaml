@@ -88,6 +88,7 @@ importers:
   packages/cli/run-if-supported:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
+      '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/cross-spawn': 6.0.2
       '@types/node': '*'
       '@types/parse-json': 4.0.0
@@ -103,6 +104,7 @@ importers:
       ultra-runner: 3.10.5
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../cli-utils/top-level-await-cli
+      '@sounisi5011/ts-utils-is-property-accessible': link:../../ts-utils/is-property-accessible
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
