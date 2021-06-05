@@ -1,8 +1,8 @@
+import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import argon2 from 'argon2-browser';
 import capitalize from 'capitalize';
-
 import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
-import { bufferFrom, ifFuncThenExec, isNotUndefined, isObject, normalizeOptions, printObject } from '../utils';
+import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 
 const argon2TypeRecord = {
@@ -107,7 +107,7 @@ const ARGON2_OUTPUT = {
 const SALT_LEN = 128 / 8;
 
 export function isArgon2Options<T>(options: T): options is T extends Argon2Options ? T : never {
-    if (!isObject(options)) return false;
+    if (!isPropAccessible(options) || typeof options !== 'object') return false;
     const { algorithm } = options;
     for (const type of typeNameList) {
         if (algorithm === type) return true;
@@ -255,7 +255,7 @@ function normalizeInternalError(error: unknown): never {
         error.message = `Internal error from Argon2: ${error.message}`;
         throw error;
     }
-    if (isObject(error)) {
+    if (typeof error === 'object' && isPropAccessible(error)) {
         const { message, code, ...other } = error;
         if (typeof message === 'string' && typeof code === 'number' && Object.keys(other).length === 0) {
             throw Object.assign(

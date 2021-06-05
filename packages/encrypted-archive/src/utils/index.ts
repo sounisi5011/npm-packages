@@ -1,13 +1,9 @@
+import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { inspect, types } from 'util';
-
 import type { AsyncIterableReturn, objectEntries } from './type';
 
 function isString(value: unknown): value is string {
     return typeof value === 'string';
-}
-
-export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
-    return typeof value === 'object' && value !== null;
 }
 
 function isFunction(value: unknown): value is () => void {
@@ -178,7 +174,7 @@ function isErrorConstructor(value: unknown): value is ErrorConstructor {
 
 export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
     if (
-        isObject(oldError)
+        typeof oldError === 'object' && isPropAccessible(oldError)
         && !(oldError instanceof Error)
         && typeof oldError['name'] === 'string'
         && typeof oldError['message'] === 'string'
@@ -204,7 +200,7 @@ export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
  */
 export function fixNodePrimordialsErrorStackTrace(oldError: unknown): never {
     /* eslint-disable @typescript-eslint/no-throw-literal */
-    if (!(isObject(oldError) && !(oldError instanceof Error))) throw oldError;
+    if (!(typeof oldError === 'object' && isPropAccessible(oldError) && !(oldError instanceof Error))) throw oldError;
     const oldErrorStackTrace = oldError['stack'];
 
     if (!(isString(oldError['message']) && isString(oldErrorStackTrace))) throw oldError;

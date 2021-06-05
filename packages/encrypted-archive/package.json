@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
+    "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
     "argon2-browser": "^1.15.4",
     "bl": "^5.0.0",
     "capitalize": "^2.0.3",
