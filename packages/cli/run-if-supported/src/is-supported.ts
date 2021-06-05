@@ -1,6 +1,7 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { checkEngine, checkPlatform } from 'npm-install-checks';
 import ow from 'ow';
+
 import { isString } from './utils';
 
 function readProp<T>(

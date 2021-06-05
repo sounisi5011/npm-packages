@@ -1,5 +1,7 @@
-import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { inspect, types } from 'util';
+
+import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
+
 import type { AsyncIterableReturn, objectEntries } from './type';
 
 function isString(value: unknown): value is string {

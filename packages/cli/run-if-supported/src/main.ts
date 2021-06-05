@@ -1,9 +1,10 @@
+import { promises as fsAsync } from 'fs';
+import { dirname, resolve as resolvePath } from 'path';
+
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
-import { promises as fsAsync } from 'fs';
 import { ArgumentError } from 'ow';
 import parseJson from 'parse-json';
-import { dirname, resolve as resolvePath } from 'path';
 import pkgUp from 'pkg-up';
 import type { JsonValue } from 'type-fest';
 

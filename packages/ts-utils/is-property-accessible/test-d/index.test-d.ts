@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions, @typescript-eslint/no-explicit-any */
 
 import { expectType } from 'tsd';
+
 import { isPropertyAccessible } from '..';
 
 declare const unknownValue: unknown;

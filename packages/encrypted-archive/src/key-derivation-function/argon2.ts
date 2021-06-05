@@ -1,6 +1,7 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import argon2 from 'argon2-browser';
 import capitalize from 'capitalize';
+
 import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
