@@ -100,7 +100,7 @@ importers:
       ow: ^0.23.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
-      type-fest: 1.1.3
+      type-fest: 1.2.0
       ultra-runner: 3.10.5
     dependencies:
       command-join: 3.0.0
@@ -115,7 +115,7 @@ importers:
       '@types/parse-json': 4.0.0
       execa: 5.1.1
       is-plain-obj: 3.0.0
-      type-fest: 1.1.3
+      type-fest: 1.2.0
       ultra-runner: 3.10.5
 
   packages/encrypted-archive:
@@ -6395,8 +6395,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /type-fest/1.1.3:
-    resolution: {integrity: sha512-CsiQeFMR1jZEq8R+H59qe+bBevnjoV5N2WZTTdlyqxeoODQOOepN2+msQOywcieDq5sBjabKzTn3U+sfHZlMdw==}
+  /type-fest/1.2.0:
+    resolution: {integrity: sha512-++0N6KyAj0t2webXst0PE0xuXb4Dv3z1Z+4SGzK+j/epeWBZCfkQbkW/ezscZwpinmBQ5wu/l4TqagKSVcAGCA==}
     engines: {node: '>=10'}
     dev: true
 
