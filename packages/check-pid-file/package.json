@@ -42,9 +42,16 @@
     "test": "run-if-supported --verbose run-p test:*",
     "test:jest": "jest"
   },
+  "dependencies": {
+    "find-process": "^1.4.4",
+    "signal-exit": "^3.0.3",
+    "write-file-atomic": "^3.0.3"
+  },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.0.2",
-    "@types/node": "12.x"
+    "@types/node": "12.x",
+    "@types/signal-exit": "3.0.0",
+    "@types/write-file-atomic": "3.0.1"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
