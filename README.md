@@ -16,6 +16,7 @@
 
 | Package | Version | Dependencies |
 |-|-|-|
+| [`@sounisi5011/check-pid-file`](./packages/check-pid-file) | [![npm](https://img.shields.io/npm/v/@sounisi5011/check-pid-file.svg)](https://www.npmjs.com/package/@sounisi5011/check-pid-file) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcheck-pid-file)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fcheck-pid-file) |
 | [`@sounisi5011/encrypted-archive`](./packages/encrypted-archive) | [![npm](https://img.shields.io/npm/v/@sounisi5011/encrypted-archive.svg)](https://www.npmjs.com/package/@sounisi5011/encrypted-archive) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fencrypted-archive)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fencrypted-archive) |
 | [`@sounisi5011/stream-transform-from`](./packages/stream-transform-from) | [![npm](https://img.shields.io/npm/v/@sounisi5011/stream-transform-from.svg)](https://www.npmjs.com/package/@sounisi5011/stream-transform-from) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fstream-transform-from)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fstream-transform-from) |
 

@@ -1,0 +1,52 @@
+{
+  "name": "@sounisi5011/check-pid-file",
+  "version": "0.0.0",
+  "description": "Use the pid file to check which processes have already started and prevent multiple executions",
+  "keywords": [
+    "daemon",
+    "file",
+    "pid",
+    "pid-file",
+    "process",
+    "processes",
+    "util",
+    "utility"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/check-pid-file#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/check-pid-file"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "!*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "run-if-supported --verbose run-p test:*",
+    "test:jest": "jest"
+  },
+  "devDependencies": {
+    "@sounisi5011/run-if-supported": "1.0.2",
+    "@types/node": "12.x"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  }
+}

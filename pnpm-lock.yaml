@@ -75,6 +75,14 @@ importers:
       '@types/node': 15.6.0
       '@vercel/ncc': 0.28.6
 
+  packages/check-pid-file:
+    specifiers:
+      '@sounisi5011/run-if-supported': 1.0.2
+      '@types/node': 12.x
+    devDependencies:
+      '@sounisi5011/run-if-supported': 1.0.2
+      '@types/node': 12.20.14
+
   packages/cli-utils/top-level-await-cli:
     specifiers:
       '@types/node': 12.x
@@ -1001,6 +1009,11 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
+  /@sounisi5011/cli-utils-top-level-await/1.0.0:
+    resolution: {integrity: sha512-UroVjuLeywZwTMsS3bjFuy/mWtds0eA0dZ2+kNSzzkPwxirNiQs7japwfxZMdq4OWxhDQ13DJrUyX0qVybAKGg==}
+    engines: {node: ^12.17.x || 14.x || 15.x || 16.x}
+    dev: true
+
   /@sounisi5011/run-if-supported/1.0.1:
     resolution: {integrity: sha512-+F4aaUZB6QlUYkfH3CVLUCcMLIdAxXC8j1Z32+wi2QnDedfATkKowyNGUY54VMRcDGIwRp+5hoj+0NsYVNNw4g==}
     engines: {node: ^12.17.x || 14.x || 15.x || 16.x}
@@ -1012,6 +1025,25 @@ packages:
       ow: 0.23.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
+    dev: true
+
+  /@sounisi5011/run-if-supported/1.0.2:
+    resolution: {integrity: sha512-enLyQZpuTqkDUe78i7aKQPZaVXlWTZkbnRkol0o79YSOmeUqC9gDNb7p9WatqqpaI+fANYnKXLycLclNY+GjZw==}
+    engines: {node: ^12.17.x || 14.x || 15.x || 16.x}
+    hasBin: true
+    dependencies:
+      '@sounisi5011/cli-utils-top-level-await': 1.0.0
+      '@sounisi5011/ts-utils-is-property-accessible': 1.0.0
+      command-join: 3.0.0
+      cross-spawn: 7.0.3
+      npm-install-checks: 4.0.0
+      ow: 0.23.1
+      parse-json: 5.2.0
+      pkg-up: 3.1.0
+    dev: true
+
+  /@sounisi5011/ts-utils-is-property-accessible/1.0.0:
+    resolution: {integrity: sha512-MViziA/sRKwJb7QuERGVUyM0k329QgxxXOACW3fApO0xGxtOpbHLME/2FRmNtOiFPtcsWoQDUg0u9Uz8RG5Zwg==}
     dev: true
 
   /@tootallnate/once/1.1.2:
@@ -5140,6 +5172,18 @@ packages:
       lodash.isequal: 4.5.0
       type-fest: 0.20.2
       vali-date: 1.0.0
+
+  /ow/0.23.1:
+    resolution: {integrity: sha512-tU9NCFp5bFTPf4FytkimLv0RE2ej20R2HPgk6ZMgBg4yuERKxqjPMk0OXZbbX5vnB6k1TXL4qKJqhRTkUBtGPA==}
+    engines: {node: '>=10'}
+    dependencies:
+      '@sindresorhus/is': 4.0.1
+      callsites: 3.1.0
+      dot-prop: 6.0.1
+      lodash.isequal: 4.5.0
+      type-fest: 1.2.0
+      vali-date: 1.0.0
+    dev: true
 
   /p-all/2.1.0:
     resolution: {integrity: sha512-HbZxz5FONzz/z2gJfk6bFca0BCiSRF8jU3yCsWOen/vR6lZjfPOu/e7L3uFzTW1i0H8TlC3vqQstEJPQL4/uLA==}
