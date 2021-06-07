@@ -964,11 +964,11 @@ packages:
     resolution: {integrity: sha512-eMk0b9ReBbV23xXU693TAIrLyeO5iTgBZGSJfpqriG8UkYvr/hC9u9pyMlAakDNHWmbhMZCDs6KQO0jzKD8OTw==}
     dev: true
 
-  /@nodelib/fs.scandir/2.1.5:
-    resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
+  /@nodelib/fs.scandir/2.1.4:
+    resolution: {integrity: sha512-33g3pMJk3bg5nXbL/+CY6I2eJDzZAni49PfJnL5fghPTggPvBd/pFNSgJsdAgWptuFu7qq/ERvOYFlhvsLTCKA==}
     engines: {node: '>= 8'}
     dependencies:
-      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.stat': 2.0.4
       run-parallel: 1.2.0
 
   /@nodelib/fs.stat/1.1.3:
@@ -976,15 +976,15 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /@nodelib/fs.stat/2.0.5:
-    resolution: {integrity: sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==}
+  /@nodelib/fs.stat/2.0.4:
+    resolution: {integrity: sha512-IYlHJA0clt2+Vg7bccq+TzRdJvv19c2INqBSsoOLp1je7xjtr7J26+WXR72MCdvU9q1qTzIWDfhMf+DRvQJK4Q==}
     engines: {node: '>= 8'}
 
-  /@nodelib/fs.walk/1.2.7:
-    resolution: {integrity: sha512-BTIhocbPBSrRmHxOAJFtR18oLhxTtAFDAvL8hY1S3iU8k+E60W/YFs4jrixGzQjMpF4qPXxIQHcjVD9dz1C2QA==}
+  /@nodelib/fs.walk/1.2.6:
+    resolution: {integrity: sha512-8Broas6vTtW4GIXTAHDoE32hnN2M5ykgCpWGbuXHQ15vEMqr23pB76e/GZcYsZCHALv50ktd24qhEyKr6wBtow==}
     engines: {node: '>= 8'}
     dependencies:
-      '@nodelib/fs.scandir': 2.1.5
+      '@nodelib/fs.scandir': 2.1.4
       fastq: 1.11.0
 
   /@rollup/plugin-typescript/8.2.1_rollup@2.50.6:
@@ -1056,7 +1056,7 @@ packages:
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
-      ow: 0.23.1
+      ow: 0.23.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
     dev: true
@@ -1239,7 +1239,7 @@ packages:
   /@types/write-file-atomic/3.0.1:
     resolution: {integrity: sha512-o5Pl/qux8JEuFpof5fUg/Fl6R3N26ExJlsmWpB67ayrEJDMIxWdM9NDJacisXeNB7YW+vij8onctH8Pr1Zhi5g==}
     dependencies:
-      '@types/node': 12.20.14
+      '@types/node': 15.6.0
     dev: true
 
   /@types/yargs-parser/20.2.0:
@@ -2961,8 +2961,8 @@ packages:
     resolution: {integrity: sha512-2DtFcgT68wiTTiwZ2hNdJfcHNke9XOfnwmBRWXhmeKM8rF0TGwmC/Qto3S7RoZKp5cilZbxzO5iTNTQsJ+EeDg==}
     engines: {node: '>=8'}
     dependencies:
-      '@nodelib/fs.stat': 2.0.5
-      '@nodelib/fs.walk': 1.2.7
+      '@nodelib/fs.stat': 2.0.4
+      '@nodelib/fs.walk': 1.2.6
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.4
@@ -5208,18 +5208,6 @@ packages:
       lodash.isequal: 4.5.0
       type-fest: 0.20.2
       vali-date: 1.0.0
-
-  /ow/0.23.1:
-    resolution: {integrity: sha512-tU9NCFp5bFTPf4FytkimLv0RE2ej20R2HPgk6ZMgBg4yuERKxqjPMk0OXZbbX5vnB6k1TXL4qKJqhRTkUBtGPA==}
-    engines: {node: '>=10'}
-    dependencies:
-      '@sindresorhus/is': 4.0.1
-      callsites: 3.1.0
-      dot-prop: 6.0.1
-      lodash.isequal: 4.5.0
-      type-fest: 1.2.0
-      vali-date: 1.0.0
-    dev: true
 
   /p-all/2.1.0:
     resolution: {integrity: sha512-HbZxz5FONzz/z2gJfk6bFca0BCiSRF8jU3yCsWOen/vR6lZjfPOu/e7L3uFzTW1i0H8TlC3vqQstEJPQL4/uLA==}
