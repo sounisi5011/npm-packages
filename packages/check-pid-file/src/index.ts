@@ -18,9 +18,13 @@ async function fixNodePrimordialsError<T>(promise: Promise<T>): Promise<T> {
     });
 }
 
-const readFileAsync = async (filepath: string): Promise<string> =>
-    await (
-        fixNodePrimordialsError(fsPromises.readFile(filepath, 'utf8'))
+const readFileAsync = async (filepath: string): Promise<string | null> =>
+    await fixNodePrimordialsError(
+        fsPromises.readFile(filepath, 'utf8')
+            .catch((error: Error & Record<string, unknown>) => {
+                if (error['code'] === 'ENOENT') return null;
+                throw error;
+            }),
     );
 
 async function createFile(filepath: string, data: string | Buffer | Uint8Array): Promise<boolean> {
@@ -43,11 +47,6 @@ function parsePidFile(pidFileContent: string): number | null {
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
 
-async function checkPidFileUpdateSuccessed(pidFilepath: string, pid: number): Promise<boolean> {
-    const pidFileContent = await readFileAsync(pidFilepath);
-    return parsePidFile(pidFileContent) === pid;
-}
-
 export interface Options {
     pid?: number;
 }
@@ -56,18 +55,28 @@ export async function isProcessExist(pidFilepath: string, { pid = process.pid }:
     pidFilepath = resolvePath(pidFilepath);
     const pidFileContent = `${pid}\n`;
 
-    if (!(await createFile(pidFilepath, pidFileContent))) {
-        const savedPid = parsePidFile(await readFileAsync(pidFilepath));
-        if (typeof savedPid !== 'number' || (savedPid !== pid && !(await isPidExist(savedPid)))) {
+    while (true) {
+        if (!(await createFile(pidFilepath, pidFileContent))) {
+            const savedPidFileContent = await readFileAsync(pidFilepath);
+            if (savedPidFileContent === null) continue;
+
+            const savedPid = parsePidFile(savedPidFileContent);
+            if (typeof savedPid === 'number' && (savedPid === pid || await isPidExist(savedPid))) {
+                return savedPid !== pid;
+            }
+
             await writeFileAtomic(pidFilepath, pidFileContent);
         }
-    }
 
-    const result = await checkPidFileUpdateSuccessed(pidFilepath, pid);
-    if (result) {
-        onExit(() => {
-            unlinkSync(pidFilepath);
-        });
+        const writedPidFileContent = await readFileAsync(pidFilepath);
+        if (writedPidFileContent === null) continue;
+
+        const isWriteSuccess = parsePidFile(writedPidFileContent) === pid;
+        if (isWriteSuccess) {
+            onExit(() => {
+                unlinkSync(pidFilepath);
+            });
+            return false;
+        }
     }
-    return !result;
 }
