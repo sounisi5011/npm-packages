@@ -40,7 +40,7 @@
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
-    "test:jest": "jest"
+    "test:jest": "jest --runInBand"
   },
   "dependencies": {
     "find-process": "^1.4.4",
@@ -53,7 +53,9 @@
     "@types/node": "12.x",
     "@types/signal-exit": "3.0.0",
     "@types/write-file-atomic": "3.0.1",
-    "make-dir": "3.1.0"
+    "execa": "5.1.1",
+    "make-dir": "3.1.0",
+    "ultra-runner": "3.10.5"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
