@@ -75,12 +75,14 @@ describe('isProcessExist()', () => {
         const pidFilepath = createPidfilePath('exist');
 
         const child = execa('node', ['-e', 'setTimeout(() => {}, 60 * 1000)']);
-        await fsPromises.writeFile(pidFilepath, String(child.pid), { flag: 'wx' });
+        try {
+            await fsPromises.writeFile(pidFilepath, String(child.pid), { flag: 'wx' });
 
-        await expect(isProcessExist(pidFilepath, {})).resolves.toBe(true);
-
-        child.kill(signals.SIGKILL);
-        await once(child, 'close');
+            await expect(isProcessExist(pidFilepath, {})).resolves.toBe(true);
+        } finally {
+            child.kill(signals.SIGKILL);
+            await once(child, 'close');
+        }
     });
 
     describe('overwrite pid file', () => {
@@ -102,9 +104,10 @@ describe('isProcessExist()', () => {
             const pidFilepath = createPidfilePath('finished');
 
             const child = execa('node', ['--version']);
-            await fsPromises.writeFile(pidFilepath, String(child.pid), { flag: 'wx' });
+            const childPid = child.pid;
             await child;
 
+            await fsPromises.writeFile(pidFilepath, String(childPid), { flag: 'wx' });
             await expect(isProcessExist(pidFilepath, {})).resolves.toBe(false);
         });
     });
@@ -137,13 +140,15 @@ describe('isProcessExist()', () => {
 
     it('exec multiple processes', async () => {
         const processName = 'multi';
-        await Promise.all(
-            Array.from(
-                { length: 10 },
-                () => execa('node', [processJsPath, processName]),
-            ),
+
+        const childProcessList = Array.from(
+            { length: 10 },
+            () => execa('node', [processJsPath, processName]),
         );
+        await Promise.all(childProcessList.map(async childProcess => await childProcess.catch(() => null)));
+        await Promise.all(childProcessList);
+
         const files = await fsPromises.readdir(pidResultPath(processName));
         expect(files).toHaveLength(1);
-    });
+    }, 10 * 1000);
 });
