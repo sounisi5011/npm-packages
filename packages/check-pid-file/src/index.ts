@@ -1,5 +1,5 @@
 import { promises as fsPromises, unlinkSync } from 'fs';
-import * as path from 'path';
+import { resolve as resolvePath } from 'path';
 
 import findProcess from 'find-process';
 import onExit from 'signal-exit';
@@ -18,8 +18,9 @@ async function isPidExist(pid: number): Promise<boolean> {
     return (await findProcess('pid', pid)).length > 0;
 }
 
-function parsePidFile(pidFileContent: string): number {
-    return Number(pidFileContent.trim());
+function parsePidFile(pidFileContent: string): number | null {
+    const pidStr = pidFileContent.trim();
+    return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
 
 async function checkPidFileUpdateSuccessed(pidFilepath: string, pid: number): Promise<boolean> {
@@ -32,12 +33,12 @@ export interface Options {
 }
 
 export async function isProcessExist(pidFilepath: string, { pid = process.pid }: Options): Promise<boolean> {
-    pidFilepath = path.resolve(pidFilepath);
+    pidFilepath = resolvePath(pidFilepath);
     const pidFileContent = `${pid}\n`;
 
     if (!(await createFile(pidFilepath, pidFileContent))) {
         const savedPid = parsePidFile(await fsPromises.readFile(pidFilepath, 'utf8'));
-        if (savedPid !== pid && !(await isPidExist(savedPid))) {
+        if (typeof savedPid !== 'number' || (savedPid !== pid && !(await isPidExist(savedPid)))) {
             await writeFileAtomic(pidFilepath, pidFileContent);
         }
     }
