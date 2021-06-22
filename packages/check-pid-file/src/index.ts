@@ -53,8 +53,8 @@ async function createOrReadFile(
     return { create: true };
 }
 
-async function isPidExist(pid: number): Promise<boolean> {
-    return (await findProcess('pid', pid)).length > 0;
+async function isPidExist(targetPid: number, { currentPid }: { currentPid?: number } = {}): Promise<boolean> {
+    return targetPid === currentPid || (await findProcess('pid', targetPid)).length > 0;
 }
 
 function parsePidFile(pidFileContent: string | null | undefined): number | null {
@@ -69,23 +69,6 @@ const readPid = async (pidFileFullpath: string): Promise<number | null> =>
             ?.toString('utf8'),
     );
 
-async function updatePidFile(
-    { pidFileFullpath, oldPidFileContent, newPidFileContent, pid }: Readonly<
-        { pidFileFullpath: string; oldPidFileContent: Buffer; newPidFileContent: string; pid: number }
-    >,
-): Promise<
-    | { success: true }
-    | { success: false; existPid: number }
-> {
-    const existPid = parsePidFile(oldPidFileContent.toString('utf8'));
-    if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
-        return { success: false, existPid };
-    }
-
-    await writeFileAtomic(pidFileFullpath, newPidFileContent);
-    return { success: true };
-}
-
 async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>): Promise<
     | { success: true }
     | { success: false; writeFail: true; existPid?: undefined }
@@ -95,15 +78,14 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
 
     const createResult = await createOrReadFile(pidFileFullpath, newPidFileContent);
     if (!createResult.create) {
-        const updateResult = await updatePidFile({
-            pidFileFullpath,
-            oldPidFileContent: createResult.content,
-            newPidFileContent,
-            pid,
-        });
-        if (!updateResult.success) {
-            return { success: false, existPid: updateResult.existPid };
+        const { content: existPidFileContent } = createResult;
+
+        const existPid = parsePidFile(existPidFileContent.toString('utf8'));
+        if (typeof existPid === 'number' && await isPidExist(existPid, { currentPid: pid })) {
+            return { success: false, existPid };
         }
+
+        await writeFileAtomic(pidFileFullpath, newPidFileContent);
     }
 
     return (await readPid(pidFileFullpath)) === pid
