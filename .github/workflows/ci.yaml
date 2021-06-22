@@ -11,7 +11,14 @@ on:
     tags-ignore:
       - "**"
 jobs:
+  if-run-ci:
+    if: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
+    runs-on: ubuntu-latest
+    steps:
+      # nothing
+      - run: ":"
   lint:
+    needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,6 +46,7 @@ jobs:
       - run: pnpm run build-only-packages
       - run: pnpm run lint
   format:
+    needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -147,6 +155,7 @@ jobs:
         if: ${{ always() }}
         run: git diff --name-only --exit-code
   build:
+    needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -195,6 +204,7 @@ jobs:
           git add -N .
           git diff --name-only --exit-code
   unit-test:
+    needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -237,5 +247,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check all job status
-        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#needs-context
+        # see https://stackoverflow.com/a/67532120/4907315
+        if: >-
+          ${{
+               contains(needs.*.result, 'failure')
+            || contains(needs.*.result, 'cancelled')
+            || contains(needs.*.result, 'skipped')
+          }}
         run: exit 1
