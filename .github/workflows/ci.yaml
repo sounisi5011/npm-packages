@@ -12,8 +12,7 @@ on:
       - "**"
 jobs:
   if-run-ci:
-    # This condition is inverted
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}
+    if: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
     runs-on: ubuntu-latest
     steps:
       # nothing
