@@ -57,7 +57,8 @@ async function isPidExist(targetPid: number, { currentPid }: { currentPid?: numb
     return targetPid === currentPid || (await findProcess('pid', targetPid)).length > 0;
 }
 
-function parsePidFile(pidFileContent: string): number | null {
+function parsePidFile(pidFileContent: string | null | undefined): number | null {
+    if (typeof pidFileContent !== 'string') return null;
     const pidStr = pidFileContent.trim();
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
@@ -82,7 +83,7 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
     }
 
     const writedPidFileContent = (await readFileAsync(pidFileFullpath))?.toString('utf8');
-    const writedPid = typeof writedPidFileContent === 'string' ? parsePidFile(writedPidFileContent) : null;
+    const writedPid = parsePidFile(writedPidFileContent);
     return writedPid === pid
         ? { success: true }
         : { success: false, writeFail: true };
