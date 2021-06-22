@@ -70,17 +70,20 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
 > {
     const pidFileContent = `${pid}\n`;
 
-    const result = await createOrReadFile(pidFileFullpath, pidFileContent);
-    if (!result.create) {
-        const { content: existPidFileContent } = result;
+    const result = await createOrReadFile(pidFileFullpath, pidFileContent)
+        .then(async result => {
+            if (result.create) return;
 
-        const existPid = parsePidFile(existPidFileContent.toString('utf8'));
-        if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
-            return { success: false, existPid };
-        }
+            const { content: existPidFileContent } = result;
+            const existPid = parsePidFile(existPidFileContent.toString('utf8'));
+            if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
+                return { success: false as const, existPid };
+            }
 
-        await writeFileAtomic(pidFileFullpath, pidFileContent);
-    }
+            await writeFileAtomic(pidFileFullpath, pidFileContent);
+            return undefined;
+        });
+    if (result) return result;
 
     const writedPid = parsePidFile((await readFileAsync(pidFileFullpath))?.toString('utf8'));
     return writedPid === pid ? { success: true } : { success: false, writeFail: true };
