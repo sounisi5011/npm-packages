@@ -18,16 +18,20 @@ async function fixNodePrimordialsError<T>(promise: Promise<T>): Promise<T> {
     });
 }
 
-const readFileAsync = async (filepath: string): Promise<Buffer | null> =>
-    await fixNodePrimordialsError(
+async function readFileAsync(filepath: string): Promise<Buffer | null> {
+    return await fixNodePrimordialsError(
         fsPromises.readFile(filepath)
             .catch((error: Error & Record<string, unknown>) => {
                 if (error['code'] === 'ENOENT') return null;
                 throw error;
             }),
     );
+}
 
-async function createFile(filepath: string, data: string | Buffer | Uint8Array): Promise<boolean> {
+async function createFile(
+    filepath: string,
+    data: string | Buffer | Uint8Array,
+): Promise<boolean> {
     return await fixNodePrimordialsError(
         fsPromises.writeFile(filepath, data, { flag: 'wx' })
             .then(() => true)
@@ -53,17 +57,24 @@ async function createOrReadFile(
     return { create: true };
 }
 
-async function isPidExist(targetPid: number, { currentPid }: { currentPid?: number } = {}): Promise<boolean> {
+async function isPidExist(
+    targetPid: number,
+    { currentPid }: { currentPid?: number } = {},
+): Promise<boolean> {
     return targetPid === currentPid || (await findProcess('pid', targetPid)).length > 0;
 }
 
-function parsePidFile(pidFileContent: string | null | undefined): number | null {
+function parsePidFile(
+    pidFileContent: string | null | undefined,
+): number | null {
     if (typeof pidFileContent !== 'string') return null;
     const pidStr = pidFileContent.trim();
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
 
-async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>): Promise<
+async function createPidFile(
+    { pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>,
+): Promise<
     | { success: true }
     | { success: false; writeFail: true; existPid?: undefined }
     | { success: false; writeFail?: false; existPid: number }
@@ -93,7 +104,10 @@ export interface Options {
     pid?: number;
 }
 
-export async function isProcessExist(pidFilepath: string, { pid = process.pid }: Options): Promise<boolean> {
+export async function isProcessExist(
+    pidFilepath: string,
+    { pid = process.pid }: Options,
+): Promise<boolean> {
     const pidFileFullpath = resolvePath(pidFilepath);
 
     while (true) {
