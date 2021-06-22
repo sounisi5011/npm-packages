@@ -106,7 +106,7 @@ export interface Options {
 
 export async function isProcessExist(
     pidFilepath: string,
-    { pid = process.pid }: Options,
+    { pid = process.pid }: Options = {},
 ): Promise<boolean> {
     const pidFileFullpath = resolvePath(pidFilepath);
 

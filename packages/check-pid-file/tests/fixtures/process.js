@@ -15,7 +15,7 @@ awaitMainFn(async () => {
 
   console.log(`[${process.pid}] start`);
   await sleepMs(500);
-  if (await isProcessExist(pidFilepath, {})) {
+  if (await isProcessExist(pidFilepath)) {
     console.error(`[${process.pid}] other process is running`);
   } else {
     console.log(`[${process.pid}] done`);

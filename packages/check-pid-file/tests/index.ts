@@ -42,7 +42,7 @@ describe('isProcessExist()', () => {
 
     it('create new pid file', async () => {
         const pidFilepath = createPidfilePath('new');
-        await expect(isProcessExist(pidFilepath, {})).resolves.toBe(false);
+        await expect(isProcessExist(pidFilepath)).resolves.toBe(false);
     });
 
     describe('remove pid file on finish', () => {
@@ -80,7 +80,7 @@ describe('isProcessExist()', () => {
         try {
             await fsPromises.writeFile(pidFilepath, String(child.pid), { flag: 'wx' });
 
-            await expect(isProcessExist(pidFilepath, {})).resolves.toBe(true);
+            await expect(isProcessExist(pidFilepath)).resolves.toBe(true);
         } finally {
             child.kill(signals.SIGKILL);
             await once(child, 'close');
@@ -92,14 +92,14 @@ describe('isProcessExist()', () => {
             const pidFilepath = createPidfilePath('invalid-int');
             await fsPromises.writeFile(pidFilepath, 'foo', { flag: 'wx' });
 
-            await expect(isProcessExist(pidFilepath, {})).resolves.toBe(false);
+            await expect(isProcessExist(pidFilepath)).resolves.toBe(false);
         });
 
         it('same pid', async () => {
             const pidFilepath = createPidfilePath('same');
             await fsPromises.writeFile(pidFilepath, String(process.pid), { flag: 'wx' });
 
-            await expect(isProcessExist(pidFilepath, {})).resolves.toBe(false);
+            await expect(isProcessExist(pidFilepath)).resolves.toBe(false);
         });
 
         it('finished pid', async () => {
@@ -110,7 +110,7 @@ describe('isProcessExist()', () => {
             await child;
 
             await fsPromises.writeFile(pidFilepath, String(childPid), { flag: 'wx' });
-            await expect(isProcessExist(pidFilepath, {})).resolves.toBe(false);
+            await expect(isProcessExist(pidFilepath)).resolves.toBe(false);
         });
     });
 
@@ -119,7 +119,7 @@ describe('isProcessExist()', () => {
             const pidFilepath = createPidfilePath('permission');
             await fsPromises.writeFile(pidFilepath, '', { mode: 0, flag: 'wx' });
 
-            const result = isProcessExist(pidFilepath, {});
+            const result = isProcessExist(pidFilepath);
             await expect(result).rejects.toThrow(Error);
             await expect(result).rejects
                 .toStrictEqual(expect.objectContaining({
@@ -131,7 +131,7 @@ describe('isProcessExist()', () => {
             const pidFilepath = createPidfilePath('dir');
             await fsPromises.mkdir(pidFilepath);
 
-            const result = isProcessExist(pidFilepath, {});
+            const result = isProcessExist(pidFilepath);
             await expect(result).rejects.toThrow(Error);
             await expect(result).rejects
                 .toStrictEqual(expect.objectContaining({
