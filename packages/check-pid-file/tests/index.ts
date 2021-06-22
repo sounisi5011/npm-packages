@@ -2,9 +2,11 @@ import { once } from 'events';
 import { promises as fsPromises } from 'fs';
 import { constants as osConstants } from 'os';
 import * as path from 'path';
+import { pipeline } from 'stream';
 import { promisify } from 'util';
 
 import execa from 'execa';
+import ReadlineTransform from 'readline-transform';
 
 import { isProcessExist } from '../src';
 
@@ -14,6 +16,7 @@ const PACKAGE_ROOT = path.resolve(__dirname, '..');
 const FIXTURES_DIR = path.resolve(__dirname, 'fixtures');
 
 const sleep = promisify(setTimeout);
+const immediateAsync = promisify(setImmediate);
 
 const createPidfilePath = (() => {
     const pidfileSet = new Set<string>();
@@ -36,7 +39,6 @@ describe('isProcessExist()', () => {
     }, 60 * 1000);
 
     const processJsPath = path.resolve(FIXTURES_DIR, 'process.js');
-    const pidResultPath = (processName: string): string => path.resolve(FIXTURES_DIR, 'pid-result', processName);
 
     it('create new pid file', async () => {
         const pidFilepath = createPidfilePath('new');
@@ -143,12 +145,42 @@ describe('isProcessExist()', () => {
 
         const childProcessList = Array.from(
             { length: 10 },
-            () => execa('node', [processJsPath, processName]),
+            () => execa('node', [processJsPath, processName], { all: true }),
         );
-        await Promise.all(childProcessList.map(async childProcess => await childProcess.catch(() => null)));
-        await Promise.all(childProcessList);
+        try {
+            const logList = await Promise.all(
+                childProcessList.map(async childProcess =>
+                    await new Promise<string>((resolve, reject) => {
+                        if (childProcess.all) {
+                            pipeline(
+                                childProcess.all,
+                                new ReadlineTransform(),
+                                () => null,
+                            )
+                                .on('data', (logLine: string) => {
+                                    if (!/^\[\d+\] start$/m.test(logLine)) {
+                                        resolve(logLine);
+                                    }
+                                });
+                        }
+                        childProcess.catch(reject);
+                    })
+                ),
+            );
 
-        const files = await fsPromises.readdir(pidResultPath(processName));
-        expect(files).toHaveLength(1);
+            expect(logList.filter(line => / done$/m.test(line)))
+                .toHaveLength(1);
+            expect(logList.filter(line => / other process is running$/m.test(line)))
+                .toHaveLength(childProcessList.length - 1);
+        } finally {
+            await Promise.all(childProcessList.map(async childProcess => {
+                await Promise.race([
+                    childProcess,
+                    immediateAsync(),
+                ]);
+                childProcess.kill('SIGKILL');
+                await once(childProcess, 'close');
+            }));
+        }
     }, 10 * 1000);
 });

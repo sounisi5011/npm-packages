@@ -51,10 +51,11 @@
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "@sounisi5011/run-if-supported": "1.0.2",
     "@types/node": "12.x",
+    "@types/readline-transform": "1.0.0",
     "@types/signal-exit": "3.0.0",
     "@types/write-file-atomic": "3.0.1",
     "execa": "5.1.1",
-    "make-dir": "3.1.0",
+    "readline-transform": "1.0.0",
     "ultra-runner": "3.10.5"
   },
   "engines": {
