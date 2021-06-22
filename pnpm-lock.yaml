@@ -96,7 +96,7 @@ importers:
     devDependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../cli-utils/top-level-await-cli
       '@sounisi5011/run-if-supported': 1.0.2
-      '@types/node': 12.20.14
+      '@types/node': 12.20.15
       '@types/readline-transform': 1.0.0
       '@types/signal-exit': 3.0.0
       '@types/write-file-atomic': 3.0.1
@@ -1195,6 +1195,10 @@ packages:
 
   /@types/node/12.20.14:
     resolution: {integrity: sha512-iFJOS5Q470FF+r4Ol2pSley7/wCNVqf+jgjhtxLLaJcDs+To2iCxlXIkJXrGLD9w9G/oJ9ibySu7z92DCwr7Pg==}
+    dev: true
+
+  /@types/node/12.20.15:
+    resolution: {integrity: sha512-F6S4Chv4JicJmyrwlDkxUdGNSplsQdGwp1A0AJloEVDirWdZOAiRHhovDlsFkKUrquUXhz1imJhXHsf59auyAg==}
     dev: true
 
   /@types/node/15.6.0:
