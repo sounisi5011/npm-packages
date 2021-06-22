@@ -1,5 +1,6 @@
 {
   "extends": ["config:js-lib", ":semanticCommits"],
+  "ignoreDeps": ["@types/node"],
   "packageRules": [
     {
       "matchPaths": ["actions/**"],
