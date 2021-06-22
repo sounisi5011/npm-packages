@@ -38,15 +38,17 @@ async function createFile(filepath: string, data: string | Buffer | Uint8Array):
     );
 }
 
-async function createOrUpdateFile<T>(
+async function createOrReadFile(
     filepath: string,
     data: string | Buffer | Uint8Array,
-    updateFn: (content: Buffer) => T | PromiseLike<T>,
-): Promise<{ create: true } | { create: false; updateResult: T }> {
+): Promise<
+    | { create: true }
+    | { create: false; content: Buffer }
+> {
     while (!await createFile(filepath, data)) {
         const content = await readFileAsync(filepath);
         if (content === null) continue;
-        return { create: false, updateResult: await updateFn(content) };
+        return { create: false, content };
     }
     return { create: true };
 }
@@ -67,16 +69,17 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
 > {
     const pidFileContent = Buffer.from(`${pid}\n`);
 
-    const result = await createOrUpdateFile(pidFileFullpath, pidFileContent, async existPidFileContent => {
+    const result = await createOrReadFile(pidFileFullpath, pidFileContent);
+    if (!result.create) {
+        const { content: existPidFileContent } = result;
+
         const existPid = parsePidFile(existPidFileContent.toString('utf8'));
         if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
-            return { success: false as const, existPid };
+            return { success: false, existPid };
         }
 
         await writeFileAtomic(pidFileFullpath, pidFileContent);
-        return undefined;
-    });
-    if (!result.create && result.updateResult) return result.updateResult;
+    }
 
     const writedPidFileContent = await readFileAsync(pidFileFullpath);
     return writedPidFileContent?.equals(pidFileContent) ? { success: true } : { success: false, writeFail: true };
