@@ -57,7 +57,8 @@ async function isPidExist(pid: number): Promise<boolean> {
     return (await findProcess('pid', pid)).length > 0;
 }
 
-function parsePidFile(pidFileContent: string): number | null {
+function parsePidFile(pidFileContent: string | null | undefined): number | null {
+    if (typeof pidFileContent !== 'string') return null;
     const pidStr = pidFileContent.trim();
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
@@ -67,7 +68,7 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
     | { success: false; writeFail: true; existPid?: undefined }
     | { success: false; writeFail?: false; existPid: number }
 > {
-    const pidFileContent = Buffer.from(`${pid}\n`);
+    const pidFileContent = `${pid}\n`;
 
     const result = await createOrReadFile(pidFileFullpath, pidFileContent);
     if (!result.create) {
@@ -81,8 +82,8 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
         await writeFileAtomic(pidFileFullpath, pidFileContent);
     }
 
-    const writedPidFileContent = await readFileAsync(pidFileFullpath);
-    return writedPidFileContent?.equals(pidFileContent) ? { success: true } : { success: false, writeFail: true };
+    const writedPid = parsePidFile((await readFileAsync(pidFileFullpath))?.toString('utf8'));
+    return writedPid === pid ? { success: true } : { success: false, writeFail: true };
 }
 
 export interface Options {
