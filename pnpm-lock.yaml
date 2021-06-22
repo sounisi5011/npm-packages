@@ -173,7 +173,7 @@ importers:
       google-protobuf: ^3.15.8
       grpc_tools_node_protoc_ts: 5.2.2
       jest-extended: 0.11.5
-      jest-matcher-utils: 26.6.2
+      jest-matcher-utils: 27.0.2
       multicodec: 3.0.1
       noop-stream: 0.1.0
       varint: ^6.0.0
@@ -202,7 +202,7 @@ importers:
       glob-exec: 0.1.1
       grpc_tools_node_protoc_ts: 5.2.2
       jest-extended: 0.11.5
-      jest-matcher-utils: 26.6.2
+      jest-matcher-utils: 27.0.2
       multicodec: 3.0.1
       noop-stream: 0.1.0
 
@@ -249,7 +249,7 @@ importers:
       tsd: 0.17.0
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.2.1_rollup@2.50.6
+      '@rollup/plugin-typescript': 8.2.1_rollup@2.50.6+typescript@4.3.2
       glob-exec: 0.1.1
       rollup: 2.50.6
       tsd: 0.17.0
@@ -989,7 +989,7 @@ packages:
       '@nodelib/fs.scandir': 2.1.4
       fastq: 1.11.0
 
-  /@rollup/plugin-typescript/8.2.1_rollup@2.50.6:
+  /@rollup/plugin-typescript/8.2.1_rollup@2.50.6+typescript@4.3.2:
     resolution: {integrity: sha512-Qd2E1pleDR4bwyFxqbjt4eJf+wB0UKVMLc7/BAFDGVdAXQMCsD4DUv5/7/ww47BZCYxWtJqe1Lo0KVNswBJlRw==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -1000,6 +1000,7 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@2.50.6
       resolve: 1.20.0
       rollup: 2.50.6
+      typescript: 4.3.2
     dev: true
 
   /@rollup/pluginutils/3.1.0_rollup@2.50.6:
@@ -4187,16 +4188,6 @@ packages:
       jest-diff: 24.9.0
       jest-get-type: 24.9.0
       pretty-format: 24.9.0
-    dev: true
-
-  /jest-matcher-utils/26.6.2:
-    resolution: {integrity: sha512-llnc8vQgYcNqDrqRDXWwMr9i7rS5XFiCwvh6DTP7Jqa2mqpcCBBlpCbn+trkG0KNhPu/h8rzyBkriOtBstvWhw==}
-    engines: {node: '>= 10.14.2'}
-    dependencies:
-      chalk: 4.1.1
-      jest-diff: 26.6.2
-      jest-get-type: 26.3.0
-      pretty-format: 26.6.2
     dev: true
 
   /jest-matcher-utils/27.0.2:
