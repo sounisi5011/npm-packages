@@ -10,11 +10,9 @@ on:
       - "**"
     tags-ignore:
       - "**"
-env:
-  IS_RUN_CI: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
 jobs:
   lint:
-    if: ${{ env.IS_RUN_CI }}
+    if: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -42,6 +40,7 @@ jobs:
       - run: pnpm run build-only-packages
       - run: pnpm run lint
   format:
+    # This condition is inverted
     if: ${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}
     runs-on: ubuntu-latest
     strategy:
@@ -151,7 +150,7 @@ jobs:
         if: ${{ always() }}
         run: git diff --name-only --exit-code
   build:
-    if: ${{ IS_RUN_CI }}
+    if: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
