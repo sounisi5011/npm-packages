@@ -63,6 +63,12 @@ function parsePidFile(pidFileContent: string | null | undefined): number | null 
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
 
+const readPid = async (pidFileFullpath: string): Promise<number | null> =>
+    parsePidFile(
+        (await readFileAsync(pidFileFullpath))
+            ?.toString('utf8'),
+    );
+
 async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>): Promise<
     | { success: true }
     | { success: false; writeFail: true; existPid?: undefined }
@@ -82,8 +88,9 @@ async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpat
         await writeFileAtomic(pidFileFullpath, pidFileContent);
     }
 
-    const writedPid = parsePidFile((await readFileAsync(pidFileFullpath))?.toString('utf8'));
-    return writedPid === pid ? { success: true } : { success: false, writeFail: true };
+    return (await readPid(pidFileFullpath)) === pid
+        ? { success: true }
+        : { success: false, writeFail: true };
 }
 
 export interface Options {
