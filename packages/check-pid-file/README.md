@@ -64,3 +64,7 @@ const { isProcessExist } = require('@sounisi5011/check-pid-file');
   }
 })();
 ```
+
+## References
+
+* [Preventing duplicate cron job executions - Benjamin Cane](https://bencane.com/2015/09/22/preventing-duplicate-cron-job-executions/)
