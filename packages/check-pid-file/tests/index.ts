@@ -189,9 +189,6 @@ describe('isProcessExist()', () => {
                 .toHaveLength(1);
             expect(logList.filter(line => / other process is running$/m.test(line)))
                 .toHaveLength(childProcessCount - 1);
-
-            /** @todo remove this debug code */
-            console.log({ logList });
         } catch (error) {
             console.log({ logList });
             throw error;
