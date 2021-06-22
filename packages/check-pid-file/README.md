@@ -44,21 +44,23 @@ const { isProcessExist } = require('@sounisi5011/check-pid-file');
 
 // ----- //
 
-try {
-  // Read the PID file and check if the specified process exists.
-  // If it does not exist, recreate the PID file.
-  // It also automatically deletes the PID file when the program is terminated.
-  if (await isProcessExist('/path/to/pid-file.pid')) {
-    // The process exists with the number specified in the PID file.
-    // In this case, the program SHOULD NOT continue processing because there is already another process running.
-  } else {
-    // The following cases are applicable:
-    // + The process does not exist with the number specified in the PID file.
-    // + The same number as the current process id is specified in the PID file.
-    // + The structure of the PID file is unknown.
-    // In this case, the program SHOULD continue processing because no other processes are running.
+(async () => {
+  try {
+    // Read the PID file and check if the specified process exists.
+    // If it does not exist, recreate the PID file.
+    // It also automatically deletes the PID file when the program is terminated.
+    if (await isProcessExist('/path/to/pid-file.pid')) {
+      // The process exists with the number specified in the PID file.
+      // In this case, the program SHOULD NOT continue processing because there is already another process running.
+    } else {
+      // The following cases are applicable:
+      // + The process does not exist with the number specified in the PID file.
+      // + The same number as the current process id is specified in the PID file.
+      // + The structure of the PID file is unknown.
+      // In this case, the program SHOULD continue processing because no other processes are running.
+    }
+  } catch (error) {
+    // Exceptions may be thrown due to file system errors, etc.
   }
-} catch (error) {
-  // Exceptions may be thrown due to file system errors, etc.
-}
+})();
 ```
