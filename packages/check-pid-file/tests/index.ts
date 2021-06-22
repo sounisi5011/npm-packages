@@ -161,7 +161,10 @@ describe('isProcessExist()', () => {
                                 () => null,
                             )
                                 .on('data', (logLine: string) => {
-                                    if (!/^\[\d+\] start$/m.test(logLine)) {
+                                    if (
+                                        /^\[\d+ \d{2}:\d{2}:\d{2}(?:\.\d{1,})?~\d{2}:\d{2}:\d{2}(?:\.\d{1,})?\] [^\r\n]+$/m
+                                            .test(logLine)
+                                    ) {
                                         resolve(logLine);
                                     }
                                 });
@@ -186,6 +189,9 @@ describe('isProcessExist()', () => {
                 .toHaveLength(1);
             expect(logList.filter(line => / other process is running$/m.test(line)))
                 .toHaveLength(childProcessCount - 1);
+
+            /** @todo remove this debug code */
+            console.log({ logList });
         } catch (error) {
             console.log({ logList });
             throw error;
