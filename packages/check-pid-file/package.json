@@ -1,7 +1,7 @@
 {
   "name": "@sounisi5011/check-pid-file",
   "version": "0.0.0",
-  "description": "Use the pid file to check which processes have already started and prevent multiple executions",
+  "description": "Use the PID file to check which processes have already started and prevent multiple executions",
   "keywords": [
     "daemon",
     "file",
