@@ -2,6 +2,10 @@
   "extends": ["config:js-lib", ":semanticCommits"],
   "packageRules": [
     {
+      "matchPaths": ["actions/**"],
+      "extends": [":pinDependencies"]
+    },
+    {
       "packageNames": ["eslint"],
       "packagePatterns": [
         "^@typescript-eslint/",
