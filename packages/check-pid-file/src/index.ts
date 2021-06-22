@@ -69,23 +69,41 @@ const readPid = async (pidFileFullpath: string): Promise<number | null> =>
             ?.toString('utf8'),
     );
 
+async function updatePidFile(
+    { pidFileFullpath, oldPidFileContent, newPidFileContent, pid }: Readonly<
+        { pidFileFullpath: string; oldPidFileContent: Buffer; newPidFileContent: string; pid: number }
+    >,
+): Promise<
+    | { success: true }
+    | { success: false; existPid: number }
+> {
+    const existPid = parsePidFile(oldPidFileContent.toString('utf8'));
+    if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
+        return { success: false, existPid };
+    }
+
+    await writeFileAtomic(pidFileFullpath, newPidFileContent);
+    return { success: true };
+}
+
 async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>): Promise<
     | { success: true }
     | { success: false; writeFail: true; existPid?: undefined }
     | { success: false; writeFail?: false; existPid: number }
 > {
-    const pidFileContent = `${pid}\n`;
+    const newPidFileContent = `${pid}\n`;
 
-    const result = await createOrReadFile(pidFileFullpath, pidFileContent);
-    if (!result.create) {
-        const { content: existPidFileContent } = result;
-
-        const existPid = parsePidFile(existPidFileContent.toString('utf8'));
-        if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
-            return { success: false, existPid };
+    const createResult = await createOrReadFile(pidFileFullpath, newPidFileContent);
+    if (!createResult.create) {
+        const updateResult = await updatePidFile({
+            pidFileFullpath,
+            oldPidFileContent: createResult.content,
+            newPidFileContent,
+            pid,
+        });
+        if (!updateResult.success) {
+            return { success: false, existPid: updateResult.existPid };
         }
-
-        await writeFileAtomic(pidFileFullpath, pidFileContent);
     }
 
     return (await readPid(pidFileFullpath)) === pid
