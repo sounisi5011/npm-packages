@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "declarationMap": false,
+    // Even without the `rootDir` option, the `tsc` command will not fail.
+    // However, it will cause an error in VS Code.
+    "rootDir": "./",
+    "noEmit": true,
+
+    /* Module Resolution Options */
+    "types": ["node"],
+
+    /* Source Map Options */
+    "inlineSources": true
+  }
+}
