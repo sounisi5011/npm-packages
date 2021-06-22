@@ -73,20 +73,20 @@ function parsePidFile(
 }
 
 async function createPidFile(
-    { pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>,
+    { pidFileFullpath, currentPid }: Readonly<{ pidFileFullpath: string; currentPid: number }>,
 ): Promise<
     | { success: true }
     | { success: false; writeFail: true; existPid?: undefined }
     | { success: false; writeFail?: false; existPid: number }
 > {
-    const newPidFileContent = `${pid}\n`;
+    const newPidFileContent = `${currentPid}\n`;
 
     const createResult = await createOrReadFile(pidFileFullpath, newPidFileContent);
     if (!createResult.create) {
         const { content: existPidFileContent } = createResult;
 
         const existPid = parsePidFile(existPidFileContent.toString('utf8'));
-        if (typeof existPid === 'number' && await isPidExist(existPid, { currentPid: pid })) {
+        if (typeof existPid === 'number' && await isPidExist(existPid, { currentPid })) {
             return { success: false, existPid };
         }
 
@@ -95,23 +95,27 @@ async function createPidFile(
 
     const writedPidFileContent = (await readFileAsync(pidFileFullpath))?.toString('utf8');
     const writedPid = parsePidFile(writedPidFileContent);
-    return writedPid === pid
+    return writedPid === currentPid
         ? { success: true }
         : { success: false, writeFail: true };
 }
 
 export interface Options {
-    pid?: number;
+    /**
+     * @default process.pid
+     */
+    currentPid?: number;
 }
 
 export async function isProcessExist(
     pidFilepath: string,
-    { pid = process.pid }: Options = {},
+    options: Options = {},
 ): Promise<boolean> {
     const pidFileFullpath = resolvePath(pidFilepath);
+    const { currentPid = process.pid } = options;
 
     while (true) {
-        const result = await createPidFile({ pidFileFullpath, pid });
+        const result = await createPidFile({ pidFileFullpath, currentPid });
         if (result.success) {
             onExit(() => {
                 unlinkSync(pidFileFullpath);
@@ -120,6 +124,6 @@ export async function isProcessExist(
         }
 
         if (result.writeFail) continue;
-        return result.existPid !== pid;
+        return result.existPid !== currentPid;
     }
 }
