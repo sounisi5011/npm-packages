@@ -143,12 +143,15 @@ describe('isProcessExist()', () => {
     it('exec multiple processes', async () => {
         const processName = 'multi';
 
+        const childProcessCount = 10;
         const childProcessList = Array.from(
-            { length: 10 },
+            { length: childProcessCount },
             () => execa('node', [processJsPath, processName], { all: true }),
         );
+
+        let logList: string[];
         try {
-            const logList = await Promise.all(
+            logList = await Promise.all(
                 childProcessList.map(async childProcess =>
                     await new Promise<string>((resolve, reject) => {
                         if (childProcess.all) {
@@ -167,11 +170,6 @@ describe('isProcessExist()', () => {
                     })
                 ),
             );
-
-            expect(logList.filter(line => / done$/m.test(line)))
-                .toHaveLength(1);
-            expect(logList.filter(line => / other process is running$/m.test(line)))
-                .toHaveLength(childProcessList.length - 1);
         } finally {
             await Promise.all(childProcessList.map(async childProcess => {
                 await Promise.race([
@@ -181,6 +179,16 @@ describe('isProcessExist()', () => {
                 childProcess.kill('SIGKILL');
                 await once(childProcess, 'close');
             }));
+        }
+
+        try {
+            expect(logList.filter(line => / done$/m.test(line)))
+                .toHaveLength(1);
+            expect(logList.filter(line => / other process is running$/m.test(line)))
+                .toHaveLength(childProcessCount - 1);
+        } catch (error) {
+            console.log({ logList });
+            throw error;
         }
     }, 10 * 1000);
 });
