@@ -47,36 +47,47 @@ function parsePidFile(pidFileContent: string): number | null {
     return /^[0-9]+$/.test(pidStr) ? Number(pidStr) : null;
 }
 
+async function createPidFile({ pidFileFullpath, pid }: Readonly<{ pidFileFullpath: string; pid: number }>): Promise<
+    | { success: true }
+    | { success: false; writeFail: true; existPid?: undefined }
+    | { success: false; writeFail?: false; existPid: number }
+> {
+    const pidFileContent = `${pid}\n`;
+
+    while (!await createFile(pidFileFullpath, pidFileContent)) {
+        const existPidFileContent = await readFileAsync(pidFileFullpath);
+        if (existPidFileContent === null) continue;
+
+        const existPid = parsePidFile(existPidFileContent);
+        if (typeof existPid === 'number' && (existPid === pid || await isPidExist(existPid))) {
+            return { success: false, existPid };
+        }
+
+        await writeFileAtomic(pidFileFullpath, pidFileContent);
+        break;
+    }
+
+    const writedPidFileContent = await readFileAsync(pidFileFullpath);
+    return writedPidFileContent === pidFileContent ? { success: true } : { success: false, writeFail: true };
+}
+
 export interface Options {
     pid?: number;
 }
 
 export async function isProcessExist(pidFilepath: string, { pid = process.pid }: Options): Promise<boolean> {
-    pidFilepath = resolvePath(pidFilepath);
-    const pidFileContent = `${pid}\n`;
+    const pidFileFullpath = resolvePath(pidFilepath);
 
     while (true) {
-        if (!(await createFile(pidFilepath, pidFileContent))) {
-            const savedPidFileContent = await readFileAsync(pidFilepath);
-            if (savedPidFileContent === null) continue;
-
-            const savedPid = parsePidFile(savedPidFileContent);
-            if (typeof savedPid === 'number' && (savedPid === pid || await isPidExist(savedPid))) {
-                return savedPid !== pid;
-            }
-
-            await writeFileAtomic(pidFilepath, pidFileContent);
-        }
-
-        const writedPidFileContent = await readFileAsync(pidFilepath);
-        if (writedPidFileContent === null) continue;
-
-        const isWriteSuccess = parsePidFile(writedPidFileContent) === pid;
-        if (isWriteSuccess) {
+        const result = await createPidFile({ pidFileFullpath, pid });
+        if (result.success) {
             onExit(() => {
-                unlinkSync(pidFilepath);
+                unlinkSync(pidFileFullpath);
             });
             return false;
         }
+
+        if (result.writeFail) continue;
+        return result.existPid !== pid;
     }
 }
