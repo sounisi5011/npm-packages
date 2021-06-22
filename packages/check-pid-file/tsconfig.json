@@ -5,6 +5,9 @@
 
     /* Basic Options */
     "declarationMap": false,
+    // Even without the `rootDir` option, the `tsc` command will not fail.
+    // However, it will cause an error in VS Code.
+    "rootDir": "./",
     "noEmit": true,
 
     /* Module Resolution Options */
