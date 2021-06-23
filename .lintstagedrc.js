@@ -50,6 +50,8 @@ async function dprintCommandList(filenames, config) {
 
   const targetFilepathList = filenames
     .filter(filepath => dprintTargetFilepathList.includes(filepath));
+  if (targetFilepathList.length < 1) return [];
+
   return [
     `dprint fmt -c ${configFullpath} ${targetFilepathList.join(' ')}`,
   ];
