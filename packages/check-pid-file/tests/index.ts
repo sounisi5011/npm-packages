@@ -76,11 +76,16 @@ describe('isProcessExist()', () => {
                 const isPidFileExists = fsPromises.access(pidFilepath);
                 if (!isLastLoop) {
                     // If the file deletion fails, it will retry up to 10 times.
-                    try {
-                        await isPidFileExists;
+                    if (
+                        await (
+                            isPidFileExists
+                                .then(() => true as const)
+                                .catch(() => false as const)
+                        )
+                    ) {
                         await fsPromises.unlink(pidFilepath);
                         continue;
-                    } catch {}
+                    }
                 }
 
                 await expect(isPidFileExists).rejects
