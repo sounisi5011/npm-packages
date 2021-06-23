@@ -1,5 +1,6 @@
 {
   "extends": ["config:js-lib", ":semanticCommits"],
+  "ignorePresets": ["group:monorepos"],
   "ignoreDeps": ["@types/node"],
   "packageRules": [
     {
@@ -23,6 +24,7 @@
     },
     {
       "packageNames": [
+        "dprint",
         "husky",
         "lint-staged",
         "prettier",
