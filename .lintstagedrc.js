@@ -41,9 +41,9 @@ function unique(array) {
  */
 async function dprintCommandList(filenames, config) {
   if (filenames.length < 1) return [];
-  const configFullpath = path.resolve(__dirname, config);
+  const configOption = ['-c', path.resolve(__dirname, config)];
 
-  const { stdout } = await execFileAsync('pnpx', ['dprint', 'output-file-paths', '-c', configFullpath]);
+  const { stdout } = await execFileAsync('pnpx', ['dprint', 'output-file-paths', ...configOption]);
   const dprintTargetFilepathList = stdout
     .split(/\r?\n|\r/)
     .filter(filepath => filepath.trim() !== '');
@@ -53,7 +53,7 @@ async function dprintCommandList(filenames, config) {
   if (targetFilepathList.length < 1) return [];
 
   return [
-    `dprint fmt -c ${configFullpath} ${targetFilepathList.join(' ')}`,
+    ['dprint', 'fmt', ...configOption, ...targetFilepathList].join(' '),
   ];
 }
 
