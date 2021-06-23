@@ -22,9 +22,9 @@
     "test": "run-if-supported --verbose jest"
   },
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "find-git-root": "^1.0.4",
-    "workspace-tools": "^0.16.0"
+    "@actions/core": "1.4.0",
+    "find-git-root": "1.0.4",
+    "workspace-tools": "0.16.2"
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.0.1",
