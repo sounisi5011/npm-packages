@@ -1,5 +1,6 @@
 {
   "extends": ["config:js-lib", ":semanticCommits"],
+  "groupName": null,
   "ignoreDeps": ["@types/node"],
   "packageRules": [
     {
