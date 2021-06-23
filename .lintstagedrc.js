@@ -1,6 +1,10 @@
 // @ts-check
+const { execFile } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
+
+const execFileAsync = promisify(execFile);
 
 /**
  * @param {string|RegExp} basename
@@ -30,77 +34,94 @@ function unique(array) {
   return [...new Set(array)];
 }
 
-module.exports = {
-  /**
-   * @param {string[]} filenames
-   */
-  '*': filenames => {
-    /** @type {string[]} */
-    const commands = [];
+/**
+ * @param {readonly string[]} filenames
+ * @param {string} config
+ * @returns {Promise<string[]>}
+ */
+async function dprintCommandList(filenames, config) {
+  if (filenames.length < 1) return [];
+  const configFullpath = path.resolve(__dirname, config);
 
-    commands.push(`prettier --write ${filenames.join(' ')}`);
+  const { stdout } = await execFileAsync('pnpx', ['dprint', 'output-file-paths', '-c', configFullpath]);
+  const dprintTargetFilepathList = stdout
+    .split(/\r?\n|\r/)
+    .filter(filepath => filepath.trim() !== '');
 
-    const pkgFiles = filenames.filter(baseFilter('package.json'));
-    if (pkgFiles.length >= 1) {
-      commands.push(
-        `prettier-package-json --write ${pkgFiles.join(' ')}`,
-        `sort-package-json ${pkgFiles.join(' ')}`,
-      );
-    }
+  const targetFilepathList = filenames
+    .filter(filepath => dprintTargetFilepathList.includes(filepath));
+  return [
+    `dprint fmt -c ${configFullpath} ${targetFilepathList.join(' ')}`,
+  ];
+}
 
-    if (
-      filenames.some(baseFilter('.eslintignore'))
-      || filenames.some(baseFilter(/^(?:dprint|\.dprint)(?:-.*)?\.json$/))
-    ) {
-      commands.push(
-        'pnpm run build:dprint-config',
-        'git add ./.dprint.json ./.dprint-*.json',
-      );
-    }
+/**
+ * @type {(filenames: string[]) => Promise<string | string[]>}
+ */
+module.exports = async filenames => {
+  /** @type {string[]} */
+  const commands = [];
 
-    const tsFiles = filenames.filter(extFilter('ts'));
-    if (tsFiles.length >= 1) {
-      commands.push(
-        `pnpm run fmt:ts:dprint -- ${tsFiles.join(' ')}`,
-      );
-    }
+  commands.push(`prettier --write ${filenames.join(' ')}`);
 
-    const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
-    if (jsFiles.length >= 1) {
-      commands.push(
-        `pnpm run fmt:js:dprint -- ${jsFiles.join(' ')}`,
-      );
-    }
+  const pkgFiles = filenames.filter(baseFilter('package.json'));
+  if (pkgFiles.length >= 1) {
+    commands.push(
+      `prettier-package-json --write ${pkgFiles.join(' ')}`,
+      `sort-package-json ${pkgFiles.join(' ')}`,
+    );
+  }
 
-    const tsOrJsFiles = [...tsFiles, ...jsFiles];
-    if (tsOrJsFiles.length >= 1) {
-      commands.push(
-        `eslint --cache --fix ${tsOrJsFiles.join(' ')}`,
-      );
-    }
+  if (
+    filenames.some(baseFilter('.eslintignore'))
+    || filenames.some(baseFilter(/^(?:dprint|\.dprint)(?:-.*)?\.json$/))
+  ) {
+    commands.push(
+      'pnpm run build:dprint-config',
+      'git add ./.dprint.json ./.dprint-*.json',
+    );
+  }
 
-    const readmeFiles = filenames.filter(baseFilter('README.md'));
-    const packageListFiles = filenames.filter(baseFilter('.package-list.js'));
-    if (pkgFiles.length >= 1 || readmeFiles.length >= 1 || packageListFiles.length >= 1) {
-      commands.push(
-        'run-s build:package-list',
-        'git add ./README.md',
-      );
-    }
+  const tsFiles = filenames.filter(extFilter('ts'));
+  const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
 
-    const submoduleReadmeFiles = unique(
-      [...readmeFiles, ...pkgFiles]
-        .filter(filename => path.dirname(path.resolve(filename)) !== __dirname)
-        .map(filename => path.join(path.dirname(filename), 'README.md')),
-    )
-      .filter(filename => fs.existsSync(filename));
-    if (submoduleReadmeFiles.length >= 1) {
-      commands.push(
-        `node ./scripts/update-readme-badge.js ${submoduleReadmeFiles.join(' ')}`,
-        `git add ${submoduleReadmeFiles.join(' ')}`,
-      );
-    }
+  commands.push(
+    ...(
+      await Promise.all([
+        dprintCommandList(tsFiles, './.dprint.json'),
+        dprintCommandList(jsFiles, './.dprint-js.json'),
+      ])
+    ).flat(),
+  );
 
-    return commands;
-  },
+  const tsOrJsFiles = [...tsFiles, ...jsFiles];
+  if (tsOrJsFiles.length >= 1) {
+    commands.push(
+      `eslint --cache --fix ${tsOrJsFiles.join(' ')}`,
+    );
+  }
+
+  const readmeFiles = filenames.filter(baseFilter('README.md'));
+  const packageListFiles = filenames.filter(baseFilter('.package-list.js'));
+  if (pkgFiles.length >= 1 || readmeFiles.length >= 1 || packageListFiles.length >= 1) {
+    commands.push(
+      'run-s build:package-list',
+      'git add ./README.md',
+    );
+  }
+
+  const submoduleReadmeFiles = unique(
+    [...readmeFiles, ...pkgFiles]
+      .filter(filename => path.dirname(path.resolve(filename)) !== __dirname)
+      .map(filename => path.join(path.dirname(filename), 'README.md')),
+  )
+    .filter(filename => fs.existsSync(filename));
+  if (submoduleReadmeFiles.length >= 1) {
+    commands.push(
+      `node ./scripts/update-readme-badge.js ${submoduleReadmeFiles.join(' ')}`,
+      `git add ${submoduleReadmeFiles.join(' ')}`,
+    );
+  }
+
+  return commands;
 };
