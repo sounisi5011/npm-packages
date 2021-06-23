@@ -23,6 +23,7 @@
     },
     {
       "packageNames": [
+        "dprint",
         "husky",
         "lint-staged",
         "prettier",
