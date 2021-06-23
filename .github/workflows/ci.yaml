@@ -150,7 +150,7 @@ jobs:
           }
           echo '::endgroup::'
       - run: pnpm run build-only-packages
-      - run: pnpx run-p 'fmt:!(xs)'
+      - run: pnpm run fmt
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
