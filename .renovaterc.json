@@ -1,6 +1,6 @@
 {
   "extends": ["config:js-lib", ":semanticCommits"],
-  "groupName": null,
+  "ignorePresets": ["group:monorepos"],
   "ignoreDeps": ["@types/node"],
   "packageRules": [
     {
