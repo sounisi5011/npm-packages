@@ -53,23 +53,47 @@ describe('isProcessExist()', () => {
             ['SIGHUP', signals.SIGHUP],
             ['SIGQUIT', signals.SIGQUIT],
         ])('%s', async (testName, killSignal) => {
+            expect.assertions(1);
+
             const pidFilepath = createPidfilePath(testName);
-            const child = execa(
-                'node',
-                ['-e', `require('.').isProcessExist(process.argv.pop(), {}); setTimeout(() => {}, 1000)`, pidFilepath],
-                { cwd: PACKAGE_ROOT },
-            );
-            if (killSignal === null) {
-                await child;
-            } else {
-                await sleep(100);
-                child.kill(killSignal);
-                await once(child, 'close');
+
+            for (const count of [...Array(10).keys()].reverse()) {
+                const isLastLoop = count === 0;
+
+                const child = execa(
+                    'node',
+                    ['-e', `require('.').isProcessExist(process.argv.pop()); setTimeout(() => {}, 1000)`, pidFilepath],
+                    { cwd: PACKAGE_ROOT },
+                );
+                if (killSignal === null) {
+                    await child;
+                } else {
+                    await sleep(100);
+                    child.kill(killSignal);
+                    await once(child, 'close');
+                }
+
+                const isPidFileExists = fsPromises.access(pidFilepath);
+                if (!isLastLoop) {
+                    // If the file deletion fails, it will retry up to 10 times.
+                    if (
+                        await (
+                            isPidFileExists
+                                .then(() => true as const)
+                                .catch(() => false as const)
+                        )
+                    ) {
+                        await fsPromises.unlink(pidFilepath);
+                        continue;
+                    }
+                }
+
+                await expect(isPidFileExists).rejects
+                    .toStrictEqual(expect.objectContaining({
+                        code: 'ENOENT',
+                    }));
+                break;
             }
-            await expect(fsPromises.access(pidFilepath)).rejects
-                .toStrictEqual(expect.objectContaining({
-                    code: 'ENOENT',
-                }));
         });
     });
 
