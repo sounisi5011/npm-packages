@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/run-if-supported",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Execute the command only if you are running on a supported version of Node and platform",
   "keywords": [
     "ci",
