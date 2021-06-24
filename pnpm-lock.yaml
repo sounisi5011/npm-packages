@@ -174,7 +174,7 @@ importers:
       grpc_tools_node_protoc_ts: 5.3.0
       jest-extended: 0.11.5
       jest-matcher-utils: 26.6.2
-      multicodec: 3.0.1
+      multicodec: 3.1.0
       noop-stream: 0.1.0
       varint: ^6.0.0
     dependencies:
@@ -203,7 +203,7 @@ importers:
       grpc_tools_node_protoc_ts: 5.3.0
       jest-extended: 0.11.5
       jest-matcher-utils: 26.6.2
-      multicodec: 3.0.1
+      multicodec: 3.1.0
       noop-stream: 0.1.0
 
   packages/encrypted-archive/examples:
@@ -4947,11 +4947,11 @@ packages:
       '@multiformats/base-x': 4.0.1
     dev: true
 
-  /multicodec/3.0.1:
-    resolution: {integrity: sha512-Y6j3wiPojvkF/z6KFIGt84KdJdP2oILEdzc/3YbD3qQ3EerhqtYlfsZTPPNVoCCxNZZdzIpCKrdYFSav17sIrQ==}
+  /multicodec/3.1.0:
+    resolution: {integrity: sha512-f6d4DhbQ9a8WiJ/wpbKgeJSeR0/juP/1wnjbKdZ0KAWDkC/z7Lb3xOegMUG+uTcfwSYf6j1eTvFf8HDgqPRGmQ==}
     dependencies:
       uint8arrays: 2.1.5
-      varint: 5.0.2
+      varint: 6.0.0
     dev: true
 
   /multimatch/4.0.0:
@@ -6629,13 +6629,8 @@ packages:
       builtins: 1.0.3
     dev: false
 
-  /varint/5.0.2:
-    resolution: {integrity: sha512-lKxKYG6H03yCZUpAGOPOsMcGxd1RHCu1iKvEHYDPmTyq2HueGhD73ssNBqqQWfvYs04G9iUFRvmAVLW20Jw6ow==}
-    dev: true
-
   /varint/6.0.0:
     resolution: {integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==}
-    dev: false
 
   /w3c-hr-time/1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}
