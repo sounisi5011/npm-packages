@@ -104,7 +104,7 @@ jobs:
           pnpm run build:scripts &&
           pnpm run build:package-list &&
           git add ./README.md &&
-          git commit -m 'chore: update package list' || true
+          git commit -m 'docs: update package list' || true
           echo '::endgroup::'
 
           if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
