@@ -8,6 +8,7 @@ describe('getPackageDataList()', () => {
         const packageData: PackageData = {
             'path-git-relative': 'actions/monorepo-workspace-submodules-finder',
             'package-name': pkg.name,
+            'no-scope-package-name': pkg.name,
             'version': pkg.version ?? null,
             // eslint-disable-next-line jest/no-if
             'is-private': (Object.prototype.hasOwnProperty.call as hasOwnProperty)(pkg, 'private')
