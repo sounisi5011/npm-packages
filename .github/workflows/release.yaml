@@ -101,8 +101,9 @@ jobs:
           readonly beforeCommitHash="$(git log --format=%H -n 1)"
 
           echo '::group::' update package list
-          pnpm run build:package-list || true
-          git add ./README.md || true
+          pnpm run build:scripts &&
+          pnpm run build:package-list &&
+          git add ./README.md &&
           git commit -m 'chore: update package list' || true
           echo '::endgroup::'
 
@@ -170,7 +171,9 @@ jobs:
         #       Execution by ultra-runner will fail.
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish / Update README
-        run: node ./scripts/publish-convert-readme.js '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
+        run: |
+          pnpm run build:scripts
+          node ./scripts/publish-convert-readme.js '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish
         env:
