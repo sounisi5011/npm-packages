@@ -22,6 +22,7 @@ exec_group() {
   return $exit_code
 }
 
+exec_group pnpm run -w build:scripts || true
 exec_group pnpm run -w build:package-list || true
 exec_group git add ../../README.md || true
 exec_group git commit -m 'docs: update package list' || true
