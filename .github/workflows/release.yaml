@@ -184,7 +184,8 @@ jobs:
           cd '${{ matrix.path-git-relative }}'
           if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
             GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
-            matrix_package_name='${{ matrix.package-name }}'
+            matrix_package_name_with_scope='${{ matrix.package-name }}'
+            matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
             outputs_upload_url='${{ steps.release.outputs.upload_url }}'
             outputs_html_url='${{ steps.release.outputs.html_url }}'
             outputs_tag_name='${{ steps.release.outputs.tag_name }}'

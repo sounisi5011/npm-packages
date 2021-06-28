@@ -3,11 +3,15 @@
 git config user.name  'github-actions[bot]'
 git config user.email 'github-actions[bot]@users.noreply.github.com'
 git remote add gh-token "https://${GITHUB_TOKEN}@github.com/sounisi5011/npm-packages.git"
-git tag -d "${matrix_package_name}-v${outputs_major}" || true
-git tag -d "${matrix_package_name}-v${outputs_major}.${outputs_minor}" || true
-git push origin :"${matrix_package_name}-v${outputs_major}" || true
-git push origin :"${matrix_package_name}-v${outputs_major}.${outputs_minor}" || true
-git tag -a "${matrix_package_name}-v${outputs_major}" -m "Release ${matrix_package_name}@${outputs_major}.x"
-git tag -a "${matrix_package_name}-v${outputs_major}.${outputs_minor}" -m "Release ${matrix_package_name}@${outputs_major}.${outputs_minor}.x"
-git push origin "${matrix_package_name}-v${outputs_major}"
-git push origin "${matrix_package_name}-v${outputs_major}.${outputs_minor}"
+
+update_git_tag() {
+  local tag_name="$1"
+  local tag_message="$2"
+  git tag -d "${tag_name}" || true
+  git push origin :"${tag_name}" || true
+  git tag -a "${tag_name}" -m "${tag_message}"
+  git push origin "${tag_name}"
+}
+
+update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}"                  "Release ${matrix_package_name_with_scope}@${outputs_major}.x"
+update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}.${outputs_minor}" "Release ${matrix_package_name_with_scope}@${outputs_major}.${outputs_minor}.x"
