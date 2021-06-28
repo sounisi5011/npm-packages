@@ -88,6 +88,9 @@ jobs:
       - run: |
           echo 'path:' '${{ matrix.path-git-relative }}'
           echo 'package name:' '${{ matrix.package-name }}'
+          if [ '${{ matrix.package-name }}' != '${{ matrix.no-scope-package-name }}' ]; then
+            echo 'package name (no scope):' '${{ matrix.no-scope-package-name }}'
+          fi
           echo 'version:' '${{ matrix.version }}'
           echo 'private:' '${{ matrix.is-private }}'
 ```
