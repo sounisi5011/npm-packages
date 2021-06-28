@@ -94,7 +94,7 @@
   },
   "devDependencies": {
     "@jorgeferrero/stream-to-buffer": "2.0.6",
-    "@sounisi5011/run-if-supported": "1.0.1",
+    "@sounisi5011/run-if-supported": "1.0.3",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/argon2-browser": "1.18.0",
     "@types/bl": "5.0.1",
