@@ -37,11 +37,11 @@
     "preinstall": "npx only-allow pnpm",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --cache ./",
-    "lint:tsc": "pnpm recursive run lint:tsc --filter '*'",
+    "lint:tsc": "ultra --recursive lint:tsc",
     "prepare": "husky install",
     "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
-    "test:unit-test": "pnpm recursive test --filter '*'"
+    "test:unit-test": "ultra --recursive test"
   },
   "devDependencies": {
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
