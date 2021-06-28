@@ -90,6 +90,20 @@ function headerText2markdownAnchor(header) {
  *
  * @typedef {Object<string, string | Partial<HeaderData>>} HeaderTable
  *
+ * @typedef {Object} PackageInfo
+ * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
+ * @property {import('workspace-tools').WorkspaceInfo[number]['path']} path
+ * @property {import('workspace-tools').WorkspaceInfo[number]['packageJson']} packageJson
+ * @property {string} version
+ * @property {string} versionLink
+ * @property {string} localURL
+ * @property {string} noScopeName
+ * @property {hostedGitInfo} repoData
+ * @property {string} packagePathURL
+ * @property {string} headerText
+ * @property {string} headerText
+ * @property {string} depsLink
+ *
  * @param {HeaderTable} headerTable
  * @param {string} relativePackagePath
  * @returns {HeaderData}
@@ -155,21 +169,6 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
         relativePackagePath,
       );
 
-      /**
-       * @typedef {Object} PackageInfo
-       * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
-       * @property {import('workspace-tools').WorkspaceInfo[number]['path']} path
-       * @property {import('workspace-tools').WorkspaceInfo[number]['packageJson']} packageJson
-       * @property {string} version
-       * @property {string} versionLink
-       * @property {string} localURL
-       * @property {string} noScopeName
-       * @property {hostedGitInfo} repoData
-       * @property {string} packagePathURL
-       * @property {string} headerText
-       * @property {string} headerText
-       * @property {string} depsLink
-       */
       /** @type {PackageInfo} */
       const packageInfo = {
         ...data,
