@@ -37,7 +37,7 @@
   "author": "sounisi5011",
   "type": "commonjs",
   "bin": {
-    "run-if-supported": "./dist/index.js"
+    "run-if-supported": "./cli.js"
   },
   "directories": {
     "lib": "./src/",
@@ -45,6 +45,7 @@
   },
   "files": [
     "dist/",
+    "cli.js",
     "!*.d.ts",
     "!*.tsbuildinfo"
   ],

@@ -12,13 +12,13 @@ import { isNotSupported } from './is-supported';
 import { parseOptions } from './options';
 import { filterObjectEntry, isString } from './utils';
 
-function getBinName(pkg: Record<PropertyKey, unknown>, entryFilepath: string): string | undefined {
+function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entryFilepath: string): string | undefined {
     if (isPropAccessible(pkg['bin'])) {
         const binEntry = Object.entries(pkg['bin'])
             .filter(filterObjectEntry(isString))
             .map(([binName, binPath]) => ({ binName, binPath }))
             .find(({ binPath }) => {
-                const binFullpath = resolvePath(dirname(entryFilepath), '..', binPath);
+                const binFullpath = resolvePath(pkgDirpath, binPath);
                 return binFullpath === entryFilepath;
             });
         if (binEntry) return binEntry.binName;
@@ -34,14 +34,15 @@ function getCliData(entryFilepath: string): {
     version: string | undefined;
     description: string;
 } {
+    const pkgPath = resolvePath(__dirname, '../package.json');
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const PKG: unknown = require('../package.json');
+    const PKG: unknown = require(pkgPath);
     let version: string | undefined;
     let description = '';
 
     if (!isPropAccessible(PKG)) return { binName: undefined, version, description };
 
-    const binName = getBinName(PKG, entryFilepath);
+    const binName = getBinName(PKG, dirname(pkgPath), entryFilepath);
     if (typeof PKG['version'] === 'string') version = PKG['version'];
     if (typeof PKG['description'] === 'string') description = PKG['description'];
 
