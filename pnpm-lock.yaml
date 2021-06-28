@@ -62,17 +62,21 @@ importers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
+      '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
       find-git-root: 1.0.4
+      validate-npm-package-name: 3.0.0
       workspace-tools: 0.16.2
     dependencies:
       '@actions/core': 1.4.0
       find-git-root: 1.0.4
+      validate-npm-package-name: 3.0.0
       workspace-tools: 0.16.2
     devDependencies:
       '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/node': 15.12.5
+      '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
 
   packages/check-pid-file:
@@ -1237,6 +1241,10 @@ packages:
 
   /@types/stack-utils/2.0.0:
     resolution: {integrity: sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==}
+    dev: true
+
+  /@types/validate-npm-package-name/3.0.2:
+    resolution: {integrity: sha512-7ohzD2fh5iV74brBLY2SdEI/nt4vnUoY1++r0P8QEAL5utR0fTFGeGijJMLHTmeNriroZQphGyVp46CbIuILMA==}
     dev: true
 
   /@types/varint/6.0.0:

@@ -27,12 +27,14 @@ The content is as follows:
   {
     "path-git-relative": "packages/ts-type-utils/has-own-property",
     "package-name": "@sounisi5011/ts-type-util-has-own-property",
+    "no-scope-package-name": "ts-type-util-has-own-property",
     "version": "1.0.0",
     "is-private": false
   },
   {
     "path-git-relative": "actions/monorepo-workspace-submodules-finder",
     "package-name": "monorepo-workspace-submodules-finder-action",
+    "no-scope-package-name": "monorepo-workspace-submodules-finder-action",
     "version": "1.0.0",
     "is-private": false
   }
@@ -45,9 +47,14 @@ A string indicating the location of the submodule as a path relative to the proj
 
 #### `package-name` property
 
-[The package name](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#name) defined in [the `package.json` file] for each submodule.
+[The package name] defined in [the `package.json` file] for each submodule.
 
+[The package name]: https://docs.npmjs.com/cli/v6/configuring-npm/package-json#name
 [the `package.json` file]: https://docs.npmjs.com/cli/v6/configuring-npm/package-json
+
+#### `no-scope-package-name` property
+
+[The package name] without [scope](https://docs.npmjs.com/cli/v6/using-npm/scope).
 
 #### `version` property
 
