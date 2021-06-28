@@ -10,6 +10,32 @@ const validateNpmPkgName = require('validate-npm-package-name');
 const { getWorkspaces, getWorkspaceRoot } = require('workspace-tools');
 
 /**
+ * @typedef {Object<string, string | Partial<HeaderData>>} HeaderTable
+ *
+ * @typedef {Object} HeaderData
+ * @property {string} header
+ * @property {function(PackageInfo, UtilFuncs): string} getVersionLink
+ * @property {function(PackageInfo, UtilFuncs): string} getDependenciesLink
+ *
+ * @typedef {Object} PackageInfo
+ * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
+ * @property {import('workspace-tools').WorkspaceInfo[number]['path']} path
+ * @property {import('workspace-tools').WorkspaceInfo[number]['packageJson']} packageJson
+ * @property {string} version
+ * @property {string} versionLink
+ * @property {string} localURL
+ * @property {string} noScopeName
+ * @property {hostedGitInfo} repoData
+ * @property {string} packagePathURL
+ * @property {string} headerText
+ * @property {string} headerText
+ * @property {string} depsLink
+ *
+ * @typedef {Object} UtilFuncs
+ * @property {typeof strictUriEncode} strictUriEncode
+ */
+
+/**
  * @param {string} message
  */
 function reportError(message) {
@@ -80,16 +106,6 @@ function headerText2markdownAnchor(header) {
 }
 
 /**
- * @typedef {Object} UtilFuncs
- * @property {typeof strictUriEncode} strictUriEncode
- *
- * @typedef {Object} HeaderData
- * @property {string} header
- * @property {function(PackageInfo, UtilFuncs): string} getVersionLink
- * @property {function(PackageInfo, UtilFuncs): string} getDependenciesLink
- *
- * @typedef {Object<string, string | Partial<HeaderData>>} HeaderTable
- *
  * @param {HeaderTable} headerTable
  * @param {string} relativePackagePath
  * @returns {HeaderData}
@@ -155,21 +171,6 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
         relativePackagePath,
       );
 
-      /**
-       * @typedef {Object} PackageInfo
-       * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
-       * @property {import('workspace-tools').WorkspaceInfo[number]['path']} path
-       * @property {import('workspace-tools').WorkspaceInfo[number]['packageJson']} packageJson
-       * @property {string} version
-       * @property {string} versionLink
-       * @property {string} localURL
-       * @property {string} noScopeName
-       * @property {hostedGitInfo} repoData
-       * @property {string} packagePathURL
-       * @property {string} headerText
-       * @property {string} headerText
-       * @property {string} depsLink
-       */
       /** @type {PackageInfo} */
       const packageInfo = {
         ...data,
