@@ -59,6 +59,7 @@ importers:
   actions/monorepo-workspace-submodules-finder:
     specifiers:
       '@actions/core': 1.4.0
+      '@actions/exec': 1.1.0
       '@actions/github': 5.0.0
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
@@ -70,6 +71,7 @@ importers:
       workspace-tools: 0.16.2
     dependencies:
       '@actions/core': 1.4.0
+      '@actions/exec': 1.1.0
       '@actions/github': 5.0.0
       find-git-root: 1.0.4
       validate-npm-package-name: 3.0.0
@@ -308,6 +310,12 @@ packages:
     resolution: {integrity: sha512-CGx2ilGq5i7zSLgiiGUtBCxhRRxibJYU6Fim0Q1Wg2aQL2LTnF27zbqZOrxfvFQ55eSBW0L8uVStgtKMpa0Qlg==}
     dev: false
 
+  /@actions/exec/1.1.0:
+    resolution: {integrity: sha512-LImpN9AY0J1R1mEYJjVJfSZWU4zYOlEcwSTgPve1rFQqK5AwrEs6uWW5Rv70gbDIQIAUwI86z6B+9mPK4w9Sbg==}
+    dependencies:
+      '@actions/io': 1.1.1
+    dev: false
+
   /@actions/github/5.0.0:
     resolution: {integrity: sha512-QvE9eAAfEsS+yOOk0cylLBIO/d6WyWIOvsxxzdrPFaud39G6BOkUwScXZn1iBzQzHyu9SBkkLSWlohDWdsasAQ==}
     dependencies:
@@ -321,6 +329,10 @@ packages:
     resolution: {integrity: sha512-VRYHGQV1rqnROJqdMvGUbY/Kn8vriQe/F9HR2AlYHzmKuM/p3kjNuXhmdBfcVgsvRWTz5C5XW5xvndZrVBuAYg==}
     dependencies:
       tunnel: 0.0.6
+    dev: false
+
+  /@actions/io/1.1.1:
+    resolution: {integrity: sha512-Qi4JoKXjmE0O67wAOH6y0n26QXhMKMFo7GD/4IXNVcrtLjUlGjGuVys6pQgwF3ArfGTQu0XpqaNr0YhED2RaRA==}
     dev: false
 
   /@babel/code-frame/7.12.11:
