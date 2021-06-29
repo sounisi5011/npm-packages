@@ -1,6 +1,6 @@
 import { inspect } from 'util';
 
-import { debug, getBooleanInput, getInput, setFailed, setOutput } from '@actions/core';
+import { debug, getBooleanInput, getInput, group, setFailed, setOutput } from '@actions/core';
 import { exec, getExecOutput } from '@actions/exec';
 import { context, getOctokit } from '@actions/github';
 
@@ -21,9 +21,13 @@ async function main(): Promise<void> {
     });
     debug(`latest release: ${inspect(latestRelease.data)}`);
 
-    // see https://stackoverflow.com/a/54635270/4907315
-    await exec('git fetch --no-tags origin tag', [latestRelease.data.tag_name]);
-    const status = await getExecOutput('git diff --name-only', [latestRelease.data.tag_name]);
+    await group('Fetching tag from repository', async () =>
+        // see https://stackoverflow.com/a/54635270/4907315
+        await exec('git fetch --no-tags origin tag', [latestRelease.data.tag_name]));
+    const status = await group(
+        'Get the differences',
+        async () => await getExecOutput('git diff --name-only', [latestRelease.data.tag_name]),
+    );
     const changes = status.stdout.split('\n');
     debug(`changes: ${inspect(changes)}`);
 
