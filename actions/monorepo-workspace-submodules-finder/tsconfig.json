@@ -12,6 +12,10 @@
     "composite": false, // If the `composite` option is `true`, the `incremental` option cannot be `false`
 
     /* Module Resolution Options */
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./types.node_modules/*"]
+    },
     "types": ["node"]
   },
   "include": ["./src/**/*"]

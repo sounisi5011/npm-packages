@@ -3,6 +3,7 @@ import { inspect } from 'util';
 import { debug, getBooleanInput, getInput, group, setFailed, setOutput } from '@actions/core';
 import { exec, getExecOutput } from '@actions/exec';
 import { context, getOctokit } from '@actions/github';
+import pathStartsWith from 'path-starts-with';
 
 import { getPackageDataList } from './main';
 
@@ -28,10 +29,20 @@ async function main(): Promise<void> {
         'Get the differences',
         async () => await getExecOutput('git diff --name-only', [latestRelease.data.tag_name]),
     );
-    const changes = status.stdout.split('\n');
+    const changes = status.stdout.split('\n').filter(line => line !== '');
     debug(`changes: ${inspect(changes)}`);
 
-    setOutput('result', output);
+    const onlyChangedSubmodules = await group('Exclude unchanged submodules', async () => (
+        output
+            .filter(data => {
+                const submodulePath = data['path-git-relative'];
+                const result = changes.some(changedPath => pathStartsWith(changedPath, submodulePath));
+                console.log(`${submodulePath}: ${result ? 'detect changes' : 'no changes'}`);
+                return result;
+            })
+    ));
+
+    setOutput('result', onlyChangedSubmodules);
 }
 
 function handleError(error: unknown): void {
