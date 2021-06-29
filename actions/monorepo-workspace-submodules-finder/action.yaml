@@ -6,6 +6,10 @@ inputs:
     description: If you want to exclude submodules whose "private" field is set to `true`, set this option to `true`
     required: false
     default: false
+  token:
+    description: Personal access token (PAT) used to fetch data from the repository.
+    required: false
+    default: ${{ github.token }}
 outputs:
   result:
     description: JSON string of an array that includes the path and package name pairs of each submodule

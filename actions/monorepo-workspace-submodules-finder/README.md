@@ -15,6 +15,12 @@ All monorepos that are supported by [`workspace-tools@^0.12.3`](https://github.c
 
 If you want to exclude submodules whose [`"private"` field](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#private) is set to `true`, set this option to `true`.
 
+### `token`
+
+[Personal access token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) used to fetch data from the repository.
+
+Default: [`github.token`](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context) - functionally equivalent to [the `GITHUB_TOKEN` secret](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret)
+
 ## Outputs
 
 ### `result`
