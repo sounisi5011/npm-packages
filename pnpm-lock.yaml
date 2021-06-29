@@ -66,6 +66,7 @@ importers:
       '@types/node': '*'
       '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
+      cross-env: 7.0.3
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
       validate-npm-package-name: 3.0.0
@@ -84,6 +85,7 @@ importers:
       '@types/node': 15.12.5
       '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
+      cross-env: 7.0.3
 
   packages/check-pid-file:
     specifiers:
@@ -2257,6 +2259,14 @@ packages:
       p-all: 2.1.0
       p-filter: 2.1.0
       p-map: 3.0.0
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/6.0.5:
