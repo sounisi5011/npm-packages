@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@actions/core": "1.4.0",
+    "@actions/github": "5.0.0",
     "find-git-root": "1.0.4",
     "validate-npm-package-name": "3.0.0",
     "workspace-tools": "0.16.2"

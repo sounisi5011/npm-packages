@@ -1,13 +1,25 @@
 import { inspect } from 'util';
 
-import { getBooleanInput, setFailed, setOutput } from '@actions/core';
+import { debug, getBooleanInput, getInput, setFailed, setOutput } from '@actions/core';
+import { context, getOctokit } from '@actions/github';
 
 import { getPackageDataList } from './main';
 
 async function main(): Promise<void> {
     const ignorePrivate = getBooleanInput('ignore-private');
+    const apiToken = getInput('token');
+
     const output = (await getPackageDataList())
         .filter(data => !(ignorePrivate && data['is-private']));
+
+    const github = getOctokit(apiToken);
+    const { owner, repo } = context.repo;
+    const latestRelease = await github.rest.repos.getLatestRelease({
+        owner,
+        repo,
+    });
+    debug(`latest release: ${inspect(latestRelease.data)}`);
+
     setOutput('result', output);
 }
 
