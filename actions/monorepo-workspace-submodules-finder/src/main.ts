@@ -130,21 +130,9 @@ function filterChangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-
 }
 
 /**
- * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L36
+ * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L29
  */
-export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-git-relative'>>(
-    submoduleList: TSubmoduleData[],
-    options: {
-        api: {
-            owner: string;
-            repo: string;
-            token: string;
-        };
-        info: LogFunc;
-        debug: LogFunc;
-        group: GroupFunc;
-    },
-): Promise<TSubmoduleData[]> {
+async function getChangesSinceLatestRelease(options: ExcludeUnchangedSubmodulesOptions): Promise<string[]> {
     const github = getGithub(options.api.token, { log: options.info, debug: options.debug });
     const latestRelease = await options.group(
         'Fetching latest release from GitHub',
@@ -156,7 +144,36 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<Pac
     );
     options.debug(`latest release: ${inspect(latestRelease.data)}`);
 
-    const changes = await getGitChangesSinceTag(latestRelease.data.tag_name, options);
+    return await getGitChangesSinceTag(latestRelease.data.tag_name, options);
+}
+
+export interface ExcludeUnchangedSubmodulesOptions {
+    api: {
+        owner: string;
+        repo: string;
+        token: string;
+    };
+    info: LogFunc;
+    debug: LogFunc;
+    group: GroupFunc;
+}
+
+export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-git-relative'>>(
+    submoduleList: readonly TSubmoduleData[],
+    options:
+        & ExcludeUnchangedSubmodulesOptions
+        & {
+            since: `initial commit` | `latest release`;
+        },
+): Promise<TSubmoduleData[]> {
+    const { since, ...opts } = options;
+
+    let changes: readonly string[];
+    if (since === 'initial commit') return [...submoduleList];
+    else if (since === 'latest release') changes = await getChangesSinceLatestRelease(opts);
+    else {
+        throw new RangeError(`Unsupported options.since: ${inspect(since)}`);
+    }
     options.debug(`changes: ${inspect(changes)}`);
 
     const { changedSubmodules, unchangedSubmodules } = filterChangedSubmodules(submoduleList, changes);

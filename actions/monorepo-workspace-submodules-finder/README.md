@@ -15,6 +15,24 @@ All monorepos that are supported by [`workspace-tools@^0.12.3`](https://github.c
 
 If you want to exclude submodules whose [`"private"` field](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#private) is set to `true`, set this option to `true`.
 
+### `only-changed-since`
+
+Returns only submodules that have changed since the specified point in time.
+Currently, the following values are supported:
+
+* `initial commit`
+
+    This means the initial commit of the repository.
+    If this value is specified, all submodules will be returned.
+    In other words, it will not detect any changes.
+
+* `latest release`
+
+    This means the latest release of the repository.
+    If this value is specified, it will use [the GitHub API's "Get the latest release"](https://docs.github.com/en/rest/reference/repos#get-the-latest-release) to detect the latest published full release and return all submodules containing files that have changed since then.
+
+Default: `initial commit`
+
 ### `token`
 
 [Personal access token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) used to fetch data from the repository.
