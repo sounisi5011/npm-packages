@@ -40,6 +40,30 @@ export async function getPackageDataList(cwd = process.cwd()): Promise<PackageDa
     return output;
 }
 
+function printOctokitResponse(
+    response: {
+        status: number;
+        headers: Record<string, string | number | undefined>;
+        data: unknown;
+    },
+    options: {
+        log: LogFunc;
+        debug: LogFunc;
+        isError?: true;
+    },
+): void {
+    options.log(`Response:`);
+    options.log(`  HTTP ${response.status}`);
+    for (const [name, value] of Object.entries(response.headers)) {
+        if (value !== undefined) {
+            options.log(`  ${name}: ${value}`);
+        }
+    }
+    (options.isError ? options.log : options.debug)(
+        `Response Data:\n${inspect(response.data).replace(/^(?!$)/mg, '  ')}`,
+    );
+}
+
 function getGithub(
     token: string,
     options: {
@@ -47,33 +71,16 @@ function getGithub(
         debug: LogFunc;
     },
 ): ReturnType<typeof getOctokit> {
-    const printResponse = (
-        response: {
-            status: number;
-            headers: Record<string, string | number | undefined>;
-            data: unknown;
-        },
-        isError = false,
-    ): void => {
-        options.log(`Response:`);
-        options.log(`  HTTP ${response.status}`);
-        for (const [name, value] of Object.entries(response.headers)) {
-            if (value !== undefined) {
-                options.log(`  ${name}: ${value}`);
-            }
-        }
-        (isError ? options.log : options.debug)(`Response Data:\n${inspect(response.data).replace(/^(?!$)/mg, '  ')}`);
-    };
-
     const github = getOctokit(token);
+
     github.hook.before('request', requestOptions => {
         const { method, url } = endpoint(requestOptions);
         options.log(`Request:`);
         options.log(`  ${method} ${url}`);
     });
-    github.hook.after('request', response => printResponse(response));
+    github.hook.after('request', response => printOctokitResponse(response, options));
     github.hook.error('request', error => {
-        if ('response' in error && error.response) printResponse(error.response, true);
+        if ('response' in error && error.response) printOctokitResponse(error.response, { ...options, isError: true });
         throw error;
     });
 
