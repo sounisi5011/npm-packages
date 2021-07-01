@@ -44,7 +44,8 @@ function getGithub(token: string, options: { log: LogFunc }): ReturnType<typeof 
     const printResponse = (
         response: { status: number; headers: Record<string, string | number | undefined> },
     ): void => {
-        options.log(`  ${response.status}`);
+        options.log(`Response:`);
+        options.log(`  HTTP ${response.status}`);
         for (const [name, value] of Object.entries(response.headers)) {
             if (value !== undefined) {
                 options.log(`  ${name}: ${value}`);
@@ -55,7 +56,8 @@ function getGithub(token: string, options: { log: LogFunc }): ReturnType<typeof 
     const github = getOctokit(token);
     github.hook.before('request', requestOptions => {
         const { method, url } = endpoint(requestOptions);
-        options.log(`${method} ${url}`);
+        options.log(`Request:`);
+        options.log(`  ${method} ${url}`);
     });
     github.hook.after('request', printResponse);
     github.hook.error('request', error => {
