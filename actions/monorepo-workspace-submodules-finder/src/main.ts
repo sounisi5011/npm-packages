@@ -106,10 +106,13 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends { 'path-
 
     const { changedSubmodules, unchangedSubmodules } = filterChangedSubmodules(submoduleList, changes);
     await options.group('Exclude unchanged submodules', async () => {
-        const toPathList = (submoduleList: readonly TSubmoduleData[]): string[] =>
-            submoduleList.map(data => data['path-git-relative']);
-        options.info(`detect changes:\n${toPathList(changedSubmodules).join('\n')}`);
-        options.info(`no changes:\n${toPathList(unchangedSubmodules).join('\n')}`);
+        const toPathListStr = (label: string, submoduleList: readonly TSubmoduleData[]): string =>
+            [
+                `${label}:`,
+                ...submoduleList.map(data => `  ${data['path-git-relative']}`),
+            ].join('\n');
+        options.info(toPathListStr('detect changes', changedSubmodules));
+        options.info(toPathListStr('no changes', unchangedSubmodules));
     });
 
     return changedSubmodules;
