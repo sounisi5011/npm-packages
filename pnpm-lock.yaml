@@ -61,6 +61,7 @@ importers:
       '@actions/core': 1.4.0
       '@actions/exec': 1.1.0
       '@actions/github': 5.0.0
+      '@octokit/endpoint': 6.0.12
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/node': '*'
@@ -75,6 +76,7 @@ importers:
       '@actions/core': 1.4.0
       '@actions/exec': 1.1.0
       '@actions/github': 5.0.0
+      '@octokit/endpoint': 6.0.12
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
       validate-npm-package-name: 3.0.0
@@ -325,8 +327,8 @@ packages:
     dependencies:
       '@actions/http-client': 1.0.11
       '@octokit/core': 3.5.1
-      '@octokit/plugin-paginate-rest': 2.13.5_@octokit+core@3.5.1
-      '@octokit/plugin-rest-endpoint-methods': 5.3.4_@octokit+core@3.5.1
+      '@octokit/plugin-paginate-rest': 2.13.6_@octokit+core@3.5.1
+      '@octokit/plugin-rest-endpoint-methods': 5.3.7_@octokit+core@3.5.1
     dev: false
 
   /@actions/http-client/1.0.11:
@@ -1050,7 +1052,7 @@ packages:
   /@octokit/auth-token/2.4.5:
     resolution: {integrity: sha512-BpGYsPgJt05M7/L/5FoE1PiAbdxXFZkX/3kDYcsvd1v6UhlnE5e96dTDr0ezX/EFwciQxf3cNV0loipsURU+WA==}
     dependencies:
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
     dev: false
 
   /@octokit/core/3.5.1:
@@ -1060,7 +1062,7 @@ packages:
       '@octokit/graphql': 4.6.4
       '@octokit/request': 5.6.0
       '@octokit/request-error': 2.1.0
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       before-after-hook: 2.2.2
       universal-user-agent: 6.0.0
     dev: false
@@ -1068,7 +1070,7 @@ packages:
   /@octokit/endpoint/6.0.12:
     resolution: {integrity: sha512-lF3puPwkQWGfkMClXb4k/eUT/nZKQfxinRWJrdZaJO85Dqwo/G0yOC434Jr2ojwafWJMYqFGFa5ms4jJUgujdA==}
     dependencies:
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       is-plain-object: 5.0.0
       universal-user-agent: 6.0.0
     dev: false
@@ -1077,37 +1079,37 @@ packages:
     resolution: {integrity: sha512-SWTdXsVheRmlotWNjKzPOb6Js6tjSqA2a8z9+glDJng0Aqjzti8MEWOtuT8ZSu6wHnci7LZNuarE87+WJBG4vg==}
     dependencies:
       '@octokit/request': 5.6.0
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       universal-user-agent: 6.0.0
     dev: false
 
-  /@octokit/openapi-types/7.4.0:
-    resolution: {integrity: sha512-V2qNML1knHjrjTJcIIvhYZSTkvtSAoQpNEX8y0ykTJI8vOQPqIh0y6Jf9EU6c/y+v0c9+LeC1acwLQh1xo96MA==}
+  /@octokit/openapi-types/8.1.4:
+    resolution: {integrity: sha512-NnGr4NNDqO5wjSDJo5nxrGtzZUwoT23YasqK2H4Pav/6vSgeVTxuqCL9Aeh+cWfTxDomj1M4Os5BrXFsvl7qiQ==}
     dev: false
 
-  /@octokit/plugin-paginate-rest/2.13.5_@octokit+core@3.5.1:
-    resolution: {integrity: sha512-3WSAKBLa1RaR/7GG+LQR/tAZ9fp9H9waE9aPXallidyci9oZsfgsLn5M836d3LuDC6Fcym+2idRTBpssHZePVg==}
+  /@octokit/plugin-paginate-rest/2.13.6_@octokit+core@3.5.1:
+    resolution: {integrity: sha512-ai7TNKLi8tGkDvLM7fm0X1fbIP9u1nfXnN49ZAw2PgSoQou9yixKn5c3m0awuLacbuX2aXEvJpv1gKm3jboabg==}
     peerDependencies:
       '@octokit/core': '>=2'
     dependencies:
       '@octokit/core': 3.5.1
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
     dev: false
 
-  /@octokit/plugin-rest-endpoint-methods/5.3.4_@octokit+core@3.5.1:
-    resolution: {integrity: sha512-2Y2q/FYCsW5tcwIqgnLOgzZXEb3I1VoSQGyHs/Zki/Ufs5H+uT0maPVHatLKw90LQbqK7ON8NpL3Y8IyzG6pNA==}
+  /@octokit/plugin-rest-endpoint-methods/5.3.7_@octokit+core@3.5.1:
+    resolution: {integrity: sha512-LAgTLOsJ86ig2wYSpcSx+UWt7aQYYsEZ/Tf/pksAVQWKNcGuTVCDl9OUiPhQ7DZelNozYVWTO9Iyjd/soe4tug==}
     peerDependencies:
       '@octokit/core': '>=3'
     dependencies:
       '@octokit/core': 3.5.1
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       deprecation: 2.3.1
     dev: false
 
   /@octokit/request-error/2.1.0:
     resolution: {integrity: sha512-1VIvgXxs9WHSjicsRwq8PlR2LR2x6DwsJAaFgzdi0JfJoGSO8mYI/cHJQ+9FbN21aa+DrgNLnwObmyeSC8Rmpg==}
     dependencies:
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       deprecation: 2.3.1
       once: 1.4.0
     dev: false
@@ -1117,16 +1119,16 @@ packages:
     dependencies:
       '@octokit/endpoint': 6.0.12
       '@octokit/request-error': 2.1.0
-      '@octokit/types': 6.16.7
+      '@octokit/types': 6.17.4
       is-plain-object: 5.0.0
       node-fetch: 2.6.1
       universal-user-agent: 6.0.0
     dev: false
 
-  /@octokit/types/6.16.7:
-    resolution: {integrity: sha512-OuQELiwIKeDySgNID52vm33wDRc2aaX8lKYgAw9Hmw939ITow1HspT8/AH3M3jgGFUMDmHlMNBNEmH7xV7ggXQ==}
+  /@octokit/types/6.17.4:
+    resolution: {integrity: sha512-Ghk/JC4zC/1al1GwH6p8jVX6pLdypSWmbnx6h79C/yo3DeaDd6MsNsBFlHu22KbkFh+CdcAzFqdP7UdPaPPmmA==}
     dependencies:
-      '@octokit/openapi-types': 7.4.0
+      '@octokit/openapi-types': 8.1.4
     dev: false
 
   /@rollup/plugin-typescript/8.2.1_rollup@2.52.2+typescript@4.3.4:

@@ -3,6 +3,7 @@ import { inspect } from 'util';
 
 import { exec, getExecOutput } from '@actions/exec';
 import { getOctokit } from '@actions/github';
+import { endpoint } from '@octokit/endpoint';
 import findGitRoot from 'find-git-root';
 import pathStartsWith from 'path-starts-with';
 import validateNpmPackageName from 'validate-npm-package-name';
@@ -37,6 +38,32 @@ export async function getPackageDataList(cwd = process.cwd()): Promise<PackageDa
             'is-private': workspaceData.packageJson.private ?? false,
         }));
     return output;
+}
+
+function getGithub(token: string, options: { log: LogFunc }): ReturnType<typeof getOctokit> {
+    const printResponse = (
+        response: { status: number; headers: Record<string, string | number | undefined> },
+    ): void => {
+        options.log(`  ${response.status}`);
+        for (const [name, value] of Object.entries(response.headers)) {
+            if (value !== undefined) {
+                options.log(`  ${name}: ${value}`);
+            }
+        }
+    };
+
+    const github = getOctokit(token);
+    github.hook.before('request', requestOptions => {
+        const { method, url } = endpoint(requestOptions);
+        options.log(`${method} ${url}`);
+    });
+    github.hook.after('request', printResponse);
+    github.hook.error('request', error => {
+        if ('response' in error && error.response) printResponse(error.response);
+        throw error;
+    });
+
+    return github;
 }
 
 /**
@@ -97,11 +124,15 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<Pac
         group: GroupFunc;
     },
 ): Promise<TSubmoduleData[]> {
-    const github = getOctokit(options.api.token);
-    const latestRelease = await github.rest.repos.getLatestRelease({
-        owner: options.api.owner,
-        repo: options.api.repo,
-    });
+    const github = getGithub(options.api.token, { log: options.info });
+    const latestRelease = await options.group(
+        'Fetching latest release from GitHub',
+        async () =>
+            await github.rest.repos.getLatestRelease({
+                owner: options.api.owner,
+                repo: options.api.repo,
+            }),
+    );
     options.debug(`latest release: ${inspect(latestRelease.data)}`);
 
     const changes = await getGitChangesSinceTag(latestRelease.data.tag_name, options);

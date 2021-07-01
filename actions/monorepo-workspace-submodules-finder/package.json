@@ -25,6 +25,7 @@
     "@actions/core": "1.4.0",
     "@actions/exec": "1.1.0",
     "@actions/github": "5.0.0",
+    "@octokit/endpoint": "6.0.12",
     "find-git-root": "1.0.4",
     "path-starts-with": "2.0.0",
     "validate-npm-package-name": "3.0.0",
