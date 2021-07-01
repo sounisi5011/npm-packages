@@ -47,11 +47,14 @@ function getGithub(
         debug: LogFunc;
     },
 ): ReturnType<typeof getOctokit> {
-    const printResponse = (response: {
-        status: number;
-        headers: Record<string, string | number | undefined>;
-        data: unknown;
-    }): void => {
+    const printResponse = (
+        response: {
+            status: number;
+            headers: Record<string, string | number | undefined>;
+            data: unknown;
+        },
+        isError = false,
+    ): void => {
         options.log(`Response:`);
         options.log(`  HTTP ${response.status}`);
         for (const [name, value] of Object.entries(response.headers)) {
@@ -59,7 +62,7 @@ function getGithub(
                 options.log(`  ${name}: ${value}`);
             }
         }
-        options.debug(`Response Data:\n${inspect(response.data).replace(/^(?!$)/mg, '  ')}`);
+        (isError ? options.log : options.debug)(`Response Data:\n${inspect(response.data).replace(/^(?!$)/mg, '  ')}`);
     };
 
     const github = getOctokit(token);
@@ -68,9 +71,9 @@ function getGithub(
         options.log(`Request:`);
         options.log(`  ${method} ${url}`);
     });
-    github.hook.after('request', printResponse);
+    github.hook.after('request', response => printResponse(response));
     github.hook.error('request', error => {
-        if ('response' in error && error.response) printResponse(error.response);
+        if ('response' in error && error.response) printResponse(error.response, true);
         throw error;
     });
 
