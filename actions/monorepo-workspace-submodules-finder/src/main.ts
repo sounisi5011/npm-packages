@@ -1,6 +1,10 @@
 import { dirname, relative as relativePath } from 'path';
+import { inspect } from 'util';
 
+import { exec, getExecOutput } from '@actions/exec';
+import { getOctokit } from '@actions/github';
 import findGitRoot from 'find-git-root';
+import pathStartsWith from 'path-starts-with';
 import validateNpmPackageName from 'validate-npm-package-name';
 import { getWorkspaces } from 'workspace-tools';
 
@@ -30,4 +34,65 @@ export async function getPackageDataList(cwd = process.cwd()): Promise<PackageDa
             'is-private': workspaceData.packageJson.private ?? false,
         }));
     return output;
+}
+
+/**
+ * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L25-L28
+ */
+async function getGitChangesSinceTag(
+    tagName: string,
+    options: {
+        group: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+    },
+): Promise<string[]> {
+    await options.group(
+        'Fetching tag from repository',
+        async () =>
+            /** @see https://stackoverflow.com/a/54635270/4907315 */
+            await exec('git fetch --no-tags origin tag', [tagName]),
+    );
+
+    const status = await options.group(
+        'Get the differences',
+        async () => await getExecOutput('git diff --name-only', [tagName]),
+    );
+
+    return status.stdout.split('\n').filter(line => line !== '');
+}
+
+/**
+ * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L36
+ */
+export async function excludeUnchangedSubmodules<TSubmoduleData extends { 'path-git-relative': string }>(
+    submoduleList: TSubmoduleData[],
+    options: {
+        api: {
+            owner: string;
+            repo: string;
+            token: string;
+        };
+        info: (message: string) => void;
+        debug: (message: string) => void;
+        group: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+    },
+): Promise<TSubmoduleData[]> {
+    const github = getOctokit(options.api.token);
+    const latestRelease = await github.rest.repos.getLatestRelease({
+        owner: options.api.owner,
+        repo: options.api.repo,
+    });
+    options.debug(`latest release: ${inspect(latestRelease.data)}`);
+
+    const changes = await getGitChangesSinceTag(latestRelease.data.tag_name, options);
+    options.debug(`changes: ${inspect(changes)}`);
+
+    return await options.group('Exclude unchanged submodules', async () => (
+        submoduleList
+            .filter(data => {
+                const submodulePath = data['path-git-relative'];
+                const result = changes.some(changedPath => pathStartsWith(changedPath, submodulePath));
+                options.info(`${submodulePath}: ${result ? 'detect changes' : 'no changes'}`);
+                return result;
+            })
+    ));
 }
