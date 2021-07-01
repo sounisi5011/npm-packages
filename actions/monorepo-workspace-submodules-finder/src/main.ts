@@ -40,10 +40,18 @@ export async function getPackageDataList(cwd = process.cwd()): Promise<PackageDa
     return output;
 }
 
-function getGithub(token: string, options: { log: LogFunc }): ReturnType<typeof getOctokit> {
-    const printResponse = (
-        response: { status: number; headers: Record<string, string | number | undefined> },
-    ): void => {
+function getGithub(
+    token: string,
+    options: {
+        log: LogFunc;
+        debug: LogFunc;
+    },
+): ReturnType<typeof getOctokit> {
+    const printResponse = (response: {
+        status: number;
+        headers: Record<string, string | number | undefined>;
+        data: unknown;
+    }): void => {
         options.log(`Response:`);
         options.log(`  HTTP ${response.status}`);
         for (const [name, value] of Object.entries(response.headers)) {
@@ -51,6 +59,7 @@ function getGithub(token: string, options: { log: LogFunc }): ReturnType<typeof 
                 options.log(`  ${name}: ${value}`);
             }
         }
+        options.debug(`Response Data:\n${inspect(response.data).replace(/^(?!$)/mg, '  ')}`);
     };
 
     const github = getOctokit(token);
@@ -126,7 +135,7 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<Pac
         group: GroupFunc;
     },
 ): Promise<TSubmoduleData[]> {
-    const github = getGithub(options.api.token, { log: options.info });
+    const github = getGithub(options.api.token, { log: options.info, debug: options.debug });
     const latestRelease = await options.group(
         'Fetching latest release from GitHub',
         async () =>
