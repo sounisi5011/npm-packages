@@ -8,6 +8,9 @@ import pathStartsWith from 'path-starts-with';
 import validateNpmPackageName from 'validate-npm-package-name';
 import { getWorkspaces } from 'workspace-tools';
 
+type LogFunc = (message: string) => void;
+type GroupFunc = <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+
 export interface PackageData {
     'path-git-relative': string;
     'package-name': string;
@@ -42,7 +45,7 @@ export async function getPackageDataList(cwd = process.cwd()): Promise<PackageDa
 async function getGitChangesSinceTag(
     tagName: string,
     options: {
-        group: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+        group: GroupFunc;
     },
 ): Promise<string[]> {
     await options.group(
@@ -60,7 +63,7 @@ async function getGitChangesSinceTag(
     return status.stdout.split('\n').filter(line => line !== '');
 }
 
-function filterChangedSubmodules<TSubmoduleData extends { 'path-git-relative': string }>(
+function filterChangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-git-relative'>>(
     submoduleList: readonly TSubmoduleData[],
     changedPathList: readonly string[],
 ): Record<'changedSubmodules' | 'unchangedSubmodules', TSubmoduleData[]> {
@@ -81,7 +84,7 @@ function filterChangedSubmodules<TSubmoduleData extends { 'path-git-relative': s
 /**
  * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L36
  */
-export async function excludeUnchangedSubmodules<TSubmoduleData extends { 'path-git-relative': string }>(
+export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-git-relative'>>(
     submoduleList: TSubmoduleData[],
     options: {
         api: {
@@ -89,9 +92,9 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends { 'path-
             repo: string;
             token: string;
         };
-        info: (message: string) => void;
-        debug: (message: string) => void;
-        group: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+        info: LogFunc;
+        debug: LogFunc;
+        group: GroupFunc;
     },
 ): Promise<TSubmoduleData[]> {
     const github = getOctokit(options.api.token);
