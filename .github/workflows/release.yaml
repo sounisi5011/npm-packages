@@ -17,6 +17,7 @@ jobs:
         uses: ./actions/monorepo-workspace-submodules-finder
         with:
           ignore-private: true
+          only-changed-since: xxxx
 
   # ↓↓↓DEBUG↓↓↓
   job-for-each-submodule:
