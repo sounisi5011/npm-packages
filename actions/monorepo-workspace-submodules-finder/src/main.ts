@@ -139,22 +139,6 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<Pac
     },
 ): Promise<TSubmoduleData[]> {
     const github = getGithub(options.api.token, { log: options.info, debug: options.debug });
-
-    // ↓↓↓DEBUG↓↓↓
-    await options.group('Overuse GitHub API', async () => {
-        for (let i = 0; i < 999; i++) {
-            try {
-                await github.rest.repos.getLatestRelease({
-                    owner: options.api.owner,
-                    repo: options.api.repo,
-                });
-            } catch {
-                break;
-            }
-        }
-    });
-    // ↑↑↑DEBUG↑↑↑
-
     const latestRelease = await options.group(
         'Fetching latest release from GitHub',
         async () =>
