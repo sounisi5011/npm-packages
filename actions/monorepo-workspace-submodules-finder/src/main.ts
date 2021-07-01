@@ -60,6 +60,24 @@ async function getGitChangesSinceTag(
     return status.stdout.split('\n').filter(line => line !== '');
 }
 
+function filterChangedSubmodules<TSubmoduleData extends { 'path-git-relative': string }>(
+    submoduleList: readonly TSubmoduleData[],
+    changedPathList: readonly string[],
+): Record<'changedSubmodules' | 'unchangedSubmodules', TSubmoduleData[]> {
+    const submoduleWithChangeFlagList = submoduleList.map(data => {
+        const submodulePath = data['path-git-relative'];
+        const hasChange = changedPathList.some(changedPath => pathStartsWith(changedPath, submodulePath));
+        return { data, hasChange };
+    });
+    const changedSubmodules = submoduleWithChangeFlagList
+        .filter(({ hasChange }) => hasChange)
+        .map(({ data }) => data);
+    const unchangedSubmodules = submoduleWithChangeFlagList
+        .filter(({ hasChange }) => !hasChange)
+        .map(({ data }) => data);
+    return { changedSubmodules, unchangedSubmodules };
+}
+
 /**
  * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L36
  */
@@ -86,13 +104,13 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends { 'path-
     const changes = await getGitChangesSinceTag(latestRelease.data.tag_name, options);
     options.debug(`changes: ${inspect(changes)}`);
 
-    return await options.group('Exclude unchanged submodules', async () => (
-        submoduleList
-            .filter(data => {
-                const submodulePath = data['path-git-relative'];
-                const result = changes.some(changedPath => pathStartsWith(changedPath, submodulePath));
-                options.info(`${submodulePath}: ${result ? 'detect changes' : 'no changes'}`);
-                return result;
-            })
-    ));
+    const { changedSubmodules, unchangedSubmodules } = filterChangedSubmodules(submoduleList, changes);
+    await options.group('Exclude unchanged submodules', async () => {
+        const toPathList = (submoduleList: readonly TSubmoduleData[]): string[] =>
+            submoduleList.map(data => data['path-git-relative']);
+        options.info(`detect changes:\n${toPathList(changedSubmodules).join('\n')}`);
+        options.info(`no changes:\n${toPathList(unchangedSubmodules).join('\n')}`);
+    });
+
+    return changedSubmodules;
 }
