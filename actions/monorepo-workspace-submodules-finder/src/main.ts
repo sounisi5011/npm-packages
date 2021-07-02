@@ -132,7 +132,7 @@ function filterChangedSubmodules<TSubmoduleData extends Pick<PackageData, 'path-
 /**
  * @see https://github.com/conventional-changelog/conventional-changelog/blob/f1f50f56626099e92efe31d2f8c5477abd90f1b7/.github/workflows/release-submodules.yaml#L20-L29
  */
-async function getChangesSinceLatestRelease(options: ExcludeUnchangedSubmodulesOptions): Promise<string[]> {
+async function getChangesSinceLatestRelease(options: ExcludeUnchangedSubmodulesOptions): Promise<string[] | null> {
     const github = getGithub(options.api.token, { log: options.info, debug: options.debug });
     const latestRelease = await options.group(
         'Fetching latest release from GitHub',
@@ -140,8 +140,17 @@ async function getChangesSinceLatestRelease(options: ExcludeUnchangedSubmodulesO
             await github.rest.repos.getLatestRelease({
                 owner: options.api.owner,
                 repo: options.api.repo,
-            }),
+            })
+                .catch(error => {
+                    if (error.status === 404) return null;
+                    throw error;
+                }),
     );
+
+    if (!latestRelease) {
+        options.debug(`latest release is Not Found`);
+        return latestRelease;
+    }
     options.debug(`latest release: ${inspect(latestRelease.data)}`);
 
     return await getGitChangesSinceTag(latestRelease.data.tag_name, options);
@@ -168,13 +177,14 @@ export async function excludeUnchangedSubmodules<TSubmoduleData extends Pick<Pac
 ): Promise<TSubmoduleData[]> {
     const { since, ...opts } = options;
 
-    let changes: readonly string[];
+    let changes: readonly string[] | null;
     if (since === 'initial commit') return [...submoduleList];
     else if (since === 'latest release') changes = await getChangesSinceLatestRelease(opts);
     else {
         throw new RangeError(`Unsupported options.since: ${inspect(since)}`);
     }
     options.debug(`changes: ${inspect(changes)}`);
+    if (!changes) return [...submoduleList];
 
     const { changedSubmodules, unchangedSubmodules } = filterChangedSubmodules(submoduleList, changes);
     await options.group('Exclude unchanged submodules', async () => {
