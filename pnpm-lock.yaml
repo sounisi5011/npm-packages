@@ -69,6 +69,7 @@ importers:
       '@vercel/ncc': 0.28.6
       cross-env: 7.0.3
       find-git-root: 1.0.4
+      jest-mock-process: 1.4.0
       nock: 13.1.0
       path-starts-with: 2.0.0
       spawk: 1.7.1
@@ -90,6 +91,7 @@ importers:
       '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
       cross-env: 7.0.3
+      jest-mock-process: 1.4.0
       nock: 13.1.0
       spawk: 1.7.1
 
@@ -4275,6 +4277,12 @@ packages:
       pretty-format: 27.0.2
       slash: 3.0.0
       stack-utils: 2.0.3
+    dev: true
+
+  /jest-mock-process/1.4.0:
+    resolution: {integrity: sha512-3LM1TyEaRKRjh/x9rZPmuy28r7q8cgNkHYcrPWtxXT3ZzPPS+bKNs2ysb8BJPVB41X5yM1sMtatvE5z2XJ0S/w==}
+    peerDependencies:
+      jest: '>=23.4 <27'
     dev: true
 
   /jest-mock/27.0.3:

@@ -38,6 +38,7 @@
     "@types/validate-npm-package-name": "3.0.2",
     "@vercel/ncc": "0.28.6",
     "cross-env": "7.0.3",
+    "jest-mock-process": "1.4.0",
     "nock": "13.1.0",
     "spawk": "1.7.1"
   },
