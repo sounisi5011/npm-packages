@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.3...run-if-supported-v1.0.4) (2021-07-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ow to ^0.26.0 ([#168](https://www.github.com/sounisi5011/npm-packages/issues/168)) ([468be03](https://www.github.com/sounisi5011/npm-packages/commit/468be035ecd1f84bbc266c87f4aaa34b65159926))
+
 ### [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.2...run-if-supported-v1.0.3) (2021-06-24)
 
 
