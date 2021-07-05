@@ -146,7 +146,7 @@ importers:
       execa: 5.1.1
       is-plain-obj: 3.0.0
       npm-install-checks: ^4.0.0
-      ow: ^0.24.0
+      ow: ^0.26.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
       type-fest: 1.2.1
@@ -157,7 +157,7 @@ importers:
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
-      ow: 0.24.1
+      ow: 0.26.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
     devDependencies:
@@ -5271,8 +5271,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /ow/0.24.1:
-    resolution: {integrity: sha512-RblFPB9PV1U0dNaQKmvnq3RkPb+B0lQjou1YakpAPxy8pQXIZqIfXtqvcft8KRKPgTJjtYQTYy1JvxzAviN1mA==}
+  /ow/0.26.0:
+    resolution: {integrity: sha512-22YUQW9d6oUSCpIQuBV25djtC1uMtpWqmtUYnuh2UHWeNMpppCFCvq3eSBIWWMDbe2UVq26kWYvBHDzOIu5NYg==}
     engines: {node: '>=12'}
     dependencies:
       '@sindresorhus/is': 4.0.1
