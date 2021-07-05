@@ -33,17 +33,22 @@ describe('excludeUnchangedSubmodules()', () => {
         { 'path-git-relative': 'dir2/mod4' },
     ];
 
-    const mockRun = (mockRun =>
-        async (f: () => Promise<void>) => {
-            const mocks = await mockRun(f);
+    const mockRun = (() => {
+        const origMockRun = asyncMockedRun({
+            stdout: mockProcessStdout,
+            stderr: mockProcessStderr,
+        });
+        return async (f: () => Promise<void>) => {
+            const mocks = await origMockRun(f);
+            if (mocks.error) {
+                throw mocks.error;
+            }
             return Object.assign(mocks, {
                 stdoutWrites: mocks['stdout']?.mock.calls.map(String),
                 stderrWrites: mocks['stderr']?.mock.calls.map(String),
             });
-        })(asyncMockedRun({
-            stdout: mockProcessStdout,
-            stderr: mockProcessStderr,
-        }));
+        };
+    })();
 
     beforeEach(() => {
         spawk.clean();
