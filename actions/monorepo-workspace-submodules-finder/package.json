@@ -15,15 +15,19 @@
   "author": "sounisi5011",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.ts --minify --out ./dist/",
+    "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/index.ts --minify --out ./dist/",
     "lint:tsc": "run-p lint:tsc:*",
-    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose jest"
   },
   "dependencies": {
     "@actions/core": "1.4.0",
+    "@actions/exec": "1.1.0",
+    "@actions/github": "5.0.0",
+    "@octokit/endpoint": "6.0.12",
     "find-git-root": "1.0.4",
+    "path-starts-with": "2.0.0",
     "validate-npm-package-name": "3.0.0",
     "workspace-tools": "0.16.2"
   },
@@ -32,7 +36,11 @@
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/node": "*",
     "@types/validate-npm-package-name": "3.0.2",
-    "@vercel/ncc": "0.28.6"
+    "@vercel/ncc": "0.28.6",
+    "cross-env": "7.0.3",
+    "jest-mock-process": "1.4.0",
+    "nock": "13.1.0",
+    "spawk": "1.7.1"
   },
   "engines": {
     "node": "12"

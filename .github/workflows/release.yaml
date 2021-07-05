@@ -16,6 +16,7 @@ jobs:
         uses: ./actions/monorepo-workspace-submodules-finder
         with:
           ignore-private: true
+          only-changed-since: latest release
   release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder

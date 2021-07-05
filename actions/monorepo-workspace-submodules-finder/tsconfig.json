@@ -7,12 +7,17 @@
     "incremental": false, // If the `incremental` option is `true`, the build by `@vercel/ncc@0.27.0` will fail
     "declaration": false,
     "declarationMap": false,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    // Even without the `rootDir` option, the `tsc` command will not fail.
+    // However, it will cause an error in VS Code.
+    "rootDir": "./",
     "composite": false, // If the `composite` option is `true`, the `incremental` option cannot be `false`
+    "noEmit": true,
 
     /* Module Resolution Options */
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./types.node_modules/*"]
+    },
     "types": ["node"]
-  },
-  "include": ["./src/**/*"]
+  }
 }
