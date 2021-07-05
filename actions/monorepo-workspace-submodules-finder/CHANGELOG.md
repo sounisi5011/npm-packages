@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.1...monorepo-workspace-submodules-finder-action-v1.2.0) (2021-07-05)
+
+
+### Features
+
+* **monorepo-workspace-submodules-finder-action:** only target submodules that have changes ([#182](https://www.github.com/sounisi5011/npm-packages/issues/182)) ([f23be04](https://www.github.com/sounisi5011/npm-packages/commit/f23be04495b834e7bcb10a234b639191fcffe801))
+* **monorepo-workspace-submodules-finder-action:** support package names excluding scope ([#174](https://www.github.com/sounisi5011/npm-packages/issues/174)) ([19fe273](https://www.github.com/sounisi5011/npm-packages/commit/19fe2737c47ae5d7b7c0d4ae8643016e1aba0df8))
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([#146](https://www.github.com/sounisi5011/npm-packages/issues/146)) ([f49547c](https://www.github.com/sounisi5011/npm-packages/commit/f49547cd9ac40b9b2b723dd0940dbf64331c2b4d))
+* **monorepo-workspace-submodules-finder-action:** use `getBooleanInput()` function instead `getInput()` function ([#172](https://www.github.com/sounisi5011/npm-packages/issues/172)) ([ca440c6](https://www.github.com/sounisi5011/npm-packages/commit/ca440c6013f5b127a51ba84a3e6d03e765b6e262))
+
 ### [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.0...monorepo-workspace-submodules-finder-action-v1.1.1) (2021-05-26)
 
 
