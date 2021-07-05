@@ -91,7 +91,7 @@ importers:
       '@types/validate-npm-package-name': 3.0.2
       '@vercel/ncc': 0.28.6
       cross-env: 7.0.3
-      jest-mock-process: 1.4.0
+      jest-mock-process: 1.4.0_jest@27.0.5
       nock: 13.1.0
       spawk: 1.7.1
 
@@ -265,13 +265,13 @@ importers:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.2.1
       glob-exec: 0.1.1
-      rollup: 2.52.2
+      rollup: 2.52.7
       tsd: 0.17.0
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.2.1_rollup@2.52.2+typescript@4.3.4
+      '@rollup/plugin-typescript': 8.2.1_rollup@2.52.7+typescript@4.3.4
       glob-exec: 0.1.1
-      rollup: 2.52.2
+      rollup: 2.52.7
       tsd: 0.17.0
 
   packages/ts-utils/is-property-accessible/examples:
@@ -1137,7 +1137,7 @@ packages:
       '@octokit/openapi-types': 8.1.4
     dev: false
 
-  /@rollup/plugin-typescript/8.2.1_rollup@2.52.2+typescript@4.3.4:
+  /@rollup/plugin-typescript/8.2.1_rollup@2.52.7+typescript@4.3.4:
     resolution: {integrity: sha512-Qd2E1pleDR4bwyFxqbjt4eJf+wB0UKVMLc7/BAFDGVdAXQMCsD4DUv5/7/ww47BZCYxWtJqe1Lo0KVNswBJlRw==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -1145,13 +1145,13 @@ packages:
       tslib: '*'
       typescript: '>=3.7.0'
     dependencies:
-      '@rollup/pluginutils': 3.1.0_rollup@2.52.2
+      '@rollup/pluginutils': 3.1.0_rollup@2.52.7
       resolve: 1.20.0
-      rollup: 2.52.2
+      rollup: 2.52.7
       typescript: 4.3.4
     dev: true
 
-  /@rollup/pluginutils/3.1.0_rollup@2.52.2:
+  /@rollup/pluginutils/3.1.0_rollup@2.52.7:
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
@@ -1160,7 +1160,7 @@ packages:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.0
-      rollup: 2.52.2
+      rollup: 2.52.7
     dev: true
 
   /@sindresorhus/is/4.0.1:
@@ -4279,10 +4279,12 @@ packages:
       stack-utils: 2.0.3
     dev: true
 
-  /jest-mock-process/1.4.0:
+  /jest-mock-process/1.4.0_jest@27.0.5:
     resolution: {integrity: sha512-3LM1TyEaRKRjh/x9rZPmuy28r7q8cgNkHYcrPWtxXT3ZzPPS+bKNs2ysb8BJPVB41X5yM1sMtatvE5z2XJ0S/w==}
     peerDependencies:
       jest: '>=23.4 <27'
+    dependencies:
+      jest: 27.0.5
     dev: true
 
   /jest-mock/27.0.3:
@@ -5882,8 +5884,8 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup/2.52.2:
-    resolution: {integrity: sha512-4RlFC3k2BIHlUsJ9mGd8OO+9Lm2eDF5P7+6DNQOp5sx+7N/1tFM01kELfbxlMX3MxT6owvLB1ln4S3QvvQlbUA==}
+  /rollup/2.52.7:
+    resolution: {integrity: sha512-55cSH4CCU6MaPr9TAOyrIC+7qFCHscL7tkNsm1MBfIJRRqRbCEY0mmeFn4Wg8FKsHtEH8r389Fz38r/o+kgXLg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
