@@ -76,8 +76,13 @@
   "devDependencies": {
     "@betit/rollup-plugin-rename-extensions": "0.1.0",
     "@rollup/plugin-typescript": "8.2.1",
+    "@types/jest": "26.0.23",
     "glob-exec": "0.1.1",
+    "jest": "27.0.6",
     "rollup": "2.52.7",
-    "tsd": "0.17.0"
+    "ts-jest": "27.0.3",
+    "tsd": "0.17.0",
+    "tslib": "2.3.0",
+    "typescript": "4.3.5"
   }
 }

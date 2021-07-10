@@ -100,6 +100,7 @@
     "@types/bl": "5.0.1",
     "@types/capitalize": "2.0.0",
     "@types/google-protobuf": "3.15.2",
+    "@types/jest": "26.0.23",
     "@types/node": "*",
     "@types/varint": "6.0.0",
     "bytefield-svg": "1.5.0",
@@ -108,10 +109,13 @@
     "escape-string-regexp": "4.0.0",
     "glob-exec": "0.1.1",
     "grpc_tools_node_protoc_ts": "5.3.0",
+    "jest": "27.0.6",
     "jest-extended": "0.11.5",
     "jest-matcher-utils": "26.6.2",
     "multicodec": "3.1.0",
-    "noop-stream": "0.1.0"
+    "noop-stream": "0.1.0",
+    "ts-jest": "27.0.3",
+    "typescript": "4.3.5"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
