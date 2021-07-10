@@ -36,6 +36,7 @@
     "test:tsd": "tsd"
   },
   "devDependencies": {
-    "tsd": "0.17.0"
+    "tsd": "0.17.0",
+    "typescript": "4.3.5"
   }
 }
