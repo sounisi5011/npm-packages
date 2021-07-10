@@ -73,6 +73,7 @@ importers:
       spawk: 1.7.1
       ts-jest: 27.0.3
       typescript: 4.3.5
+      ultra-runner: 3.10.5
       validate-npm-package-name: 3.0.0
       workspace-tools: 0.16.2
     dependencies:
@@ -98,6 +99,7 @@ importers:
       spawk: 1.7.1
       ts-jest: 27.0.3_jest@27.0.6+typescript@4.3.5
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/check-pid-file:
     specifiers:
@@ -228,6 +230,7 @@ importers:
       noop-stream: 0.1.0
       ts-jest: 27.0.3
       typescript: 4.3.5
+      ultra-runner: 3.10.5
       varint: ^6.0.0
     dependencies:
       '@sounisi5011/stream-transform-from': link:../stream-transform-from
@@ -261,6 +264,7 @@ importers:
       noop-stream: 0.1.0
       ts-jest: 27.0.3_jest@27.0.6+typescript@4.3.5
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/encrypted-archive/examples:
     specifiers:
@@ -277,6 +281,7 @@ importers:
       ts-jest: 27.0.3
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
     devDependencies:
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
       '@types/jest': 26.0.24
@@ -285,6 +290,7 @@ importers:
       ts-jest: 27.0.3_jest@27.0.6+typescript@4.3.5
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/stream-transform-from/examples:
     specifiers:
@@ -296,17 +302,21 @@ importers:
     specifiers:
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
     devDependencies:
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
     devDependencies:
       tsd: 0.17.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/ts-utils/is-property-accessible:
     specifiers:
@@ -320,6 +330,7 @@ importers:
       tsd: 0.17.0
       tslib: 2.3.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.2.1_7d14c01c9edee995879776e735b07730
@@ -331,6 +342,7 @@ importers:
       tsd: 0.17.0
       tslib: 2.3.0
       typescript: 4.3.5
+      ultra-runner: 3.10.5
 
   packages/ts-utils/is-property-accessible/examples:
     specifiers:

@@ -60,14 +60,15 @@
   ],
   "scripts": {
     "build": "run-p build:*",
+    "build-with-cache": "ultra build",
     "build:cjs": "rollup --config",
     "build:mjs": "tsc -p ./src/",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
-    "test": "npm-run-all build --parallel 'test:!(examples|tsd)' test:examples:run test:tsd:exec",
-    "test:examples": "run-s build test:examples:*",
+    "test": "npm-run-all build-with-cache --parallel 'test:!(examples|tsd)' test:examples:run test:tsd:exec",
+    "test:examples": "run-s build-with-cache test:examples:*",
     "test:examples:run": "glob-exec --foreach 'examples/*.{js,cjs,mjs}' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest",
     "test:tsd": "run-s build:mjs test:tsd:*",
@@ -83,6 +84,7 @@
     "ts-jest": "27.0.3",
     "tsd": "0.17.0",
     "tslib": "2.3.0",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "ultra-runner": "3.10.5"
   }
 }
