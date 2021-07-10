@@ -172,7 +172,7 @@ importers:
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
       ts-jest: 27.0.3
-      type-fest: 1.2.1
+      type-fest: 1.2.2
       typescript: 4.3.5
       ultra-runner: 3.10.5
     dependencies:
@@ -193,7 +193,7 @@ importers:
       is-plain-obj: 3.0.0
       jest: 27.0.6
       ts-jest: 27.0.3_jest@27.0.6+typescript@4.3.5
-      type-fest: 1.2.1
+      type-fest: 1.2.2
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
@@ -6744,6 +6744,12 @@ packages:
   /type-fest/1.2.1:
     resolution: {integrity: sha512-SbmIRuXhJs8KTneu77Ecylt9zuqL683tuiLYpTRil4H++eIhqCmx6ko6KAFem9dty8sOdnEiX7j4K1nRE628fQ==}
     engines: {node: '>=10'}
+    dev: false
+
+  /type-fest/1.2.2:
+    resolution: {integrity: sha512-pfkPYCcuV0TJoo/jlsUeWNV8rk7uMU6ocnYNvca1Vu+pyKi8Rl8Zo2scPt9O72gCsXIm+dMxOOWuA3VFDSdzWA==}
+    engines: {node: '>=10'}
+    dev: true
 
   /typedarray-to-buffer/3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
