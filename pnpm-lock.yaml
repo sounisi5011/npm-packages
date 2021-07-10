@@ -105,7 +105,7 @@ importers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@types/jest': 26.0.24
       '@types/node': 12.x
-      '@types/readline-transform': 1.0.0
+      '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
       '@types/write-file-atomic': 3.0.2
       execa: 5.1.1
@@ -126,7 +126,7 @@ importers:
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
       '@types/jest': 26.0.24
       '@types/node': 12.20.15
-      '@types/readline-transform': 1.0.0
+      '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
       '@types/write-file-atomic': 3.0.2
       execa: 5.1.1
@@ -1422,10 +1422,10 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
-  /@types/readline-transform/1.0.0:
-    resolution: {integrity: sha512-Jgc7Sr78d3EJ4AV+GXfs3BHUxPTC2pn4DNeRu78O04UVSOFux8dnMdfKZkdjw739mhjxdot4+HVWTLXjvtpiFQ==}
+  /@types/readline-transform/1.0.1:
+    resolution: {integrity: sha512-rKBZLUW/UZVZ9NoyrYVxXZ/XpZEXtXThZdKR/jWKTlDmRGw47LWxCjjkyYXiQWS2GpGJAhgs9yaDepWj3zFYeQ==}
     dependencies:
-      '@types/node': 12.20.15
+      '@types/node': 16.0.0
     dev: true
 
   /@types/signal-exit/3.0.1:
