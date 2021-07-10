@@ -12,7 +12,15 @@ on:
       - "**"
 jobs:
   if-run-ci:
-    if: ${{ ! contains(github.event.pull_request.labels.*.name, 'invalid') }}
+    # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#needs-context
+    # see https://stackoverflow.com/a/67532120/4907315
+    if: >-
+      ${{
+        ! (
+             contains(github.event.pull_request.labels.*.name, 'invalid')
+          || contains(github.event.pull_request.labels.*.name, 'skip ci')
+        )
+      }}
     runs-on: ubuntu-latest
     steps:
       # nothing
