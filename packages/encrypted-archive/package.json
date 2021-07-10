@@ -71,6 +71,7 @@
     "build-protobuf:test": "run-p build-protobuf:test:*",
     "build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-with-cache": "ultra build",
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "run-p build:docs:*",
     "build:docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
@@ -79,7 +80,7 @@
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
-    "test:examples": "run-s build test:examples:*",
+    "test:examples": "run-s build-with-cache test:examples:*",
     "test:examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest"
   },
@@ -115,7 +116,8 @@
     "multicodec": "3.1.0",
     "noop-stream": "0.1.0",
     "ts-jest": "27.0.3",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "ultra-runner": "3.10.5"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"

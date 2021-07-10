@@ -69,15 +69,16 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build-with-cache": "ultra build",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "lint:tsc:test-d": "tsc -p ./test-d/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
-    "test:examples": "run-s build test:examples:*",
+    "test:examples": "run-s build-with-cache test:examples:*",
     "test:examples:index": "node ./examples/index.js",
     "test:jest": "jest",
-    "test:tsd": "run-s build test:tsd:*",
+    "test:tsd": "run-s build-with-cache test:tsd:*",
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
@@ -87,7 +88,8 @@
     "jest": "27.0.6",
     "ts-jest": "27.0.3",
     "tsd": "0.17.0",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "ultra-runner": "3.10.5"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x"
