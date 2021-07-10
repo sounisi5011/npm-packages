@@ -19,7 +19,7 @@ importers:
       eslint-plugin-jest: 24.3.6
       eslint-plugin-node: 11.1.0
       eslint-plugin-promise: 5.1.0
-      husky: 7.0.0
+      husky: 7.0.1
       lint-staged: 11.0.0
       npm-run-all: 4.1.5
       prettier: 2.3.2
@@ -43,7 +43,7 @@ importers:
       eslint-plugin-jest: 24.3.6_bbfe94bdc32beb9697419a1eeb1a03aa
       eslint-plugin-node: 11.1.0_eslint@7.30.0
       eslint-plugin-promise: 5.1.0_eslint@7.30.0
-      husky: 7.0.0
+      husky: 7.0.1
       lint-staged: 11.0.0
       npm-run-all: 4.1.5
       prettier: 2.3.2
@@ -3722,8 +3722,8 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
-  /husky/7.0.0:
-    resolution: {integrity: sha512-xK7lO0EtSzfFPiw+oQncQVy/XqV7UVVjxBByc+Iv5iK3yhW9boDoWgvZy3OGo48QKg/hUtZkzz0hi2HXa0kn7w==}
+  /husky/7.0.1:
+    resolution: {integrity: sha512-gceRaITVZ+cJH9sNHqx5tFwbzlLCVxtVZcusME8JYQ8Edy5mpGDOqD8QBCdMhpyo9a+JXddnujQ4rpY2Ff9SJA==}
     engines: {node: '>=12'}
     hasBin: true
     dev: true
