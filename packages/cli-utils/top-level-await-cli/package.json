@@ -35,7 +35,7 @@
     "test:jest": "jest"
   },
   "devDependencies": {
-    "@types/jest": "26.0.23",
+    "@types/jest": "26.0.24",
     "@types/node": "12.x",
     "execa": "5.1.1",
     "jest": "27.0.6",
