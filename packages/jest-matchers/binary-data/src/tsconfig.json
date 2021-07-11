@@ -8,7 +8,10 @@
     // When the `composite` option is `true` and the `rootDir` option is undefined,
     // files will not be created directly under the `outDir`
     "rootDir": "./",
-    "noEmit": false
+    "noEmit": false,
+
+    /* Module Resolution Options */
+    "types": ["jest"]
   },
   "include": ["./**/*"]
 }
