@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "outDir": "../dist",
+    // When the `composite` option is `true` and the `rootDir` option is undefined,
+    // files will not be created directly under the `outDir`
+    "rootDir": "./",
+    "noEmit": false
+  },
+  "include": ["./**/*"]
+}

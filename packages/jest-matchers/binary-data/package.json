@@ -1,0 +1,73 @@
+{
+  "name": "@sounisi5011/jest-binary-data-matchers",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [
+    "array",
+    "assertions",
+    "binary",
+    "buffer",
+    "byte",
+    "bytes",
+    "data",
+    "extend",
+    "extended",
+    "jest",
+    "matchers",
+    "test",
+    "test-matchers",
+    "testing",
+    "typed",
+    "typed-array",
+    "uint8",
+    "uint8array"
+  ],
+  "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/packages/jest-matchers/binary-data#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/npm-packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sounisi5011/npm-packages.git",
+    "directory": "packages/jest-matchers/binary-data"
+  },
+  "license": "MIT",
+  "author": "sounisi5011",
+  "type": "commonjs",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "!*.tsbuildinfo",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src/",
+    "lint:tsc": "run-p lint:tsc:*",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "run-if-supported --verbose run-p test:*",
+    "test:jest": "jest"
+  },
+  "dependencies": {
+    "jest-matcher-utils": "^27.0.6"
+  },
+  "devDependencies": {
+    "@sounisi5011/run-if-supported": "workspace:^1.0.0",
+    "@types/jest": "26.0.24",
+    "jest": "27.x",
+    "ts-jest": "27.0.3",
+    "typescript": "4.3.5"
+  },
+  "peerDependencies": {
+    "jest": "27.x"
+  },
+  "engines": {
+    "node": "^12.17.x || 14.x || 15.x || 16.x"
+  }
+}
