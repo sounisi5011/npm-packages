@@ -1371,3 +1371,535 @@ exports[`.toBeByteSize() fail expect(actual = 1125899906842624n).toBeByteSize(ex
 Expected: <green>1 TiB (1099511627776 B)</>
 Received: <red>1 PiB (1125899906842624 B)</>"
 `;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 0).toBeGreaterThanByteSize(expected = 0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>0 B</>
+Received:   <red>0 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 0).toBeGreaterThanByteSize(expected = 0n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>0 B</>
+Received:   <red>0 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 0n).toBeGreaterThanByteSize(expected = 0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>0 B</>
+Received:   <red>0 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 0n).toBeGreaterThanByteSize(expected = 0n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>0 B</>
+Received:   <red>0 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1).toBeGreaterThanByteSize(expected = 1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1).toBeGreaterThanByteSize(expected = 1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1n).toBeGreaterThanByteSize(expected = 1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1n).toBeGreaterThanByteSize(expected = 1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1024).toBeGreaterThanByteSize(expected = 1024) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1024).toBeGreaterThanByteSize(expected = 1024n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1024n).toBeGreaterThanByteSize(expected = 1024) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1024n).toBeGreaterThanByteSize(expected = 1024n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1048576).toBeGreaterThanByteSize(expected = 1048576) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1048576).toBeGreaterThanByteSize(expected = 1048576n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1048576n).toBeGreaterThanByteSize(expected = 1048576) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1048576n).toBeGreaterThanByteSize(expected = 1048576n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1073741824).toBeGreaterThanByteSize(expected = 1073741824) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1073741824).toBeGreaterThanByteSize(expected = 1073741824n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1073741824n).toBeGreaterThanByteSize(expected = 1073741824) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1073741824n).toBeGreaterThanByteSize(expected = 1073741824n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1099511627776).toBeGreaterThanByteSize(expected = 1099511627776) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1099511627776).toBeGreaterThanByteSize(expected = 1099511627776n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1099511627776n).toBeGreaterThanByteSize(expected = 1099511627776) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1099511627776n).toBeGreaterThanByteSize(expected = 1099511627776n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1125899906842624).toBeGreaterThanByteSize(expected = 1125899906842624) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 PiB (1125899906842624 B)</>
+Received:   <red>1 PiB (1125899906842624 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1125899906842624).toBeGreaterThanByteSize(expected = 1125899906842624n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 PiB (1125899906842624 B)</>
+Received:   <red>1 PiB (1125899906842624 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1125899906842624n).toBeGreaterThanByteSize(expected = 1125899906842624) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 PiB (1125899906842624 B)</>
+Received:   <red>1 PiB (1125899906842624 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(actual = 1125899906842624n).toBeGreaterThanByteSize(expected = 1125899906842624n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 PiB (1125899906842624 B)</>
+Received:   <red>1 PiB (1125899906842624 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 2).not.toBeGreaterThanByteSize(small = 1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1 B</>
+Received:       <red>2 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 2).not.toBeGreaterThanByteSize(small = 1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1 B</>
+Received:       <red>2 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 2n).not.toBeGreaterThanByteSize(small = 1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1 B</>
+Received:       <red>2 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 2n).not.toBeGreaterThanByteSize(small = 1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1 B</>
+Received:       <red>2 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1024).not.toBeGreaterThanByteSize(small = 1023) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1023 B</>
+Received:       <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1024).not.toBeGreaterThanByteSize(small = 1023n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1023 B</>
+Received:       <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1024n).not.toBeGreaterThanByteSize(small = 1023) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1023 B</>
+Received:       <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1024n).not.toBeGreaterThanByteSize(small = 1023n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1023 B</>
+Received:       <red>1 KiB (1024 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1048576).not.toBeGreaterThanByteSize(small = 1048575) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 KiB (1048575 B)</>
+Received:       <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1048576).not.toBeGreaterThanByteSize(small = 1048575n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 KiB (1048575 B)</>
+Received:       <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1048576n).not.toBeGreaterThanByteSize(small = 1048575) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 KiB (1048575 B)</>
+Received:       <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1048576n).not.toBeGreaterThanByteSize(small = 1048575n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 KiB (1048575 B)</>
+Received:       <red>1 MiB (1048576 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1073741824).not.toBeGreaterThanByteSize(small = 1073741823) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 MiB (1073741823 B)</>
+Received:       <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1073741824).not.toBeGreaterThanByteSize(small = 1073741823n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 MiB (1073741823 B)</>
+Received:       <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1073741824n).not.toBeGreaterThanByteSize(small = 1073741823) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 MiB (1073741823 B)</>
+Received:       <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1073741824n).not.toBeGreaterThanByteSize(small = 1073741823n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 MiB (1073741823 B)</>
+Received:       <red>1 GiB (1073741824 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1099511627776).not.toBeGreaterThanByteSize(small = 1099511627775) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 GiB (1099511627775 B)</>
+Received:       <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1099511627776).not.toBeGreaterThanByteSize(small = 1099511627775n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 GiB (1099511627775 B)</>
+Received:       <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1099511627776n).not.toBeGreaterThanByteSize(small = 1099511627775) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 GiB (1099511627775 B)</>
+Received:       <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 1099511627776n).not.toBeGreaterThanByteSize(small = 1099511627775n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>1024 GiB (1099511627775 B)</>
+Received:       <red>1 TiB (1099511627776 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 9007199254740991).not.toBeGreaterThanByteSize(small = 9007199254740990) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>8 PiB (9007199254740990 B)</>
+Received:       <red>8 PiB (9007199254740991 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 9007199254740991).not.toBeGreaterThanByteSize(small = 9007199254740990n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>8 PiB (9007199254740990 B)</>
+Received:       <red>8 PiB (9007199254740991 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 9007199254740991n).not.toBeGreaterThanByteSize(small = 9007199254740990) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>8 PiB (9007199254740990 B)</>
+Received:       <red>8 PiB (9007199254740991 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(big = 9007199254740991n).not.toBeGreaterThanByteSize(small = 9007199254740990n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: not > <green>8 PiB (9007199254740990 B)</>
+Received:       <red>8 PiB (9007199254740991 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1).toBeGreaterThanByteSize(big = 2) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>2 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1).toBeGreaterThanByteSize(big = 2n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>2 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1n).toBeGreaterThanByteSize(big = 2) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>2 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1n).toBeGreaterThanByteSize(big = 2n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>2 B</>
+Received:   <red>1 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1023).toBeGreaterThanByteSize(big = 1024) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1023 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1023).toBeGreaterThanByteSize(big = 1024n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1023 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1023n).toBeGreaterThanByteSize(big = 1024) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1023 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1023n).toBeGreaterThanByteSize(big = 1024n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 KiB (1024 B)</>
+Received:   <red>1023 B</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1048575).toBeGreaterThanByteSize(big = 1048576) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1024 KiB (1048575 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1048575).toBeGreaterThanByteSize(big = 1048576n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1024 KiB (1048575 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1048575n).toBeGreaterThanByteSize(big = 1048576) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1024 KiB (1048575 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1048575n).toBeGreaterThanByteSize(big = 1048576n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 MiB (1048576 B)</>
+Received:   <red>1024 KiB (1048575 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1073741823).toBeGreaterThanByteSize(big = 1073741824) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1024 MiB (1073741823 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1073741823).toBeGreaterThanByteSize(big = 1073741824n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1024 MiB (1073741823 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1073741823n).toBeGreaterThanByteSize(big = 1073741824) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1024 MiB (1073741823 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1073741823n).toBeGreaterThanByteSize(big = 1073741824n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 GiB (1073741824 B)</>
+Received:   <red>1024 MiB (1073741823 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1099511627775).toBeGreaterThanByteSize(big = 1099511627776) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1024 GiB (1099511627775 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1099511627775).toBeGreaterThanByteSize(big = 1099511627776n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1024 GiB (1099511627775 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1099511627775n).toBeGreaterThanByteSize(big = 1099511627776) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1024 GiB (1099511627775 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 1099511627775n).toBeGreaterThanByteSize(big = 1099511627776n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>1 TiB (1099511627776 B)</>
+Received:   <red>1024 GiB (1099511627775 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 9007199254740990).toBeGreaterThanByteSize(big = 9007199254740991) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>8 PiB (9007199254740991 B)</>
+Received:   <red>8 PiB (9007199254740990 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 9007199254740990).toBeGreaterThanByteSize(big = 9007199254740991n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>8 PiB (9007199254740991 B)</>
+Received:   <red>8 PiB (9007199254740990 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 9007199254740990n).toBeGreaterThanByteSize(big = 9007199254740991) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>8 PiB (9007199254740991 B)</>
+Received:   <red>8 PiB (9007199254740990 B)</>"
+`;
+
+exports[`.toBeGreaterThanByteSize() fail expect(small = 9007199254740990n).toBeGreaterThanByteSize(big = 9007199254740991n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBeGreaterThanByteSize<dim>(</><green>expected</><dim>)</>
+
+Expected: > <green>8 PiB (9007199254740991 B)</>
+Received:   <red>8 PiB (9007199254740990 B)</>"
+`;
