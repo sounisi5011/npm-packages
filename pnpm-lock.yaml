@@ -170,7 +170,7 @@ importers:
       is-plain-obj: 3.0.0
       jest: 27.0.6
       npm-install-checks: ^4.0.0
-      ow: ^0.26.0
+      ow: ^0.27.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
       ts-jest: 27.0.3
@@ -183,7 +183,7 @@ importers:
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 4.0.0
-      ow: 0.26.0
+      ow: 0.27.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
     devDependencies:
@@ -5440,15 +5440,15 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /ow/0.26.0:
-    resolution: {integrity: sha512-22YUQW9d6oUSCpIQuBV25djtC1uMtpWqmtUYnuh2UHWeNMpppCFCvq3eSBIWWMDbe2UVq26kWYvBHDzOIu5NYg==}
+  /ow/0.27.0:
+    resolution: {integrity: sha512-SGnrGUbhn4VaUGdU0EJLMwZWSupPmF46hnTRII7aCLCrqixTAC5eKo8kI4/XXf1eaaI8YEVT+3FeGNJI9himAQ==}
     engines: {node: '>=12'}
     dependencies:
       '@sindresorhus/is': 4.0.1
       callsites: 3.1.0
       dot-prop: 6.0.1
       lodash.isequal: 4.5.0
-      type-fest: 1.2.1
+      type-fest: 1.2.2
       vali-date: 1.0.0
     dev: false
 
@@ -6753,15 +6753,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /type-fest/1.2.1:
-    resolution: {integrity: sha512-SbmIRuXhJs8KTneu77Ecylt9zuqL683tuiLYpTRil4H++eIhqCmx6ko6KAFem9dty8sOdnEiX7j4K1nRE628fQ==}
-    engines: {node: '>=10'}
-    dev: false
-
   /type-fest/1.2.2:
     resolution: {integrity: sha512-pfkPYCcuV0TJoo/jlsUeWNV8rk7uMU6ocnYNvca1Vu+pyKi8Rl8Zo2scPt9O72gCsXIm+dMxOOWuA3VFDSdzWA==}
     engines: {node: '>=10'}
-    dev: true
 
   /typedarray-to-buffer/3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
