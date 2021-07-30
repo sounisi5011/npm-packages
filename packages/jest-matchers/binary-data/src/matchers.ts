@@ -1,7 +1,7 @@
 import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 
 import { byteSize, toMessageFn } from './utils';
-import { createMatchers, ensureByteSize } from './utils/jest';
+import { ensureByteSize } from './utils/jest';
 
 function createCompareByteSizeMatcher(
     opts: {
@@ -44,50 +44,47 @@ function createCompareByteSizeMatcher(
     };
 }
 
-export const matchers = createMatchers({
-    /**
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L74-L125
-     */
-    toBeByteSize: matcherName =>
-        createCompareByteSizeMatcher({
-            matcherName,
-            passFn: ({ expected, received }) => received == expected, // eslint-disable-line eqeqeq
-        }),
-    /**
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
-     */
-    toBeGreaterThanByteSize: matcherName =>
-        createCompareByteSizeMatcher({
-            matcherName,
-            operator: '>',
-            passFn: ({ expected, received }) => received > expected,
-        }),
-    /**
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L258-L280
-     */
-    toBeGreaterThanOrEqualByteSize: matcherName =>
-        createCompareByteSizeMatcher({
-            matcherName,
-            operator: '>=',
-            passFn: ({ expected, received }) => received >= expected,
-        }),
-    /**
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L332-L354
-     */
-    toBeLessThanByteSize: matcherName =>
-        createCompareByteSizeMatcher({
-            matcherName,
-            operator: '<',
-            passFn: ({ expected, received }) => received < expected,
-        }),
-    /**
-     * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L356-L378
-     */
-    toBeLessThanOrEqualByteSize: matcherName =>
-        createCompareByteSizeMatcher({
-            matcherName,
-            operator: '<=',
-            passFn: ({ expected, received }) => received <= expected,
-        }),
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L74-L125
+ */
+export const toBeByteSize = createCompareByteSizeMatcher({
+    matcherName: 'toBeByteSize',
+    passFn: ({ expected, received }) => received == expected, // eslint-disable-line eqeqeq
+});
+
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
+ */
+export const toBeGreaterThanByteSize = createCompareByteSizeMatcher({
+    matcherName: 'toBeGreaterThanByteSize',
+    operator: '>',
+    passFn: ({ expected, received }) => received > expected,
+});
+
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L258-L280
+ */
+export const toBeGreaterThanOrEqualByteSize = createCompareByteSizeMatcher({
+    matcherName: 'toBeGreaterThanOrEqualByteSize',
+    operator: '>=',
+    passFn: ({ expected, received }) => received >= expected,
+});
+
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L332-L354
+ */
+export const toBeLessThanByteSize = createCompareByteSizeMatcher({
+    matcherName: 'toBeLessThanByteSize',
+    operator: '<',
+    passFn: ({ expected, received }) => received < expected,
+});
+
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L356-L378
+ */
+export const toBeLessThanOrEqualByteSize = createCompareByteSizeMatcher({
+    matcherName: 'toBeLessThanOrEqualByteSize',
+    operator: '<=',
+    passFn: ({ expected, received }) => received <= expected,
 });
