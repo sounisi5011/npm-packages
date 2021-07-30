@@ -36,16 +36,16 @@ export function ensureByteSize(
         });
     }
 
-    if (errorList.length > 0) {
-        // Prepend maybe not only for backward compatibility.
-        const matcherString = (options ? '' : '[.not]') + matcherName;
-        throw new Error(
-            matcherErrorMessage(
-                matcherHint(matcherString, undefined, undefined, options),
-                `${errorList.map(({ label }) => label).join(' and ')} ${errorList.length > 1 ? 'values' : 'value'}`
-                    + ' must be a non-negative integer or non-negative bigint',
-                errorList.map(({ specific }) => specific).join('\n\n'),
-            ),
-        );
-    }
+    if (errorList.length === 0) return;
+
+    // Prepend maybe not only for backward compatibility.
+    const matcherString = (options ? '' : '[.not]') + matcherName;
+    throw new Error(
+        matcherErrorMessage(
+            matcherHint(matcherString, undefined, undefined, options),
+            `${errorList.map(({ label }) => label).join(' and ')} ${errorList.length > 1 ? 'values' : 'value'}`
+                + ' must be a non-negative integer or non-negative bigint',
+            errorList.map(({ specific }) => specific).join('\n\n'),
+        ),
+    );
 }
