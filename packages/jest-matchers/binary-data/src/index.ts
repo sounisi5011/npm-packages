@@ -6,9 +6,9 @@ import {
     toBeLessThanOrEqualByteSize,
 } from './matchers';
 
-type ActualArgs<T extends jest.CustomMatcher> = (
+type MatcherFn<T extends jest.CustomMatcher, R> = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    T extends ((...args: [any, ...infer P]) => unknown) ? P : never
+    T extends ((...args: [any, ...infer P]) => unknown) ? (...args: P) => R : never
 );
 
 expect.extend({
@@ -22,11 +22,11 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace jest {
         interface Matchers<R> {
-            toBeByteSize: (...args: ActualArgs<typeof toBeByteSize>) => R;
-            toBeGreaterThanByteSize: (...args: ActualArgs<typeof toBeGreaterThanByteSize>) => R;
-            toBeGreaterThanOrEqualByteSize: (...args: ActualArgs<typeof toBeGreaterThanOrEqualByteSize>) => R;
-            toBeLessThanByteSize: (...args: ActualArgs<typeof toBeLessThanByteSize>) => R;
-            toBeLessThanOrEqualByteSize: (...args: ActualArgs<typeof toBeLessThanOrEqualByteSize>) => R;
+            toBeByteSize: MatcherFn<typeof toBeByteSize, R>;
+            toBeGreaterThanByteSize: MatcherFn<typeof toBeGreaterThanByteSize, R>;
+            toBeGreaterThanOrEqualByteSize: MatcherFn<typeof toBeGreaterThanOrEqualByteSize, R>;
+            toBeLessThanByteSize: MatcherFn<typeof toBeLessThanByteSize, R>;
+            toBeLessThanOrEqualByteSize: MatcherFn<typeof toBeLessThanOrEqualByteSize, R>;
         }
     }
 }
