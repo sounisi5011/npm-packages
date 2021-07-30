@@ -52,7 +52,7 @@
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
-    "test:jest": "jest"
+    "test:jest": "jest --colors"
   },
   "dependencies": {
     "jest-matcher-utils": "^27.0.6"
