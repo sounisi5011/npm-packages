@@ -3,6 +3,41 @@ import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils'
 import { byteSize, toMessageFn } from './utils';
 import { ensureByteSize } from './utils/jest';
 
+function compareByteSize(
+    context: jest.MatcherContext,
+    opts: {
+        matcherName: string;
+        operator?: string;
+        passFn: (arg: {
+            expected: number | bigint;
+            received: number | bigint;
+        }) => boolean;
+        received: unknown;
+        expected: number | bigint;
+    },
+): jest.CustomMatcherResult {
+    const isNot = context.isNot;
+    const options: jest.MatcherHintOptions = {
+        isNot,
+        promise: context.promise,
+    };
+
+    const { matcherName, received, expected } = opts;
+    ensureByteSize(received, expected, matcherName, options);
+
+    const operator: string = opts.operator ? ` ${opts.operator}` : '';
+    const opIndent = ' '.repeat(operator.length);
+    return {
+        message: toMessageFn(() => [
+            matcherHint(matcherName, undefined, undefined, options),
+            ``,
+            `Expected:${isNot ? ' not' : ''}${operator} ${EXPECTED_COLOR(byteSize(expected))}`,
+            `Received:${isNot ? '    ' : ''}${opIndent} ${RECEIVED_COLOR(byteSize(received))}`,
+        ]),
+        pass: opts.passFn({ expected, received }),
+    };
+}
+
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L74-L125
@@ -12,23 +47,12 @@ export function toBeByteSize(
     received: number | bigint,
     expected: number | bigint,
 ): jest.CustomMatcherResult {
-    const matcherName = toBeByteSize.name;
-    const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
-        isNot,
-        promise: this.promise,
-    };
-    ensureByteSize(received, expected, matcherName, options);
-
-    return {
-        message: toMessageFn(() => [
-            matcherHint(matcherName, undefined, undefined, options),
-            ``,
-            `Expected:${isNot ? ' not' : ''} ${EXPECTED_COLOR(byteSize(expected))}`,
-            `Received:${isNot ? '    ' : ''} ${RECEIVED_COLOR(byteSize(received))}`,
-        ]),
-        pass: received == expected, // eslint-disable-line eqeqeq
-    };
+    return compareByteSize(this, {
+        matcherName: toBeByteSize.name,
+        passFn: ({ expected, received }) => received == expected, // eslint-disable-line eqeqeq
+        received,
+        expected,
+    });
 }
 
 /**
@@ -39,23 +63,13 @@ export function toBeGreaterThanByteSize(
     received: number | bigint,
     expected: number | bigint,
 ): jest.CustomMatcherResult {
-    const matcherName = toBeGreaterThanByteSize.name;
-    const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
-        isNot,
-        promise: this.promise,
-    };
-    ensureByteSize(received, expected, matcherName, options);
-
-    return {
-        pass: received > expected,
-        message: toMessageFn(() => [
-            matcherHint(matcherName, undefined, undefined, options),
-            ``,
-            `Expected:${isNot ? ' not' : ''} > ${EXPECTED_COLOR(byteSize(expected))}`,
-            `Received:${isNot ? '    ' : ''}   ${RECEIVED_COLOR(byteSize(received))}`,
-        ]),
-    };
+    return compareByteSize(this, {
+        matcherName: toBeGreaterThanByteSize.name,
+        operator: '>',
+        passFn: ({ expected, received }) => received > expected,
+        received,
+        expected,
+    });
 }
 
 /**
@@ -66,23 +80,13 @@ export function toBeGreaterThanOrEqualByteSize(
     received: number | bigint,
     expected: number | bigint,
 ): jest.CustomMatcherResult {
-    const matcherName = toBeGreaterThanOrEqualByteSize.name;
-    const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
-        isNot,
-        promise: this.promise,
-    };
-    ensureByteSize(received, expected, matcherName, options);
-
-    return {
-        pass: received >= expected,
-        message: toMessageFn(() => [
-            matcherHint(matcherName, undefined, undefined, options),
-            ``,
-            `Expected:${isNot ? ' not' : ''} >= ${EXPECTED_COLOR(byteSize(expected))}`,
-            `Received:${isNot ? '    ' : ''}    ${RECEIVED_COLOR(byteSize(received))}`,
-        ]),
-    };
+    return compareByteSize(this, {
+        matcherName: toBeGreaterThanOrEqualByteSize.name,
+        operator: '>=',
+        passFn: ({ expected, received }) => received >= expected,
+        received,
+        expected,
+    });
 }
 
 /**
@@ -93,23 +97,13 @@ export function toBeLessThanByteSize(
     received: number | bigint,
     expected: number | bigint,
 ): jest.CustomMatcherResult {
-    const matcherName = toBeLessThanByteSize.name;
-    const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
-        isNot,
-        promise: this.promise,
-    };
-    ensureByteSize(received, expected, matcherName, options);
-
-    return {
-        pass: received < expected,
-        message: toMessageFn(() => [
-            matcherHint(matcherName, undefined, undefined, options),
-            ``,
-            `Expected:${isNot ? ' not' : ''} < ${EXPECTED_COLOR(byteSize(expected))}`,
-            `Received:${isNot ? '    ' : ''}   ${RECEIVED_COLOR(byteSize(received))}`,
-        ]),
-    };
+    return compareByteSize(this, {
+        matcherName: toBeLessThanByteSize.name,
+        operator: '<',
+        passFn: ({ expected, received }) => received < expected,
+        received,
+        expected,
+    });
 }
 
 /**
@@ -120,21 +114,11 @@ export function toBeLessThanOrEqualByteSize(
     received: number | bigint,
     expected: number | bigint,
 ): jest.CustomMatcherResult {
-    const matcherName = toBeLessThanOrEqualByteSize.name;
-    const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
-        isNot,
-        promise: this.promise,
-    };
-    ensureByteSize(received, expected, matcherName, options);
-
-    return {
-        pass: received <= expected,
-        message: toMessageFn(() => [
-            matcherHint(matcherName, undefined, undefined, options),
-            ``,
-            `Expected:${isNot ? ' not' : ''} <= ${EXPECTED_COLOR(byteSize(expected))}`,
-            `Received:${isNot ? '    ' : ''}    ${RECEIVED_COLOR(byteSize(received))}`,
-        ]),
-    };
+    return compareByteSize(this, {
+        matcherName: toBeLessThanOrEqualByteSize.name,
+        operator: '<=',
+        passFn: ({ expected, received }) => received <= expected,
+        received,
+        expected,
+    });
 }
