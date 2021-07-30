@@ -60,6 +60,9 @@ describe('.toBeByteSize()', () => {
 
 describe('.toBeGreaterThanByteSize()', () => {
     describe('pass', () => {
+        it.each(sameCases)('expect(actual = %p).not.toBeGreaterThanByteSize(expected = %p)', (actual, expected) => {
+            expect(actual).not.toBeGreaterThanByteSize(expected);
+        });
         it.each(bigAndSmallCases)('expect(big = %p).toBeGreaterThanByteSize(small = %p)', (big, small) => {
             expect(big).toBeGreaterThanByteSize(small);
         });
@@ -77,6 +80,88 @@ describe('.toBeGreaterThanByteSize()', () => {
         });
         it.each(smallAndBigCases)('expect(small = %p).toBeGreaterThanByteSize(big = %p)', (small, big) => {
             expect(() => expect(small).toBeGreaterThanByteSize(big)).toThrowErrorMatchingSnapshot();
+        });
+    });
+});
+
+describe('.toBeGreaterThanOrEqualByteSize()', () => {
+    describe('pass', () => {
+        it.each(sameCases)('expect(actual = %p).toBeGreaterThanOrEqualByteSize(expected = %p)', (actual, expected) => {
+            expect(actual).toBeGreaterThanOrEqualByteSize(expected);
+        });
+        it.each(bigAndSmallCases)('expect(big = %p).toBeGreaterThanOrEqualByteSize(small = %p)', (big, small) => {
+            expect(big).toBeGreaterThanOrEqualByteSize(small);
+        });
+        it.each(smallAndBigCases)('expect(small = %p).not.toBeGreaterThanOrEqualByteSize(big = %p)', (small, big) => {
+            expect(small).not.toBeGreaterThanOrEqualByteSize(big);
+        });
+    });
+
+    describe('fail', () => {
+        it.each(sameCases)(
+            'expect(actual = %p).not.toBeGreaterThanOrEqualByteSize(expected = %p)',
+            (actual, expected) => {
+                expect(() => expect(actual).not.toBeGreaterThanOrEqualByteSize(expected))
+                    .toThrowErrorMatchingSnapshot();
+            },
+        );
+        it.each(bigAndSmallCases)('expect(big = %p).not.toBeGreaterThanOrEqualByteSize(small = %p)', (big, small) => {
+            expect(() => expect(big).not.toBeGreaterThanOrEqualByteSize(small)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(smallAndBigCases)('expect(small = %p).toBeGreaterThanOrEqualByteSize(big = %p)', (small, big) => {
+            expect(() => expect(small).toBeGreaterThanOrEqualByteSize(big)).toThrowErrorMatchingSnapshot();
+        });
+    });
+});
+
+describe('.toBeLessThanByteSize()', () => {
+    describe('pass', () => {
+        it.each(sameCases)('expect(actual = %p).not.toBeLessThanByteSize(expected = %p)', (actual, expected) => {
+            expect(actual).not.toBeLessThanByteSize(expected);
+        });
+        it.each(smallAndBigCases)('expect(small = %p).toBeLessThanByteSize(big = %p)', (small, big) => {
+            expect(small).toBeLessThanByteSize(big);
+        });
+        it.each(bigAndSmallCases)('expect(big = %p).not.toBeLessThanByteSize(small = %p)', (big, small) => {
+            expect(big).not.toBeLessThanByteSize(small);
+        });
+    });
+
+    describe('fail', () => {
+        it.each(sameCases)('expect(actual = %p).toBeLessThanByteSize(expected = %p)', (actual, expected) => {
+            expect(() => expect(actual).toBeLessThanByteSize(expected)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(smallAndBigCases)('expect(small = %p).not.toBeLessThanByteSize(big = %p)', (small, big) => {
+            expect(() => expect(small).not.toBeLessThanByteSize(big)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(bigAndSmallCases)('expect(big = %p).toBeLessThanByteSize(small = %p)', (big, small) => {
+            expect(() => expect(big).toBeLessThanByteSize(small)).toThrowErrorMatchingSnapshot();
+        });
+    });
+});
+
+describe('.toBeLessThanOrEqualByteSize()', () => {
+    describe('pass', () => {
+        it.each(sameCases)('expect(actual = %p).toBeLessThanOrEqualByteSize(expected = %p)', (actual, expected) => {
+            expect(actual).toBeLessThanOrEqualByteSize(expected);
+        });
+        it.each(smallAndBigCases)('expect(small = %p).toBeLessThanOrEqualByteSize(big = %p)', (small, big) => {
+            expect(small).toBeLessThanOrEqualByteSize(big);
+        });
+        it.each(bigAndSmallCases)('expect(big = %p).not.toBeLessThanOrEqualByteSize(small = %p)', (big, small) => {
+            expect(big).not.toBeLessThanOrEqualByteSize(small);
+        });
+    });
+
+    describe('fail', () => {
+        it.each(sameCases)('expect(actual = %p).not.toBeLessThanOrEqualByteSize(expected = %p)', (actual, expected) => {
+            expect(() => expect(actual).not.toBeLessThanOrEqualByteSize(expected)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(smallAndBigCases)('expect(small = %p).not.toBeLessThanOrEqualByteSize(big = %p)', (small, big) => {
+            expect(() => expect(small).not.toBeLessThanOrEqualByteSize(big)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(bigAndSmallCases)('expect(big = %p).toBeLessThanOrEqualByteSize(small = %p)', (big, small) => {
+            expect(() => expect(big).toBeLessThanOrEqualByteSize(small)).toThrowErrorMatchingSnapshot();
         });
     });
 });
