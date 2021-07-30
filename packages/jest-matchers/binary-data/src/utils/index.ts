@@ -6,6 +6,18 @@ function toArray<T>(value: T | readonly T[]): T[] {
     return ([] as T[]).concat(value);
 }
 
+type FixedIsInteger = (number: unknown) => number is number;
+
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L224-L226
+ */
+export function isNonNegativeInteger(value: unknown): value is number | bigint {
+    return (
+        (Number.isSafeInteger as FixedIsInteger)(value)
+        || typeof value === 'bigint'
+    ) && (value >= 0 && !Object.is(value, -0));
+}
+
 export function toMessageFn(func: () => (string | ReadonlyArray<string | null>)): jest.CustomMatcherResult['message'] {
     return () => {
         const lines: string[] = toArray(func()).filter(isNotNull);

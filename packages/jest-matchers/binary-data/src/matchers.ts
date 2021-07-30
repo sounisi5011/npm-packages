@@ -1,6 +1,7 @@
-import { ensureNumbers, EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 
 import { byteSize, toMessageFn } from './utils';
+import { ensureByteSize } from './utils/jest';
 
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
@@ -17,7 +18,7 @@ export function toBeByteSize(
         isNot,
         promise: this.promise,
     };
-    ensureNumbers(received, expected, matcherName, options);
+    ensureByteSize(received, expected, matcherName, options);
 
     return {
         message: toMessageFn(() => [
@@ -44,7 +45,7 @@ export function toBeGreaterThanByteSize(
         isNot,
         promise: this.promise,
     };
-    ensureNumbers(received, expected, matcherName, options);
+    ensureByteSize(received, expected, matcherName, options);
 
     return {
         pass: received > expected,
@@ -71,7 +72,7 @@ export function toBeGreaterThanOrEqualByteSize(
         isNot,
         promise: this.promise,
     };
-    ensureNumbers(received, expected, matcherName, options);
+    ensureByteSize(received, expected, matcherName, options);
 
     return {
         pass: received >= expected,
@@ -98,7 +99,7 @@ export function toBeLessThanByteSize(
         isNot,
         promise: this.promise,
     };
-    ensureNumbers(received, expected, matcherName, options);
+    ensureByteSize(received, expected, matcherName, options);
 
     return {
         pass: received < expected,
@@ -125,7 +126,7 @@ export function toBeLessThanOrEqualByteSize(
         isNot,
         promise: this.promise,
     };
-    ensureNumbers(received, expected, matcherName, options);
+    ensureByteSize(received, expected, matcherName, options);
 
     return {
         pass: received <= expected,
