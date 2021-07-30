@@ -2,7 +2,7 @@ import '../src';
 
 import { plugins as prettyFormatPlugins } from 'pretty-format';
 
-import * as matcherList from '../src/matchers';
+import { matchers } from '../src/matchers';
 
 expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
 
@@ -47,8 +47,8 @@ const invalidValueList = [
 ];
 const invalidValuePairList = invalidValueList.map(value => [value, value] as const);
 
-const matcherNameList = Reflect.ownKeys(matcherList)
-    .filter((key): key is keyof typeof matcherList => (
+const matcherNameList = Reflect.ownKeys(matchers)
+    .filter((key): key is keyof typeof matchers => (
         // @ts-expect-error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Expect'.
         typeof expect[key] === 'function'
     ));

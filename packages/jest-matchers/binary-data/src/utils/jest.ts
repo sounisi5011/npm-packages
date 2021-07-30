@@ -49,3 +49,22 @@ export function ensureByteSize(
         ),
     );
 }
+
+export function createMatchers<
+    T extends Record<string, (matcherName: string) => jest.CustomMatcher>
+>(
+    matcherGeneratorMap: T,
+): { [P in keyof T]: ReturnType<T[P]> };
+export function createMatchers(
+    matcherGeneratorMap: Record<string, (matcherName: string) => jest.CustomMatcher>,
+): Record<string, jest.CustomMatcher> {
+    return Object.fromEntries(
+        Object.entries(matcherGeneratorMap)
+            .map(([matcherName, matcherGenerator]) =>
+                [
+                    matcherName,
+                    matcherGenerator(matcherName),
+                ] as const
+            ),
+    );
+}
