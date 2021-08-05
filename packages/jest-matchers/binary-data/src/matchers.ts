@@ -12,26 +12,27 @@ function createCompareByteSizeMatcher(
             received: number | bigint;
         }) => boolean;
     },
-) {
+): (
+    this: jest.MatcherContext,
+    received: unknown,
+    expected: number | bigint,
+) => jest.CustomMatcherResult {
+    const { matcherName, passFn } = opts;
+    const operator: string = opts.operator ? ` ${opts.operator}` : '';
+    const opIndent = ' '.repeat(operator.length);
+
     /**
      * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
      */
-    return function(
-        this: jest.MatcherContext,
-        received: unknown,
-        expected: number | bigint,
-    ): jest.CustomMatcherResult {
+    return function(received, expected) {
         const isNot = this.isNot;
         const options: jest.MatcherHintOptions = {
             isNot,
             promise: this.promise,
         };
 
-        const { matcherName } = opts;
         ensureByteSize(received, expected, matcherName, options);
 
-        const operator: string = opts.operator ? ` ${opts.operator}` : '';
-        const opIndent = ' '.repeat(operator.length);
         return {
             message: toMessageFn(() => [
                 matcherHint(matcherName, undefined, undefined, options),
@@ -39,7 +40,7 @@ function createCompareByteSizeMatcher(
                 `Expected:${isNot ? ' not' : ''}${operator} ${EXPECTED_COLOR(byteSize(expected))}`,
                 `Received:${isNot ? '    ' : ''}${opIndent} ${RECEIVED_COLOR(byteSize(received))}`,
             ]),
-            pass: opts.passFn({ expected, received }),
+            pass: passFn({ expected, received }),
         };
     };
 }
