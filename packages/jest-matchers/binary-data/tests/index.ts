@@ -1,5 +1,7 @@
 import '../src';
 
+import { inspect } from 'util';
+
 import { plugins as prettyFormatPlugins } from 'pretty-format';
 
 expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
@@ -24,6 +26,19 @@ const smallAndBigCases = toIntAndBigintCases([
 ]);
 const bigAndSmallCases = smallAndBigCases.map(([small, big]) => [big, small] as const);
 
+function createTupleArray<T extends readonly [...unknown[]]>(...args: T): [...T] {
+    return [...args];
+}
+
+const inspect1line = (value: unknown): string =>
+    inspect(
+        value,
+        {
+            breakLength: Infinity,
+            compact: true,
+        },
+    );
+
 function toIntAndBigintCases<TActual, TExpected>(
     cases: ReadonlyArray<readonly [TActual, TExpected]>,
 ): Array<[TActual | bigint, TExpected | bigint]> {
@@ -36,6 +51,37 @@ function toIntAndBigintCases<TActual, TExpected>(
         if (typeof v1 === 'number' && typeof v2 === 'number') newCases.push([BigInt(v1), BigInt(v2)]);
         return newCases;
     });
+}
+
+function unshiftTestCases<
+    T extends readonly [...unknown[]],
+    U extends readonly [...unknown[]]
+>(
+    cases: readonly T[],
+    pushFn: (...args: T) => [...U],
+): Array<[...U, ...T]> {
+    return cases
+        .map(caseValues => [
+            ...pushFn(...caseValues),
+            ...caseValues,
+        ]);
+}
+
+function getTypedArrayList(arrayBuffer: ArrayBufferLike): Array<NodeJS.TypedArray | Buffer> {
+    return [
+        new Int8Array(arrayBuffer),
+        new Uint8Array(arrayBuffer),
+        new Uint8ClampedArray(arrayBuffer),
+        new Int16Array(arrayBuffer),
+        new Uint16Array(arrayBuffer),
+        new Int32Array(arrayBuffer),
+        new Uint32Array(arrayBuffer),
+        new BigInt64Array(arrayBuffer),
+        new BigUint64Array(arrayBuffer),
+        new Float32Array(arrayBuffer),
+        new Float64Array(arrayBuffer),
+        Buffer.from(arrayBuffer),
+    ];
 }
 
 describe('.toBeByteSize()', () => {
@@ -162,6 +208,56 @@ describe('.toBeLessThanOrEqualByteSize()', () => {
         });
         it.each(bigAndSmallCases)('expect(big = %p).toBeLessThanOrEqualByteSize(small = %p)', (big, small) => {
             expect(() => expect(big).toBeLessThanOrEqualByteSize(small)).toThrowErrorMatchingSnapshot();
+        });
+    });
+});
+
+describe('.toBytesEqual()', () => {
+    const cases1 = ((): Array<ArrayBuffer | DataView | NodeJS.TypedArray | Buffer> => {
+        const arrayBuffer = new ArrayBuffer(16);
+        const dataView = new DataView(arrayBuffer);
+        const typedArrayList = getTypedArrayList(arrayBuffer);
+        dataView.setFloat64(0, 0.01);
+        return [arrayBuffer, dataView, ...typedArrayList];
+    })();
+    const cases2 = ((): Array<ArrayBuffer | DataView | NodeJS.TypedArray | Buffer> => {
+        const arrayBuffer = new ArrayBuffer(16);
+        const dataView = new DataView(arrayBuffer);
+        const typedArrayList = getTypedArrayList(arrayBuffer);
+        dataView.setFloat64(1, 0.02);
+        return [arrayBuffer, dataView, ...typedArrayList];
+    })();
+
+    const sameCases = unshiftTestCases(
+        cases1.flatMap(actual =>
+            cases1
+                .map(expected => createTupleArray(actual, expected))
+        ),
+        (actual, expected) => [inspect1line(actual), inspect1line(expected)],
+    );
+    const diffCases = unshiftTestCases(
+        cases1.flatMap(actual =>
+            cases2
+                .map(expected => createTupleArray(actual, expected))
+        ),
+        (actual, expected) => [inspect1line(actual), inspect1line(expected)],
+    );
+
+    describe('pass', () => {
+        it.each(sameCases)('expect(actual = %s).toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
+            expect(actual).toBytesEqual(expected);
+        });
+        it.each(diffCases)('expect(actual = %s).not.toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
+            expect(actual).not.toBytesEqual(expected);
+        });
+    });
+
+    describe('fail', () => {
+        it.each(sameCases)('expect(actual = %s).not.toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
+            expect(() => expect(actual).not.toBytesEqual(expected)).toThrowErrorMatchingSnapshot();
+        });
+        it.each(diffCases)('expect(actual = %s).toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
+            expect(() => expect(actual).toBytesEqual(expected)).toThrowErrorMatchingSnapshot();
         });
     });
 });

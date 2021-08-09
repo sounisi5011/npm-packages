@@ -56,16 +56,34 @@ const matcherNameList = Reflect.ownKeys(matcherList)
 describe.each(matcherNameList)('.%s()', matcherName => {
     describe('invalid type actual', () => {
         it.each(invalidValueList)(`expect(actual = %p).${matcherName}(…)`, actual => {
-            expect(() => expect(actual)[matcherName](0)).toThrowErrorMatchingSnapshot();
+            expect(() => {
+                const jestMatchers = expect(actual);
+                if (matcherName === 'toBytesEqual') {
+                    jestMatchers[matcherName](new Uint8Array());
+                } else {
+                    jestMatchers[matcherName](0);
+                }
+            }).toThrowErrorMatchingSnapshot();
         });
         it.each(invalidValueList)(`expect(actual = %p).not.${matcherName}(…)`, actual => {
-            expect(() => expect(actual).not[matcherName](0)).toThrowErrorMatchingSnapshot();
+            expect(() => {
+                // eslint-disable-next-line jest/valid-expect
+                const jestMatchers = expect(actual).not;
+                if (matcherName === 'toBytesEqual') {
+                    jestMatchers[matcherName](new Uint8Array());
+                } else {
+                    jestMatchers[matcherName](0);
+                }
+            }).toThrowErrorMatchingSnapshot();
         });
     });
     describe('invalid type expected', () => {
+        const actualValue = matcherName === 'toBytesEqual'
+            ? new Uint8Array()
+            : 0;
         it.each(invalidValueList)(`expect(…).${matcherName}(expected = %p)`, expected => {
             expect(() =>
-                expect(0)[matcherName](
+                expect(actualValue)[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
                     expected,
                 )
@@ -73,7 +91,7 @@ describe.each(matcherNameList)('.%s()', matcherName => {
         });
         it.each(invalidValueList)(`expect(…).not.${matcherName}(expected = %p)`, expected => {
             expect(() =>
-                expect(0).not[matcherName](
+                expect(actualValue).not[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
                     expected,
                 )

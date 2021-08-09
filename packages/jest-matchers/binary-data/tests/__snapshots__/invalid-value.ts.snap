@@ -5619,3 +5619,1127 @@ exports[`.toBeLessThanOrEqualByteSize() invalid type expected expect(…).toBeLe
 
 Expected has value: <green>undefined</>"
 `;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "").not.toBytesEqual(expected = "") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "").toBytesEqual(expected = "") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "42").not.toBytesEqual(expected = "42") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"42\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "42").toBytesEqual(expected = "42") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"42\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "foo").not.toBytesEqual(expected = "foo") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"foo\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = "foo").toBytesEqual(expected = "foo") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"foo\\"</>
+
+Expected has type:  string
+Expected has value: <green>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = /bar/).not.toBytesEqual(expected = /bar/) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  regexp
+Received has value: <red>/bar/</>
+
+Expected has type:  regexp
+Expected has value: <green>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = /bar/).toBytesEqual(expected = /bar/) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  regexp
+Received has value: <red>/bar/</>
+
+Expected has type:  regexp
+Expected has value: <green>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = []).not.toBytesEqual(expected = []) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  array
+Received has value: <red>[]</>
+
+Expected has type:  array
+Expected has value: <green>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = []).toBytesEqual(expected = []) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  array
+Received has value: <red>[]</>
+
+Expected has type:  array
+Expected has value: <green>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = [Function anonymous]).not.toBytesEqual(expected = [Function anonymous]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  function
+Received has value: <red>[Function anonymous]</>
+
+Expected has type:  function
+Expected has value: <green>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = [Function anonymous]).toBytesEqual(expected = [Function anonymous]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  function
+Received has value: <red>[Function anonymous]</>
+
+Expected has type:  function
+Expected has value: <green>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = {}).not.toBytesEqual(expected = {}) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  object
+Received has value: <red>{}</>
+
+Expected has type:  object
+Expected has value: <green>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = {}).toBytesEqual(expected = {}) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  object
+Received has value: <red>{}</>
+
+Expected has type:  object
+Expected has value: <green>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -0).not.toBytesEqual(expected = -0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-0</>
+
+Expected has type:  number
+Expected has value: <green>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -0).toBytesEqual(expected = -0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-0</>
+
+Expected has type:  number
+Expected has value: <green>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -1).not.toBytesEqual(expected = -1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-1</>
+
+Expected has type:  number
+Expected has value: <green>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -1).toBytesEqual(expected = -1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-1</>
+
+Expected has type:  number
+Expected has value: <green>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -1n).not.toBytesEqual(expected = -1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  bigint
+Received has value: <red>-1n</>
+
+Expected has type:  bigint
+Expected has value: <green>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -1n).toBytesEqual(expected = -1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  bigint
+Received has value: <red>-1n</>
+
+Expected has type:  bigint
+Expected has value: <green>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -Infinity).not.toBytesEqual(expected = -Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-Infinity</>
+
+Expected has type:  number
+Expected has value: <green>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = -Infinity).toBytesEqual(expected = -Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-Infinity</>
+
+Expected has type:  number
+Expected has value: <green>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = 0.1).not.toBytesEqual(expected = 0.1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>0.1</>
+
+Expected has type:  number
+Expected has value: <green>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = 0.1).toBytesEqual(expected = 0.1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>0.1</>
+
+Expected has type:  number
+Expected has value: <green>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = Infinity).not.toBytesEqual(expected = Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>Infinity</>
+
+Expected has type:  number
+Expected has value: <green>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = Infinity).toBytesEqual(expected = Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>Infinity</>
+
+Expected has type:  number
+Expected has value: <green>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = NaN).not.toBytesEqual(expected = NaN) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>NaN</>
+
+Expected has type:  number
+Expected has value: <green>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = NaN).toBytesEqual(expected = NaN) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>NaN</>
+
+Expected has type:  number
+Expected has value: <green>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = Symbol(vore)).not.toBytesEqual(expected = Symbol(vore)) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  symbol
+Received has value: <red>Symbol(vore)</>
+
+Expected has type:  symbol
+Expected has value: <green>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = Symbol(vore)).toBytesEqual(expected = Symbol(vore)) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  symbol
+Received has value: <red>Symbol(vore)</>
+
+Expected has type:  symbol
+Expected has value: <green>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = false).not.toBytesEqual(expected = false) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>false</>
+
+Expected has type:  boolean
+Expected has value: <green>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = false).toBytesEqual(expected = false) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>false</>
+
+Expected has type:  boolean
+Expected has value: <green>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = null).not.toBytesEqual(expected = null) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>null</>
+
+Expected has value: <green>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = null).toBytesEqual(expected = null) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>null</>
+
+Expected has value: <green>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = true).not.toBytesEqual(expected = true) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>true</>
+
+Expected has type:  boolean
+Expected has value: <green>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = true).toBytesEqual(expected = true) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>true</>
+
+Expected has type:  boolean
+Expected has value: <green>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = undefined).not.toBytesEqual(expected = undefined) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>undefined</>
+
+Expected has value: <green>undefined</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual & expected expect(actual = undefined).toBytesEqual(expected = undefined) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> and <green>expected</> values must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>undefined</>
+
+Expected has value: <green>undefined</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "").not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "").toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "42").not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "42").toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "foo").not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = "foo").toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  string
+Received has value: <red>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = /bar/).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  regexp
+Received has value: <red>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = /bar/).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  regexp
+Received has value: <red>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = []).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  array
+Received has value: <red>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = []).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  array
+Received has value: <red>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = [Function anonymous]).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  function
+Received has value: <red>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = [Function anonymous]).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  function
+Received has value: <red>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = {}).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  object
+Received has value: <red>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = {}).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  object
+Received has value: <red>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -0).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -0).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -1).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -1).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -1n).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  bigint
+Received has value: <red>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -1n).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  bigint
+Received has value: <red>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -Infinity).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = -Infinity).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = 0.1).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = 0.1).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = Infinity).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = Infinity).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = NaN).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = NaN).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  number
+Received has value: <red>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = Symbol(vore)).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  symbol
+Received has value: <red>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = Symbol(vore)).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  symbol
+Received has value: <red>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = false).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = false).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = null).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = null).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = true).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = true).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has type:  boolean
+Received has value: <red>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = undefined).not.toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>undefined</>"
+`;
+
+exports[`.toBytesEqual() invalid type actual expect(actual = undefined).toBytesEqual(…) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <red>received</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Received has value: <red>undefined</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = "") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = "42") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = "foo") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = /bar/) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  regexp
+Expected has value: <green>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = []) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  array
+Expected has value: <green>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = [Function anonymous]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  function
+Expected has value: <green>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = {}) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  object
+Expected has value: <green>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = -0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = -1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = -1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  bigint
+Expected has value: <green>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = -Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = 0.1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = NaN) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = Symbol(vore)) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  symbol
+Expected has value: <green>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = false) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  boolean
+Expected has value: <green>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = null) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has value: <green>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = true) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  boolean
+Expected has value: <green>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).not.toBytesEqual(expected = undefined) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has value: <green>undefined</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = "") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = "42") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"42\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = "foo") 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  string
+Expected has value: <green>\\"foo\\"</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = /bar/) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  regexp
+Expected has value: <green>/bar/</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = []) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  array
+Expected has value: <green>[]</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = [Function anonymous]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  function
+Expected has value: <green>[Function anonymous]</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = {}) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  object
+Expected has value: <green>{}</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = -0) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-0</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = -1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-1</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = -1n) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  bigint
+Expected has value: <green>-1n</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = -Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>-Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = 0.1) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>0.1</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = Infinity) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>Infinity</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = NaN) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  number
+Expected has value: <green>NaN</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = Symbol(vore)) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  symbol
+Expected has value: <green>Symbol(vore)</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = false) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  boolean
+Expected has value: <green>false</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = null) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has value: <green>null</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = true) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has type:  boolean
+Expected has value: <green>true</>"
+`;
+
+exports[`.toBytesEqual() invalid type expected expect(…).toBytesEqual(expected = undefined) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<bold>Matcher error</>: <green>expected</> value must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer
+
+Expected has value: <green>undefined</>"
+`;
