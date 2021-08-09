@@ -9,7 +9,7 @@ import {
     RECEIVED_COLOR,
 } from 'jest-matcher-utils';
 
-import { bytes2DataView, BytesData, isBytesData, isNonNegativeInteger } from '.';
+import { bytes2DataView, BytesData, isBytesData, isNonNegativeInteger, padTextColumns } from '.';
 
 interface EnsureFuncPredicateOptions<T> {
     predicate: (value: unknown) => value is T;
@@ -125,7 +125,10 @@ export function printBytesDiff(
         );
     }
 
-    const lines = [`Expected: not ${printExpected(expected)}`];
-    if (expected.constructor !== received.constructor) lines.push(`Received:     ${printReceived(received)}`);
-    return lines.join('\n');
+    return padTextColumns([
+        ['Expected:', 'not', printExpected(expected)],
+        expected.constructor !== received.constructor
+            ? ['Received:', '', printReceived(received)]
+            : null,
+    ]);
 }

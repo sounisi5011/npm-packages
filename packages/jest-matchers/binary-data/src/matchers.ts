@@ -1,6 +1,6 @@
 import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 
-import { BytesData, bytesEqual, byteSize, toMessageFn } from './utils';
+import { BytesData, bytesEqual, byteSize, padTextColumns, toMessageFn } from './utils';
 import { ensureBytes, ensureByteSize, printBytesDiff } from './utils/jest';
 
 function createCompareByteSizeMatcher(
@@ -18,8 +18,7 @@ function createCompareByteSizeMatcher(
     expected: number | bigint,
 ) => jest.CustomMatcherResult {
     const { matcherName, passFn } = opts;
-    const operator: string = opts.operator ? ` ${opts.operator}` : '';
-    const opIndent = ' '.repeat(operator.length);
+    const operator: string = opts.operator ? opts.operator : '';
 
     /**
      * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L234-L256
@@ -37,8 +36,10 @@ function createCompareByteSizeMatcher(
             message: toMessageFn(() => [
                 matcherHint(matcherName, undefined, undefined, options),
                 ``,
-                `Expected:${isNot ? ' not' : ''}${operator} ${EXPECTED_COLOR(byteSize(expected))}`,
-                `Received:${isNot ? '    ' : ''}${opIndent} ${RECEIVED_COLOR(byteSize(received))}`,
+                padTextColumns([
+                    ['Expected:', [isNot ? 'not' : '', operator], EXPECTED_COLOR(byteSize(expected))],
+                    ['Received:', '', RECEIVED_COLOR(byteSize(received))],
+                ]),
             ]),
             pass: passFn({ expected, received }),
         };

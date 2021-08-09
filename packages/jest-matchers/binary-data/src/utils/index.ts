@@ -1,7 +1,13 @@
 import { types } from 'util';
 
+import type { isReadonlyArray } from '@sounisi5011/ts-type-util-is-readonly-array';
+
 function isNotNull<T>(value: T): value is Exclude<T, null> {
     return value !== null;
+}
+
+function isNotEmptyString<T extends unknown>(value: T): value is Exclude<T, ''> {
+    return value !== '';
 }
 
 function toArray<T>(value: T | readonly T[]): T[] {
@@ -48,6 +54,39 @@ export function bytes2DataView(value: BytesData): DataView {
         return new DataView(value.buffer, value.byteOffset, value.byteLength);
     }
     return new DataView(value);
+}
+
+export function padTextColumns(
+    lines: ReadonlyArray<readonly [string, string | readonly string[], string] | null>,
+    options: { fillString?: string; gapString?: string } = {},
+): string {
+    const { fillString = ' ', gapString = ' ' } = options;
+    const filteredLines = lines
+        .filter(isNotNull)
+        .map(([firstColumn, secondColumn, lastColumn]) =>
+            [
+                firstColumn,
+                (Array.isArray as isReadonlyArray)(secondColumn)
+                    ? secondColumn.filter(isNotEmptyString).join(gapString)
+                    : secondColumn,
+                lastColumn,
+            ] as const
+        );
+    const firstColumnMaxLength = filteredLines
+        .reduce((len, [column]) => Math.max(len, column.length), 0);
+    const secondColumnMaxLength = filteredLines
+        .reduce((len, [, column]) => Math.max(len, column.length), 0);
+    return filteredLines
+        .map(([firstColumn, secondColumn, lastColumn]) =>
+            [
+                firstColumn.padEnd(firstColumnMaxLength, fillString),
+                secondColumn.padStart(secondColumnMaxLength, fillString),
+                lastColumn,
+            ]
+                .filter(isNotEmptyString)
+                .join(gapString)
+        )
+        .join('\n');
 }
 
 export function toMessageFn(func: () => (string | ReadonlyArray<string | null>)): jest.CustomMatcherResult['message'] {
