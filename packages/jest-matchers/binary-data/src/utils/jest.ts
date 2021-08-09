@@ -20,8 +20,14 @@ type EnsureFunc<TActual> = (
     actual: unknown,
     expected: unknown,
     matcherName: string,
-    options?: jest.MatcherHintOptions,
+    options: jest.MatcherHintOptions,
 ) => asserts actual is TActual;
+
+function printValues(valueNameList: readonly string[]): string {
+    const prefix = valueNameList.join(' and ');
+    const suffix = valueNameList.length > 1 ? 'values' : 'value';
+    return `${prefix} ${suffix}`;
+}
 
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L205-L216
@@ -31,33 +37,26 @@ type EnsureFunc<TActual> = (
  */
 function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
     return (actual, expected, matcherName, options) => {
-        const errorList: Array<{ label: string; specific: string }> = [];
-        if (!opts.predicate(actual)) {
-            errorList.push({
-                label: RECEIVED_COLOR('received'),
-                specific: printWithType('Received', actual, printReceived),
-            });
+        const isValidActual = opts.predicate(actual);
+        const isValidExpected = opts.predicate(expected);
+        if (isValidActual && isValidExpected) return;
+
+        const labelList: string[] = [];
+        const specificList: string[] = [];
+        if (!isValidActual) {
+            labelList.push(RECEIVED_COLOR('received'));
+            specificList.push(printWithType('Received', actual, printReceived));
         }
-        if (!opts.predicate(expected)) {
-            errorList.push({
-                label: EXPECTED_COLOR('expected'),
-                specific: printWithType('Expected', expected, printExpected),
-            });
+        if (!isValidExpected) {
+            labelList.push(EXPECTED_COLOR('expected'));
+            specificList.push(printWithType('Expected', expected, printExpected));
         }
 
-        if (errorList.length === 0) return;
-
-        // Prepend maybe not only for backward compatibility.
-        const matcherString = (options ? '' : '[.not]') + matcherName;
-        throw new Error(
-            matcherErrorMessage(
-                matcherHint(matcherString, undefined, undefined, options),
-                `${errorList.map(({ label }) => label).join(' and ')} ${
-                    errorList.length > 1 ? 'values' : 'value'
-                } must be ${opts.typeName}`,
-                errorList.map(({ specific }) => specific).join('\n\n'),
-            ),
-        );
+        throw new Error(matcherErrorMessage(
+            matcherHint(matcherName, undefined, undefined, options),
+            `${printValues(labelList)} must be ${opts.typeName}`,
+            specificList.join('\n\n'),
+        ));
     };
 }
 
