@@ -1,4 +1,4 @@
-import { types } from 'util';
+import { inspect, types } from 'util';
 
 import type { isReadonlyArray } from '@sounisi5011/ts-type-util-is-readonly-array';
 
@@ -45,6 +45,15 @@ export function bytesEqual(bytes1: BytesData, bytes2: BytesData): boolean {
 
     return true;
 }
+
+export const inspectSingleline = (value: unknown): string =>
+    inspect(
+        value,
+        {
+            breakLength: Infinity,
+            compact: true,
+        },
+    );
 
 export function bytes2DataView(value: BytesData): DataView {
     /**
