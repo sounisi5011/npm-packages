@@ -72,19 +72,15 @@ export function padTextColumns(
                 lastColumn,
             ] as const
         );
-    const firstColumnMaxLength = filteredLines
-        .reduce((len, [column]) => Math.max(len, column.length), 0);
-    const secondColumnMaxLength = filteredLines
-        .reduce((len, [, column]) => Math.max(len, column.length), 0);
+    const firstColumnMaxLength = filteredLines.reduce((len, [column]) => Math.max(len, column.length), 0);
+    const secondColumnMaxLength = filteredLines.reduce((len, [, column]) => Math.max(len, column.length), 0);
     return filteredLines
         .map(([firstColumn, secondColumn, lastColumn]) =>
             [
                 firstColumn.padEnd(firstColumnMaxLength, fillString),
                 secondColumn.padStart(secondColumnMaxLength, fillString),
                 lastColumn,
-            ]
-                .filter(isNotEmptyString)
-                .join(gapString)
+            ].filter(isNotEmptyString).join(gapString)
         )
         .join('\n');
 }
