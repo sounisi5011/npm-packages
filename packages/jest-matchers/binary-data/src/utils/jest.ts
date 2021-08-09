@@ -11,79 +11,70 @@ import {
 
 import { bytes2DataView, BytesData, isBytesData, isNonNegativeInteger } from '.';
 
+interface EnsureFuncPredicateOptions<T> {
+    predicate: (value: unknown) => value is T;
+    typeName: string;
+}
+
+type EnsureFunc<TActual> = (
+    actual: unknown,
+    expected: unknown,
+    matcherName: string,
+    options?: jest.MatcherHintOptions,
+) => asserts actual is TActual;
+
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L205-L216
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L163-L182
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L184-L203
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L218-L238
  */
-export function ensureByteSize(
-    actual: unknown,
-    expected: unknown,
-    matcherName: string,
-    options?: jest.MatcherHintOptions,
-): asserts actual is number | bigint {
-    const errorList: Array<{ label: string; specific: string }> = [];
-    if (!isNonNegativeInteger(actual)) {
-        errorList.push({
-            label: RECEIVED_COLOR('received'),
-            specific: printWithType('Received', actual, printReceived),
-        });
-    }
-    if (!isNonNegativeInteger(expected)) {
-        errorList.push({
-            label: EXPECTED_COLOR('expected'),
-            specific: printWithType('Expected', expected, printExpected),
-        });
-    }
+function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
+    return (actual, expected, matcherName, options) => {
+        const errorList: Array<{ label: string; specific: string }> = [];
+        if (!opts.predicate(actual)) {
+            errorList.push({
+                label: RECEIVED_COLOR('received'),
+                specific: printWithType('Received', actual, printReceived),
+            });
+        }
+        if (!opts.predicate(expected)) {
+            errorList.push({
+                label: EXPECTED_COLOR('expected'),
+                specific: printWithType('Expected', expected, printExpected),
+            });
+        }
 
-    if (errorList.length === 0) return;
+        if (errorList.length === 0) return;
 
-    // Prepend maybe not only for backward compatibility.
-    const matcherString = (options ? '' : '[.not]') + matcherName;
-    throw new Error(
-        matcherErrorMessage(
-            matcherHint(matcherString, undefined, undefined, options),
-            `${errorList.map(({ label }) => label).join(' and ')} ${errorList.length > 1 ? 'values' : 'value'}`
-                + ' must be a non-negative integer or non-negative bigint',
-            errorList.map(({ specific }) => specific).join('\n\n'),
-        ),
-    );
+        // Prepend maybe not only for backward compatibility.
+        const matcherString = (options ? '' : '[.not]') + matcherName;
+        throw new Error(
+            matcherErrorMessage(
+                matcherHint(matcherString, undefined, undefined, options),
+                `${errorList.map(({ label }) => label).join(' and ')} ${
+                    errorList.length > 1 ? 'values' : 'value'
+                } must be ${opts.typeName}`,
+                errorList.map(({ specific }) => specific).join('\n\n'),
+            ),
+        );
+    };
 }
 
-export function ensureBytes(
-    actual: unknown,
-    expected: unknown,
-    matcherName: string,
-    options?: jest.MatcherHintOptions,
-): asserts actual is BytesData {
-    const errorList: Array<{ label: string; specific: string }> = [];
-    if (!isBytesData(actual)) {
-        errorList.push({
-            label: RECEIVED_COLOR('received'),
-            specific: printWithType('Received', actual, printReceived),
-        });
-    }
-    if (!isBytesData(expected)) {
-        errorList.push({
-            label: EXPECTED_COLOR('expected'),
-            specific: printWithType('Expected', expected, printExpected),
-        });
-    }
+/**
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L163-L182
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L184-L203
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L218-L238
+ */
+export const ensureByteSize: EnsureFunc<number | bigint> = createEnsure({
+    predicate: isNonNegativeInteger,
+    typeName: 'a non-negative integer or non-negative bigint',
+});
 
-    if (errorList.length === 0) return;
-
-    // Prepend maybe not only for backward compatibility.
-    const matcherString = (options ? '' : '[.not]') + matcherName;
-    throw new Error(
-        matcherErrorMessage(
-            matcherHint(matcherString, undefined, undefined, options),
-            `${errorList.map(({ label }) => label).join(' and ')} ${errorList.length > 1 ? 'values' : 'value'}`
-                + ' must be a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer',
-            errorList.map(({ specific }) => specific).join('\n\n'),
-        ),
-    );
-}
+export const ensureBytes: EnsureFunc<BytesData> = createEnsure({
+    predicate: isBytesData,
+    typeName: 'a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer',
+});
 
 function getByteDataLines(byteData: BytesData): {
     onlyBytes: string[];
