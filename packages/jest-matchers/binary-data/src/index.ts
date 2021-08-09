@@ -4,6 +4,7 @@ import {
     toBeGreaterThanOrEqualByteSize,
     toBeLessThanByteSize,
     toBeLessThanOrEqualByteSize,
+    toBytesEqual,
 } from './matchers';
 
 type MatcherFn<T extends jest.CustomMatcher, R> = (
@@ -17,6 +18,7 @@ expect.extend({
     toBeGreaterThanOrEqualByteSize,
     toBeLessThanByteSize,
     toBeLessThanOrEqualByteSize,
+    toBytesEqual,
 });
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -27,6 +29,7 @@ declare global {
             toBeGreaterThanOrEqualByteSize: MatcherFn<typeof toBeGreaterThanOrEqualByteSize, R>;
             toBeLessThanByteSize: MatcherFn<typeof toBeLessThanByteSize, R>;
             toBeLessThanOrEqualByteSize: MatcherFn<typeof toBeLessThanOrEqualByteSize, R>;
+            toBytesEqual: MatcherFn<typeof toBytesEqual, R>;
         }
     }
 }

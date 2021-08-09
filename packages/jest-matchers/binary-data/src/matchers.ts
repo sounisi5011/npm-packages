@@ -1,7 +1,7 @@
-import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, matcherHint, printExpected, printReceived, RECEIVED_COLOR } from 'jest-matcher-utils';
 
-import { byteSize, toMessageFn } from './utils';
-import { ensureByteSize } from './utils/jest';
+import { BytesData, bytesEqual, byteSize, toMessageFn } from './utils';
+import { ensureBytes, ensureByteSize, printBytesDiff } from './utils/jest';
 
 function createCompareByteSizeMatcher(
     opts: {
@@ -89,3 +89,46 @@ export const toBeLessThanOrEqualByteSize = createCompareByteSizeMatcher({
     operator: '<=',
     passFn: ({ expected, received }) => received <= expected,
 });
+
+export function toBytesEqual(
+    this: jest.MatcherContext,
+    received: unknown,
+    expected: BytesData,
+): jest.CustomMatcherResult {
+    const matcherName = toBytesEqual.name;
+    const isNot = this.isNot;
+    const options: jest.MatcherHintOptions = {
+        isNot,
+        promise: this.promise,
+    };
+
+    ensureBytes(received, expected, matcherName, options);
+    const pass = bytesEqual(expected, received);
+
+    return {
+        message: toMessageFn(() =>
+            [
+                matcherHint(matcherName, undefined, undefined, options),
+                ``,
+            ].concat(
+                !pass
+                    ? printBytesDiff(
+                        expected,
+                        received,
+                        'Expected',
+                        'Received',
+                        this.expand,
+                    )
+                    : expected.constructor !== received.constructor
+                    ? [
+                        `Expected: not ${printExpected(expected)}`,
+                        `Received:     ${printReceived(received)}`,
+                    ]
+                    : [
+                        `Expected: not ${printExpected(expected)}`,
+                    ],
+            )
+        ),
+        pass,
+    };
+}

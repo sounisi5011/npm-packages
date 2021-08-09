@@ -1,3 +1,5 @@
+import { types } from 'util';
+
 function isNotNull<T>(value: T): value is Exclude<T, null> {
     return value !== null;
 }
@@ -16,6 +18,36 @@ export function isNonNegativeInteger(value: unknown): value is number | bigint {
         (Number.isSafeInteger as FixedIsInteger)(value)
         || typeof value === 'bigint'
     ) && (value >= 0 && !Object.is(value, -0));
+}
+
+export type BytesData = ArrayBufferLike | NodeJS.ArrayBufferView;
+
+export function isBytesData(value: unknown): value is BytesData {
+    return types.isArrayBufferView(value) || types.isAnyArrayBuffer(value);
+}
+
+export function bytesEqual(bytes1: BytesData, bytes2: BytesData): boolean {
+    if (bytes1 === bytes2) return true;
+    if (bytes1.byteLength !== bytes2.byteLength) return false;
+
+    const view1 = bytes2DataView(bytes1);
+    const view2 = bytes2DataView(bytes2);
+
+    for (let i = view1.byteLength; i--;) {
+        if (view1.getUint8(i) !== view2.getUint8(i)) return false;
+    }
+
+    return true;
+}
+
+export function bytes2DataView(value: BytesData): DataView {
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
+     */
+    if (types.isArrayBufferView(value)) {
+        return new DataView(value.buffer, value.byteOffset, value.byteLength);
+    }
+    return new DataView(value);
 }
 
 export function toMessageFn(func: () => (string | ReadonlyArray<string | null>)): jest.CustomMatcherResult['message'] {

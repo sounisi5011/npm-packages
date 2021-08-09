@@ -11,7 +11,7 @@
     "noEmit": false,
 
     /* Module Resolution Options */
-    "types": ["jest"]
+    "types": ["node", "jest"]
   },
   "include": ["./**/*"]
 }

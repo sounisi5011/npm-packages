@@ -55,11 +55,13 @@
     "test:jest": "jest"
   },
   "dependencies": {
+    "jest-diff": "^27.0.6",
     "jest-matcher-utils": "^27.0.6"
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@types/jest": "26.0.24",
+    "@types/node": "12.x",
     "jest": "27.0.6",
     "pretty-format": "26.6.2",
     "ts-jest": "27.0.3",
