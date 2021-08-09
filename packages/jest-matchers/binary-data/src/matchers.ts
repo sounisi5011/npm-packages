@@ -115,9 +115,11 @@ export function toBytesEqual(
                     ? printBytesDiff(
                         expected,
                         received,
-                        'Expected',
-                        'Received',
-                        this.expand,
+                        {
+                            expectedLabel: 'Expected',
+                            receivedLabel: 'Received',
+                            expand: this.expand,
+                        },
                     )
                     : expected.constructor !== received.constructor
                     ? [

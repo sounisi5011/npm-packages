@@ -100,9 +100,11 @@ function getByteDataLines(byteData: BytesData): {
 export function printBytesDiff(
     expected: BytesData,
     received: BytesData,
-    expectedLabel: string,
-    receivedLabel: string,
-    expand: boolean,
+    options: {
+        expectedLabel: string;
+        receivedLabel: string;
+        expand: boolean;
+    },
 ): string {
     const expectedLines = getByteDataLines(expected);
     const receivedLines = getByteDataLines(received);
@@ -112,9 +114,9 @@ export function printBytesDiff(
         ['', ...expectedLines.onlyBytes, ''],
         ['', ...receivedLines.onlyBytes, ''],
         {
-            aAnnotation: expectedLabel,
-            bAnnotation: receivedLabel,
-            expand,
+            aAnnotation: options.expectedLabel,
+            bAnnotation: options.receivedLabel,
+            expand: options.expand,
             includeChangeCounts: true,
         },
     );
