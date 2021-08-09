@@ -1,4 +1,4 @@
-import { EXPECTED_COLOR, matcherHint, printExpected, printReceived, RECEIVED_COLOR } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 
 import { BytesData, bytesEqual, byteSize, toMessageFn } from './utils';
 import { ensureBytes, ensureByteSize, printBytesDiff } from './utils/jest';
@@ -104,33 +104,16 @@ export function toBytesEqual(
 
     ensureBytes(received, expected, matcherName, options);
     const pass = bytesEqual(expected, received);
+    const message = toMessageFn(() => [
+        matcherHint(matcherName, undefined, undefined, options),
+        ``,
+        printBytesDiff(expected, received, {
+            expectedLabel: 'Expected',
+            receivedLabel: 'Received',
+            expand: this.expand,
+            pass,
+        }),
+    ]);
 
-    return {
-        message: toMessageFn(() =>
-            [
-                matcherHint(matcherName, undefined, undefined, options),
-                ``,
-            ].concat(
-                !pass
-                    ? printBytesDiff(
-                        expected,
-                        received,
-                        {
-                            expectedLabel: 'Expected',
-                            receivedLabel: 'Received',
-                            expand: this.expand,
-                        },
-                    )
-                    : expected.constructor !== received.constructor
-                    ? [
-                        `Expected: not ${printExpected(expected)}`,
-                        `Received:     ${printReceived(received)}`,
-                    ]
-                    : [
-                        `Expected: not ${printExpected(expected)}`,
-                    ],
-            )
-        ),
-        pass,
-    };
+    return { message, pass };
 }

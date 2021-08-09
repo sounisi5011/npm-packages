@@ -96,6 +96,7 @@ function getByteDataLines(byteData: BytesData): {
 
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L315-L394
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L955-L972
  */
 export function printBytesDiff(
     expected: BytesData,
@@ -104,20 +105,27 @@ export function printBytesDiff(
         expectedLabel: string;
         receivedLabel: string;
         expand: boolean;
+        pass: boolean;
     },
 ): string {
-    const expectedLines = getByteDataLines(expected);
-    const receivedLines = getByteDataLines(received);
-    return diffLinesUnified2(
-        ['<', ...expectedLines.withByteOffset.map(line => `  ${line},`), '>'],
-        ['<', ...receivedLines.withByteOffset.map(line => `  ${line},`), '>'],
-        ['', ...expectedLines.onlyBytes, ''],
-        ['', ...receivedLines.onlyBytes, ''],
-        {
-            aAnnotation: options.expectedLabel,
-            bAnnotation: options.receivedLabel,
-            expand: options.expand,
-            includeChangeCounts: true,
-        },
-    );
+    if (!options.pass) {
+        const expectedLines = getByteDataLines(expected);
+        const receivedLines = getByteDataLines(received);
+        return diffLinesUnified2(
+            ['<', ...expectedLines.withByteOffset.map(line => `  ${line},`), '>'],
+            ['<', ...receivedLines.withByteOffset.map(line => `  ${line},`), '>'],
+            ['', ...expectedLines.onlyBytes, ''],
+            ['', ...receivedLines.onlyBytes, ''],
+            {
+                aAnnotation: options.expectedLabel,
+                bAnnotation: options.receivedLabel,
+                expand: options.expand,
+                includeChangeCounts: true,
+            },
+        );
+    }
+
+    const lines = [`Expected: not ${printExpected(expected)}`];
+    if (expected.constructor !== received.constructor) lines.push(`Received:     ${printReceived(received)}`);
+    return lines.join('\n');
 }
