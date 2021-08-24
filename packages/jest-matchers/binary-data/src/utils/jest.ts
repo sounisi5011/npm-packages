@@ -9,7 +9,7 @@ import {
     RECEIVED_COLOR,
 } from 'jest-matcher-utils';
 
-import { bytes2DataView, BytesData, inspectSingleline, isBytesData, isNonNegativeInteger, padTextColumns } from '.';
+import { bytes2DataView, BytesData, inspectSingleline, isBytesData, isNonNegativeInteger, or, padTextColumns } from '.';
 
 interface EnsureFuncPredicateOptions<T> {
     predicate: (value: unknown) => value is T;
@@ -60,19 +60,19 @@ function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
     };
 }
 
+export const ensureBytes: EnsureFunc<BytesData> = createEnsure({
+    predicate: isBytesData,
+    typeName: 'a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer',
+});
+
 /**
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L163-L182
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L184-L203
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L218-L238
  */
-export const ensureByteSize: EnsureFunc<number | bigint> = createEnsure({
-    predicate: isNonNegativeInteger,
-    typeName: 'a non-negative integer or non-negative bigint',
-});
-
-export const ensureBytes: EnsureFunc<BytesData> = createEnsure({
-    predicate: isBytesData,
-    typeName: 'a TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer',
+export const ensureByteSizeOrBytes: EnsureFunc<number | bigint | BytesData> = createEnsure({
+    predicate: or(isNonNegativeInteger, isBytesData),
+    typeName: 'a non-negative integer, non-negative bigint, TypedArray, DataView, ArrayBuffer, or SharedArrayBuffer',
 });
 
 function getByteDataLines(byteData: BytesData): {

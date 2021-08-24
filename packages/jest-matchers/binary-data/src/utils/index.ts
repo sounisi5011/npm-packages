@@ -14,6 +14,10 @@ function toArray<T>(value: T | readonly T[]): T[] {
     return ([] as T[]).concat(value);
 }
 
+export function or<T1, T2>(predicate1: (value: unknown) => value is T1, predicate2: (value: unknown) => value is T2) {
+    return (value: unknown): value is T1 | T2 => predicate1(value) || predicate2(value);
+}
+
 type FixedIsInteger = (number: unknown) => number is number;
 
 /**

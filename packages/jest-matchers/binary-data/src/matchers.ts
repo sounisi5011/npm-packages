@@ -1,7 +1,7 @@
 import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 
-import { BytesData, bytesEqual, byteSize, padTextColumns, toMessageFn } from './utils';
-import { ensureBytes, ensureByteSize, printBytesDiff } from './utils/jest';
+import { BytesData, bytesEqual, byteSize, isBytesData, padTextColumns, toMessageFn } from './utils';
+import { ensureBytes, ensureByteSizeOrBytes, printBytesDiff } from './utils/jest';
 
 function createCompareByteSizeMatcher(
     opts: {
@@ -15,7 +15,7 @@ function createCompareByteSizeMatcher(
 ): (
     this: jest.MatcherContext,
     received: unknown,
-    expected: number | bigint,
+    expected: number | bigint | BytesData,
 ) => jest.CustomMatcherResult {
     const { matcherName, passFn } = opts;
     const operator: string = opts.operator ? opts.operator : '';
@@ -30,18 +30,20 @@ function createCompareByteSizeMatcher(
             promise: this.promise,
         };
 
-        ensureByteSize(received, expected, matcherName, options);
+        ensureByteSizeOrBytes(received, expected, matcherName, options);
+        const expectedByteLength = isBytesData(expected) ? expected.byteLength : expected;
+        const receivedByteLength = isBytesData(received) ? received.byteLength : received;
 
         return {
             message: toMessageFn(() => [
                 matcherHint(matcherName, undefined, undefined, options),
                 ``,
                 padTextColumns([
-                    ['Expected:', [isNot ? 'not' : '', operator], EXPECTED_COLOR(byteSize(expected))],
-                    ['Received:', '', RECEIVED_COLOR(byteSize(received))],
+                    ['Expected:', [isNot ? 'not' : '', operator], EXPECTED_COLOR(byteSize(expectedByteLength))],
+                    ['Received:', '', RECEIVED_COLOR(byteSize(receivedByteLength))],
                 ]),
             ]),
-            pass: passFn({ expected, received }),
+            pass: passFn({ expected: expectedByteLength, received: receivedByteLength }),
         };
     };
 }
