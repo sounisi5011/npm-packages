@@ -32,6 +32,10 @@ const list = {
     header: 'TypeScript Type Utilities',
     getVersionLink: createNpmBadge,
   },
+  'packages/jest-matchers': {
+    header: 'Jest Matchers',
+    getVersionLink: createNpmBadge,
+  },
   'actions': 'GitHub Actions',
 };
 
