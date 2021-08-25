@@ -9,10 +9,6 @@ const inspect1line = (value: unknown): string =>
         },
     );
 
-export function createTupleArray<T extends readonly [...unknown[]]>(...args: T): [...T] {
-    return [...args];
-}
-
 export function getTypedArrayList(arrayBuffer: ArrayBufferLike): Array<NodeJS.TypedArray | Buffer> {
     return [
         new Int8Array(arrayBuffer),

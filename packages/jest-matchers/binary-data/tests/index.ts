@@ -2,7 +2,7 @@ import '../src';
 
 import { plugins as prettyFormatPlugins } from 'pretty-format';
 
-import { createTupleArray, getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
+import { getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 
 expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
 
@@ -265,13 +265,13 @@ describe('.toBytesEqual()', () => {
     const sameCases = unshiftInspect(
         cases1.flatMap(actual =>
             cases1
-                .map(expected => createTupleArray(actual, expected))
+                .map(expected => [actual, expected])
         ),
     );
     const diffCases = unshiftInspect(
         cases1.flatMap(actual =>
             cases2
-                .map(expected => createTupleArray(actual, expected))
+                .map(expected => [actual, expected])
         ),
     );
 
