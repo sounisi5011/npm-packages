@@ -10,7 +10,7 @@ importers:
       '@typescript-eslint/parser': 4.28.2
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
-      dprint: 0.15.3
+      dprint: 0.15.4
       eslint: 7.30.0
       eslint-config-prettier: 8.3.0
       eslint-config-standard: 16.0.3
@@ -19,8 +19,8 @@ importers:
       eslint-plugin-jest: 24.3.6
       eslint-plugin-node: 11.1.0
       eslint-plugin-promise: 5.1.0
-      husky: 7.0.1
-      lint-staged: 11.0.0
+      husky: 7.0.2
+      lint-staged: 11.1.2
       npm-run-all: 4.1.5
       prettier: 2.3.2
       prettier-package-json: 2.6.0
@@ -34,7 +34,7 @@ importers:
       '@typescript-eslint/parser': 4.28.2_eslint@7.30.0+typescript@4.3.5
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
-      dprint: 0.15.3
+      dprint: 0.15.4
       eslint: 7.30.0
       eslint-config-prettier: 8.3.0_eslint@7.30.0
       eslint-config-standard: 16.0.3_68aba462ebcb9819879db75ba6ea05da
@@ -43,8 +43,8 @@ importers:
       eslint-plugin-jest: 24.3.6_bbfe94bdc32beb9697419a1eeb1a03aa
       eslint-plugin-node: 11.1.0_eslint@7.30.0
       eslint-plugin-promise: 5.1.0_eslint@7.30.0
-      husky: 7.0.1
-      lint-staged: 11.0.0
+      husky: 7.0.2
+      lint-staged: 11.1.2
       npm-run-all: 4.1.5
       prettier: 2.3.2
       prettier-package-json: 2.6.0
@@ -2687,8 +2687,8 @@ packages:
       is-obj: 2.0.0
     dev: false
 
-  /dprint/0.15.3:
-    resolution: {integrity: sha512-x/7wc+7TMSj+gO0vzeyU6X/3RqWph1nariuYCuhaF9hFSkmzShMuAhw4aJLxZoS/V/qtDAbJtsZ4/mJeGU1qvg==}
+  /dprint/0.15.4:
+    resolution: {integrity: sha512-VQBDKa7bqYfN1aeVU1BzXp/FUT/jh3nmmQAH8EuDmjZE7Z4lh5H4YjMyUyIicNQxAG5rJF0Z8ZOe2nVzxl+cQg==}
     hasBin: true
     requiresBuild: true
     dev: true
@@ -3734,8 +3734,8 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
-  /husky/7.0.1:
-    resolution: {integrity: sha512-gceRaITVZ+cJH9sNHqx5tFwbzlLCVxtVZcusME8JYQ8Edy5mpGDOqD8QBCdMhpyo9a+JXddnujQ4rpY2Ff9SJA==}
+  /husky/7.0.2:
+    resolution: {integrity: sha512-8yKEWNX4z2YsofXAMT7KvA1g8p+GxtB1ffV8XtpAEGuXNAbCV5wdNKH+qTpw8SM9fh4aMPDR+yQuKfgnreyZlg==}
     engines: {node: '>=12'}
     hasBin: true
     dev: true
@@ -4860,8 +4860,8 @@ packages:
   /lines-and-columns/1.1.6:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
 
-  /lint-staged/11.0.0:
-    resolution: {integrity: sha512-3rsRIoyaE8IphSUtO1RVTFl1e0SLBtxxUOPBtHxQgBHS5/i6nqvjcUfNioMa4BU9yGnPzbO+xkfLtXtxBpCzjw==}
+  /lint-staged/11.1.2:
+    resolution: {integrity: sha512-6lYpNoA9wGqkL6Hew/4n1H6lRqF3qCsujVT0Oq5Z4hiSAM7S6NksPJ3gnr7A7R52xCtiZMcEUNNQ6d6X5Bvh9w==}
     hasBin: true
     dependencies:
       chalk: 4.1.1
@@ -4869,7 +4869,6 @@ packages:
       commander: 7.2.0
       cosmiconfig: 7.0.0
       debug: 4.3.2
-      dedent: 0.7.0
       enquirer: 2.3.6
       execa: 5.1.1
       listr2: 3.10.0_enquirer@2.3.6
