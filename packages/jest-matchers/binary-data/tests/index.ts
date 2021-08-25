@@ -2,7 +2,7 @@ import '../src';
 
 import { plugins as prettyFormatPlugins } from 'pretty-format';
 
-import { createTupleArray, getBytesDataList, getTypedArrayList, toIntAndBigintCases, unshiftInspect } from './helpers';
+import { createTupleArray, getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 
 expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
 
@@ -259,20 +259,8 @@ expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
 }
 
 describe('.toBytesEqual()', () => {
-    const cases1 = ((): Array<ArrayBuffer | DataView | NodeJS.TypedArray | Buffer> => {
-        const arrayBuffer = new ArrayBuffer(16);
-        const dataView = new DataView(arrayBuffer);
-        const typedArrayList = getTypedArrayList(arrayBuffer);
-        dataView.setFloat64(0, 0.01);
-        return [arrayBuffer, dataView, ...typedArrayList];
-    })();
-    const cases2 = ((): Array<ArrayBuffer | DataView | NodeJS.TypedArray | Buffer> => {
-        const arrayBuffer = new ArrayBuffer(16);
-        const dataView = new DataView(arrayBuffer);
-        const typedArrayList = getTypedArrayList(arrayBuffer);
-        dataView.setFloat64(1, 0.02);
-        return [arrayBuffer, dataView, ...typedArrayList];
-    })();
+    const cases1 = getBytesDataList(16, dataView => dataView.setFloat64(0, 0.01));
+    const cases2 = getBytesDataList(16, dataView => dataView.setFloat64(1, 0.02));
 
     const sameCases = unshiftInspect(
         cases1.flatMap(actual =>

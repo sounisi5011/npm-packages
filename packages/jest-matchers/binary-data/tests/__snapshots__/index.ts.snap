@@ -23729,6 +23729,13 @@ Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
 Received:     <red><Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00></>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
+Received:     <red><Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00></>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>).not.toBytesEqual(expected = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -24017,6 +24024,32 @@ exports[`.toBytesEqual() fail expect(actual = <Buffer 3f 84 7a e1 47 ae 14 7b 00
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -24187,6 +24220,13 @@ exports[`.toBytesEqual() fail expect(actual = ArrayBuffer { [Uint8Contents]: <3f
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
 `;
 
@@ -24478,6 +24518,32 @@ exports[`.toBytesEqual() fail expect(actual = ArrayBuffer { [Uint8Contents]: <3f
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -24648,6 +24714,13 @@ exports[`.toBytesEqual() fail expect(actual = BigInt64Array(2) [ 886890518994816
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>BigInt64Array(2) [ 8868905189948163135n, 0n ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = BigInt64Array(2) [ 8868905189948163135n, 0n ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>BigInt64Array(2) [ 8868905189948163135n, 0n ]</>"
 `;
 
@@ -24939,6 +25012,32 @@ exports[`.toBytesEqual() fail expect(actual = BigInt64Array(2) [ 886890518994816
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = BigInt64Array(2) [ 8868905189948163135n, 0n ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = BigInt64Array(2) [ 8868905189948163135n, 0n ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -25109,6 +25208,13 @@ exports[`.toBytesEqual() fail expect(actual = BigUint64Array(2) [ 88689051899481
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>BigUint64Array(2) [ 8868905189948163135n, 0n ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = BigUint64Array(2) [ 8868905189948163135n, 0n ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>BigUint64Array(2) [ 8868905189948163135n, 0n ]</>"
 `;
 
@@ -25400,6 +25506,32 @@ exports[`.toBytesEqual() fail expect(actual = BigUint64Array(2) [ 88689051899481
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = BigUint64Array(2) [ 8868905189948163135n, 0n ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = BigUint64Array(2) [ 8868905189948163135n, 0n ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -25570,6 +25702,13 @@ exports[`.toBytesEqual() fail expect(actual = DataView { byteLength: 16, byteOff
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }</>"
 `;
 
@@ -25861,6 +26000,32 @@ exports[`.toBytesEqual() fail expect(actual = DataView { byteLength: 16, byteOff
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -26031,6 +26196,13 @@ exports[`.toBytesEqual() fail expect(actual = Float32Array(4) [ -288825959610245
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]</>"
 `;
 
@@ -26322,6 +26494,32 @@ exports[`.toBytesEqual() fail expect(actual = Float32Array(4) [ -288825959610245
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -26492,6 +26690,13 @@ exports[`.toBytesEqual() fail expect(actual = Float64Array(2) [ 7.68816898872414
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Float64Array(2) [ 7.688168988724143e+284, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Float64Array(2) [ 7.688168988724143e+284, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Float64Array(2) [ 7.688168988724143e+284, 0 ]</>"
 `;
 
@@ -26783,6 +26988,32 @@ exports[`.toBytesEqual() fail expect(actual = Float64Array(2) [ 7.68816898872414
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Float64Array(2) [ 7.688168988724143e+284, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Float64Array(2) [ 7.688168988724143e+284, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -26953,6 +27184,13 @@ exports[`.toBytesEqual() fail expect(actual = Int8Array(16) [ 63, -124, 122, -31
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
 `;
 
@@ -27244,6 +27482,32 @@ exports[`.toBytesEqual() fail expect(actual = Int8Array(16) [ 63, -124, 122, -31
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -27414,6 +27678,13 @@ exports[`.toBytesEqual() fail expect(actual = Int16Array(8) [ -31681, -7814, -20
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]</>"
 `;
 
@@ -27705,6 +27976,32 @@ exports[`.toBytesEqual() fail expect(actual = Int16Array(8) [ -31681, -7814, -20
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -27876,6 +28173,13 @@ exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 206495
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 2064952903, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
+Received:     <red>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>"
 `;
 
 exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 2064952903, 0, 0 ]).not.toBytesEqual(expected = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
@@ -28166,6 +28470,32 @@ exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 206495
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 2064952903, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 2064952903, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -28270,6 +28600,500 @@ exports[`.toBytesEqual() fail expect(actual = Int32Array(4) [ -512064449, 206495
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green><Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00></>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = BigInt64Array(2) [ 8868905189948163135n, 0n ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>BigInt64Array(2) [ 8868905189948163135n, 0n ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = BigUint64Array(2) [ 8868905189948163135n, 0n ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>BigUint64Array(2) [ 8868905189948163135n, 0n ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 } }</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Float32Array(4) [ -288825959610245450000, 7.719946995337284e+35, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Float64Array(2) [ 7.688168988724143e+284, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Float64Array(2) [ 7.688168988724143e+284, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Int8Array(16) [ 63, -124, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Int16Array(8) [ -31681, -7814, -20921, 31508, 0, 0, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Int32Array(4) [ -512064449, 2064952903, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).not.toBytesEqual(expected = Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]</>
+Received:     <red>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = <Buffer 00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = ArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = BigInt64Array(2) [ 1490207560455962368n, 123n ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = BigUint64Array(2) [ 1490207560455962368n, 123n ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = DataView { byteLength: 16, byteOffset: 0, buffer: ArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 } }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Float32Array(4) [ 3.848688634340923e+35, 1.759786131060771e-26, 1.723597111119525e-43, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Float64Array(2) [ 4.6053234898221557e-209, 6.1e-322 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Int8Array(16) [ 0, 63, -108, 122, -31, 71, -82, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Int16Array(8) [ 16128, 31380, 18401, 5294, 123, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Int32Array(4) [ 2056535808, 346965985, 123, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Uint8ClampedArray(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Uint16Array(8) [ 16128, 31380, 18401, 5294, 123, 0, 0, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }).toBytesEqual(expected = Uint32Array(4) [ 2056535808, 346965985, 123, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).not.toBytesEqual(expected = <Buffer 3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -28337,6 +29161,13 @@ exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
 `;
 
@@ -28627,6 +29458,32 @@ exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Uint8Array(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -28798,6 +29655,13 @@ exports[`.toBytesEqual() fail expect(actual = Uint8ClampedArray(16) [ 63, 132, 1
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]</>"
 `;
 
@@ -29088,6 +29952,32 @@ exports[`.toBytesEqual() fail expect(actual = Uint8ClampedArray(16) [ 63, 132, 1
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Uint8ClampedArray(16) [ 63, 132, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -29259,6 +30149,13 @@ exports[`.toBytesEqual() fail expect(actual = Uint16Array(8) [ 33855, 57722, 446
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]</>"
 `;
 
@@ -29549,6 +30446,32 @@ exports[`.toBytesEqual() fail expect(actual = Uint16Array(8) [ 33855, 57722, 446
 <dim>    13: 0x00,</>"
 `;
 
+exports[`.toBytesEqual() fail expect(actual = Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
 exports[`.toBytesEqual() fail expect(actual = Uint16Array(8) [ 33855, 57722, 44615, 31508, 0, 0, 0, 0 ]).toBytesEqual(expected = Uint8Array(16) [ 0, 63, 148, 122, 225, 71, 174, 20, 123, 0, 0, 0, 0, 0, 0, 0 ]) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
@@ -29720,6 +30643,13 @@ exports[`.toBytesEqual() fail expect(actual = Uint32Array(4) [ 3782902847, 20649
 "<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 Expected: not <green>Int32Array(4) [ -512064449, 2064952903, 0, 0 ]</>
+Received:     <red>Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]).not.toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+Expected: not <green>SharedArrayBuffer { [Uint8Contents]: <3f 84 7a e1 47 ae 14 7b 00 00 00 00 00 00 00 00>, byteLength: 16 }</>
 Received:     <red>Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]</>"
 `;
 
@@ -29985,6 +30915,32 @@ exports[`.toBytesEqual() fail expect(actual = Uint32Array(4) [ 3782902847, 20649
 `;
 
 exports[`.toBytesEqual() fail expect(actual = Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]).toBytesEqual(expected = Int32Array(4) [ 2056535808, 346965985, 123, 0 ]) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
+
+<green>- Expected  - 2</>
+<red>+ Received  + 2</>
+
+<yellow>@@ -1,15 +1,15 @@</>
+<dim>  <</>
+<green>-   00: 0x00,</>
+<dim>    00: 0x3F,</>
+<green>-   02: 0x94,</>
+<red>+   01: 0x84,</>
+<dim>    02: 0x7A,</>
+<dim>    03: 0xE1,</>
+<dim>    04: 0x47,</>
+<dim>    05: 0xAE,</>
+<dim>    06: 0x14,</>
+<dim>    07: 0x7B,</>
+<red>+   08: 0x00,</>
+<dim>    09: 0x00,</>
+<dim>    10: 0x00,</>
+<dim>    11: 0x00,</>
+<dim>    12: 0x00,</>
+<dim>    13: 0x00,</>"
+`;
+
+exports[`.toBytesEqual() fail expect(actual = Uint32Array(4) [ 3782902847, 2064952903, 0, 0 ]).toBytesEqual(expected = SharedArrayBuffer { [Uint8Contents]: <00 3f 94 7a e1 47 ae 14 7b 00 00 00 00 00 00 00>, byteLength: 16 }) 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toBytesEqual<dim>(</><green>expected</><dim>)</>
 
 <green>- Expected  - 2</>

@@ -1,7 +1,5 @@
 import { inspect } from 'util';
 
-import type { BytesData } from '../../src/utils';
-
 const inspect1line = (value: unknown): string =>
     inspect(
         value,
@@ -32,13 +30,24 @@ export function getTypedArrayList(arrayBuffer: ArrayBufferLike): Array<NodeJS.Ty
     ];
 }
 
-export function getBytesDataList(byteLength: number): BytesData[] {
+export function getBytesDataList(
+    byteLength: number,
+    updateFn?: (data: DataView) => void,
+): Array<ArrayBufferLike | DataView | NodeJS.TypedArray | Buffer> {
     const arrayBuffer = new ArrayBuffer(byteLength);
+    const sharedArrayBuffer = new SharedArrayBuffer(byteLength);
+    const dataView = new DataView(arrayBuffer);
+
+    if (updateFn) {
+        updateFn(dataView);
+        updateFn(new DataView(sharedArrayBuffer));
+    }
+
     return [
         arrayBuffer,
-        new SharedArrayBuffer(byteLength),
+        sharedArrayBuffer,
         ...getTypedArrayList(arrayBuffer),
-        new DataView(arrayBuffer),
+        dataView,
     ];
 }
 
