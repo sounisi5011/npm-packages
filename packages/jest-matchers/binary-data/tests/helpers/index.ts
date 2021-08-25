@@ -67,24 +67,13 @@ export function toIntAndBigintCases<TActual, TExpected>(
     });
 }
 
-function unshiftTestCases<
-    T extends readonly [...unknown[]],
-    U extends readonly [...unknown[]]
->(
-    cases: readonly T[],
-    pushFn: (...args: T) => [...U],
-): Array<[...U, ...T]> {
-    return cases
-        .map(caseValues => [
-            ...pushFn(...caseValues),
-            ...caseValues,
-        ]);
-}
-
-export const unshiftInspect = <TActual, TExpected>(
+export function unshiftInspect<TActual, TExpected>(
     cases: ReadonlyArray<readonly [TActual, TExpected]>,
-): Array<[string, string, TActual, TExpected]> =>
-    unshiftTestCases(
-        cases,
-        (actual, expected) => [inspect1line(actual), inspect1line(expected)],
-    );
+): Array<[string, string, TActual, TExpected]> {
+    return cases.map(([actual, expected]) => [
+        inspect1line(actual),
+        inspect1line(expected),
+        actual,
+        expected,
+    ]);
+}
