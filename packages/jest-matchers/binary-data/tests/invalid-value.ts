@@ -55,36 +55,24 @@ const matcherNameList = Reflect.ownKeys(matcherList)
 
 describe.each(matcherNameList)('.%s()', matcherName => {
     describe('invalid type actual', () => {
+        const expectedValue = new Uint8Array();
         it.each(invalidValueList)(`expect(actual = %p).${matcherName}(…)`, actual => {
             expect(() => {
-                const jestMatchers = expect(actual);
-                if (matcherName === 'toBytesEqual') {
-                    jestMatchers[matcherName](new Uint8Array());
-                } else {
-                    jestMatchers[matcherName](0);
-                }
+                expect(actual)[matcherName](expectedValue);
             }).toThrowErrorMatchingSnapshot();
         });
         it.each(invalidValueList)(`expect(actual = %p).not.${matcherName}(…)`, actual => {
             expect(() => {
-                // eslint-disable-next-line jest/valid-expect
-                const jestMatchers = expect(actual).not;
-                if (matcherName === 'toBytesEqual') {
-                    jestMatchers[matcherName](new Uint8Array());
-                } else {
-                    jestMatchers[matcherName](0);
-                }
+                expect(actual).not[matcherName](expectedValue);
             }).toThrowErrorMatchingSnapshot();
         });
     });
     describe('invalid type expected', () => {
-        const actualValue = matcherName === 'toBytesEqual'
-            ? new Uint8Array()
-            : 0;
+        const actualValue = new Uint8Array();
         it.each(invalidValueList)(`expect(…).${matcherName}(expected = %p)`, expected => {
             expect(() =>
                 expect(actualValue)[matcherName](
-                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
+                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
                 )
             ).toThrowErrorMatchingSnapshot();
@@ -92,7 +80,7 @@ describe.each(matcherNameList)('.%s()', matcherName => {
         it.each(invalidValueList)(`expect(…).not.${matcherName}(expected = %p)`, expected => {
             expect(() =>
                 expect(actualValue).not[matcherName](
-                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
+                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
                 )
             ).toThrowErrorMatchingSnapshot();
@@ -102,7 +90,7 @@ describe.each(matcherNameList)('.%s()', matcherName => {
         it.each(invalidValuePairList)(`expect(actual = %p).${matcherName}(expected = %p)`, (actual, expected) => {
             expect(() =>
                 expect(actual)[matcherName](
-                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
+                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
                 )
             ).toThrowErrorMatchingSnapshot();
@@ -110,7 +98,7 @@ describe.each(matcherNameList)('.%s()', matcherName => {
         it.each(invalidValuePairList)(`expect(actual = %p).not.${matcherName}(expected = %p)`, (actual, expected) => {
             expect(() =>
                 expect(actual).not[matcherName](
-                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'number | bigint'.
+                    // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
                 )
             ).toThrowErrorMatchingSnapshot();
