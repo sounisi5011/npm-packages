@@ -112,7 +112,7 @@
     "grpc_tools_node_protoc_ts": "5.3.0",
     "jest": "27.0.6",
     "jest-extended": "0.11.5",
-    "jest-matcher-utils": "26.6.2",
+    "jest-matcher-utils": "27.1.0",
     "multicodec": "3.1.0",
     "noop-stream": "0.1.0",
     "ts-jest": "27.0.3",
