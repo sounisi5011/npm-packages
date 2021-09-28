@@ -1,4 +1,5 @@
 import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
+import type { MatcherHintOptions } from 'jest-matcher-utils';
 
 import { BytesData, bytesEqual, byteSize, isBytesData, padTextColumns, toMessageFn } from './utils';
 import { ensureBytes, ensureByteSizeOrBytes, printBytesDiff } from './utils/jest';
@@ -25,7 +26,7 @@ function createCompareByteSizeMatcher(
      */
     return function(received, expected) {
         const isNot = this.isNot;
-        const options: jest.MatcherHintOptions = {
+        const options: MatcherHintOptions = {
             isNot,
             promise: this.promise,
         };
@@ -100,7 +101,7 @@ export function toBytesEqual(
 ): jest.CustomMatcherResult {
     const matcherName = toBytesEqual.name;
     const isNot = this.isNot;
-    const options: jest.MatcherHintOptions = {
+    const options: MatcherHintOptions = {
         isNot,
         promise: this.promise,
     };

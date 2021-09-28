@@ -8,6 +8,7 @@ import {
     printWithType,
     RECEIVED_COLOR,
 } from 'jest-matcher-utils';
+import type { MatcherHintOptions } from 'jest-matcher-utils';
 
 import { bytes2DataView, BytesData, inspectSingleline, isBytesData, isNonNegativeInteger, or, padTextColumns } from '.';
 
@@ -20,7 +21,7 @@ type EnsureFunc<TActual> = (
     actual: unknown,
     expected: unknown,
     matcherName: string,
-    options: jest.MatcherHintOptions,
+    options: MatcherHintOptions,
 ) => asserts actual is TActual;
 
 function printValues(valueNameList: readonly string[]): string {
