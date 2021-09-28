@@ -3,15 +3,15 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "outDir": "../dist",
+    /* Modules */
     // When the `composite` option is `true` and the `rootDir` option is undefined,
     // files will not be created directly under the `outDir`
     "rootDir": "./",
-    "noEmit": false,
+    "types": ["node", "jest"],
 
-    /* Module Resolution Options */
-    "types": ["node", "jest"]
+    /* Emit */
+    "outDir": "../dist",
+    "noEmit": false
   },
   "include": ["./**/*"]
 }

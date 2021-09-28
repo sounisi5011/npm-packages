@@ -3,15 +3,24 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
+    /* Language and Environment */
     // Node.js 12.9.0 or newer supports all new functions and properties introduced in ES2020
     // see https://qiita.com/suin/items/32f76c9b88b8daa286c4#nodejs-129%E6%9C%AA%E6%BA%80%E3%81%AE%E5%A0%B4%E5%90%88
     // see https://stackoverflow.com/a/59787575/4907315
     "lib": ["ES2020"],
+
+    /* Modules */
+    "types": [],
+
+    /* Emit */
     "declarationMap": false,
     "noEmit": true,
 
-    /* Module Resolution Options */
-    "types": []
+    /* Type Checking */
+    // This flag should have been enabled by the "strict" option written in the inherited tsconfig.
+    // However, it does not show up in the results of the "tsc --showConfig" command.
+    // For this reason, we have enabled it explicitly.
+    "useUnknownInCatchVariables": true,
+    "exactOptionalPropertyTypes": true
   }
 }
