@@ -14,13 +14,13 @@
 
     /* Emit */
     "declarationMap": false,
-    "noEmit": true,
+    "noEmit": true
 
     /* Type Checking */
     // This flag should have been enabled by the "strict" option written in the inherited tsconfig.
     // However, it does not show up in the results of the "tsc --showConfig" command.
     // For this reason, we have enabled it explicitly.
-    "useUnknownInCatchVariables": true,
-    "exactOptionalPropertyTypes": true
+    //"useUnknownInCatchVariables": true, /** @todo Comment out when TypeScript in the project root is upgraded to 4.4+ */
+    //"exactOptionalPropertyTypes": true /** @todo Comment out when TypeScript in the project root is upgraded to 4.4+ */
   }
 }
