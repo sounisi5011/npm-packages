@@ -34,7 +34,8 @@ describe('isPropertyAccessible()', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         it.each(anyValues.filter(v => !isPropertyAccessible(v)))('%p', (value: any) => {
             expect(() => value.foo).toThrow(TypeError);
-            expect(() => value.foo).toThrow(/^Cannot read property 'foo'/);
+            // Starting with Node.js 16.9.0, the format of error messages has been changed
+            expect(() => value.foo).toThrow(/^Cannot read property 'foo'|^Cannot read properties .*\(reading 'foo'\)$/);
         });
     });
 });
