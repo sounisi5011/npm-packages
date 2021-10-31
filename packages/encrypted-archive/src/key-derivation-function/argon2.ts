@@ -1,5 +1,5 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
-import argon2 from 'argon2-browser';
+import { ArgonType, hash as argonHash } from 'argon2-browser';
 import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
@@ -7,8 +7,8 @@ import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObje
 import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
 
 const argon2TypeRecord = {
-    argon2d: argon2.ArgonType.Argon2d,
-    argon2id: argon2.ArgonType.Argon2id,
+    argon2d: ArgonType.Argon2d,
+    argon2id: ArgonType.Argon2id,
 };
 const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
 const typeNameList = [...argon2TypeMap.keys()];
@@ -269,7 +269,7 @@ function normalizeInternalError(error: unknown): never {
 }
 
 function createDeriveKeyFunc(
-    type: argon2.ArgonType,
+    type: ArgonType,
     options: Omit<NormalizedArgon2Options, 'algorithm'>,
 ): GetArgon2KDFResult['deriveKey'] {
     return async (password, salt, keyLengthBytes) => {
@@ -287,7 +287,7 @@ function createDeriveKeyFunc(
             { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
-        return await argon2.hash({
+        return await argonHash({
             pass: passwordBufferOrString,
             salt,
             time: options.iterations,
