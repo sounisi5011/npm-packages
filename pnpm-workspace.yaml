@@ -4,6 +4,7 @@ packages:
   - packages/cli-utils/*
   - packages/ts-utils/*
   - packages/ts-type-utils/*
+  - packages/jest-matchers/*
   - actions/*
   - scripts
   - scripts/*

@@ -10,6 +10,7 @@
 - [CLI Utilities](#cli-utilities)
 - [TypeScript Utilities](#typescript-utilities)
 - [TypeScript Type Utilities](#typescript-type-utilities)
+- [Jest Matchers](#jest-matchers)
 - [GitHub Actions](#github-actions)
 
 ### Packages
@@ -44,6 +45,12 @@
 |-|-|-|
 | [`@sounisi5011/ts-type-util-has-own-property`](./packages/ts-type-utils/has-own-property) | [![npm](https://img.shields.io/npm/v/@sounisi5011/ts-type-util-has-own-property.svg)](https://www.npmjs.com/package/@sounisi5011/ts-type-util-has-own-property) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fts-type-utils%2Fhas-own-property)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fts-type-utils%2Fhas-own-property) |
 | [`@sounisi5011/ts-type-util-is-readonly-array`](./packages/ts-type-utils/is-readonly-array) | [![npm](https://img.shields.io/npm/v/@sounisi5011/ts-type-util-is-readonly-array.svg)](https://www.npmjs.com/package/@sounisi5011/ts-type-util-is-readonly-array) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fts-type-utils%2Fis-readonly-array)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fts-type-utils%2Fis-readonly-array) |
+
+### Jest Matchers
+
+| Package | Version | Dependencies |
+|-|-|-|
+| [`@sounisi5011/jest-binary-data-matchers`](./packages/jest-matchers/binary-data) | [![npm](https://img.shields.io/npm/v/@sounisi5011/jest-binary-data-matchers.svg)](https://www.npmjs.com/package/@sounisi5011/jest-binary-data-matchers) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fjest-matchers%2Fbinary-data)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fjest-matchers%2Fbinary-data) |
 
 ### GitHub Actions
 
