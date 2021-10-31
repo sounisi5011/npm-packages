@@ -174,7 +174,7 @@ importers:
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
       ts-jest: 27.0.7
-      type-fest: 1.2.2
+      type-fest: 1.4.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
     dependencies:
@@ -195,7 +195,7 @@ importers:
       is-plain-obj: 3.0.0
       jest: 27.3.1
       ts-jest: 27.0.7_35e891dc1f235c55ba86124cc89716fa
-      type-fest: 1.2.2
+      type-fest: 1.4.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
@@ -6918,8 +6918,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /type-fest/1.2.2:
-    resolution: {integrity: sha512-pfkPYCcuV0TJoo/jlsUeWNV8rk7uMU6ocnYNvca1Vu+pyKi8Rl8Zo2scPt9O72gCsXIm+dMxOOWuA3VFDSdzWA==}
+  /type-fest/1.4.0:
+    resolution: {integrity: sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==}
     engines: {node: '>=10'}
     dev: true
 
