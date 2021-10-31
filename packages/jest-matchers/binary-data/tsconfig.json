@@ -14,7 +14,8 @@
 
     /* Emit */
     "declarationMap": false,
-    "noEmit": true
+    "noEmit": true,
+    "inlineSources": true
 
     /* Type Checking */
     // This flag should have been enabled by the "strict" option written in the inherited tsconfig.

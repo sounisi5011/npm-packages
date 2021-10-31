@@ -42,9 +42,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "src/",
-    "!*.tsbuildinfo",
-    "!tsconfig.json"
+    "!*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc -p ./src/",
