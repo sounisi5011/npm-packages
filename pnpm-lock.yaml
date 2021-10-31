@@ -207,7 +207,7 @@ importers:
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/argon2-browser': 1.18.1
-      '@types/bl': 5.0.1
+      '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.3
       '@types/jest': 26.0.24
@@ -245,7 +245,7 @@ importers:
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.18.1
-      '@types/bl': 5.0.1
+      '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.3
       '@types/jest': 26.0.24
@@ -1540,10 +1540,10 @@ packages:
       '@babel/types': 7.14.5
     dev: true
 
-  /@types/bl/5.0.1:
-    resolution: {integrity: sha512-hcjx0OAaT82pFU0bN2f6k4n6nyyIKsTe9PuXtY1zkANNPbUmJJmTtt98UebGHZuPwll7atG3UPXxYJ634cnLqg==}
+  /@types/bl/5.0.2:
+    resolution: {integrity: sha512-V4g3uJIfBHeDd/35QTPOujJ4+viJJVtNwC2LmBUZeXGSGL60R5iTsBEZ9Nh+wP3asMOA/LEFHxmKT6JzK+Vd0A==}
     dependencies:
-      '@types/node': 16.0.0
+      '@types/node': 16.11.6
       '@types/readable-stream': 2.3.10
     dev: true
 
@@ -1676,7 +1676,7 @@ packages:
   /@types/readable-stream/2.3.10:
     resolution: {integrity: sha512-xwSXvAv9x4B9Vj88AMZnFyEVLilz1EBxKvRUhGqIF4nJpRQBSTm7jS236X4Y9Y2qPsVvaMxwrGJlNhLHEahlFQ==}
     dependencies:
-      '@types/node': 16.0.0
+      '@types/node': 16.11.6
       safe-buffer: 5.2.1
     dev: true
 
