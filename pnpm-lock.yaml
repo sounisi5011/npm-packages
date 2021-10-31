@@ -63,7 +63,7 @@ importers:
       '@types/jest': 26.0.24
       '@types/node': '*'
       '@types/validate-npm-package-name': 3.0.3
-      '@vercel/ncc': 0.28.6
+      '@vercel/ncc': 0.31.1
       cross-env: 7.0.3
       find-git-root: 1.0.4
       jest: 27.0.6
@@ -91,7 +91,7 @@ importers:
       '@types/jest': 26.0.24
       '@types/node': 16.0.0
       '@types/validate-npm-package-name': 3.0.3
-      '@vercel/ncc': 0.28.6
+      '@vercel/ncc': 0.31.1
       cross-env: 7.0.3
       jest: 27.0.6
       jest-mock-process: 1.4.1_jest@27.0.6
@@ -1900,8 +1900,8 @@ packages:
       eslint-visitor-keys: 2.1.0
     dev: true
 
-  /@vercel/ncc/0.28.6:
-    resolution: {integrity: sha512-t4BoSSuyK8BZaUE0gV18V6bkFs4st7baumtFGa50dv1tMu2GDBEBF8sUZaKBdKiL6DzJ2D2+XVCwYWWDcQOYdQ==}
+  /@vercel/ncc/0.31.1:
+    resolution: {integrity: sha512-g0FAxwdViI6UzsiVz5HssIHqjcPa1EHL6h+2dcJD893SoCJaGdqqgUF09xnMW6goWnnhbLvgiKlgJWrJa+7qYA==}
     hasBin: true
     dev: true
 
