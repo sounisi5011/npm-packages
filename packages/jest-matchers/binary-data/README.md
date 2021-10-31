@@ -27,7 +27,7 @@ pnpm add @sounisi5011/jest-binary-data-matchers
 
 ## Setup
 
-Add your setup script to your [Jest `setupFilesAfterEnv` configuration](https://jestjs.io/docs/configuration#setupfilesafterenv-array).
+Add `"@sounisi5011/jest-binary-data-matchers"` to your [Jest `setupFilesAfterEnv` configuration](https://jestjs.io/docs/configuration#setupfilesafterenv-array).
 
 ```json
 "jest": {
