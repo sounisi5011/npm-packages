@@ -350,7 +350,7 @@ importers:
       '@types/jest': 26.0.24
       glob-exec: 0.1.1
       jest: 27.0.6
-      rollup: 2.53.0
+      rollup: 2.58.3
       ts-jest: 27.0.3
       tsd: 0.17.0
       tslib: 2.3.0
@@ -358,11 +358,11 @@ importers:
       ultra-runner: 3.10.5
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.2.1_7d14c01c9edee995879776e735b07730
+      '@rollup/plugin-typescript': 8.2.1_14fefafd2cea9be415f7d4f8539dbc79
       '@types/jest': 26.0.24
       glob-exec: 0.1.1
       jest: 27.0.6
-      rollup: 2.53.0
+      rollup: 2.58.3
       ts-jest: 27.0.3_jest@27.0.6+typescript@4.3.5
       tsd: 0.17.0
       tslib: 2.3.0
@@ -1447,7 +1447,7 @@ packages:
       '@octokit/openapi-types': 8.2.1
     dev: false
 
-  /@rollup/plugin-typescript/8.2.1_7d14c01c9edee995879776e735b07730:
+  /@rollup/plugin-typescript/8.2.1_14fefafd2cea9be415f7d4f8539dbc79:
     resolution: {integrity: sha512-Qd2E1pleDR4bwyFxqbjt4eJf+wB0UKVMLc7/BAFDGVdAXQMCsD4DUv5/7/ww47BZCYxWtJqe1Lo0KVNswBJlRw==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -1455,14 +1455,14 @@ packages:
       tslib: '*'
       typescript: '>=3.7.0'
     dependencies:
-      '@rollup/pluginutils': 3.1.0_rollup@2.53.0
+      '@rollup/pluginutils': 3.1.0_rollup@2.58.3
       resolve: 1.20.0
-      rollup: 2.53.0
+      rollup: 2.58.3
       tslib: 2.3.0
       typescript: 4.3.5
     dev: true
 
-  /@rollup/pluginutils/3.1.0_rollup@2.53.0:
+  /@rollup/pluginutils/3.1.0_rollup@2.58.3:
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
@@ -1471,7 +1471,7 @@ packages:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.0
-      rollup: 2.53.0
+      rollup: 2.58.3
     dev: true
 
   /@sindresorhus/is/4.0.1:
@@ -6861,8 +6861,8 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup/2.53.0:
-    resolution: {integrity: sha512-spgrY78Toh+m0+zaOoeaayJKuzFuWy6o1PdFIBMVwRcuxT0xCOX9A5rChyKe+2ruL4lePKWUMImS4mMW1QAkmQ==}
+  /rollup/2.58.3:
+    resolution: {integrity: sha512-ei27MSw1KhRur4p87Q0/Va2NAYqMXOX++FNEumMBcdreIRLURKy+cE2wcDJKBn0nfmhP2ZGrJkP1XPO+G8FJQw==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
