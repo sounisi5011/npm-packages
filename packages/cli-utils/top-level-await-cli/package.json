@@ -38,8 +38,8 @@
     "@types/jest": "26.0.24",
     "@types/node": "12.x",
     "execa": "5.1.1",
-    "jest": "27.0.6",
-    "ts-jest": "27.0.3",
+    "jest": "27.3.1",
+    "ts-jest": "27.0.7",
     "typescript": "4.3.5",
     "ultra-runner": "3.10.5"
   },

@@ -85,8 +85,8 @@
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@types/jest": "26.0.24",
     "@types/node": "15.6.0",
-    "jest": "27.0.6",
-    "ts-jest": "27.0.3",
+    "jest": "27.3.1",
+    "ts-jest": "27.0.7",
     "tsd": "0.17.0",
     "typescript": "4.3.5",
     "ultra-runner": "3.10.5"
