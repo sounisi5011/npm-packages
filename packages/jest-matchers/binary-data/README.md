@@ -37,7 +37,7 @@ Add your setup script to your [Jest `setupFilesAfterEnv` configuration](https://
 
 ### TypeScript
 
-Add your `tsconfig.json` to your [`types` flag](https://www.staging-typescript.org/tsconfig#types).
+In addition to the steps above, add to [the `types` flag](https://www.staging-typescript.org/tsconfig#types) in your `tsconfig.json`.
 
 ```json
 {
