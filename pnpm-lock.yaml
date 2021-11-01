@@ -10,7 +10,7 @@ importers:
       '@typescript-eslint/parser': 4.33.0
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
-      dprint: 0.18.1
+      dprint: 0.18.2
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0
       eslint-config-standard: 16.0.3
@@ -34,7 +34,7 @@ importers:
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.3.5
       commitizen: 4.2.4
       cz-conventional-changelog: 3.3.0
-      dprint: 0.18.1
+      dprint: 0.18.2
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0_eslint@7.32.0
       eslint-config-standard: 16.0.3_a98be2c812be0dd4646c7ffcb7a10e91
@@ -2759,8 +2759,8 @@ packages:
       is-obj: 2.0.0
     dev: false
 
-  /dprint/0.18.1:
-    resolution: {integrity: sha512-1zIATsZ3AdKaorl8lpXStbYUn/dG8RJmluEKCnlqeYDeZVtBxfOfGTSEHHta4ThbBErhN+QmCvTt4TV6jL/70w==}
+  /dprint/0.18.2:
+    resolution: {integrity: sha512-uTx2JNxkBxPXEw0A1kvq484Z+2suJrro/8MJXAqJ/O2G85SjymSShZRKeauStXi4PZxYcOAPr/mGk/0tiNymxA==}
     hasBin: true
     requiresBuild: true
     dev: true
