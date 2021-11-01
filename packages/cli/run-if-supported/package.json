@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@types/cross-spawn": "6.0.2",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.2",
     "@types/node": "*",
     "@types/parse-json": "4.0.0",
     "execa": "5.1.1",
