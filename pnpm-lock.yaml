@@ -304,7 +304,7 @@ importers:
       '@types/node': 15.6.0
       jest: 27.3.1
       ts-jest: 27.0.7
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
     devDependencies:
@@ -313,7 +313,7 @@ importers:
       '@types/node': 15.6.0
       jest: 27.3.1
       ts-jest: 27.0.7_aa63873380b4bb2f237e2e46aef8ee69
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
@@ -325,21 +325,21 @@ importers:
 
   packages/ts-type-utils/has-own-property:
     specifiers:
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.17.0
+      tsd: 0.18.0
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
@@ -352,7 +352,7 @@ importers:
       jest: 27.3.1
       rollup: 2.58.3
       ts-jest: 27.0.7
-      tsd: 0.17.0
+      tsd: 0.18.0
       tslib: 2.3.1
       typescript: 4.3.5
       ultra-runner: 3.10.5
@@ -364,7 +364,7 @@ importers:
       jest: 27.3.1
       rollup: 2.58.3
       ts-jest: 27.0.7_aa63873380b4bb2f237e2e46aef8ee69
-      tsd: 0.17.0
+      tsd: 0.18.0
       tslib: 2.3.1
       typescript: 4.3.5
       ultra-runner: 3.10.5
@@ -1312,8 +1312,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /@tsd/typescript/4.3.5:
-    resolution: {integrity: sha512-Xwxv8bIwyI3ggPz9bwoWEoiaz79MJs+VGf27S1N2tapfDVo60Lz741j5diL9RwszZSXt6IkTAuw7Lai7jSXRJg==}
+  /@tsd/typescript/4.4.4:
+    resolution: {integrity: sha512-XNaotnbhU6sKSXYg9rVz4L9i9g+j+x1IIgMPztK8KumtMEsrLXcqPBKp/qzmUKwAZEqgHs4+TTz90dUu5/aIqQ==}
     hasBin: true
     dev: true
 
@@ -2908,7 +2908,7 @@ packages:
     dependencies:
       '@types/eslint': 7.2.13
       ansi-escapes: 4.3.2
-      chalk: 4.1.1
+      chalk: 4.1.2
       eslint-rule-docs: 1.1.230
       log-symbols: 4.1.0
       plur: 4.0.0
@@ -6806,12 +6806,12 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd/0.17.0:
-    resolution: {integrity: sha512-+HUwya2NgoP/g9t2gRCC3I8VtGu65NgG9Lv75vNzMaxjMFo+0VXF9c4sj3remSzJYeBHLNKzWMbFOinPqrL20Q==}
+  /tsd/0.18.0:
+    resolution: {integrity: sha512-UIkxm2CLmSjXlQs4zqxgVV9UmzK8VgJ63eBpgkH/ZsMkiUdzxxHvdCCg8F314HDxzfQl2muJEy/TEcXHIFIPXg==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
-      '@tsd/typescript': 4.3.5
+      '@tsd/typescript': 4.4.4
       eslint-formatter-pretty: 4.1.0
       globby: 11.0.4
       meow: 9.0.0
