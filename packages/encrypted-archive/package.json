@@ -104,7 +104,7 @@
     "@types/jest": "27.0.2",
     "@types/node": "*",
     "@types/varint": "6.0.0",
-    "bytefield-svg": "1.5.0",
+    "bytefield-svg": "1.6.0",
     "combinate": "1.1.7",
     "cpy-cli": "3.1.1",
     "escape-string-regexp": "4.0.0",
