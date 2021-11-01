@@ -353,19 +353,19 @@ importers:
       rollup: 2.58.3
       ts-jest: 27.0.7
       tsd: 0.17.0
-      tslib: 2.3.0
+      tslib: 2.3.1
       typescript: 4.3.5
       ultra-runner: 3.10.5
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.3.0_14fefafd2cea9be415f7d4f8539dbc79
+      '@rollup/plugin-typescript': 8.3.0_6e46f0e3b8bb6c596b4a793b713f03dd
       '@types/jest': 27.0.2
       glob-exec: 0.1.1
       jest: 27.3.1
       rollup: 2.58.3
       ts-jest: 27.0.7_aa63873380b4bb2f237e2e46aef8ee69
       tsd: 0.17.0
-      tslib: 2.3.0
+      tslib: 2.3.1
       typescript: 4.3.5
       ultra-runner: 3.10.5
 
@@ -1267,7 +1267,7 @@ packages:
       '@octokit/openapi-types': 8.2.1
     dev: false
 
-  /@rollup/plugin-typescript/8.3.0_14fefafd2cea9be415f7d4f8539dbc79:
+  /@rollup/plugin-typescript/8.3.0_6e46f0e3b8bb6c596b4a793b713f03dd:
     resolution: {integrity: sha512-I5FpSvLbtAdwJ+naznv+B4sjXZUcIvLLceYpITAn7wAP8W0wqc5noLdGIp9HGVntNhRWXctwPYrSSFQxtl0FPA==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -1278,7 +1278,7 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@2.58.3
       resolve: 1.20.0
       rollup: 2.58.3
-      tslib: 2.3.0
+      tslib: 2.3.1
       typescript: 4.3.5
     dev: true
 
@@ -6833,14 +6833,9 @@ packages:
     resolution: {integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==}
     dev: true
 
-  /tslib/2.3.0:
-    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
-    dev: true
-
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
     dev: true
-    optional: true
 
   /tsutils/3.21.0_typescript@4.3.5:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
