@@ -6,6 +6,7 @@
     (draw-varint label {:span 4})))
 (def left-margin 1)
 ;; (draw-column-headers)
+(def svg-attrs {:style "background-color:white"})
 
 (draw-box "Content Identifier" {:span 4})
 (draw-varint "Header Length")
