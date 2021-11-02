@@ -8,6 +8,6 @@
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "cross-spawn": "^7.0.3",
-    "globby": "^11.0.3"
+    "globby": "^12.0.0"
   }
 }
