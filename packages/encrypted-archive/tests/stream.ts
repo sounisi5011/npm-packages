@@ -158,7 +158,7 @@ describe('decryptStream()', () => {
             }
 
             const decryptedData = Buffer.concat(chunkList);
-            expect(decryptedData).toStrictEqual(cleartext);
+            expect(decryptedData).toBytesEqual(cleartext);
         });
     });
     describe('non Buffer chunk', () => {

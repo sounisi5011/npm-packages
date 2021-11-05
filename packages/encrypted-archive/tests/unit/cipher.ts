@@ -51,8 +51,8 @@ describe.each([...cryptoAlgorithmMap.values()].map(algorithm => [algorithm.name,
             expect(() => cleartextPartList.push(decipher.final())).not.toThrow();
 
             const cleartext2 = Buffer.concat(cleartextPartList);
-            expect(cleartext2).toStrictEqual(cleartext);
-            expect(cleartext).toStrictEqual(cleartext2);
+            expect(cleartext2).toBytesEqual(cleartext);
+            expect(cleartext).toBytesEqual(cleartext2);
         });
 
         describe('decryption fail', () => {

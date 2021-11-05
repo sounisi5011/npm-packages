@@ -9,7 +9,7 @@ describe('class StreamReader', () => {
             const targetStream = stream.Readable.from([]);
             const reader = new StreamReader(targetStream);
             await expect(reader.read(1)).resolves
-                .toStrictEqual(Buffer.from([]));
+                .toBytesEqual(Buffer.from([]));
         });
         describe.each([
             ['non empty stream', [[0, 1, 2, 3, 4, 5]]],
@@ -34,10 +34,10 @@ describe('class StreamReader', () => {
                 if (input.offset === undefined) {
                     // eslint-disable-next-line jest/no-conditional-expect
                     await expect(reader.read(input.size)).resolves
-                        .toStrictEqual(expectedBuffer);
+                        .toBytesEqual(expectedBuffer);
                 }
                 await expect(reader.read(input.size, input.offset)).resolves
-                    .toStrictEqual(expectedBuffer);
+                    .toBytesEqual(expectedBuffer);
             });
         });
         it('multi read', async () => {
@@ -58,35 +58,35 @@ describe('class StreamReader', () => {
             expect(readCount).toBe(0);
 
             await expect(reader.read(0)).resolves
-                .toStrictEqual(Buffer.from([]));
+                .toBytesEqual(Buffer.from([]));
             expect(readCount).toBe(0);
 
             await expect(reader.read(1)).resolves
-                .toStrictEqual(Buffer.from([0]));
+                .toBytesEqual(Buffer.from([0]));
             expect(readCount).toBe(1);
 
             await expect(reader.read(4)).resolves
-                .toStrictEqual(Buffer.from([0, 1, 2, 3]));
+                .toBytesEqual(Buffer.from([0, 1, 2, 3]));
             expect(readCount).toBe(1);
 
             await expect(reader.read(5)).resolves
-                .toStrictEqual(Buffer.from([0, 1, 2, 3, 4]));
+                .toBytesEqual(Buffer.from([0, 1, 2, 3, 4]));
             expect(readCount).toBe(2);
 
             await expect(reader.read(4)).resolves
-                .toStrictEqual(Buffer.from([0, 1, 2, 3]));
+                .toBytesEqual(Buffer.from([0, 1, 2, 3]));
             expect(readCount).toBe(2);
 
             await expect(reader.read(2, 3)).resolves
-                .toStrictEqual(Buffer.from([3, 4]));
+                .toBytesEqual(Buffer.from([3, 4]));
             expect(readCount).toBe(2);
 
             await expect(reader.read(2, 4)).resolves
-                .toStrictEqual(Buffer.from([4, 5]));
+                .toBytesEqual(Buffer.from([4, 5]));
             expect(readCount).toBe(3);
 
             await expect(reader.read(10, 4)).resolves
-                .toStrictEqual(Buffer.from([4, 5, 6, 7, 8]));
+                .toBytesEqual(Buffer.from([4, 5, 6, 7, 8]));
             expect(readCount).toBe(3);
         });
     });
@@ -135,7 +135,7 @@ describe('class StreamReader', () => {
             })());
             const reader = new StreamReader(targetStream);
 
-            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([0, 1]));
+            await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
                 const entryList: ReadEntry[] = [];
                 for await (const entry of reader.readIterator(3)) {
@@ -157,7 +157,7 @@ describe('class StreamReader', () => {
                 ]);
             }
             // always seek because storing huge data is inefficient
-            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([3, 4]));
+            await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([3, 4]));
             await expect(reader.isEnd()).resolves.toBeFalse();
 
             {
@@ -181,7 +181,7 @@ describe('class StreamReader', () => {
                 ]);
             }
 
-            await expect(reader.read(1)).resolves.toStrictEqual(Buffer.from([]));
+            await expect(reader.read(1)).resolves.toBytesEqual(Buffer.from([]));
             await expect(reader.isEnd()).resolves.toBeTrue();
             {
                 const entryList: ReadEntry[] = [];
@@ -208,7 +208,7 @@ describe('class StreamReader', () => {
             })());
             const reader = new StreamReader(targetStream);
 
-            await expect(reader.read(2)).resolves.toStrictEqual(Buffer.from([0, 1]));
+            await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
                 const entryList: ReadEntry[] = [];
                 for await (const entry of reader.readIterator(3)) {
@@ -237,7 +237,7 @@ describe('class StreamReader', () => {
             }
 
             // the `read()` method merges the chunks as it reads them
-            await expect(reader.read(3)).resolves.toStrictEqual(Buffer.from([3, 4, 5]));
+            await expect(reader.read(3)).resolves.toBytesEqual(Buffer.from([3, 4, 5]));
             {
                 const entryList: ReadEntry[] = [];
                 for await (const entry of reader.readIterator(999, 1)) {
@@ -278,7 +278,7 @@ describe('class StreamReader', () => {
                 ]);
             }
 
-            await expect(reader.read(1)).resolves.toStrictEqual(Buffer.from([]));
+            await expect(reader.read(1)).resolves.toBytesEqual(Buffer.from([]));
             await expect(reader.isEnd()).resolves.toBeTrue();
             {
                 const entryList: ReadEntry[] = [];
@@ -313,7 +313,7 @@ describe('class StreamReader', () => {
 
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
-                        .toStrictEqual(Buffer.from(expected));
+                        .toBytesEqual(Buffer.from(expected));
                 });
             });
             describe('after read', () => {
@@ -328,10 +328,10 @@ describe('class StreamReader', () => {
                     const reader = new StreamReader(targetStream);
 
                     await expect(reader.read(3, 0)).resolves
-                        .toStrictEqual(Buffer.from([9, 8, 7]));
+                        .toBytesEqual(Buffer.from([9, 8, 7]));
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
-                        .toStrictEqual(Buffer.from(expected));
+                        .toBytesEqual(Buffer.from(expected));
                 });
             });
         });
