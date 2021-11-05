@@ -32,7 +32,7 @@ describe('encryptStream()', () => {
             // eslint-disable-next-line jest/no-if
             if (typeof firstChunkLen === 'number') {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(chunk.byteLength).toBeLessThanByteSize(firstChunkLen);
+                expect(chunk).toBeLessThanByteSize(firstChunkLen);
             } else {
                 firstChunkLen = chunk.byteLength;
             }

@@ -16,7 +16,7 @@ describe('class Nonce', () => {
         it.each(rangeArray(MIN_NONCE_LENGTH, MAX_NONCE_LENGTH))('byteLength: %i', len => {
             const nonceState = new Nonce();
             const nonce = nonceState.create(len); // invocation: 0
-            expect(nonce.byteLength).toBeByteSize(len);
+            expect(nonce).toBeByteSize(len);
             const currentFixedField = nonce.subarray(0, 7);
             expect(nonce).toBytesEqual(
                 Buffer.from(padEndArray([...currentFixedField, 0x00, 0x00], len, 0)),

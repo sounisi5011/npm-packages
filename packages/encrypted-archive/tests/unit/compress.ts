@@ -22,7 +22,7 @@ describe('createCompressor()', () => {
                 const compressedIterable = createCompressor(options)
                     .compressIterable(sourceAsyncIterable);
                 const compressedData = await iterable2buffer(compressedIterable);
-                expect(compressedData.byteLength).toBeLessThanByteSize(data.byteLength);
+                expect(compressedData).toBeLessThanByteSize(data);
             });
             it('reuse compressIterable()', async () => {
                 const { compressIterable } = createCompressor(algorithm);

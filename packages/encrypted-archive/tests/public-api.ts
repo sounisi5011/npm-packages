@@ -74,12 +74,12 @@ describe('encrypt()', () => {
         it('gzip', async () => {
             const uncompressedEncryptedData = await encrypt(cleartext, password);
             const compressedEncryptedData = await encrypt(cleartext, password, { compress: 'gzip' });
-            expect(compressedEncryptedData.byteLength).toBeLessThanByteSize(uncompressedEncryptedData.byteLength);
+            expect(compressedEncryptedData).toBeLessThanByteSize(uncompressedEncryptedData);
         });
         it('brotli', async () => {
             const uncompressedEncryptedData = await encrypt(cleartext, password);
             const compressedEncryptedData = await encrypt(cleartext, password, { compress: 'brotli' });
-            expect(compressedEncryptedData.byteLength).toBeLessThanByteSize(uncompressedEncryptedData.byteLength);
+            expect(compressedEncryptedData).toBeLessThanByteSize(uncompressedEncryptedData);
         });
         it('unknown', async () => {
             await expect(encrypt(cleartext, password, {
