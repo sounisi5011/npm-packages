@@ -6,7 +6,7 @@ module.exports = {
       tsconfig: '<rootDir>/tests/tsconfig.json',
     },
   },
-  setupFilesAfterEnv: ['jest-extended'],
+  setupFilesAfterEnv: ['jest-extended/all'],
   testEnvironment: 'node',
   testMatch: ['<rootDir>/tests/**/*.ts'],
   testPathIgnorePatterns: ['<rootDir>/tests/helpers/'],
