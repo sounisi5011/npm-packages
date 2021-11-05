@@ -12,7 +12,13 @@
     /* Emit */
     "declarationMap": false,
     "outDir": "./dist",
-    "inlineSources": true
+    "inlineSources": true,
+
+    /* Type Checking */
+    /** @todo Comment out when this package is fixed */
+    "useUnknownInCatchVariables": false,
+    /** @todo Comment out when this package is fixed */
+    "exactOptionalPropertyTypes": false
   },
   "include": ["./src/**/*"]
 }

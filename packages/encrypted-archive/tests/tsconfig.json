@@ -12,7 +12,13 @@
     "allowJs": true,
 
     /* Emit */
-    "noEmit": true
+    "noEmit": true,
+
+    /* Type Checking */
+    /** @todo Comment out when this package is fixed */
+    "useUnknownInCatchVariables": false,
+    /** @todo Comment out when this package is fixed */
+    "exactOptionalPropertyTypes": false
   },
   "include": ["./**/*", "../src/**/*", "../package.json"]
 }
