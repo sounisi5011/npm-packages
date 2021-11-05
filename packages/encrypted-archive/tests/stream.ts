@@ -77,7 +77,7 @@ describe('encryptStream()', () => {
                 encryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+            await expect(resultPromise).rejects.toThrowWithMessage(
                 TypeError,
                 chunkTypeErrorMessageRegExp,
             );
@@ -201,7 +201,7 @@ describe('decryptStream()', () => {
                 decryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+            await expect(resultPromise).rejects.toThrowWithMessage(
                 TypeError,
                 chunkTypeErrorMessageRegExp,
             );

@@ -43,7 +43,7 @@ describe('encrypt()', () => {
             await expect(encrypt(cleartext, password, {
                 // @ts-expect-error TS2322
                 algorithm: 'foo',
-            })).rejects.toThrowWithMessageFixed(
+            })).rejects.toThrowWithMessage(
                 TypeError,
                 `Unknown algorithm was received: foo`,
             );
@@ -63,7 +63,7 @@ describe('encrypt()', () => {
                     // @ts-expect-error TS2322
                     algorithm: 'bar',
                 },
-            })).rejects.toThrowWithMessageFixed(
+            })).rejects.toThrowWithMessage(
                 TypeError,
                 `Unknown KDF (Key Derivation Function) algorithm was received: bar`,
             );
@@ -85,7 +85,7 @@ describe('encrypt()', () => {
             await expect(encrypt(cleartext, password, {
                 // @ts-expect-error TS2322
                 compress: 'hoge',
-            })).rejects.toThrowWithMessageFixed(
+            })).rejects.toThrowWithMessage(
                 TypeError,
                 `Unknown compress algorithm was received: hoge`,
             );
@@ -153,7 +153,7 @@ describe('decrypt()', () => {
             'chacha20-poly1305',
         ])('%s', async algorithm => {
             const encryptedData = await encrypt(cleartext, password, { algorithm });
-            await expect(decrypt(encryptedData, password2)).rejects.toThrowWithMessageFixed(
+            await expect(decrypt(encryptedData, password2)).rejects.toThrowWithMessage(
                 Error,
                 `Unsupported state or unable to authenticate data`,
             );

@@ -59,7 +59,7 @@ describe('getKDF()', () => {
             {},
         ])('%p', value => {
             // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Readonly<Argon2Options> | undefined'.
-            expect(() => getKDF(value)).toThrowWithMessageFixed(
+            expect(() => getKDF(value)).toThrowWithMessage(
                 TypeError,
                 /^Unknown deriveKey options was received: /,
             );
@@ -287,7 +287,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF({ algorithm: 'argon2d' });
                 const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
                 const salt = Buffer.alloc(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too short salt was received for Argon2's option "salt"`,
@@ -304,7 +304,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessageFixed(
+                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too short for Argon2's option "keyLengthBytes"`,
@@ -318,7 +318,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF({ algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
                 const salt = createDummySizeBuffer(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too long salt was received for Argon2's option "salt"`,
@@ -335,7 +335,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessageFixed(
+                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too long for Argon2's option "keyLengthBytes"`,
@@ -359,7 +359,7 @@ describe('algorithm: Argon2', () => {
             memory: 2 ** 40 / 2 ** 10,
         });
         const salt = Buffer.alloc(saltLength);
-        await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessageFixed(
+        await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
             Error,
             `Internal error from Argon2: Memory cost is too large`,
         );
