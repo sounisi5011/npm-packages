@@ -1,5 +1,4 @@
 import { Nonce } from '../../src/nonce';
-import '../helpers/jest-matchers';
 import { padEndArray, rangeArray } from '../helpers';
 
 const tooSmallFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
@@ -42,7 +41,7 @@ describe('class Nonce', () => {
             describe('too short', () => {
                 it.each(rangeArray(0, MIN_NONCE_LENGTH - 1))('%i', len => {
                     const nonceState = new Nonce();
-                    expect(() => nonceState.create(len)).toThrowWithMessageFixed(
+                    expect(() => nonceState.create(len)).toThrowWithMessage(
                         RangeError,
                         `The value of "byteLength" argument is too short. It must be >= ${MIN_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                     );
@@ -52,7 +51,7 @@ describe('class Nonce', () => {
             describe('too long', () => {
                 it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i', len => {
                     const nonceState = new Nonce();
-                    expect(() => nonceState.create(len)).toThrowWithMessageFixed(
+                    expect(() => nonceState.create(len)).toThrowWithMessage(
                         RangeError,
                         `The value of "byteLength" argument is too long. It must be >= ${MIN_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                     );
@@ -284,7 +283,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.createFromInvocationCountDiff(new Uint8Array(len), BigInt(1)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -303,7 +302,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.createFromInvocationCountDiff(new Uint8Array(len), BigInt(1)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -315,7 +314,7 @@ describe('class Nonce', () => {
             it.each(rangeArray(-5, 0).map(BigInt))('%i', addInvocationCount => {
                 const nonceState = new Nonce();
                 expect(() => nonceState.createFromInvocationCountDiff(new Uint8Array(8), addInvocationCount))
-                    .toThrowWithMessageFixed(
+                    .toThrowWithMessage(
                         RangeError,
                         `The value of "addInvocationCount" argument is out of range. It must be >= 1. Received ${addInvocationCount}`,
                     );
@@ -553,7 +552,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(len), BigInt(1), BigInt(0)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -572,7 +571,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(len), BigInt(1), BigInt(0)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -584,7 +583,7 @@ describe('class Nonce', () => {
             it.each(rangeArray(-5, 0).map(BigInt))('%i', addFixedField => {
                 const nonceState = new Nonce();
                 expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(8), addFixedField, BigInt(0)))
-                    .toThrowWithMessageFixed(
+                    .toThrowWithMessage(
                         RangeError,
                         `The value of "addFixedField" argument is out of range. It must be >= 1. Received ${addFixedField}`,
                     );
@@ -595,7 +594,7 @@ describe('class Nonce', () => {
             it.each(rangeArray(-5, -1).map(BigInt))('%i', resetInvocationCount => {
                 const nonceState = new Nonce();
                 expect(() => nonceState.createFromFixedFieldDiff(new Uint8Array(8), BigInt(1), resetInvocationCount))
-                    .toThrowWithMessageFixed(
+                    .toThrowWithMessage(
                         RangeError,
                         `The value of "resetInvocationCount" argument is out of range. It must be >= 0. Received ${resetInvocationCount}`,
                     );
@@ -755,7 +754,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.getDiff(new Uint8Array(len), new Uint8Array(MIN_INPUT_NONCE_LENGTH)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -774,7 +773,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.getDiff(new Uint8Array(len), new Uint8Array(MIN_INPUT_NONCE_LENGTH)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "prevNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -787,7 +786,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(0, MIN_INPUT_NONCE_LENGTH - 1))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.getDiff(new Uint8Array(MIN_INPUT_NONCE_LENGTH), new Uint8Array(len)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "currentNonce" argument has too short byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -806,7 +805,7 @@ describe('class Nonce', () => {
                 it.each(rangeArray(MAX_NONCE_LENGTH + 1, MAX_NONCE_LENGTH + 5))('%i bytes', len => {
                     const nonceState = new Nonce();
                     expect(() => nonceState.getDiff(new Uint8Array(MIN_INPUT_NONCE_LENGTH), new Uint8Array(len)))
-                        .toThrowWithMessageFixed(
+                        .toThrowWithMessage(
                             RangeError,
                             `The value of "currentNonce" argument has too long byte length. It must be >= ${MIN_INPUT_NONCE_LENGTH} and <= ${MAX_NONCE_LENGTH}. Received ${len}`,
                         );
@@ -879,7 +878,7 @@ describe('class Nonce', () => {
         )).toBytesEqual(
             Buffer.from([...fixedField, 0xFF, 0xFF]),
         );
-        expect(() => nonceState.create(9)).toThrowWithMessageFixed(
+        expect(() => nonceState.create(9)).toThrowWithMessage(
             Error,
             `Unable to create nonce. All bits are overflowing. Please increase the nonce bytes from current value. Received 9`,
         );
@@ -901,7 +900,7 @@ describe('class Nonce', () => {
         )).toBytesEqual(
             Buffer.from([...fixedField, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]),
         );
-        expect(() => nonceState.create(15)).toThrowWithMessageFixed(
+        expect(() => nonceState.create(15)).toThrowWithMessage(
             Error,
             `Unable to create nonce. All bits are overflowing.`,
         );

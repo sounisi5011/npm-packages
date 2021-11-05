@@ -3,7 +3,6 @@ import * as stream from 'stream';
 import { writableNoopStream } from 'noop-stream';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
-import './helpers/jest-matchers';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
@@ -77,7 +76,7 @@ describe('encryptStream()', () => {
                 encryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+            await expect(resultPromise).rejects.toThrowWithMessage(
                 TypeError,
                 chunkTypeErrorMessageRegExp,
             );
@@ -94,12 +93,12 @@ describe('encryptStream()', () => {
                     done(new Error(`error!!!!!`));
                 },
             }),
-        )).rejects.toThrow(new Error(`error!!!!!`));
+        )).rejects.toThrowWithMessage(Error, `error!!!!!`);
 
         await expect(pipelineAsync(
             stream.Readable.from([42]),
             encryptStream(''),
-        )).rejects.toThrow(chunkTypeErrorMessageRegExp);
+        )).rejects.toThrowWithMessage(Error, chunkTypeErrorMessageRegExp);
     });
 });
 
@@ -188,7 +187,7 @@ describe('decryptStream()', () => {
                 decryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrow(/^Invalid identifier detected\./);
+            await expect(resultPromise).rejects.toThrowWithMessage(Error, /^Invalid identifier detected\./);
         });
         it.each<[string, unknown]>([
             ['number', 42],
@@ -201,7 +200,7 @@ describe('decryptStream()', () => {
                 decryptStream(''),
                 writableNoopStream(),
             );
-            await expect(resultPromise).rejects.toThrowWithMessageFixed(
+            await expect(resultPromise).rejects.toThrowWithMessage(
                 TypeError,
                 chunkTypeErrorMessageRegExp,
             );
@@ -218,11 +217,11 @@ describe('decryptStream()', () => {
                     done(new Error(`error!!!!!`));
                 },
             }),
-        )).rejects.toThrow(new Error(`error!!!!!`));
+        )).rejects.toThrowWithMessage(Error, `error!!!!!`);
 
         await expect(pipelineAsync(
             createCountStream(1),
             decryptStream(''),
-        )).rejects.toThrow(/^Invalid identifier detected\./);
+        )).rejects.toThrowWithMessage(Error, /^Invalid identifier detected\./);
     });
 });
