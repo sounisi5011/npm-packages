@@ -3,7 +3,11 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "declarationMap": false
+    /* Emit */
+    "declarationMap": false,
+
+    /* Type Checking */
+    /** @todo Comment out when this package is fixed */
+    "exactOptionalPropertyTypes": false
   }
 }

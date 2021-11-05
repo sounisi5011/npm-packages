@@ -3,10 +3,8 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
+    /* Emit */
     "declarationMap": false,
-
-    /* Advanced Options */
     "emitDeclarationOnly": true
   },
   "exclude": ["*/*.test-d.ts"]
