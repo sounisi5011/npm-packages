@@ -5,7 +5,12 @@
 
     /* Modules */
     "rootDir": "../",
-    "types": ["node", "jest", "jest-extended"],
+    "types": [
+      "node",
+      "jest",
+      "jest-extended",
+      "@sounisi5011/jest-binary-data-matchers"
+    ],
     "resolveJsonModule": true,
 
     /* JavaScript Support */
