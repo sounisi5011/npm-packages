@@ -6,6 +6,7 @@ function isNotNull<T>(value: T): value is Exclude<T, null> {
     return value !== null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 function isNotEmptyString<T extends unknown>(value: T): value is Exclude<T, ''> {
     return value !== '';
 }
