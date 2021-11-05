@@ -17,7 +17,7 @@ const anyValues: Array<undefined | null | boolean | number | string | Record<Pro
 
 describe('isNotSupported()', () => {
     it('empty pkg', () => {
-        expect(isNotSupported({}, '1.0.0')).toStrictEqual(false);
+        expect(isNotSupported({}, '1.0.0')).toBe(false);
     });
     describe('node version', () => {
         describe.each<string>([

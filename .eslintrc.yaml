@@ -95,11 +95,11 @@ overrides:
       - plugin:jest/style
     rules:
       jest/consistent-test-it: error
-      jest/lowercase-name: error
       jest/no-deprecated-functions: error
       jest/no-duplicate-hooks: error
       jest/no-if: error
       jest/no-test-return-statement: error
+      jest/prefer-lowercase-title: error
       jest/prefer-spy-on: error
       jest/prefer-strict-equal: error
       jest/prefer-todo: error
