@@ -3,12 +3,12 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
+    /* Modules */
     "rootDir": "../",
-    "noEmit": true,
+    "types": ["node", "jest"],
 
-    /* Module Resolution Options */
-    "types": ["node", "jest"]
+    /* Emit */
+    "noEmit": true
   },
   "include": ["./**/*", "../src/**/*"]
 }

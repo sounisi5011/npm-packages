@@ -2,39 +2,42 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
+    /* Projects */
     "incremental": true,
+    "composite": true,
+
+    /* Language and Environment */
     // Node.js 12 and above almost supports features up to ES2019
     // see https://node.green/#ES2019
     // see https://www.staging-typescript.org/tsconfig#target
     "target": "ES2019",
+    "useDefineForClassFields": true,
+
+    /* Modules */
     "module": "CommonJS",
+    "moduleResolution": "Node",
+    "types": [],
+
+    /* Emit */
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "composite": true,
+    "importsNotUsedAsValues": "error",
+    "newLine": "LF",
 
-    /* Strict Type-Checking Options */
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
     "strict": true,
-
-    /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-
-    /* Module Resolution Options */
-    "moduleResolution": "Node",
-    "types": [],
-    "esModuleInterop": true,
-
-    /* Advanced Options */
-    "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
-    "newLine": "LF",
-    "useDefineForClassFields": true
+    "noPropertyAccessFromIndexSignature": true
   }
 }
