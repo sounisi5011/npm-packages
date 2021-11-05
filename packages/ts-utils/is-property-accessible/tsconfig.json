@@ -3,13 +3,13 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
+    /* Modules */
     "module": "ESNext",
-    "declarationMap": false,
     "rootDir": "./",
-    "noEmit": true,
 
-    /* Source Map Options */
+    /* Emit */
+    "declarationMap": false,
+    "noEmit": true,
     "inlineSources": true
   }
 }

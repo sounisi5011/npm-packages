@@ -3,16 +3,16 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "allowJs": true,
+    /* Modules */
     "rootDir": "../",
-    "noEmit": true,
-
-    /* Module Resolution Options */
     "types": ["node", "jest", "jest-extended"],
+    "resolveJsonModule": true,
 
-    /* Advanced Options */
-    "resolveJsonModule": true
+    /* JavaScript Support */
+    "allowJs": true,
+
+    /* Emit */
+    "noEmit": true
   },
   "include": ["./**/*", "../src/**/*", "../package.json"]
 }
