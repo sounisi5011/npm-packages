@@ -78,18 +78,16 @@ describe('createHeader()', () => {
             {
                 const headerLength = varint.decode(headerData, headerLenStartOffset);
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData)
-                    .toBeByteSize(
-                        cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
-                    );
+                expect(headerData).toBeByteSize(
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
+                );
             }
             {
                 const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData)
-                    .toBeByteSize(
-                        cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
-                    );
+                expect(headerData).toBeByteSize(
+                    cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
+                );
             }
         });
     });
@@ -125,8 +123,9 @@ describe('createSimpleHeader()', () => {
             const headerLength = varint.decode(headerData);
             const headerLengthVarintBytes = varint.decode.bytes;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
-            expect(headerData)
-                .toBeByteSize(headerLengthVarintBytes + headerLength + ciphertextLengthByteLen);
+            expect(headerData).toBeByteSize(
+                headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
+            );
         });
     });
     it('ciphertext byte length included', () => {
