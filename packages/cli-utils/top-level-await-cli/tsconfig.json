@@ -3,11 +3,11 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "declarationMap": false,
-    "noEmit": true,
+    /* Modules */
+    "types": ["node"],
 
-    /* Module Resolution Options */
-    "types": ["node"]
+    /* Emit */
+    "declarationMap": false,
+    "noEmit": true
   }
 }
