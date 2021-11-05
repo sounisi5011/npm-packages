@@ -21,11 +21,11 @@ describe('getKDF()', () => {
 
         it.each(rangeArray(ARGON2_MIN_OUTLEN, 20))('keyLengthBytes: %i', async keyLengthBytes => {
             const key = await deriveKey(password, salt, keyLengthBytes);
-            expect(key.byteLength).toBeByteSize(keyLengthBytes);
+            expect(key).toBeByteSize(keyLengthBytes);
             const key2 = await deriveKey(password, salt, keyLengthBytes);
-            expect(key2).toStrictEqual(key);
+            expect(key2).toBytesEqual(key);
             const key3 = await deriveKey(password, salt, keyLengthBytes);
-            expect(key3).toStrictEqual(key);
+            expect(key3).toBytesEqual(key);
         });
     });
 
@@ -116,11 +116,11 @@ describe('algorithm: Argon2', () => {
                 rangeArray(ARGON2_MIN_OUTLEN, 20),
             )('keyLengthBytes: %i', async keyLengthBytes => {
                 const key = await deriveKey(password, salt, keyLengthBytes);
-                expect(key.byteLength).toBeByteSize(keyLengthBytes);
+                expect(key).toBeByteSize(keyLengthBytes);
                 const key2 = await deriveKey(password, salt, keyLengthBytes);
-                expect(key2).toStrictEqual(key);
+                expect(key2).toBytesEqual(key);
                 const key3 = await deriveKey(password, salt, keyLengthBytes);
-                expect(key3).toStrictEqual(key);
+                expect(key3).toBytesEqual(key);
             });
         });
     });

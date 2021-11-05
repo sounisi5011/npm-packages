@@ -78,14 +78,14 @@ describe('createHeader()', () => {
             {
                 const headerLength = varint.decode(headerData, headerLenStartOffset);
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBeByteSize(
+                expect(headerData).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
             {
                 const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
                 const headerLengthVarintBytes = varint.decode.bytes;
-                expect(headerData.byteLength).toBeByteSize(
+                expect(headerData).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
@@ -98,7 +98,7 @@ describe('createHeader()', () => {
             headerData.byteLength - ciphertextLengthByte.byteLength,
             headerData.byteLength,
         );
-        expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
+        expect(headerInCiphertextLenBytes).toBytesEqual(ciphertextLengthByte);
     });
 });
 
@@ -123,7 +123,7 @@ describe('createSimpleHeader()', () => {
             const headerLength = varint.decode(headerData);
             const headerLengthVarintBytes = varint.decode.bytes;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
-            expect(headerData.byteLength).toBeByteSize(
+            expect(headerData).toBeByteSize(
                 headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
             );
         });
@@ -133,7 +133,7 @@ describe('createSimpleHeader()', () => {
         const headerData = createSimpleHeader(dummyHeaderData);
         const headerInCiphertextLenBytes = headerData
             .subarray(headerData.byteLength - ciphertextLengthByte.byteLength, headerData.byteLength);
-        expect(headerInCiphertextLenBytes).toStrictEqual(ciphertextLengthByte);
+        expect(headerInCiphertextLenBytes).toBytesEqual(ciphertextLengthByte);
     });
     describe('invalid nonce', () => {
         {
@@ -891,7 +891,7 @@ describe('parseCiphertextIterable()', () => {
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
             const resultIterable = parseCiphertextIterable(reader, { ciphertextByteLength: 6, ...opts });
-            await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
+            await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
     });
     describe('same size data as needed byte length', () => {
@@ -915,7 +915,7 @@ describe('parseCiphertextIterable()', () => {
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
             const resultIterable = parseCiphertextIterable(reader, opts);
-            await expect(iterable2buffer(resultIterable)).resolves.toStrictEqual(expected);
+            await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
     });
     describe('smaller data than required byte length', () => {
