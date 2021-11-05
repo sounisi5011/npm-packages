@@ -3,8 +3,6 @@ import * as zlib from 'zlib';
 import { CompressOptions, createCompressor, decompressIterable } from '../../src/compress';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
-// dprint-ignore
-import '../helpers/jest-matchers';
 
 describe('createCompressor()', () => {
     describe('compress data', () => {

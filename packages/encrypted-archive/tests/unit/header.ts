@@ -20,7 +20,6 @@ import {
     validateCID,
 } from '../../src/header';
 import { cidByteList } from '../../src/header/content-identifier';
-import '../helpers/jest-matchers';
 import { iterable2buffer, padStartArray } from '../helpers';
 import { DummyStreamReader } from '../helpers/stream';
 

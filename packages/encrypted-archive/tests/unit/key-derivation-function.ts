@@ -7,8 +7,6 @@ import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function'
 import type { Argon2Options } from '../../src/key-derivation-function/argon2';
 import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
 
-import '../helpers/jest-matchers';
-
 /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L57 */
 const ARGON2_MIN_OUTLEN = 4;
 

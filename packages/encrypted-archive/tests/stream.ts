@@ -3,7 +3,6 @@ import * as stream from 'stream';
 import { writableNoopStream } from 'noop-stream';
 
 import { decryptStream, encrypt, encryptStream } from '../src';
-import './helpers/jest-matchers';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =

@@ -11,7 +11,6 @@ import {
     encryptStream,
     KeyDerivationOptions,
 } from '../src';
-import './helpers/jest-matchers';
 import { createStreamFromBuffer } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
