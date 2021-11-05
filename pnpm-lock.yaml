@@ -226,7 +226,7 @@ importers:
       grpc_tools_node_protoc_ts: 5.3.2
       jest: 27.3.1
       jest-extended: 1.1.0
-      jest-matcher-utils: 26.6.2
+      jest-matcher-utils: 27.3.1
       multicodec: 3.2.1
       noop-stream: 0.1.0
       ts-jest: 27.0.7
@@ -261,7 +261,7 @@ importers:
       grpc_tools_node_protoc_ts: 5.3.2
       jest: 27.3.1
       jest-extended: 1.1.0
-      jest-matcher-utils: 26.6.2
+      jest-matcher-utils: 27.3.1
       multicodec: 3.2.1
       noop-stream: 0.1.0
       ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
@@ -4439,7 +4439,7 @@ packages:
     resolution: {integrity: sha512-llnc8vQgYcNqDrqRDXWwMr9i7rS5XFiCwvh6DTP7Jqa2mqpcCBBlpCbn+trkG0KNhPu/h8rzyBkriOtBstvWhw==}
     engines: {node: '>= 10.14.2'}
     dependencies:
-      chalk: 4.1.1
+      chalk: 4.1.2
       jest-diff: 26.6.2
       jest-get-type: 26.3.0
       pretty-format: 26.6.2
