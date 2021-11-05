@@ -3,18 +3,22 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "declarationMap": false,
-    "outDir": "./dist",
+    /* Modules */
     // When the `composite` option is `true` and the `rootDir` option is undefined,
     // files will not be created directly under the `outDir`
     "rootDir": "./src",
-
-    /* Module Resolution Options */
     "types": ["node"],
 
-    /* Source Map Options */
-    "inlineSources": true
+    /* Emit */
+    "declarationMap": false,
+    "outDir": "./dist",
+    "inlineSources": true,
+
+    /* Type Checking */
+    /** @todo Comment out when this package is fixed */
+    "useUnknownInCatchVariables": false,
+    /** @todo Comment out when this package is fixed */
+    "exactOptionalPropertyTypes": false
   },
   "include": ["./src/**/*"]
 }

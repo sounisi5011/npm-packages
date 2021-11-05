@@ -3,16 +3,22 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Basic Options */
-    "allowJs": true,
+    /* Modules */
     "rootDir": "../",
+    "types": ["node", "jest", "jest-extended"],
+    "resolveJsonModule": true,
+
+    /* JavaScript Support */
+    "allowJs": true,
+
+    /* Emit */
     "noEmit": true,
 
-    /* Module Resolution Options */
-    "types": ["node", "jest", "jest-extended"],
-
-    /* Advanced Options */
-    "resolveJsonModule": true
+    /* Type Checking */
+    /** @todo Comment out when this package is fixed */
+    "useUnknownInCatchVariables": false,
+    /** @todo Comment out when this package is fixed */
+    "exactOptionalPropertyTypes": false
   },
   "include": ["./**/*", "../src/**/*", "../package.json"]
 }
