@@ -1,5 +1,10 @@
 {
-  "extends": ["config:js-lib", ":semanticCommits", ":maintainLockFilesWeekly"],
+  "extends": [
+    "config:js-lib",
+    ":semanticCommits",
+    ":maintainLockFilesWeekly",
+    "helpers:disableTypesNodeMajor"
+  ],
   "ignorePresets": ["group:monorepos"],
   "packageRules": [
     {
@@ -37,10 +42,6 @@
       "packageNames": ["jest", "@types/jest", "ts-jest"],
       "groupName": "test packages",
       "groupSlug": "tester-packages"
-    },
-    {
-      "packageNames": ["@types/node"],
-      "extends": [":disableMajorUpdates"]
     }
   ]
 }
