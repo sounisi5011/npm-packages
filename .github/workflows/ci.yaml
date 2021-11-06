@@ -98,8 +98,8 @@ jobs:
                            ls -alp ./node_modules/.bin/dprint
           echo '::endgroup::'
 
-          echo '::group::' pnpx dprint '[npm installed]'
-          pnpx dprint || {
+          echo '::group::' pnpm exec dprint '[npm installed]'
+          pnpm exec dprint || {
             echo '::endgroup::'
 
             echo '::group::' rm -rf ./node_modules/.bin/dprint
@@ -114,8 +114,8 @@ jobs:
                              ls -alp ./node_modules/.bin/dprint
             echo '::endgroup::'
 
-            echo '::group::' pnpx dprint '[npm binary]'
-            pnpx dprint || {
+            echo '::group::' pnpm exec dprint '[npm binary]'
+            pnpm exec dprint || {
               echo '::endgroup::'
 
               echo '::group::' Detect dprint version
@@ -135,8 +135,8 @@ jobs:
                                ls -alp ./node_modules/.bin/dprint
               echo '::endgroup::'
 
-              echo '::group::' pnpx dprint '[download from official with version]'
-              pnpx dprint || {
+              echo '::group::' pnpm exec dprint '[download from official with version]'
+              pnpm exec dprint || {
                 echo '::endgroup::'
 
                 echo '::group::' Install dprint
@@ -151,8 +151,8 @@ jobs:
                                  ls -alp ./node_modules/.bin/dprint
                 echo '::endgroup::'
 
-                echo '::group::' pnpx dprint '[download from official with latest version]'
-                pnpx dprint
+                echo '::group::' pnpm exec dprint '[download from official with latest version]'
+                pnpm exec dprint
               }
             }
           }
@@ -200,7 +200,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Show Protocol Buffers compiler version
         run: protoc --version
-      - run: pnpx npm-run-all build-all --parallel 'build-!(all|only-packages)'
+      - run: pnpm exec npm-run-all build-all --parallel 'build-!(all|only-packages)'
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code

@@ -7,7 +7,7 @@ import { getFixturesPath, PACKAGE_ROOT } from './helpers';
 
 describe('cli', () => {
     beforeAll(async () => {
-        await execa('pnpx', ['ultra', 'build'], { cwd: PACKAGE_ROOT });
+        await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
     }, 60 * 1000);
 
     const CLI_PATH = path.resolve(PACKAGE_ROOT, 'cli.js');
