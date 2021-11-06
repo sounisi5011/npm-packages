@@ -37,6 +37,10 @@
       "packageNames": ["jest", "@types/jest", "ts-jest"],
       "groupName": "test packages",
       "groupSlug": "tester-packages"
+    },
+    {
+      "packageNames": ["@types/node"],
+      "extends": [":disableMajorUpdates"]
     }
   ]
 }
