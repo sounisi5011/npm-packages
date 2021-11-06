@@ -1,7 +1,6 @@
 {
   "extends": ["config:js-lib", ":semanticCommits", ":maintainLockFilesWeekly"],
   "ignorePresets": ["group:monorepos"],
-  "ignoreDeps": ["@types/node"],
   "packageRules": [
     {
       "matchPaths": ["actions/**"],
