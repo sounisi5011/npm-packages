@@ -159,7 +159,7 @@ jobs:
         run: pnpm install
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish / Build
-        run: pnpx ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
+        run: pnpm exec ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
         # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
         # Therefore, build only the submodules included in the required dependencies.
         #
