@@ -61,7 +61,7 @@ importers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/jest': 27.0.2
-      '@types/node': 16.x
+      '@types/node': '*'
       '@types/validate-npm-package-name': 3.0.3
       '@vercel/ncc': 0.31.1
       cross-env: 7.0.3
@@ -162,7 +162,7 @@ importers:
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/cross-spawn': 6.0.2
       '@types/jest': 27.0.2
-      '@types/node': 12.x
+      '@types/node': '*'
       '@types/parse-json': 4.0.0
       command-join: ^3.0.0
       cross-spawn: ^7.0.3
@@ -189,7 +189,7 @@ importers:
     devDependencies:
       '@types/cross-spawn': 6.0.2
       '@types/jest': 27.0.2
-      '@types/node': 12.20.36
+      '@types/node': 16.11.6
       '@types/parse-json': 4.0.0
       execa: 5.1.1
       is-plain-obj: 3.0.0
@@ -212,7 +212,7 @@ importers:
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.5
       '@types/jest': 27.0.2
-      '@types/node': 12.x
+      '@types/node': '*'
       '@types/varint': 6.0.0
       argon2-browser: ^1.15.4
       bl: ^5.0.0
@@ -250,7 +250,7 @@ importers:
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.5
       '@types/jest': 27.0.2
-      '@types/node': 12.20.36
+      '@types/node': 16.11.6
       '@types/varint': 6.0.0
       bytefield-svg: 1.6.0
       combinate: 1.1.7
