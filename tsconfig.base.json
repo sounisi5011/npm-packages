@@ -1,4 +1,5 @@
 {
+  "extends": "@tsconfig/node12/tsconfig.json",
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
@@ -7,10 +8,6 @@
     "composite": true,
 
     /* Language and Environment */
-    // Node.js 12 and above almost supports features up to ES2019
-    // see https://node.green/#ES2019
-    // see https://www.staging-typescript.org/tsconfig#target
-    "target": "ES2019",
     "useDefineForClassFields": true,
 
     /* Modules */
@@ -38,6 +35,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true
+    "noPropertyAccessFromIndexSignature": true,
+
+    /* Completeness */
+    "skipLibCheck": false
   }
 }
