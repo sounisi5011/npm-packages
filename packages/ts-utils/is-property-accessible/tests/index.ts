@@ -9,7 +9,6 @@ const anyValues: ReadonlyArray<
     true,
     false,
     ...numList,
-    // @ts-expect-error TS2583: Cannot find name 'BigInt'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
     // eslint-disable-next-line node/no-unsupported-features/es-builtins
     ...(typeof BigInt === 'function' ? numList.map(v => BigInt(v)) : []),
     NaN,
