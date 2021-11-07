@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--globby-exec': workspace:^0.0.0
+      '@tsconfig/node12': 1.0.9
       '@typescript-eslint/eslint-plugin': 5.3.0
       '@typescript-eslint/parser': 5.3.0
       commitizen: 4.2.4
@@ -30,6 +31,7 @@ importers:
     devDependencies:
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--globby-exec': link:scripts/globby-exec
+      '@tsconfig/node12': 1.0.9
       '@typescript-eslint/eslint-plugin': 5.3.0_f8873316f48f7781ccc3e081fc76e214
       '@typescript-eslint/parser': 5.3.0_eslint@8.1.0+typescript@4.4.4
       commitizen: 4.2.4
@@ -1268,6 +1270,10 @@ packages:
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
+    dev: true
+
+  /@tsconfig/node12/1.0.9:
+    resolution: {integrity: sha512-/yBMcem+fbvhSREH+s14YJi18sp7J9jpuhYByADT2rypfajMZZN4WQ6zBGgBKp53NKmqI36wFYDb3yaMPurITw==}
     dev: true
 
   /@tsd/typescript/4.4.4:
