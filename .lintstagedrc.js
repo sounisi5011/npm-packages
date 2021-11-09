@@ -84,6 +84,15 @@ module.exports = async filenames => {
     );
   }
 
+  const actionsWorkflowFiles = filenames.filter(filename =>
+    /(?:^|[/\\])\.github[/\\]workflows[/\\][^/\\]+\.(?:yaml|yml)$/.test(filename)
+  );
+  if (actionsWorkflowFiles.length >= 1) {
+    commands.push(
+      `actionlint ${actionsWorkflowFiles.join(' ')}`,
+    );
+  }
+
   const tsFiles = filenames.filter(extFilter('ts'));
   const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
 
