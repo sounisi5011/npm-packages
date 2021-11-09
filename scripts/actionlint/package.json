@@ -1,0 +1,6 @@
+{
+  "name": "@sounisi5011/actionlint",
+  "version": "0.0.0",
+  "private": true,
+  "bin": "bin.js"
+}
