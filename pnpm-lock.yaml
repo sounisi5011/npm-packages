@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--globby-exec': workspace:^0.0.0
       '@tsconfig/node12': 1.0.9
@@ -29,6 +30,7 @@ importers:
       typescript: 4.4.4
       ultra-runner: 3.10.5
     devDependencies:
+      '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--globby-exec': link:scripts/globby-exec
       '@tsconfig/node12': 1.0.9
