@@ -119,7 +119,7 @@ jobs:
               echo '::endgroup::'
 
               echo '::group::' Detect dprint version
-              readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
+              readonly dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
               echo dprint version':' "${dprintVersion}"
               echo '::endgroup::'
 

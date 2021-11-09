@@ -102,16 +102,19 @@ jobs:
           readonly beforeCommitHash="$(git log --format=%H -n 1)"
 
           echo '::group::' update package list
-          pnpm run build:scripts &&
-          pnpm run build:package-list &&
-          git add ./README.md &&
-          git commit -m 'docs: update package list' || true
+          {
+            pnpm run build:scripts &&
+            pnpm run build:package-list &&
+            git add ./README.md &&
+            git commit -m 'docs: update package list' ;
+          } || true
           echo '::endgroup::'
 
           if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
             (
               echo '::group::' loading "${CUSTOM_RELEASE_SCRIPT_FULLPATH}"
               cd '${{ matrix.path-git-relative }}'
+              # shellcheck source=/dev/null
               . "${CUSTOM_RELEASE_SCRIPT_PATH}"
               echo '::endgroup::'
             )
@@ -184,18 +187,19 @@ jobs:
 
           cd '${{ matrix.path-git-relative }}'
           if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
-            GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
-            matrix_package_name_with_scope='${{ matrix.package-name }}'
-            matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
-            outputs_upload_url='${{ steps.release.outputs.upload_url }}'
-            outputs_html_url='${{ steps.release.outputs.html_url }}'
-            outputs_tag_name='${{ steps.release.outputs.tag_name }}'
-            outputs_major='${{ steps.release.outputs.major }}'
-            outputs_minor='${{ steps.release.outputs.minor }}'
-            outputs_patch='${{ steps.release.outputs.patch }}'
-            outputs_sha='${{ steps.release.outputs.sha }}'
-            outputs_pr='${{ steps.release.outputs.pr }}'
+            export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            export matrix_package_name_with_scope='${{ matrix.package-name }}'
+            export matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
+            export outputs_upload_url='${{ steps.release.outputs.upload_url }}'
+            export outputs_html_url='${{ steps.release.outputs.html_url }}'
+            export outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            export outputs_major='${{ steps.release.outputs.major }}'
+            export outputs_minor='${{ steps.release.outputs.minor }}'
+            export outputs_patch='${{ steps.release.outputs.patch }}'
+            export outputs_sha='${{ steps.release.outputs.sha }}'
+            export outputs_pr='${{ steps.release.outputs.pr }}'
             echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
+            # shellcheck source=/dev/null
             source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
           else
             # see https://stackoverflow.com/a/62675843/4907315
