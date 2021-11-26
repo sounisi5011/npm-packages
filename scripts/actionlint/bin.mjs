@@ -18,9 +18,18 @@ import { dirname as dirpath } from './dirname.js';
  * @see https://github.com/rhysd/actionlint/blob/v1.6.7/docs/install.md#download-script
  */
 const DOWNLOAD_SCRIPT_URL = 'https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash';
+const MAX_AGE_SEC = 24 * 60 * 60;
 
 const isWin = os.platform() === 'win32';
 const exePath = path.join(dirpath, isWin ? 'actionlint.exe' : 'actionlint');
+
+/**
+ * @param stats {fs.Stats}
+ * @returns {boolean}
+ */
+function isExecutable(stats) {
+  return Boolean(stats.mode & fs.constants.S_IXUSR);
+}
 
 /**
  * @param url {string}
@@ -72,13 +81,18 @@ async function install() {
   }
   console.warn('-----');
 
+  /** @type {fs.Stats|false} */
+  let exeStats;
   if (
     cache
-    && await fs.promises.stat(exePath)
-      .then(stats => stats.isFile() && (stats.mode & fs.constants.S_IXUSR))
-      .catch(() => false)
+    && (exeStats = await fs.promises.stat(exePath).catch(() => false))
+    && exeStats.isFile()
+    && isExecutable(exeStats)
   ) {
     console.warn('actionlint already installed');
+    // Update ctime
+    await fs.promises.chmod(exePath, exeStats.mode)
+      .catch(() => {});
   } else {
     console.warn('Installing actionlint...');
     const result = crossSpawn.sync('bash', [downloadScriptFilepath], { cwd: dirpath, stdio: 'inherit' });
@@ -113,15 +127,21 @@ function execActionlint(args) {
 awaitMainFn(async () => {
   const args = process.argv.slice(2);
 
-  try {
-    execActionlint(args);
-  } catch (error) {
-    if (!(error instanceof Error && error.code === 'ENOENT')) {
-      throw error;
-    }
-
+  if (
+    await fs.promises.stat(exePath)
+      .then(exeStats =>
+        // If exec file is not a regular file, reinstall actionlint
+        !exeStats.isFile()
+        // If exec file is not executable, reinstall actionlint
+        || !isExecutable(exeStats)
+        // If exec file is outdated, reinstall actionlint
+        || (MAX_AGE_SEC * 1000) < (Date.now() - Math.max(exeStats.birthtimeMs, exeStats.mtimeMs, exeStats.ctimeMs))
+      )
+      // If exec file does not exist, install actionlint
+      .catch(() => true)
+  ) {
     await install();
-
-    execActionlint(args);
   }
+
+  execActionlint(args);
 });
