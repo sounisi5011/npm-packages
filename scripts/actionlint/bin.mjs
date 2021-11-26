@@ -3,7 +3,6 @@
 
 /* eslint-disable node/no-missing-import, import/no-unresolved */
 
-import * as actionsCache from '@actions/cache';
 import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 import crossSpawn from 'cross-spawn';
 import fetch from 'node-fetch';
@@ -15,7 +14,6 @@ import * as util from 'node:util';
 
 import { dirname as dirpath } from './dirname.js';
 
-const CACHE_KEY = `actionlint-${os.platform()}-${os.arch()}`;
 /**
  * @see https://github.com/rhysd/actionlint/blob/v1.6.7/docs/install.md#download-script
  */
@@ -51,24 +49,6 @@ async function install() {
   console.warn('-----');
 }
 
-async function restoreFromCache() {
-  console.warn('Restoring from cache...');
-  const cacheKey = await actionsCache.restoreCache([exePath], CACHE_KEY);
-
-  if (cacheKey) {
-    console.warn(`Cache restored from key: ${cacheKey}`);
-  } else {
-    console.warn(`Cache not found for key: ${CACHE_KEY}`);
-  }
-  console.warn('-----');
-}
-
-async function saveToCache() {
-  console.warn('-----\nSave to cache...');
-  await actionsCache.saveCache([exePath], CACHE_KEY);
-  console.warn(`Cache saved with key: ${CACHE_KEY}`);
-}
-
 /**
  * @param args {string[]}
  */
@@ -88,11 +68,6 @@ function execActionlint(args) {
 
 awaitMainFn(async () => {
   const args = process.argv.slice(2);
-  const isUseActionsCache = 'GITHUB_ACTIONS' in process.env;
-
-  if (isUseActionsCache) {
-    await restoreFromCache();
-  }
 
   try {
     execActionlint(args);
@@ -104,9 +79,5 @@ awaitMainFn(async () => {
     await install();
 
     execActionlint(args);
-  }
-
-  if (isUseActionsCache) {
-    await saveToCache();
   }
 });
