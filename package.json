@@ -36,6 +36,7 @@
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
     "preinstall": "npx only-allow pnpm",
     "lint": "run-p lint:*",
+    "lint:actions": "actionlint",
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "ultra --recursive lint:tsc",
     "prepare": "husky install",
@@ -44,6 +45,7 @@
     "test:unit-test": "ultra --recursive test"
   },
   "devDependencies": {
+    "@sounisi5011/actionlint": "link:scripts/actionlint",
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--globby-exec": "workspace:^0.0.0",
     "@tsconfig/node12": "1.0.9",

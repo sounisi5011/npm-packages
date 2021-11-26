@@ -47,6 +47,15 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
+      - name: Cache actionlint
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./scripts/actionlint/actionlint
+            ./scripts/actionlint/actionlint.exe
+            ./scripts/actionlint/download-actionlint.bash
+            ./scripts/actionlint/download-actionlint.bash.http-cache-metadata.json
+          key: actionlint-${{ runner.os }}
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
@@ -119,7 +128,7 @@ jobs:
               echo '::endgroup::'
 
               echo '::group::' Detect dprint version
-              readonly dprintVersion="$(cat ./package.json  | jq -r '.devDependencies.dprint')"
+              readonly dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
               echo dprint version':' "${dprintVersion}"
               echo '::endgroup::'
 
