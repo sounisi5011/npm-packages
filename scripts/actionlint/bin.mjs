@@ -25,27 +25,71 @@ const exePath = path.join(dirpath, isWin ? 'actionlint.exe' : 'actionlint');
 /**
  * @param url {string}
  * @param destPath {string}
+ * @returns {Promise<{cache: boolean}>}
  */
 async function download(url, destPath) {
-  const response = await fetch(url);
+  const cacheMetadataPath = `${destPath}.http-cache-metadata.json`;
+  const cacheMetadata = await fs.promises.readFile(cacheMetadataPath, 'utf8')
+    .then(JSON.parse)
+    .catch(() => ({}));
+  /** @type {string|null} */
+  const etag = typeof cacheMetadata.etag === 'string' ? cacheMetadata.etag : '';
+  const useConditionalRequest = /^(?:W\/)?".+"$/s.test(etag) && fs.existsSync(destPath);
+
+  /** @type {import('node-fetch').RequestInit} */
+  const requestInit = {
+    headers: useConditionalRequest
+      ? {
+        'If-None-Match': etag,
+      }
+      : {},
+  };
+  const response = await fetch(url, requestInit);
+  const newCacheMetadata = {
+    etag: response.headers.get('Etag'),
+    lastModified: response.headers.get('Last-Modified'),
+  };
+
+  if (useConditionalRequest && response.status === 304) {
+    return { cache: true };
+  }
+
   const destFileStream = fs.createWriteStream(destPath);
   await util.promisify(stream.pipeline)(response.body, destFileStream);
+  await fs.promises.writeFile(cacheMetadataPath, JSON.stringify(newCacheMetadata))
+    .catch(() => {});
+
+  return { cache: false };
 }
 
 async function install() {
   const downloadScriptFilepath = path.join(dirpath, 'download-actionlint.bash');
 
   console.warn('Downloading "download-actionlint.bash"...');
-  await download(DOWNLOAD_SCRIPT_URL, downloadScriptFilepath);
-
-  console.warn('-----\nInstalling actionlint...');
-  const result = crossSpawn.sync('bash', [downloadScriptFilepath], { cwd: dirpath, stdio: 'inherit' });
-  if (result.error) {
-    process.exitCode = typeof result.status !== 'number' ? 1 : result.status;
-    throw result.error;
-  } else {
-    process.exitCode = typeof result.status !== 'number' ? 0 : result.status;
+  const { cache } = await download(DOWNLOAD_SCRIPT_URL, downloadScriptFilepath);
+  if (cache) {
+    console.warn('"download-actionlint.bash" is not modified');
   }
+  console.warn('-----');
+
+  if (
+    cache
+    && await fs.promises.stat(exePath)
+      .then(stats => stats.isFile() && (stats.mode & fs.constants.S_IXUSR))
+      .catch(() => false)
+  ) {
+    console.warn('actionlint already installed');
+  } else {
+    console.warn('Installing actionlint...');
+    const result = crossSpawn.sync('bash', [downloadScriptFilepath], { cwd: dirpath, stdio: 'inherit' });
+    if (result.error) {
+      process.exitCode = typeof result.status !== 'number' ? 1 : result.status;
+      throw result.error;
+    } else {
+      process.exitCode = typeof result.status !== 'number' ? 0 : result.status;
+    }
+  }
+
   console.warn('-----');
 }
 
