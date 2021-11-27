@@ -55,7 +55,7 @@
     "@types/readline-transform": "1.0.1",
     "@types/signal-exit": "3.0.1",
     "@types/write-file-atomic": "3.0.2",
-    "execa": "5.1.1",
+    "execa": "6.0.0",
     "jest": "27.3.1",
     "readline-transform": "1.0.0",
     "ts-jest": "27.0.7",
