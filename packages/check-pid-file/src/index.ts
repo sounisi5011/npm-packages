@@ -104,7 +104,7 @@ export interface Options {
     /**
      * @default process.pid
      */
-    currentPid?: number;
+    currentPid?: number | undefined;
 }
 
 export async function isProcessExist(
