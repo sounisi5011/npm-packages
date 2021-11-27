@@ -38,7 +38,7 @@
     "@types/jest": "27.0.2",
     "@types/node": "*",
     "@types/validate-npm-package-name": "3.0.3",
-    "@vercel/ncc": "0.31.1",
+    "@vercel/ncc": "0.32.0",
     "cross-env": "7.0.3",
     "jest": "27.3.1",
     "jest-mock-process": "1.4.1",
