@@ -35,7 +35,7 @@
   "devDependencies": {
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.0.3",
     "@types/node": "*",
     "@types/validate-npm-package-name": "3.0.3",
     "@vercel/ncc": "0.32.0",

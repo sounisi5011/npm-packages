@@ -64,7 +64,7 @@ importers:
       '@octokit/endpoint': 6.0.12
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': '*'
       '@types/validate-npm-package-name': 3.0.3
       '@vercel/ncc': 0.32.0
@@ -92,7 +92,7 @@ importers:
     devDependencies:
       '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 16.11.6
       '@types/validate-npm-package-name': 3.0.3
       '@vercel/ncc': 0.32.0
@@ -101,7 +101,7 @@ importers:
       jest-mock-process: 1.4.1_jest@27.3.1
       nock: 13.2.1
       spawk: 1.7.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
@@ -109,7 +109,7 @@ importers:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       '@sounisi5011/run-if-supported': workspace:^1.0.0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
@@ -130,7 +130,7 @@ importers:
     devDependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../cli-utils/top-level-await-cli
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
@@ -138,13 +138,13 @@ importers:
       execa: 5.1.1
       jest: 27.3.1
       readline-transform: 1.0.0
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
   packages/cli-utils/top-level-await-cli:
     specifiers:
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       execa: 5.1.1
       jest: 27.3.1
@@ -152,11 +152,11 @@ importers:
       typescript: 4.4.4
       ultra-runner: 3.10.5
     devDependencies:
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       execa: 5.1.1
       jest: 27.3.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
@@ -165,7 +165,7 @@ importers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/cross-spawn': 6.0.2
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': '*'
       '@types/parse-json': 4.0.0
       command-join: ^3.0.0
@@ -192,13 +192,13 @@ importers:
       pkg-up: 3.1.0
     devDependencies:
       '@types/cross-spawn': 6.0.2
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 16.11.6
       '@types/parse-json': 4.0.0
       execa: 5.1.1
       is-plain-obj: 3.0.0
       jest: 27.3.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       type-fest: 2.6.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
@@ -215,7 +215,7 @@ importers:
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.5
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': '*'
       '@types/varint': 6.0.0
       argon2-browser: ^1.15.4
@@ -253,7 +253,7 @@ importers:
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.5
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 16.11.6
       '@types/varint': 6.0.0
       bytefield-svg: 1.6.0
@@ -266,7 +266,7 @@ importers:
       jest-extended: 1.1.0
       multicodec: 3.2.1
       noop-stream: 0.1.0
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
@@ -280,7 +280,7 @@ importers:
     specifiers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-is-readonly-array': workspace:^1.0.0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       jest: 27.3.1
       jest-diff: ^27.3.1
@@ -294,17 +294,17 @@ importers:
       jest-matcher-utils: 27.3.1
     devDependencies:
       '@sounisi5011/run-if-supported': link:../../cli/run-if-supported
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 12.20.37
       jest: 27.3.1
       pretty-format: 27.3.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       typescript: 4.4.4
 
   packages/stream-transform-from:
     specifiers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 15.6.0
       jest: 27.3.1
       ts-jest: 27.0.7
@@ -313,10 +313,10 @@ importers:
       ultra-runner: 3.10.5
     devDependencies:
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       '@types/node': 15.6.0
       jest: 27.3.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       tsd: 0.18.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
@@ -351,7 +351,7 @@ importers:
     specifiers:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.3.0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       glob-exec: 0.1.1
       jest: 27.3.1
       rollup: 2.60.1
@@ -363,11 +363,11 @@ importers:
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
       '@rollup/plugin-typescript': 8.3.0_80b1cc6af705ff249633511b1f3b98f0
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       glob-exec: 0.1.1
       jest: 27.3.1
       rollup: 2.60.1
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
       tsd: 0.18.0
       tslib: 2.3.1
       typescript: 4.4.4
@@ -1388,8 +1388,8 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  /@types/jest/27.0.2:
-    resolution: {integrity: sha512-4dRxkS/AFX0c5XW6IPMNOydLn2tEhNhJV7DnYK+0bjoJZ+QTmfucBlihX7aoEsh/ocYtkLC73UbnBXBXIxsULA==}
+  /@types/jest/27.0.3:
+    resolution: {integrity: sha512-cmmwv9t7gBYt7hNKH5Spu7Kuu/DotGa+Ff+JGRKZ4db5eh8PnKS4LuebJ3YLUoyOyIHraTGyULn23YtEAm0VSg==}
     dependencies:
       jest-diff: 27.3.1
       pretty-format: 27.3.1
@@ -6732,7 +6732,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /ts-jest/27.0.7_2c4ca6574207836d1023f54689cc81ac:
+  /ts-jest/27.0.7_b626c82449d36ccae0aa7169b15092e6:
     resolution: {integrity: sha512-O41shibMqzdafpuP+CkrOL7ykbmLh+FqQrXEmV9CydQ5JBk0Sj0uAEF5TNNe94fZWKm3yYvWa/IbyV4Yg1zK2Q==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -6750,7 +6750,7 @@ packages:
       babel-jest:
         optional: true
     dependencies:
-      '@types/jest': 27.0.2
+      '@types/jest': 27.0.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       jest: 27.3.1
