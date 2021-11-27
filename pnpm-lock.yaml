@@ -308,7 +308,7 @@ importers:
       '@types/node': 15.6.0
       jest: 27.3.1
       ts-jest: 27.0.7
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
     devDependencies:
@@ -317,7 +317,7 @@ importers:
       '@types/node': 15.6.0
       jest: 27.3.1
       ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
@@ -329,21 +329,21 @@ importers:
 
   packages/ts-type-utils/has-own-property:
     specifiers:
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.18.0
+      tsd: 0.19.0
       typescript: 4.4.4
       ultra-runner: 3.10.5
 
@@ -356,7 +356,7 @@ importers:
       jest: 27.3.1
       rollup: 2.60.1
       ts-jest: 27.0.7
-      tsd: 0.18.0
+      tsd: 0.19.0
       tslib: 2.3.1
       typescript: 4.4.4
       ultra-runner: 3.10.5
@@ -368,7 +368,7 @@ importers:
       jest: 27.3.1
       rollup: 2.60.1
       ts-jest: 27.0.7_b626c82449d36ccae0aa7169b15092e6
-      tsd: 0.18.0
+      tsd: 0.19.0
       tslib: 2.3.1
       typescript: 4.4.4
       ultra-runner: 3.10.5
@@ -1288,8 +1288,8 @@ packages:
     resolution: {integrity: sha512-/yBMcem+fbvhSREH+s14YJi18sp7J9jpuhYByADT2rypfajMZZN4WQ6zBGgBKp53NKmqI36wFYDb3yaMPurITw==}
     dev: true
 
-  /@tsd/typescript/4.4.4:
-    resolution: {integrity: sha512-XNaotnbhU6sKSXYg9rVz4L9i9g+j+x1IIgMPztK8KumtMEsrLXcqPBKp/qzmUKwAZEqgHs4+TTz90dUu5/aIqQ==}
+  /@tsd/typescript/4.5.2:
+    resolution: {integrity: sha512-K778wcPuAsJ9Ch0/FlhQcaIMFEi+TfxNi5NSUbgZd3RucaktYUpR++1Ox2mW2G25oyxWb8gfgg+JUhulRbI6eQ==}
     hasBin: true
     dev: true
 
@@ -6789,12 +6789,12 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd/0.18.0:
-    resolution: {integrity: sha512-UIkxm2CLmSjXlQs4zqxgVV9UmzK8VgJ63eBpgkH/ZsMkiUdzxxHvdCCg8F314HDxzfQl2muJEy/TEcXHIFIPXg==}
+  /tsd/0.19.0:
+    resolution: {integrity: sha512-DlYCjjRVspfSAC+9X1NUDqPj0PtsVjUSyC4/OJpCGnY2Mtg0ddc+opckmnLV3RhUBpVuAAOrz661v+QSJwINkQ==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
-      '@tsd/typescript': 4.4.4
+      '@tsd/typescript': 4.5.2
       eslint-formatter-pretty: 4.1.0
       globby: 11.0.4
       meow: 9.0.0
