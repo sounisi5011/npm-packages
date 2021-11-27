@@ -58,6 +58,31 @@ if (hasOwnProp(obj, 'prop')) {
 }
 ```
 
+#### Optional property for union types with `undefined`
+
+Since TypeScript 4.4, when [the `exactOptionalPropertyTypes` option](https://www.typescriptlang.org/tsconfig#exactOptionalPropertyTypes) is enabled, [optional properties are no longer union types by default](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-4.html#exact-optional-property-types---exactoptionalpropertytypes).
+In this case, it is possible to specify the union type with `undefined` type as an optional property.
+The `hasOwnProperty` type will not remove the `undefined` type of a union type whose `undefined` type has been explicitly specified.
+
+```ts
+import { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
+
+const hasOwnProp = Object.prototype.hasOwnProperty.call as hasOwnProperty;
+
+// ----- //
+
+interface Obj {
+    prop?: string | undefined;
+}
+
+const obj: Obj = {};
+
+if (hasOwnProp(obj, 'prop')) {
+    // If the `exactOptionalPropertyTypes` option is true, `obj.prop` is `string | undefined` type.
+    // If the `exactOptionalPropertyTypes` option is false, `obj.prop` is `string` type.
+}
+```
+
 ### Union type property with `undefined`
 
 If it is not an optional property, the `undefined` type should not be removed.
