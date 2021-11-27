@@ -50,7 +50,7 @@
   "devDependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.0.3",
     "@types/node": "12.20.37",
     "@types/readline-transform": "1.0.1",
     "@types/signal-exit": "3.0.1",
