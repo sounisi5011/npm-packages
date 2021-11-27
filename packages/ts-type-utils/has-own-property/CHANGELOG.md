@@ -1,11 +1,6 @@
 # Changelog
 
-## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.0...ts-type-util-has-own-property-v1.1.0) (2021-11-27)
-
-
-### Features
-
-* **ts-type-util-is-readonly-array:** create a new package  ([#28](https://www.github.com/sounisi5011/npm-packages/issues/28)) ([dc41544](https://www.github.com/sounisi5011/npm-packages/commit/dc4154419fc9a5db8cade1d5f01914cf5874a3c7))
+## [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.0...ts-type-util-has-own-property-v1.0.1) (2021-11-27)
 
 
 ### Bug Fixes
