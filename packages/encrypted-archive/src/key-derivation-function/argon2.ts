@@ -16,9 +16,9 @@ const typeNameList = [...argon2TypeMap.keys()];
 export type Argon2Algorithm = (typeof typeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
     algorithm: Argon2Algorithm;
-    iterations?: number;
-    memory?: number;
-    parallelism?: number;
+    iterations?: number | undefined;
+    memory?: number | undefined;
+    parallelism?: number | undefined;
 }
 export type NormalizedArgon2Options = Required<Argon2Options>;
 
