@@ -2,7 +2,7 @@ import { inspect, types } from 'util';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
-import type { AsyncIterableReturn, objectEntries } from './type';
+import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './type';
 
 function isString(value: unknown): value is string {
     return typeof value === 'string';
@@ -57,7 +57,7 @@ export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function normalizeOptions<T extends object>(
     defaultOptions: Readonly<Required<T>>,
-    ...optionsList: Array<Readonly<Partial<T>>>
+    ...optionsList: Array<Readonly<PartialWithUndefined<T>>>
 ): T {
     // Copy the objects in the `defaultOptions` argument using the spread syntax to avoid destructive updates.
     // This operation also removes non-enumerable properties contained in the `defaultOptions` argument value.

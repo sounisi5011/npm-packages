@@ -4,7 +4,7 @@ import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
-import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
+import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
 
 const argon2TypeRecord = {
     argon2d: ArgonType.Argon2d,
@@ -20,7 +20,7 @@ export interface Argon2Options extends BaseKeyDerivationOptions {
     memory?: number | undefined;
     parallelism?: number | undefined;
 }
-export type NormalizedArgon2Options = Required<Argon2Options>;
+export type NormalizedArgon2Options = RequiredExcludeUndefined<Argon2Options>;
 
 export const defaultOptions: NormalizedArgon2Options = {
     algorithm: 'argon2d',

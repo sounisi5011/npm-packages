@@ -136,8 +136,10 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
             const chunk = await this.tryReadChunk();
             if (!chunk) break;
 
-            const [data, remainder] = this.splitBuffer(chunk, requestedSize - readedSize);
-            yield [data, remainder];
+            const bufferPair = this.splitBuffer(chunk, requestedSize - readedSize);
+            const [data] = bufferPair;
+
+            yield bufferPair;
             readedSize += data.byteLength;
         }
     }

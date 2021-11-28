@@ -4,6 +4,14 @@ export type ObjectValue<T> = T[keyof T];
 
 export type OneOrMoreReadonlyArray<T> = readonly [T, ...T[]];
 
+export type PartialWithUndefined<T> = {
+    [P in keyof T]?: T[P] | undefined;
+};
+
+export type RequiredExcludeUndefined<T> = {
+    [P in keyof T]-?: Exclude<T[P], undefined>;
+};
+
 /**
  * The built-in `AsyncIterable` type does not have the `TReturn` and `TNext` arguments.
  * This type fixes that problem and makes it easier to use with function return types.

@@ -5,7 +5,7 @@ import type { StreamReaderInterface } from '../utils/stream';
 export async function readVarint(
     reader: StreamReaderInterface,
     error: Error | ((error: unknown) => Error),
-    options?: { offset?: number; autoSeek?: true },
+    options?: { offset?: number; autoSeek?: true | undefined },
 ): Promise<{ value: number; byteLength: number; endOffset: number }> {
     const { offset = 0, autoSeek } = options ?? {};
     const data = await reader.read(9, offset);
