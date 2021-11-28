@@ -11,9 +11,9 @@ import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
-    algorithm?: CryptoAlgorithmName;
-    keyDerivation?: KeyDerivationOptions;
-    compress?: CompressOptions | CompressOptions['algorithm'];
+    algorithm?: CryptoAlgorithmName | undefined;
+    keyDerivation?: KeyDerivationOptions | undefined;
+    compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
 }
 
 interface EncryptorState {

@@ -44,7 +44,7 @@ export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoS
 
 export async function* parseCiphertextIterable<T extends Buffer | Uint8Array>(
     reader: StreamReaderInterface<T>,
-    { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number },
+    { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number | undefined },
 ): AsyncIterableReturn<T, void> {
     for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {
         if (data) {

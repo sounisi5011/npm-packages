@@ -52,7 +52,7 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
     readIterator: (
         size: number,
         offset?: number,
-    ) => AsyncIterable<{ data?: T; requestedSize: number; offset: number; readedSize: number }>;
+    ) => AsyncIterable<{ data?: T | undefined; requestedSize: number; offset: number; readedSize: number }>;
     seek: (offset: number) => Promise<void>;
     isEnd: () => Promise<boolean>;
 }
@@ -136,8 +136,10 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
             const chunk = await this.tryReadChunk();
             if (!chunk) break;
 
-            const [data, remainder] = this.splitBuffer(chunk, requestedSize - readedSize);
-            yield [data, remainder];
+            const bufferPair = this.splitBuffer(chunk, requestedSize - readedSize);
+            const [data] = bufferPair;
+
+            yield bufferPair;
             readedSize += data.byteLength;
         }
     }

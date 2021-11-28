@@ -4,7 +4,7 @@ import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
-import { assertType, isInteger, objectEntries, objectFromEntries } from '../utils/type';
+import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
 
 const argon2TypeRecord = {
     argon2d: ArgonType.Argon2d,
@@ -16,11 +16,11 @@ const typeNameList = [...argon2TypeMap.keys()];
 export type Argon2Algorithm = (typeof typeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
     algorithm: Argon2Algorithm;
-    iterations?: number;
-    memory?: number;
-    parallelism?: number;
+    iterations?: number | undefined;
+    memory?: number | undefined;
+    parallelism?: number | undefined;
 }
-export type NormalizedArgon2Options = Required<Argon2Options>;
+export type NormalizedArgon2Options = RequiredExcludeUndefined<Argon2Options>;
 
 export const defaultOptions: NormalizedArgon2Options = {
     algorithm: 'argon2d',
@@ -131,11 +131,11 @@ function validatePositiveInteger(optionName: string, value: unknown): asserts va
 interface ValidateBetweenOptions<TValue> {
     min: number;
     max: number;
-    tooX?: { min: string; max: string };
-    type?: string;
-    startPrefix?: ValidateBetweenOptionsFn<TValue, { min: string; max: string }>;
-    rangeCond?: Partial<Record<'min' | 'max', ValidateBetweenOptionsFn<TValue, string>>>;
-    suffix?: Partial<Record<'prefix' | 'suffix', ValidateBetweenOptionsFn<TValue, string>>>;
+    tooX?: { min: string; max: string } | undefined;
+    type?: string | undefined;
+    startPrefix?: ValidateBetweenOptionsFn<TValue, { min: string; max: string }> | undefined;
+    rangeCond?: Partial<Record<'min' | 'max', ValidateBetweenOptionsFn<TValue, string>>> | undefined;
+    suffix?: Partial<Record<'prefix' | 'suffix', ValidateBetweenOptionsFn<TValue, string>>> | undefined;
 }
 
 type ValidateBetweenOptionsFn<TValue, TReturn> =
@@ -144,7 +144,7 @@ type ValidateBetweenOptionsFn<TValue, TReturn> =
         options:
             & { value: TValue }
             & ValidateBetweenOptions<TValue>
-            & Required<Pick<ValidateBetweenOptions<TValue>, 'tooX' | 'type'>>,
+            & RequiredExcludeUndefined<Pick<ValidateBetweenOptions<TValue>, 'tooX' | 'type'>>,
     ) => TReturn | undefined);
 
 function createBetweenErrorMessage<TValue extends number>(
@@ -188,7 +188,7 @@ function validateBetween<TValue extends number>(
 }
 
 interface ValidateBetweenLengthOptions<TValue> extends ValidateBetweenOptions<TValue> {
-    shortName?: string;
+    shortName?: string | undefined;
 }
 
 function validateBetweenLength<TValue extends number>(
