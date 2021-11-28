@@ -52,7 +52,7 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
     readIterator: (
         size: number,
         offset?: number,
-    ) => AsyncIterable<{ data?: T; requestedSize: number; offset: number; readedSize: number }>;
+    ) => AsyncIterable<{ data?: T | undefined; requestedSize: number; offset: number; readedSize: number }>;
     seek: (offset: number) => Promise<void>;
     isEnd: () => Promise<boolean>;
 }

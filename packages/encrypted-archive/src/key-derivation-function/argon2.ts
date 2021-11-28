@@ -131,11 +131,11 @@ function validatePositiveInteger(optionName: string, value: unknown): asserts va
 interface ValidateBetweenOptions<TValue> {
     min: number;
     max: number;
-    tooX?: { min: string; max: string };
-    type?: string;
-    startPrefix?: ValidateBetweenOptionsFn<TValue, { min: string; max: string }>;
-    rangeCond?: Partial<Record<'min' | 'max', ValidateBetweenOptionsFn<TValue, string>>>;
-    suffix?: Partial<Record<'prefix' | 'suffix', ValidateBetweenOptionsFn<TValue, string>>>;
+    tooX?: { min: string; max: string } | undefined;
+    type?: string | undefined;
+    startPrefix?: ValidateBetweenOptionsFn<TValue, { min: string; max: string }> | undefined;
+    rangeCond?: Partial<Record<'min' | 'max', ValidateBetweenOptionsFn<TValue, string>>> | undefined;
+    suffix?: Partial<Record<'prefix' | 'suffix', ValidateBetweenOptionsFn<TValue, string>>> | undefined;
 }
 
 type ValidateBetweenOptionsFn<TValue, TReturn> =
@@ -144,7 +144,7 @@ type ValidateBetweenOptionsFn<TValue, TReturn> =
         options:
             & { value: TValue }
             & ValidateBetweenOptions<TValue>
-            & Required<Pick<ValidateBetweenOptions<TValue>, 'tooX' | 'type'>>,
+            & RequiredExcludeUndefined<Pick<ValidateBetweenOptions<TValue>, 'tooX' | 'type'>>,
     ) => TReturn | undefined);
 
 function createBetweenErrorMessage<TValue extends number>(
@@ -188,7 +188,7 @@ function validateBetween<TValue extends number>(
 }
 
 interface ValidateBetweenLengthOptions<TValue> extends ValidateBetweenOptions<TValue> {
-    shortName?: string;
+    shortName?: string | undefined;
 }
 
 function validateBetweenLength<TValue extends number>(

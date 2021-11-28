@@ -5,7 +5,7 @@ import type { StreamReaderInterface } from '../utils/stream';
 export async function readVarint(
     reader: StreamReaderInterface,
     error: Error | ((error: unknown) => Error),
-    options?: { offset?: number; autoSeek?: true | undefined },
+    options?: { offset?: number | undefined; autoSeek?: true | undefined },
 ): Promise<{ value: number; byteLength: number; endOffset: number }> {
     const { offset = 0, autoSeek } = options ?? {};
     const data = await reader.read(9, offset);
@@ -21,18 +21,26 @@ export async function readVarint(
 }
 
 export interface ParseDataLengthFn {
-    (opts: { data: Uint8Array; offset?: number; throwIfLowData?: true }): { dataByteLength: number; endOffset: number };
-    (opts: { data: Uint8Array; offset?: number; throwIfLowData?: boolean }):
+    (opts: {
+        data: Uint8Array;
+        offset?: number | undefined;
+        throwIfLowData?: true | undefined;
+    }): { dataByteLength: number; endOffset: number };
+    (opts: {
+        data: Uint8Array;
+        offset?: number | undefined;
+        throwIfLowData?: boolean | undefined;
+    }):
         | { dataByteLength: number; endOffset: number; error?: never }
         | { error: { needByteLength: number } };
 }
 
 // export function parseDataLength(opts: { name: string }): ParseDataLengthFn;
 export function parseDataLength(
-    { name, autoSeek: defaultAutoSeek }: { name: string; autoSeek?: true },
+    { name, autoSeek: defaultAutoSeek }: { name: string; autoSeek?: true | undefined },
 ): (
     reader: StreamReaderInterface,
-    opts?: { offset?: number; autoSeek?: boolean },
+    opts?: { offset?: number | undefined; autoSeek?: boolean | undefined },
 ) => Promise<{ dataByteLength: number; endOffset: number }> {
     return async (reader, { offset = 0, autoSeek = defaultAutoSeek } = {}) => {
         const result = await readVarint(
@@ -54,7 +62,7 @@ export function validateDataLength(
         requiredLength: number;
         received: number | Uint8Array;
         name: string;
-        longname?: string;
+        longname?: string | undefined;
     },
 ): void {
     const receivedLength = typeof received === 'number' ? received : received.byteLength;
@@ -72,11 +80,11 @@ export function createHeaderDataParser<T>(
         name: string;
         longname: string;
         genHeaderData: (headerDataBytes: Uint8Array) => T;
-        autoSeek?: true;
+        autoSeek?: true | undefined;
     },
 ): (
     reader: StreamReaderInterface,
-    opts: { headerByteLength: number; offset?: number; autoSeek?: boolean },
+    opts: { headerByteLength: number; offset?: number | undefined; autoSeek?: boolean | undefined },
 ) => Promise<{ headerData: T; endOffset: number }> {
     return async (reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
         const headerDataBytes = await reader.read(headerByteLength, offset);

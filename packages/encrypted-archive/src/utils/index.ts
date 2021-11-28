@@ -138,7 +138,7 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
         .join('');
 }
 
-export function printObject(value: unknown, opts?: { passThroughString?: boolean }): string {
+export function printObject(value: unknown, opts?: { passThroughString?: boolean | undefined }): string {
     return (opts?.passThroughString && typeof value === 'string') ? value : inspect(value, { breakLength: Infinity });
 }
 
