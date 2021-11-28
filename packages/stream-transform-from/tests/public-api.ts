@@ -216,7 +216,9 @@ describe('transforms string with passed encoding', () => {
             () =>
                 new stream.Transform({
                     transform(chunk, encoding, done) {
-                        this.push(Buffer.from(chunk, encoding));
+                        if (Buffer.isEncoding(encoding)) {
+                            this.push(Buffer.from(chunk, encoding));
+                        }
                         done();
                     },
                     writableObjectMode: true,
@@ -757,7 +759,12 @@ describe('options that affect functionality should be ignored', () => {
         );
         expect(outputChunkList).toStrictEqual(outputData);
     });
-    it.each<stream.TransformOptions>([
+
+    interface TransformOptionsNode15 extends stream.TransformOptions {
+        // This field has been added in Node v15.0.0
+        construct?: (this: stream.Transform, callback: (error?: Error | null) => void) => void;
+    }
+    it.each<TransformOptionsNode15>([
         {
             // This field has been added in Node v15.0.0
             construct(done) {

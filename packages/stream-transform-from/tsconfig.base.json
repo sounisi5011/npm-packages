@@ -4,10 +4,6 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Emit */
-    "declarationMap": false,
-
-    /* Type Checking */
-    /** @todo Comment out when this package is fixed */
-    "exactOptionalPropertyTypes": false
+    "declarationMap": false
   }
 }
