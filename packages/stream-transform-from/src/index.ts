@@ -89,7 +89,7 @@ export class TransformFromAsyncIterable<
 > extends Transform {
     private transformCallback: stream.TransformCallback | undefined;
     private isFinished = false;
-    private receiveData?: (data: ReceivedData<TOpts>) => void;
+    private receiveData?: ((data: ReceivedData<TOpts>) => void) | undefined;
     private readonly receivedDataList: Array<ReceivedData<TOpts>> = [];
 
     constructor(transformFn: TransformFunction<TOpts>, opts?: TOpts) {
