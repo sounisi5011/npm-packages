@@ -42,7 +42,7 @@
     "prepare": "husky install",
     "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
-    "test:unit-test": "ultra --recursive test"
+    "test:unit-test": "ultra --recursive --serial test"
   },
   "devDependencies": {
     "@sounisi5011/actionlint": "link:scripts/actionlint",
