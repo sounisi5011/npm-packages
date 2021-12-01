@@ -34,7 +34,7 @@ describe('encryptStream()', () => {
          * the amount of memory used will be less than the input data length
          * even when converting huge data.
          */
-        const expectedMaxMemoryUsage = dataSize / 5;
+        const expectedMaxMemoryUsage = dataSize / 2;
         expect(subprocessResult.maxMemoryUsage.rss).toBeLessThanByteSize(expectedMaxMemoryUsage);
         expect(subprocessResult.maxMemoryUsage.heapTotal).toBeLessThanByteSize(expectedMaxMemoryUsage);
         expect(subprocessResult.maxMemoryUsage.heapUsed).toBeLessThanByteSize(expectedMaxMemoryUsage);
