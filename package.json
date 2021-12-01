@@ -38,7 +38,7 @@
     "lint": "run-p lint:*",
     "lint:actions": "actionlint",
     "lint:eslint": "eslint --cache ./",
-    "lint:tsc": "ultra --recursive lint:tsc",
+    "lint:tsc": "ultra --recursive --serial lint:tsc",
     "prepare": "husky install",
     "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
