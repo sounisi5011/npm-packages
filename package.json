@@ -38,11 +38,11 @@
     "lint": "run-p lint:*",
     "lint:actions": "actionlint",
     "lint:eslint": "eslint --cache ./",
-    "lint:tsc": "ultra --recursive lint:tsc",
+    "lint:tsc": "ultra --recursive --serial lint:tsc",
     "prepare": "husky install",
     "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
-    "test:unit-test": "ultra --recursive test"
+    "test:unit-test": "ultra --recursive --serial test"
   },
   "devDependencies": {
     "@sounisi5011/actionlint": "link:scripts/actionlint",
