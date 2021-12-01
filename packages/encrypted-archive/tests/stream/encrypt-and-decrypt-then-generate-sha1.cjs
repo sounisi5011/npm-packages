@@ -23,14 +23,6 @@ let timerID;
   timerID = setImmediate(monitorMem);
 })();
 
-const buffer = new Uint8Array(500 * 2 ** 20);
-let bufferOffset = 0;
-
-process.stdin.on('data', data => {
-  data.copy(buffer, bufferOffset);
-  bufferOffset += data.byteLength;
-});
-
 pipeline(
   process.stdin,
   encryptStream(password, {
