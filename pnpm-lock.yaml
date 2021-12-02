@@ -79,7 +79,7 @@ importers:
       typescript: 4.5.2
       ultra-runner: 3.10.5
       validate-npm-package-name: 3.0.0
-      workspace-tools: 0.16.2
+      workspace-tools: 0.17.0
     dependencies:
       '@actions/core': 1.6.0
       '@actions/exec': 1.1.0
@@ -88,7 +88,7 @@ importers:
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
       validate-npm-package-name: 3.0.0
-      workspace-tools: 0.16.2
+      workspace-tools: 0.17.0
     devDependencies:
       '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
@@ -419,13 +419,13 @@ importers:
       hosted-git-info: ^4.0.2
       strict-uri-encode: ^2.0.0
       validate-npm-package-name: ^3.0.0
-      workspace-tools: ^0.16.0
+      workspace-tools: ^0.17.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       hosted-git-info: 4.0.2
       strict-uri-encode: 2.0.0
       validate-npm-package-name: 3.0.0
-      workspace-tools: 0.16.2
+      workspace-tools: 0.17.0
 
 packages:
 
@@ -7096,8 +7096,8 @@ packages:
       typical: 5.2.0
     dev: true
 
-  /workspace-tools/0.16.2:
-    resolution: {integrity: sha512-Z/NHo4t39DUd50MdWiPfxICyVaCjWZc/xwZxE4a/n2nAQGgeYeg6GWBY1juULPi/BGSrjSVaDQfDCj/Y80033A==}
+  /workspace-tools/0.17.0:
+    resolution: {integrity: sha512-vfKAXUkwFwC2IAo0/34Zql25IGMc8aVm2zJ+D1rdZpRPfvSjT06kf0pv+kamgNjMQ0Vsrq9rirCyJz1mPhZZtg==}
     dependencies:
       '@yarnpkg/lockfile': 1.1.0
       find-up: 4.1.0
