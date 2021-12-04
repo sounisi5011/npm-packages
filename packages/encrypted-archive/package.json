@@ -62,7 +62,8 @@
   },
   "files": [
     "dist/",
-    "runkit-example.js"
+    "runkit-example.js",
+    "!*.tsbuildinfo"
   ],
   "scripts": {
     "build": "run-p build:*",
@@ -75,9 +76,9 @@
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "run-p build:docs:*",
     "build:docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
-    "build:tsc": "tsc",
+    "build:tsc": "tsc -p ./src/",
     "lint:tsc": "run-p lint:tsc:*",
-    "lint:tsc:src": "tsc --noEmit",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
     "test:examples": "run-s build-with-cache test:examples:*",

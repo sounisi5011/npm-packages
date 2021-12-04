@@ -1,10 +1,9 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Modules */
-    "rootDir": "../",
     "types": [
       "node",
       "jest",
@@ -17,11 +16,7 @@
     "allowJs": true,
 
     /* Emit */
-    "noEmit": true,
-
-    /* Type Checking */
-    /** @todo Comment out when this package is fixed */
-    "useUnknownInCatchVariables": false
+    "noEmit": true
   },
   "include": ["./**/*", "../src/**/*", "../package.json"]
 }
