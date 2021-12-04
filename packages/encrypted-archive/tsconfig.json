@@ -4,19 +4,14 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Modules */
-    // When the `composite` option is `true` and the `rootDir` option is undefined,
-    // files will not be created directly under the `outDir`
-    "rootDir": "./src",
-    "types": ["node"],
+    "rootDir": "./",
+    "types": [],
 
     /* Emit */
-    "declarationMap": false,
-    "outDir": "./dist",
-    "inlineSources": true,
+    "noEmit": true,
 
     /* Type Checking */
     /** @todo Comment out when this package is fixed */
     "useUnknownInCatchVariables": false
-  },
-  "include": ["./src/**/*"]
+  }
 }

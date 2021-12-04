@@ -51,8 +51,19 @@ overrides:
     parserOptions:
       sourceType: module
       project:
-        - ./packages/{*,*/*}{,/tests{,/helpers},/test-d}/tsconfig.json
-        - ./actions/*{,/tests{,/helpers},/test-d}/tsconfig.json
+        - ./packages/{*,*/*}/src/tsconfig.json
+        - ./packages/{*,*/*}/tests/helpers/tsconfig.json
+        - ./packages/{*,*/*}/tests/tsconfig.json
+        - ./packages/{*,*/*}/test-d/tsconfig.json
+        - ./packages/{*,*/*}/tsconfig.json
+          # Note: The package root tsconfig must be written after the subdirectory of tsconfig.
+          #       Writing it before the subdirectory may cause erroneous errors
+          #       because ESLint will use the package root tsconfig before the subdirectory tsconfig.
+        - ./actions/*/src/tsconfig.json
+        - ./actions/*/tests/helpers/tsconfig.json
+        - ./actions/*/tests/tsconfig.json
+        - ./actions/*/test-d/tsconfig.json
+        - ./actions/*/tsconfig.json
     settings:
       node:
         # see https://github.com/mysticatea/eslint-plugin-node/blob/v11.1.0/docs/rules/shebang.md
