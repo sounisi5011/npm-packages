@@ -16,10 +16,6 @@
     /* Emit */
     "declarationMap": false,
     "noEmit": true,
-    "inlineSources": true,
-
-    /* Type Checking */
-    /** @todo Comment out when this package is fixed */
-    "exactOptionalPropertyTypes": false
+    "inlineSources": true
   }
 }

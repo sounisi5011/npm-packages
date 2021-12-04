@@ -1,6 +1,6 @@
 export interface ParsedArgs {
     options: Map<string, string[]>;
-    command?: string;
+    command?: string | undefined;
     commandArgs: string[];
 }
 
@@ -61,7 +61,7 @@ export function parseOptions(
     argv: readonly string[],
     hasValueOptions: readonly string[] = [],
 ): ParsedArgs {
-    const { options, command, commandArgs } = argv.reduce<ParsedArgs & { waitValueOptionName?: string }>(
+    const { options, command, commandArgs } = argv.reduce<ParsedArgs & { waitValueOptionName?: string | undefined }>(
         ({ options, command, commandArgs, waitValueOptionName }, arg) => {
             if (command !== undefined) {
                 commandArgs.push(arg);
