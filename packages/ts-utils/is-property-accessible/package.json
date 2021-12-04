@@ -79,7 +79,7 @@
     "@rollup/plugin-typescript": "8.3.0",
     "@types/jest": "27.0.3",
     "glob-exec": "0.1.1",
-    "jest": "27.3.1",
+    "jest": "27.4.3",
     "rollup": "2.60.1",
     "ts-jest": "27.0.7",
     "tsd": "0.19.0",
