@@ -2,7 +2,7 @@
 
 ## Supported monorepo
 
-All monorepos that are supported by [`workspace-tools@^0.12.3`](https://github.com/microsoft/workspace-tools).
+All monorepos that are supported by [`workspace-tools@0.17.0`](https://github.com/microsoft/workspace-tools).
 
 * [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces)
 * [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)
