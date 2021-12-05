@@ -113,7 +113,7 @@
     "execa": "5.1.1",
     "glob-exec": "0.1.1",
     "grpc_tools_node_protoc_ts": "5.3.2",
-    "jest": "27.3.1",
+    "jest": "27.4.3",
     "jest-extended": "1.1.0",
     "multicodec": "3.2.1",
     "noop-stream": "0.1.0",
