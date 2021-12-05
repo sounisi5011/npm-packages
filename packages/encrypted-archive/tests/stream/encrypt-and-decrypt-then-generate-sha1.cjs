@@ -18,6 +18,7 @@ let timerID;
   maxMemoryUsage.heapTotal = Math.max(maxMemoryUsage.heapTotal, memoryUsage.heapTotal);
   maxMemoryUsage.heapUsed = Math.max(maxMemoryUsage.heapUsed, memoryUsage.heapUsed);
   maxMemoryUsage.external = Math.max(maxMemoryUsage.external, memoryUsage.external);
+  // @ts-expect-error TS2339: Property 'arrayBuffers' does not exist on type 'MemoryUsage'.
   maxMemoryUsage.arrayBuffers = Math.max(maxMemoryUsage.arrayBuffers, memoryUsage.arrayBuffers);
 
   timerID = setImmediate(monitorMem);

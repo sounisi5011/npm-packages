@@ -15,7 +15,7 @@ const cryptoAlgorithmList = [
             nonceLength: 96 / 8,
             createCipher: (key: crypto.CipherKey, nonce: crypto.BinaryLike) =>
                 createCipheriv(ALGORITHM_NAME, key, nonce),
-            createDecipher: (key: crypto.CipherKey, nonce: crypto.BinaryLike) =>
+            createDecipher: (key: crypto.BinaryLike, nonce: crypto.BinaryLike) =>
                 createDecipheriv(ALGORITHM_NAME, key, nonce),
         } as const;
     })(),
@@ -26,6 +26,11 @@ const cryptoAlgorithmList = [
          * @see https://tools.ietf.org/html/rfc7539#section-2.8
          */
         const AUTH_TAG_LEN = 128 / 8;
+
+        // @ts-expect-error TS2322: Type '"chacha20-poly1305"' is not assignable to type 'CipherCCMTypes'.
+        // Note: `@types/node@12.20.37` does not support chacha20-poly1305.
+        //       However, Node.js 12 can use chacha20-poly1305.
+        const algorithm: crypto.CipherCCMTypes = ALGORITHM_NAME;
 
         return {
             name: ALGORITHM_NAME,
@@ -40,9 +45,9 @@ const cryptoAlgorithmList = [
              */
             nonceLength: 96 / 8,
             createCipher: (key: crypto.CipherKey, nonce: crypto.BinaryLike) =>
-                createCipheriv(ALGORITHM_NAME, key, nonce, { authTagLength: AUTH_TAG_LEN }),
-            createDecipher: (key: crypto.CipherKey, nonce: crypto.BinaryLike) =>
-                createDecipheriv(ALGORITHM_NAME, key, nonce, { authTagLength: AUTH_TAG_LEN }),
+                createCipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN }),
+            createDecipher: (key: crypto.BinaryLike, nonce: crypto.BinaryLike) =>
+                createDecipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN }),
         } as const;
     })(),
 ];
