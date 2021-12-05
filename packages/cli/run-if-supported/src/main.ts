@@ -2,14 +2,14 @@ import { promises as fsAsync } from 'fs';
 import { dirname, resolve as resolvePath } from 'path';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
+import { BaseContext, Builtins, Cli, Command, Option } from 'clipanion';
 import { commandJoin } from 'command-join';
 import { ArgumentError } from 'ow';
 import parseJson from 'parse-json';
 import pkgUp from 'pkg-up';
-import type { JsonValue } from 'type-fest';
+import type { JsonValue, Mutable } from 'type-fest';
 
 import { isNotSupported } from './is-supported';
-import { parseOptions } from './options';
 import { filterObjectEntry, isString } from './utils';
 
 function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entryFilepath: string): string | undefined {
@@ -59,57 +59,6 @@ async function readPkg(opts: { cwd: string }): Promise<{ pkgPath: string; pkg: J
     return { pkgPath, pkg };
 }
 
-function createHelpText(opts: {
-    binName: string | undefined;
-    version: string | undefined;
-    description: string;
-}): string {
-    const helpTextLines: string[][] = [];
-    if (opts.binName && opts.version) helpTextLines.push([`${opts.binName} v${opts.version}`]);
-    if (opts.description) helpTextLines.push([opts.description]);
-    if (opts.binName) {
-        helpTextLines.push([
-            'Usage:',
-            `  $ ${opts.binName} [--print-skip-message] [--verbose] <command> [...args]`,
-        ]);
-    }
-    helpTextLines.push([
-        'Options:',
-        '  -v, -V, --version     Display version number',
-        '  -h, --help            Display this message',
-        '  --print-skip-message  If the command was not executed, print the reason',
-        '  --verbose             Enable the "--print-skip-message" option and print executed commands',
-    ]);
-    if (opts.binName) {
-        helpTextLines.push([
-            'Examples:',
-            `  $ ${opts.binName} jest`,
-            `  $ ${opts.binName} jest --verbose`,
-        ]);
-    }
-    return helpTextLines.map(lines => lines.join('\n')).join('\n\n');
-}
-
-function printHelpAndVersion(opts: { options: Map<string, unknown>; entryFilepath: string }): boolean {
-    if (opts.options.has('-h') || opts.options.has('--help')) {
-        const { binName, version, description } = getCliData(opts.entryFilepath);
-        console.log(createHelpText({ binName, version, description }));
-        return true;
-    }
-    if (opts.options.has('-v') || opts.options.has('-V') || opts.options.has('--version')) {
-        const { version } = getCliData(opts.entryFilepath);
-        console.log(version ?? 'unknown');
-        return true;
-    }
-
-    return false;
-}
-
-function validateCommandName(command: string | undefined): asserts command is string {
-    if (command === undefined) throw new Error(`The "<command>" argument is required`);
-    if (!command) throw new Error(`Invalid command: \`${command}\``);
-}
-
 function isSupported(
     opts: {
         pkgPath: string;
@@ -149,6 +98,64 @@ async function execCommand(
     return await opts.spawnAsync(opts.command, opts.args, { cwd: opts.cwd });
 }
 
+class VersionCommandWithUppercase extends Builtins.VersionCommand {
+    static override paths = [['-v'], ['-V'], ['--version']];
+}
+
+class RunIfSupportedCommand extends Command<RunIfSupportedContext> {
+    static override usage = Command.Usage({
+        /** @todo read this value from package.json */
+        description: 'Execute the command only if you are running on a supported version of Node and platform',
+        examples: [[
+            'Run Jest CLI',
+            '$0 jest',
+        ], [
+            'Run Jest CLI and print verbose details',
+            '$0 --verbose jest',
+        ]],
+    });
+
+    isPrintSkipMessage = Option.Boolean('--print-skip-message', false, {
+        description: 'If the command was not executed, print the reason',
+    });
+
+    isVerbose = Option.Boolean('--verbose', false, {
+        description: 'Enable the "--print-skip-message" option and print executed commands',
+    });
+
+    command = Option.String();
+    commandArgs = Option.Proxy();
+
+    async execute(): Promise<number | undefined> {
+        const { pkgPath, pkg } = await readPkg({ cwd: this.context.cwd });
+        const reasonMessage = isSupported({ pkgPath, pkg, nodeVersion: this.context.nodeVersion });
+
+        if (reasonMessage) {
+            printSkipMessage({
+                isPrint: this.isPrintSkipMessage || this.isVerbose,
+                reasonMessage,
+            });
+            return;
+        }
+
+        const { exitCode } = await execCommand({
+            cwd: this.context.cwd,
+            command: this.command,
+            args: this.commandArgs,
+            isVerbose: this.isVerbose,
+            spawnAsync: this.context.spawnAsync,
+        });
+        return exitCode ?? 0;
+    }
+}
+
+interface RunIfSupportedContext extends BaseContext {
+    cwd: string;
+    entryFilepath: string;
+    nodeVersion: string;
+    spawnAsync: SpawnAsyncFn;
+}
+
 export async function main(input: {
     cwd: string;
     entryFilepath: string;
@@ -156,29 +163,13 @@ export async function main(input: {
     nodeVersion: string;
     spawnAsync: SpawnAsyncFn;
 }): Promise<void> {
-    const { options, command, commandArgs } = parseOptions(input.argv);
-    if (printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
-    validateCommandName(command);
+    const { binName, version } = getCliData(input.entryFilepath);
+    const cliOptions: Mutable<Exclude<ConstructorParameters<typeof Cli>[0], undefined>> = {};
+    if (binName) cliOptions.binaryName = binName;
+    if (version) cliOptions.binaryVersion = version;
+    const cli = new Cli<RunIfSupportedContext>(cliOptions);
 
-    const { pkgPath, pkg } = await readPkg({ cwd: input.cwd });
-    const isPrintSkipMessage = options.has('--print-skip-message');
-    const isVerbose = options.has('--verbose');
-
-    const reasonMessage = isSupported({ pkgPath, pkg, nodeVersion: input.nodeVersion });
-    if (reasonMessage) {
-        printSkipMessage({
-            isPrint: isPrintSkipMessage || isVerbose,
-            reasonMessage,
-        });
-        return;
-    }
-
-    const { exitCode } = await execCommand({
-        cwd: input.cwd,
-        command,
-        args: commandArgs,
-        isVerbose,
-        spawnAsync: input.spawnAsync,
-    });
-    process.exitCode = exitCode ?? 0;
+    cli.register(VersionCommandWithUppercase);
+    cli.register(RunIfSupportedCommand);
+    await cli.runExit([...input.argv], input);
 }
