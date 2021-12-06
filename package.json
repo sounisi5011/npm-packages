@@ -53,7 +53,7 @@
     "@typescript-eslint/parser": "5.5.0",
     "commitizen": "4.2.4",
     "cz-conventional-changelog": "3.3.0",
-    "dprint": "0.18.2",
+    "dprint": "0.19.1",
     "eslint": "8.4.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
