@@ -1,6 +1,6 @@
 # Changelog
 
-### [1.1.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.1.1...ts-type-util-has-own-property-v1.1.2) (2021-12-09)
+### [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.2...ts-type-util-has-own-property-v1.0.3) (2021-12-09)
 
 
 ### Bug Fixes
