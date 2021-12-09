@@ -84,7 +84,7 @@ function createHelpText(opts: {
         helpTextLines.push([
             'Examples:',
             `  $ ${opts.binName} jest`,
-            `  $ ${opts.binName} jest --verbose`,
+            `  $ ${opts.binName} --verbose jest`,
         ]);
     }
     return helpTextLines.map(lines => lines.join('\n')).join('\n\n');
