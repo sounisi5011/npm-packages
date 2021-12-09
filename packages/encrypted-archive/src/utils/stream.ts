@@ -40,8 +40,11 @@ export function writeFromIterableToStream<TStream extends stream.Writable>(
              * @see https://github.com/nodejs/node/blob/v14.17.0/lib/internal/streams/destroy.js#L178-L183
              * @see https://github.com/nodejs/node/blob/v15.14.0/lib/internal/streams/destroy.js#L362-L367
              * @see https://github.com/nodejs/node/blob/v16.1.0/lib/internal/streams/destroy.js#L367-L372
+             *
+             * Note: We should probably verify that error is an instance of the Error object,
+             *       but the Node.js source code doesn't do that check.
              */
-            stream.destroy(error);
+            stream.destroy(error as Error);
         }
     })();
     return stream;

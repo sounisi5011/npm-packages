@@ -8,10 +8,6 @@
     "types": [],
 
     /* Emit */
-    "noEmit": true,
-
-    /* Type Checking */
-    /** @todo Comment out when this package is fixed */
-    "useUnknownInCatchVariables": false
+    "noEmit": true
   }
 }
