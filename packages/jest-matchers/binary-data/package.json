@@ -42,7 +42,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "!*.tsbuildinfo"
+    "**/CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc -p ./src/",

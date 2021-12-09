@@ -45,9 +45,10 @@
   },
   "files": [
     "dist/",
+    "**/CHANGELOG.md",
     "cli.js",
-    "!*.d.ts",
-    "!*.tsbuildinfo"
+    "!**/*.d.ts",
+    "!**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc -p ./src/",

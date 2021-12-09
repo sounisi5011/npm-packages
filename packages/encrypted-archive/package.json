@@ -62,8 +62,9 @@
   },
   "files": [
     "dist/",
+    "**/CHANGELOG.md",
     "runkit-example.js",
-    "!*.tsbuildinfo"
+    "!**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "run-p build:*",

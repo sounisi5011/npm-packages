@@ -65,6 +65,7 @@
   "files": [
     "dist/",
     "src/",
+    "**/CHANGELOG.md",
     "examples/index.js"
   ],
   "scripts": {
