@@ -56,7 +56,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "!*.tsbuildinfo"
+    "**/CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "run-p build:*",

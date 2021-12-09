@@ -27,6 +27,7 @@
   "author": "sounisi5011",
   "types": "./index.d.ts",
   "files": [
+    "**/CHANGELOG.md",
     "index.d.ts"
   ],
   "scripts": {
