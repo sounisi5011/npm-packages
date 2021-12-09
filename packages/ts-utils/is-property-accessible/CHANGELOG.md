@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.1...ts-utils-is-property-accessible-v1.0.2) (2021-12-09)
+
+
+### Bug Fixes
+
+* **publish:** fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315)) ([95a36db](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3))
+
 ### [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.0...ts-utils-is-property-accessible-v1.0.1) (2021-12-09)
 
 
