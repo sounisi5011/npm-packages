@@ -5,6 +5,8 @@ import execa from 'execa';
 import pkg from '../package.json';
 import { getFixturesPath, PACKAGE_ROOT } from './helpers';
 
+const env: NodeJS.ProcessEnv = { FORCE_COLOR: '0' };
+
 describe('cli', () => {
     beforeAll(async () => {
         await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
@@ -21,25 +23,29 @@ describe('cli', () => {
             '--help --version',
             '--version --help',
         ])('%s', async option => {
-            await expect(execa('node', [CLI_PATH, ...option.split(/\s+/)]))
+            await expect(execa('node', [CLI_PATH, ...option.split(/\s+/)], { env }))
                 .resolves.toStrictEqual(expect.objectContaining({
                     stdout: [
-                        `${binName} v${version}`,
-                        '',
                         pkg.description,
                         '',
-                        'Usage:',
-                        `  $ ${binName} [--print-skip-message] [--verbose] <command> [...args]`,
+                        'Usage',
                         '',
-                        'Options:',
-                        '  -v, -V, --version     Display version number',
-                        '  -h, --help            Display this message',
-                        '  --print-skip-message  If the command was not executed, print the reason',
-                        '  --verbose             Enable the "--print-skip-message" option and print executed commands',
+                        `$ ${binName} <command> ...`,
                         '',
-                        'Examples:',
+                        // Note: This line is always rich format because `clipanion@3.2.0-rc.4` has a bug.
+                        //       see https://github.com/arcanis/clipanion/issues/112
+                        '\x1b[1m━━━ Options ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[38;5;256m━\x1b[38;5;255m━\x1b[38;5;254m━\x1b[38;5;253m━\x1b[38;5;252m━\x1b[38;5;251m━\x1b[38;5;250m━\x1b[38;5;249m━\x1b[38;5;248m━\x1b[38;5;247m━\x1b[38;5;246m━\x1b[38;5;245m━\x1b[38;5;244m━\x1b[38;5;243m━\x1b[38;5;242m━\x1b[38;5;241m━\x1b[38;5;240m━\x1b[38;5;239m━\x1b[38;5;238m━\x1b[38;5;237m━\x1b[38;5;236m━\x1b[38;5;235m━\x1b[38;5;234m━\x1b[38;5;233m━\x1b[0m',
+                        '',
+                        '  --print-skip-message    If the command was not executed, print the reason',
+                        '  --verbose               Enable the "--print-skip-message" option and print executed commands',
+                        '',
+                        'Examples',
+                        '',
+                        'Run Jest CLI',
                         `  $ ${binName} jest`,
-                        `  $ ${binName} jest --verbose`,
+                        '',
+                        'Run Jest CLI and print verbose details',
+                        `  $ ${binName} --verbose jest`,
                     ].join('\n'),
                     stderr: '',
                 }));
@@ -167,18 +173,18 @@ describe('cli', () => {
     });
 
     it('no command', async () => {
-        await expect(execa('node', [CLI_PATH]))
+        await expect(execa('node', [CLI_PATH], { env }))
             .rejects.toStrictEqual(expect.objectContaining({
-                stdout: '',
-                stderr: expect.stringMatching(/^Error: The "<command>" argument is required(?:$|\n)/),
+                stdout: expect.stringMatching(/^Unknown Syntax Error: Not enough positional arguments\.(?:$|\n)/),
+                stderr: '',
             }));
     });
 
     it('no package.json', async () => {
-        await expect(execa('node', [CLI_PATH, 'echo', 'foo'], { cwd: '/' }))
+        await expect(execa('node', [CLI_PATH, 'echo', 'foo'], { cwd: '/', env }))
             .rejects.toStrictEqual(expect.objectContaining({
-                stdout: '',
-                stderr: expect.stringMatching(/^Error: "package.json" file is not found(?:$|\n)/),
+                stdout: expect.stringMatching(/^Internal Error: "package.json" file is not found(?:$|\n)/),
+                stderr: '',
             }));
     });
 });
