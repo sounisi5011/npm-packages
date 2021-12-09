@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.2...ts-type-util-has-own-property-v1.0.3) (2021-12-09)
+
+
+### Bug Fixes
+
+* **publish:** fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315)) ([95a36db](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3))
+
 ### [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.1...ts-type-util-has-own-property-v1.0.2) (2021-12-09)
 
 
