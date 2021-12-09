@@ -39,7 +39,7 @@ describe('cli', () => {
                         '',
                         'Examples:',
                         `  $ ${binName} jest`,
-                        `  $ ${binName} jest --verbose`,
+                        `  $ ${binName} --verbose jest`,
                     ].join('\n'),
                     stderr: '',
                 }));
