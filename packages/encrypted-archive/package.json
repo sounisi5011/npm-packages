@@ -62,7 +62,7 @@
   },
   "files": [
     "dist/",
-    "**/CHANGELOG.md",
+    "/CHANGELOG.md",
     "runkit-example.js",
     "!**/*.tsbuildinfo"
   ],

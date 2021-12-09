@@ -23,7 +23,7 @@
   "files": [
     "dist/",
     "src/",
-    "**/CHANGELOG.md",
+    "/CHANGELOG.md",
     "!**/*.tsbuildinfo",
     "!tsconfig.json"
   ],

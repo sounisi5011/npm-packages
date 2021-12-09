@@ -42,7 +42,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist/",
-    "**/CHANGELOG.md",
+    "/CHANGELOG.md",
     "!**/*.tsbuildinfo"
   ],
   "scripts": {
