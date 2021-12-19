@@ -32,7 +32,7 @@ jobs:
           RATE_LIMIT_JSON="$(gh api 'rate_limit')"
           for type in 'core' 'search' 'graphql' 'integration_manifest' 'source_import' 'code_scanning_upload' 'actions_runner_registration' 'scim' ; do
             echo '::group::' "${type}"
-            echo "$(echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}")"
+            echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
             echo '::endgroup::'
           done
   lint:
