@@ -119,13 +119,6 @@
     "node_modules/",
     "lib/"
   ],
-  "jest": {
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "preset": "react-native"
-  },
   "dependencies": {
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",

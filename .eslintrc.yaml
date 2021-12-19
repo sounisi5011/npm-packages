@@ -130,7 +130,9 @@ overrides:
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x
-  - files: "**/rollup.config.js"
+  - files:
+      - "**/jest.config.js"
+      - "**/rollup.config.js"
     rules:
       import/no-extraneous-dependencies:
         - error
