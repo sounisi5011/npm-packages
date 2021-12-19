@@ -43,7 +43,7 @@ jobs:
             core_reset="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.reset")"
             echo "::error::Rate limit reached. Please wait until $(date -ud "@${core_reset}" "+%Y/%m/%d %T %Z")"
             exit 1
-          elif [ "${core_remaining}" -gt 10 ]; then
+          elif [ "${core_remaining}" -lt 10 ]; then
             echo "::warning::The rate limit is approaching: core.remaining=${core_remaining}"
           fi
   lint:
