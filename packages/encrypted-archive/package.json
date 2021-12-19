@@ -129,7 +129,6 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^11.0.0",
     "@jorgeferrero/stream-to-buffer": "2.0.6",
     "@react-native-community/eslint-config": "^2.0.0",
     "@sounisi5011/jest-binary-data-matchers": "workspace:^0.0.0 || ^1.0.0",
