@@ -31,17 +31,20 @@ jobs:
         # https://stackoverflow.com/a/59352240/4907315
         # https://docs.github.com/ja/actions/learn-github-actions/workflow-commands-for-github-actions
         run: |
+          readonly DATE_FORMAT='+%Y/%m/%d %T %Z'
+
           RATE_LIMIT_JSON="$(gh api 'rate_limit')"
           for type in 'core' 'search' 'graphql' 'integration_manifest' 'source_import' 'code_scanning_upload' 'actions_runner_registration' 'scim' ; do
             echo '::group::' "${type}"
             echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
+            echo "::notice::Reset time is $(date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}")"
             echo '::endgroup::'
           done
 
           core_remaining="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.remaining")"
           if [ "${core_remaining}" == 0 ]; then
             core_reset="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.reset")"
-            echo "::error::Rate limit reached. Please wait until $(date -ud "@${core_reset}" "+%Y/%m/%d %T %Z")"
+            echo "::error::Rate limit reached. Please wait until $(date -ud "@${core_reset}" "${DATE_FORMAT}")"
             exit 1
           elif [ "${core_remaining}" -lt 10 ]; then
             echo "::warning::The rate limit is approaching: core.remaining=${core_remaining}"
