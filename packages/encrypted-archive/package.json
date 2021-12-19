@@ -125,5 +125,6 @@
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x"
   },
+  "react-native": "./dist/index.react-native.js",
   "runkitExampleFilename": "./runkit-example.js"
 }
