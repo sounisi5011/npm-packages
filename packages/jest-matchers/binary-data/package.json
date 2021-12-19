@@ -62,9 +62,9 @@
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@types/jest": "27.0.3",
     "@types/node": "12.20.37",
-    "jest": "27.4.3",
+    "jest": "27.4.5",
     "pretty-format": "27.4.2",
-    "ts-jest": "27.1.1",
+    "ts-jest": "27.1.2",
     "typescript": "4.5.4"
   },
   "peerDependencies": {
