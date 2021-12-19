@@ -23,8 +23,12 @@ jobs:
       }}
     runs-on: ubuntu-latest
     steps:
-      # nothing
-      - run: ":"
+      - name: Check GitHub API rate limit
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
+        run: gh api 'rate_limit'
   lint:
     needs: if-run-ci
     runs-on: ubuntu-latest
