@@ -35,6 +35,14 @@ jobs:
             echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
             echo '::endgroup::'
           done
+
+          core_remaining="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.remaining")"
+          if [ "${core_remaining}" != 0 ]; then
+            echo '::error::' "Rate limit reached. Please wait until $(date -r "$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.reset")")"
+            exit 1
+          elif [ "${core_remaining}" -gt 10 ]; then
+            echo '::warning::' "The rate limit is approaching: core.remaining=${core_remaining}"
+          fi
   lint:
     needs: if-run-ci
     runs-on: ubuntu-latest
