@@ -41,10 +41,10 @@ jobs:
           core_remaining="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.remaining")"
           if [ "${core_remaining}" != 0 ]; then
             core_reset="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.reset")"
-            echo "::error title=Rate limit reached::Please wait until $(date -d "@${core_reset}")"
+            echo "::error::Rate limit reached. Please wait until $(date "+%Y/%m/%d %T" -d "@${core_reset}")"
             exit 1
           elif [ "${core_remaining}" -gt 10 ]; then
-            echo "::warning title=Rate limit is approaching::remaining is ${core_remaining}"
+            echo "::warning::The rate limit is approaching: core.remaining=${core_remaining}"
           fi
   lint:
     needs: if-run-ci
