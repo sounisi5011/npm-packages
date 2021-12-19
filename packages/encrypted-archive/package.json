@@ -63,8 +63,17 @@
   "files": [
     "dist/",
     "/CHANGELOG.md",
+    "android",
+    "cpp",
+    "ios",
     "runkit-example.js",
-    "!**/*.tsbuildinfo"
+    "sounisi5011-encrypted-archive.podspec",
+    "!**/*.tsbuildinfo",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/__tests__",
+    "!android/build",
+    "!ios/build"
   ],
   "scripts": {
     "build": "run-p build:*",
@@ -81,10 +90,42 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "pods": "cd example && pod-install --quiet",
+    "prepare": "bob build",
     "test": "run-if-supported --verbose run-p test:*",
     "test:examples": "run-s build-with-cache test:examples:*",
     "test:examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "es5",
+          "useTabs": false
+        }
+      ]
+    },
+    "root": true
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native"
   },
   "dependencies": {
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
@@ -96,7 +137,9 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^11.0.0",
     "@jorgeferrero/stream-to-buffer": "2.0.6",
+    "@react-native-community/eslint-config": "^2.0.0",
     "@sounisi5011/jest-binary-data-matchers": "workspace:^0.0.0 || ^1.0.0",
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
@@ -106,6 +149,8 @@
     "@types/google-protobuf": "3.15.5",
     "@types/jest": "27.0.3",
     "@types/node": "12.20.37",
+    "@types/react": "^16.9.19",
+    "@types/react-native": "0.62.13",
     "@types/varint": "6.0.0",
     "bytefield-svg": "1.6.0",
     "combinate": "1.1.7",
@@ -118,6 +163,10 @@
     "jest-extended": "1.2.0",
     "multicodec": "3.2.1",
     "noop-stream": "0.1.0",
+    "pod-install": "^0.1.0",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-builder-bob": "^0.18.0",
     "ts-jest": "27.1.2",
     "typescript": "4.5.4",
     "ultra-runner": "3.10.5"
@@ -126,5 +175,19 @@
     "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x"
   },
   "react-native": "./dist/index.react-native.js",
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
   "runkitExampleFilename": "./runkit-example.js"
 }
