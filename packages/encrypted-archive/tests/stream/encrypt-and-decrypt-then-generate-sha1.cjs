@@ -10,7 +10,7 @@ const outputHash = createHash('sha1');
 
 const maxMemoryUsage = process.memoryUsage();
 
-/** @type {NodeJS.Immediate} */
+/** @type {ReturnType<setImmediate>} */
 let timerID;
 (function monitorMem() {
   const memoryUsage = process.memoryUsage();
