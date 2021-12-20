@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR = `The package '@sounisi5011/encrypted-archive' doesn't seem to be linked. Make sure: \n\n`
@@ -5,8 +6,8 @@ const LINKING_ERROR = `The package '@sounisi5011/encrypted-archive' doesn't seem
     + '- You rebuilt the app after installing the package\n'
     + '- You are not using Expo managed workflow\n';
 
-const EncryptedArchive = NativeModules.EncryptedArchive
-    ? NativeModules.EncryptedArchive
+const EncryptedArchive = NativeModules['EncryptedArchive']
+    ? NativeModules['EncryptedArchive']
     : new Proxy(
         {},
         {
@@ -16,6 +17,6 @@ const EncryptedArchive = NativeModules.EncryptedArchive
         },
     );
 
-export function multiply(a: number, b: number): Promise<number> {
+export async function multiply(a: number, b: number): Promise<number> {
     return EncryptedArchive.multiply(a, b);
 }
