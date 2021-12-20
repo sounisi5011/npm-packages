@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "../../",
-    "paths": {
-      "@sounisi5011/encrypted-archive": ["../../src/index.react-native"]
-    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
