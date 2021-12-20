@@ -293,6 +293,7 @@ importers:
       '@babel/core': ^7.12.10
       '@babel/runtime': ^7.12.5
       babel-plugin-module-resolver: ^4.0.0
+      escape-string-regexp: 4.0.0
       metro-react-native-babel-preset: ^0.64.0
       react: 16.13.1
       react-native: 0.63.4
@@ -303,6 +304,7 @@ importers:
       '@babel/core': 7.16.5
       '@babel/runtime': 7.16.5
       babel-plugin-module-resolver: 4.1.0
+      escape-string-regexp: 4.0.0
       metro-react-native-babel-preset: 0.64.0
 
   packages/jest-matchers/binary-data:
