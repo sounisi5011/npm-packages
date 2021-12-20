@@ -93,7 +93,7 @@ module.exports = async filenames => {
     );
   }
 
-  const tsFiles = filenames.filter(extFilter('ts'));
+  const tsFiles = filenames.filter(extFilter('ts', 'tsx'));
   const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
 
   commands.push(
