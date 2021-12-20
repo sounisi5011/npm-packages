@@ -42,7 +42,9 @@ overrides:
         - error
         - ignores:
             - modules
-  - files: "*.ts"
+  - files:
+      - "*.ts"
+      - "*.tsx"
     extends:
       - plugin:node/recommended-module
       - plugin:@typescript-eslint/recommended
