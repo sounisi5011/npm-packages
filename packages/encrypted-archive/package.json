@@ -93,7 +93,7 @@
     "pods": "cd example && pod-install --quiet",
     "test": "run-if-supported --verbose run-p test:*",
     "test:examples": "run-s build-with-cache test:examples:*",
-    "test:examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
+    "test:examples:run": "glob-exec --foreach 'examples/node/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
     "test:jest": "jest"
   },
   "eslintConfig": {
