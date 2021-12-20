@@ -1,11 +1,5 @@
 module.exports = {
-  preset: 'react-native',
-  modulePathIgnorePatterns: [
-    '<rootDir>/example/node_modules',
-    '<rootDir>/dist/',
-  ],
-  // preset: 'ts-jest'
-  transform: require('ts-jest/jest-preset.js').transform,
+  preset: 'ts-jest',
   coverageDirectory: 'coverage',
   globals: {
     'ts-jest': {
