@@ -423,11 +423,3 @@ Currently, the following compression algorithm are supported:
 ## Structure of the encrypted archive
 
 see [`docs/encrypted-archive-structure.md`](./docs/encrypted-archive-structure.md)
-
-## Contributing
-
-See the [contributing guide](./CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
