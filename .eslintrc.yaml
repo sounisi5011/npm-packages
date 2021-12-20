@@ -44,9 +44,6 @@ overrides:
             - modules
   - files: "*.ts"
     extends:
-      - # Required for parsing FlowType.
-        # The parser needs to be overridden by "@typescript-eslint/parser", so specify it first.
-        plugin:flowtype/recommended
       - plugin:node/recommended-module
       - plugin:@typescript-eslint/recommended
       - plugin:import/typescript
@@ -71,6 +68,10 @@ overrides:
       # However, since "@babel/eslint-parser" is only used to parse FlowType, we don't want to create a config file.
       # Therefore, we will disable config file checking.
       requireConfigFile: false
+      # see https://github.com/gajus/eslint-plugin-flowtype/blob/v8.0.3/src/configs/recommended.json#L3-L10
+      babelOptions:
+        plugins:
+          - "@babel/plugin-syntax-flow"
     settings:
       node:
         # see https://github.com/mysticatea/eslint-plugin-node/blob/v11.1.0/docs/rules/shebang.md
@@ -85,7 +86,6 @@ overrides:
         "@babel/eslint-parser":
           - .js
     rules:
-      flowtype/no-types-missing-file-annotation: off
       # The "@typescript-eslint/no-floating-promises" rule requires a void operator to be used as a statement.
       # see https://github.com/typescript-eslint/typescript-eslint/blob/v4.21.0/packages/eslint-plugin/docs/rules/no-floating-promises.md
       no-void:

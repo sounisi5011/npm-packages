@@ -7,7 +7,6 @@ importers:
       '@babel/core': ^7.12.10
       '@babel/eslint-parser': 7.16.5
       '@babel/plugin-syntax-flow': 7.16.5
-      '@babel/plugin-transform-react-jsx': 7.16.5
       '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--globby-exec': workspace:^0.0.0
@@ -21,7 +20,6 @@ importers:
       eslint-config-prettier: 8.3.0
       eslint-config-standard: 16.0.3
       eslint-config-standard-with-typescript: 21.0.1
-      eslint-plugin-flowtype: 8.0.3
       eslint-plugin-import: 2.25.3
       eslint-plugin-jest: 25.3.0
       eslint-plugin-node: 11.1.0
@@ -38,7 +36,6 @@ importers:
       '@babel/core': 7.16.5
       '@babel/eslint-parser': 7.16.5_@babel+core@7.16.5+eslint@8.5.0
       '@babel/plugin-syntax-flow': 7.16.5_@babel+core@7.16.5
-      '@babel/plugin-transform-react-jsx': 7.16.5_@babel+core@7.16.5
       '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--globby-exec': link:scripts/globby-exec
@@ -52,7 +49,6 @@ importers:
       eslint-config-prettier: 8.3.0_eslint@8.5.0
       eslint-config-standard: 16.0.3_4cecef3480376bac71ded249816d1e72
       eslint-config-standard-with-typescript: 21.0.1_98b2b331043e69097ed059578d81998d
-      eslint-plugin-flowtype: 8.0.3_7120bdfb3be357875e0f50685a1e073c
       eslint-plugin-import: 2.25.3_eslint@8.5.0
       eslint-plugin-jest: 25.3.0_7c3dac3e3149a1869f05f0f71d2a47ae
       eslint-plugin-node: 11.1.0_eslint@8.5.0
@@ -4054,21 +4050,6 @@ packages:
       eslint: 8.5.0
       eslint-utils: 2.1.0
       regexpp: 3.2.0
-    dev: true
-
-  /eslint-plugin-flowtype/8.0.3_7120bdfb3be357875e0f50685a1e073c:
-    resolution: {integrity: sha512-dX8l6qUL6O+fYPtpNRideCFSpmWOUVx5QcaGLVqe/vlDiBSe4vYljDWDETwnyFzpl7By/WVIu6rcrniCgH9BqQ==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@babel/plugin-syntax-flow': ^7.14.5
-      '@babel/plugin-transform-react-jsx': ^7.14.9
-      eslint: ^8.1.0
-    dependencies:
-      '@babel/plugin-syntax-flow': 7.16.5_@babel+core@7.16.5
-      '@babel/plugin-transform-react-jsx': 7.16.5_@babel+core@7.16.5
-      eslint: 8.5.0
-      lodash: 4.17.21
-      string-natural-compare: 3.0.1
     dev: true
 
   /eslint-plugin-import/2.25.3_eslint@8.5.0:
@@ -8624,10 +8605,6 @@ packages:
     dependencies:
       char-regex: 1.0.2
       strip-ansi: 6.0.1
-    dev: true
-
-  /string-natural-compare/3.0.1:
-    resolution: {integrity: sha512-n3sPwynL1nwKi3WJ6AIsClwBMa0zTi54fn2oLU6ndfTSIO05xaznjSf15PcBZU6FNWbmN5Q6cxT4V5hGvB4taw==}
     dev: true
 
   /string-width/2.1.1:
