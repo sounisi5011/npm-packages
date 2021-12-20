@@ -8,32 +8,6 @@
     "types": [],
 
     /* Emit */
-    "noEmit": true,
-
-    // ----- Created by create-react-native-library CLI ----- //
-    // TODO: Remove duplicates
-    "baseUrl": "./",
-    "paths": {
-      "@sounisi5011/encrypted-archive": ["./src/index"]
-    },
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
+    "noEmit": true
   }
 }
