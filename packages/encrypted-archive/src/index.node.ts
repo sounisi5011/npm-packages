@@ -3,13 +3,14 @@ import type * as stream from 'stream';
 
 import { transformFrom } from '@sounisi5011/stream-transform-from';
 
-import type { CompressOptions } from './compress';
 import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './decrypt';
 import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './encrypt';
 import type { KeyDerivationOptions } from './key-derivation-function';
 import { cryptoAlgorithmMap } from './node/cipher';
+import { createCompressor, decompressIterable } from './node/compress';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
+import type { CompressOptions } from './types/compress';
 import type { CryptoAlgorithmName } from './types/crypto';
 import { asyncIterable2Buffer, bufferFrom, convertIterableValue, fixNodePrimordialsErrorInstance } from './utils';
 
@@ -60,6 +61,8 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
             },
         };
     },
+    createCompressor,
+    decompressIterable: (algorithmName, source) => decompressIterable(source, algorithmName),
 };
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };

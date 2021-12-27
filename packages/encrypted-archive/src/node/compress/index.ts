@@ -1,8 +1,9 @@
 import type * as stream from 'stream';
 
-import { fixNodePrimordialsErrorStackTrace, printObject } from '../utils';
-import { writeFromIterableToStream } from '../utils/stream';
-import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
+import type { CompressOptions } from '../../types/compress';
+import { fixNodePrimordialsErrorStackTrace, printObject } from '../../utils';
+import { writeFromIterableToStream } from '../../utils/stream';
+import type { AsyncIterableReturn } from '../../utils/type';
 import { createCompress as createBrotliCompress, createDecompress as createBrotliDecompress } from './brotli';
 import { createCompress as createGzipCompress, createDecompress as createGzipDecompress } from './gzip';
 
@@ -10,15 +11,6 @@ interface CompressorTableEntry {
     createCompress: (options: never) => () => stream.Transform;
     createDecompress: () => stream.Transform;
 }
-
-type Table2CompressOptions<T extends Record<string, CompressorTableEntry>> = ObjectValue<
-    {
-        [P in keyof T]: { algorithm: P } & Exclude<Parameters<T[P]['createCompress']>[0], undefined>;
-    }
->;
-export type GetOptions<T extends (options?: never) => stream.Transform> = (
-    T extends ((options?: infer U) => stream.Transform) ? U : never
-);
 
 const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record: T) => record)({
     gzip: {
@@ -31,11 +23,9 @@ const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record
     },
 });
 
-export type CompressOptions = Table2CompressOptions<typeof compressorTable>;
-
 export function createCompressor(options: CompressOptions | CompressOptions['algorithm'] | undefined): {
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
-    compressIterable: (source: AsyncIterable<Buffer>) => AsyncIterableReturn<Buffer, void>;
+    compressIterable: (source: AsyncIterable<Uint8Array>) => AsyncIterableReturn<Uint8Array, void>;
 } {
     if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
 

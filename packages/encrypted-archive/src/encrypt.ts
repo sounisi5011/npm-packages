@@ -1,10 +1,10 @@
-import { CompressOptions, createCompressor } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { defaultCryptoAlgorithmName } from './node/cipher';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
+import type { CompressOptions, CreateCompressor } from './types/compress';
 import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
@@ -18,6 +18,7 @@ export interface EncryptOptions {
 export interface EncryptBuiltinAPIRecord {
     getRandomBytes: GetRandomBytesFn;
     getCryptoAlgorithm: GetCryptoAlgorithm;
+    createCompressor: CreateCompressor;
 }
 
 interface EncryptorState {
@@ -93,7 +94,7 @@ function createHeaderData(
     });
 }
 
-async function* encryptChunk(compressedCleartext: Buffer, {
+async function* encryptChunk(compressedCleartext: Uint8Array, {
     algorithm,
     keyResult,
     compressAlgorithmName,
@@ -155,7 +156,7 @@ export function createEncryptorIterator(
     const algorithm = builtin.getCryptoAlgorithm(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
-    const { compressAlgorithmName, compressIterable } = createCompressor(options.compress);
+    const { compressAlgorithmName, compressIterable } = builtin.createCompressor(options.compress);
 
     return async function* encryptor(source) {
         /**

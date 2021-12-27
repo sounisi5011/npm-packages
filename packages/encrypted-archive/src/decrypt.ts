@@ -1,4 +1,3 @@
-import { CompressOptions, decompressIterable } from './compress';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -14,6 +13,7 @@ import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
+import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import { bufferFrom } from './utils';
 import { StreamReader } from './utils/stream';
@@ -21,6 +21,7 @@ import type { AsyncIterableReturn } from './utils/type';
 
 export interface DecryptBuiltinAPIRecord {
     getCryptoAlgorithm: GetCryptoAlgorithm;
+    decompressIterable: DecompressIterable;
 }
 
 interface DecryptorMetadata {
@@ -188,7 +189,7 @@ export function createDecryptorIterator(
          * Decompress cleartext
          */
         yield* decryptorMetadata.compressAlgorithmName
-            ? decompressIterable(compressedCleartextIterable, decryptorMetadata.compressAlgorithmName)
+            ? builtin.decompressIterable(decryptorMetadata.compressAlgorithmName, compressedCleartextIterable)
             : compressedCleartextIterable;
     };
 }

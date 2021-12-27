@@ -1,7 +1,5 @@
 export type Nullable<T> = T | null | undefined;
 
-export type ObjectValue<T> = T[keyof T];
-
 export type OneOrMoreReadonlyArray<T> = readonly [T, ...T[]];
 
 export type PartialWithUndefined<T> = {

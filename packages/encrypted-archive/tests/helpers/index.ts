@@ -41,8 +41,8 @@ export function createDummySizeBuffer(size: number): Buffer {
     });
 }
 
-export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable<Buffer>): Promise<Buffer> {
-    const bufferList: Buffer[] = [];
+export async function iterable2buffer(iterable: Iterable<Uint8Array> | AsyncIterable<Uint8Array>): Promise<Buffer> {
+    const bufferList: Uint8Array[] = [];
     for await (const buffer of iterable) bufferList.push(buffer);
     return Buffer.concat(bufferList);
 }

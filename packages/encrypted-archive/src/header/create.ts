@@ -1,7 +1,7 @@
 import { encode as varintEncode } from 'varint';
 
-import type { CompressOptions } from '../compress';
 import type { NormalizedKeyDerivationOptions } from '../key-derivation-function';
+import type { CompressOptions } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
