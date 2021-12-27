@@ -6,7 +6,7 @@ export type InputDataType = string | Buffer | NodeJS.ArrayBufferView | ArrayBuff
 
 export type IteratorConverter = (
     source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-) => AsyncIterableIteratorReturn<Buffer, void>;
+) => AsyncIterableIteratorReturn<Uint8Array, void>;
 
 export function isInputDataType(value: unknown): value is InputDataType {
     return typeof value === 'string'

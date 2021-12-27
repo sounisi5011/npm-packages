@@ -1,6 +1,8 @@
 import { createCipheriv, createDecipheriv } from 'crypto';
 import type * as crypto from 'crypto';
 
+import type { CryptoAlgorithmName } from '../types/crypto';
+
 const cryptoAlgorithmList = [
     (() => {
         const ALGORITHM_NAME = 'aes-256-gcm';
@@ -51,9 +53,6 @@ const cryptoAlgorithmList = [
         } as const;
     })(),
 ];
-
-export type CryptoAlgorithm = (typeof cryptoAlgorithmList)[number];
-export type CryptoAlgorithmName = CryptoAlgorithm['name'];
 
 export const cryptoAlgorithmMap = new Map(cryptoAlgorithmList.map(data => [data.name, data]));
 export const defaultCryptoAlgorithmName: CryptoAlgorithmName = 'chacha20-poly1305';

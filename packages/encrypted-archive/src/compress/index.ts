@@ -64,7 +64,7 @@ export function createCompressor(options: CompressOptions | CompressOptions['alg
 }
 
 export async function* decompressIterable(
-    data: Iterable<Buffer> | AsyncIterable<Buffer>,
+    data: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
     algorithm: CompressOptions['algorithm'],
 ): AsyncIterableReturn<Buffer, void> {
     const entry = compressorTable[algorithm];

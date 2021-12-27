@@ -106,14 +106,16 @@ export function bufferFrom(
     return Buffer.from(value);
 }
 
-export async function asyncIterable2Buffer(iterable: AsyncIterable<Buffer>): Promise<Buffer> {
-    const chunkList: Buffer[] = [];
+export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
+    const chunkList: Uint8Array[] = [];
     for await (const chunk of iterable) {
         chunkList.push(chunk);
     }
     // The `Buffer.concat()` function will always copy the Buffer object.
     // However, if the length of the array is 1, there is no need to copy it.
-    return isOneArray(chunkList) ? chunkList[0] : Buffer.concat(chunkList);
+    return isOneArray(chunkList)
+        ? Buffer.from(chunkList[0].buffer, chunkList[0].byteOffset, chunkList[0].byteLength)
+        : Buffer.concat(chunkList);
 }
 
 export async function* convertIterableValue<T, U>(

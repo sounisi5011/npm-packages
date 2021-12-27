@@ -1,11 +1,11 @@
-import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressOptions, createCompressor } from './compress';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
+import { defaultCryptoAlgorithmName } from './node/cipher';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
-import type { GetRandomBytesFn } from './types/crypto';
+import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
@@ -17,6 +17,7 @@ export interface EncryptOptions {
 
 export interface EncryptBuiltinAPIRecord {
     getRandomBytes: GetRandomBytesFn;
+    getCryptoAlgorithm: GetCryptoAlgorithm;
 }
 
 interface EncryptorState {
@@ -98,7 +99,7 @@ async function* encryptChunk(compressedCleartext: Buffer, {
     compressAlgorithmName,
     prevState,
 }: {
-    algorithm: CryptoAlgorithm;
+    algorithm: CryptoAlgorithmData;
     keyResult: KeyResult;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
     prevState: EncryptorState | undefined;
@@ -111,26 +112,23 @@ async function* encryptChunk(compressedCleartext: Buffer, {
     /**
      * Encrypt cleartext
      */
-    const cipher = algorithm.createCipher(keyResult.key, nonce);
-    const ciphertextPart1 = cipher.update(compressedCleartext);
-    const ciphertextPart2 = cipher.final();
-
-    /**
-     * Get authentication tag
-     */
-    const authTag = cipher.getAuthTag();
+    const { ciphertext, authTag } = await algorithm.encrypt({
+        key: keyResult.key,
+        nonce,
+        cleartext: compressedCleartext,
+    });
 
     /**
      * Generate header data
      * The data contained in the header will be used for decryption.
      */
     const headerData = createHeaderData({
-        algorithmName: algorithm.name,
+        algorithmName: algorithm.algorithmName,
         keyResult,
         nonce,
         authTag,
         compressAlgorithmName,
-        ciphertextLength: ciphertextPart1.byteLength + ciphertextPart2.byteLength,
+        ciphertextLength: ciphertext.byteLength,
         prevState,
     });
 
@@ -139,8 +137,7 @@ async function* encryptChunk(compressedCleartext: Buffer, {
      */
     const encryptedData = Buffer.concat([
         headerData,
-        ciphertextPart1,
-        ciphertextPart2,
+        ciphertext,
     ]);
     yield encryptedData;
 
@@ -155,7 +152,7 @@ export function createEncryptorIterator(
     password: InputDataType,
     options: EncryptOptions,
 ): IteratorConverter {
-    const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
+    const algorithm = builtin.getCryptoAlgorithm(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
     const { compressAlgorithmName, compressIterable } = createCompressor(options.compress);
