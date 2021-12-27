@@ -2,8 +2,8 @@ import type * as stream from 'stream';
 
 import type { CompressOptions, CreateCompressor } from '../../types/compress';
 import { fixNodePrimordialsErrorStackTrace, printObject } from '../../utils';
-import { writeFromIterableToStream } from '../../utils/stream';
 import type { AsyncIterableReturn } from '../../utils/type';
+import { writeFromIterableToStream } from '../utils/stream';
 import { createCompress as createBrotliCompress, createDecompress as createBrotliDecompress } from './brotli';
 import { createCompress as createGzipCompress, createDecompress as createGzipDecompress } from './gzip';
 
