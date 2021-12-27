@@ -1,5 +1,3 @@
-import { randomBytes } from 'crypto';
-
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressOptions, createCompressor } from './compress';
 import { createHeader, createSimpleHeader } from './header';
@@ -7,6 +5,7 @@ import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
+import type { GetRandomBytesFn } from './types/crypto';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
@@ -14,6 +13,10 @@ export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName | undefined;
     keyDerivation?: KeyDerivationOptions | undefined;
     compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
+}
+
+export interface EncryptBuiltinAPIRecord {
+    getRandomBytes: GetRandomBytesFn;
 }
 
 interface EncryptorState {
@@ -27,10 +30,11 @@ interface KeyResult {
 }
 
 async function generateKey(
-    { password, keyLength, keyDerivationOptions }: {
+    { password, keyLength, keyDerivationOptions, getRandomBytes }: {
         password: InputDataType;
         keyLength: number;
         keyDerivationOptions: KeyDerivationOptions | undefined;
+        getRandomBytes: GetRandomBytesFn;
     },
 ): Promise<KeyResult> {
     const {
@@ -38,7 +42,7 @@ async function generateKey(
         saltLength,
         normalizedOptions: normalizedKeyDerivationOptions,
     } = getKDF(keyDerivationOptions);
-    const salt = randomBytes(saltLength);
+    const salt = await getRandomBytes(saltLength);
     const key = await deriveKey(password, salt, keyLength);
 
     return {
@@ -146,7 +150,11 @@ async function* encryptChunk(compressedCleartext: Buffer, {
     return newState;
 }
 
-export function createEncryptorIterator(password: InputDataType, options: EncryptOptions): IteratorConverter {
+export function createEncryptorIterator(
+    builtin: EncryptBuiltinAPIRecord,
+    password: InputDataType,
+    options: EncryptOptions,
+): IteratorConverter {
     const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
@@ -160,6 +168,7 @@ export function createEncryptorIterator(password: InputDataType, options: Encryp
             password,
             keyLength: algorithm.keyLength,
             keyDerivationOptions: options.keyDerivation,
+            getRandomBytes: builtin.getRandomBytes,
         });
 
         const bufferSourceIterable = convertIterableValue(
