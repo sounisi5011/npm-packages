@@ -1,6 +1,6 @@
 import type * as stream from 'stream';
 
-import type { CompressOptions } from '../../types/compress';
+import type { CompressOptions, CreateCompressor } from '../../types/compress';
 import { fixNodePrimordialsErrorStackTrace, printObject } from '../../utils';
 import { writeFromIterableToStream } from '../../utils/stream';
 import type { AsyncIterableReturn } from '../../utils/type';
@@ -23,10 +23,7 @@ const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record
     },
 });
 
-export function createCompressor(options: CompressOptions | CompressOptions['algorithm'] | undefined): {
-    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
-    compressIterable: (source: AsyncIterable<Uint8Array>) => AsyncIterableReturn<Uint8Array, void>;
-} {
+const createCompressor: CreateCompressor = options => {
     if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
 
     const { algorithm, ...compressOptions } = typeof options === 'string' ? { algorithm: options } : options;
@@ -51,7 +48,8 @@ export function createCompressor(options: CompressOptions | CompressOptions['alg
             }
         },
     };
-}
+};
+export { createCompressor };
 
 export async function* decompressIterable(
     data: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
