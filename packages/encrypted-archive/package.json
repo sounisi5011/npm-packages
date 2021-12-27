@@ -50,11 +50,11 @@
   "author": "sounisi5011",
   "type": "commonjs",
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/index.node.js",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.node.js",
+  "types": "./dist/index.node.d.ts",
   "directories": {
     "lib": "./src/",
     "example": "./examples/",

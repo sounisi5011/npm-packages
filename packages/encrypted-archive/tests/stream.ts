@@ -2,7 +2,7 @@ import * as stream from 'stream';
 
 import { writableNoopStream } from 'noop-stream';
 
-import { decryptStream, encrypt, encryptStream } from '../src';
+import { decryptStream, encrypt, encryptStream } from '../src/index.node';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
