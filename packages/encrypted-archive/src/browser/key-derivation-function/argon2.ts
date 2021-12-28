@@ -2,32 +2,20 @@ import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { ArgonType, hash as argonHash } from 'argon2-browser';
 import capitalize from 'capitalize';
 
-import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
-import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
-import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
+import type { KDFData } from '../../types/key-derivation-function';
+import {
+    Argon2Options,
+    defaultArgon2Options,
+    NormalizedArgon2Options,
+} from '../../types/key-derivation-function/argon2';
+import { ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../../utils';
+import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../../utils/type';
 
 const argon2TypeRecord = {
     argon2d: ArgonType.Argon2d,
     argon2id: ArgonType.Argon2id,
 };
 const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
-const typeNameList = [...argon2TypeMap.keys()];
-
-export type Argon2Algorithm = (typeof typeNameList)[number];
-export interface Argon2Options extends BaseKeyDerivationOptions {
-    algorithm: Argon2Algorithm;
-    iterations?: number | undefined;
-    memory?: number | undefined;
-    parallelism?: number | undefined;
-}
-export type NormalizedArgon2Options = RequiredExcludeUndefined<Argon2Options>;
-
-export const defaultOptions: NormalizedArgon2Options = {
-    algorithm: 'argon2d',
-    iterations: 3,
-    memory: 12,
-    parallelism: 1,
-};
 
 /**
  * > # 3 Specification of Argon2
@@ -106,15 +94,6 @@ const ARGON2_OUTPUT = {
  * @see https://www.ory.sh/choose-recommended-argon2-parameters-password-hashing/
  */
 const SALT_LEN = 128 / 8;
-
-export function isArgon2Options<T>(options: T): options is T extends Argon2Options ? T : never {
-    if (!isPropAccessible(options) || typeof options !== 'object') return false;
-    const { algorithm } = options;
-    for (const type of typeNameList) {
-        if (algorithm === type) return true;
-    }
-    return false;
-}
 
 function validatePositiveInteger(optionName: string, value: unknown): asserts value {
     const messageSuffix = (
@@ -249,7 +228,7 @@ function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm
     );
 }
 
-type GetArgon2KDFResult = GetKDFResult<NormalizedArgon2Options>;
+type Argon2KDFData = KDFData<NormalizedArgon2Options>;
 
 function normalizeInternalError(error: unknown): never {
     if (error instanceof Error) {
@@ -271,8 +250,13 @@ function normalizeInternalError(error: unknown): never {
 function createDeriveKeyFunc(
     type: ArgonType,
     options: Omit<NormalizedArgon2Options, 'algorithm'>,
-): GetArgon2KDFResult['deriveKey'] {
+): Argon2KDFData['deriveKey'] {
     return async (password, salt, keyLengthBytes) => {
+        validateBetweenByteLength(
+            'password',
+            password,
+            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
+        );
         validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
         validateBetweenLength(
             'keyLengthBytes',
@@ -280,15 +264,8 @@ function createDeriveKeyFunc(
             { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
         );
 
-        const passwordBufferOrString = bufferFrom(password);
-        validateBetweenByteLength(
-            'password',
-            passwordBufferOrString,
-            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
-        );
-
         return await argonHash({
-            pass: passwordBufferOrString,
+            pass: password,
             salt,
             time: options.iterations,
             mem: options.memory,
@@ -301,8 +278,8 @@ function createDeriveKeyFunc(
     };
 }
 
-export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResult {
-    const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
+export function getArgon2KDF(options: Readonly<Argon2Options>): Argon2KDFData {
+    const { algorithm, ...argon2Options } = normalizeOptions(defaultArgon2Options, options);
     const foundType = argon2TypeMap.get(algorithm);
     if (!foundType) {
         throw new TypeError(

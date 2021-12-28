@@ -1,35 +1,16 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import type { InputDataType } from '../types';
-import { cond, printObject } from '../utils';
-import type { RequiredExcludeUndefined } from '../utils/type';
-import { Argon2Options, defaultOptions as defaultArgon2Options, getArgon2KDF, isArgon2Options } from './argon2';
+import type { GetKDF } from '../../types/key-derivation-function';
+import { defaultArgon2Options, isArgon2Options } from '../../types/key-derivation-function/argon2';
+import { cond, printObject } from '../../utils';
+import { getArgon2KDF } from './argon2';
 
 const defaultValue = {
     options: defaultArgon2Options,
     getKDF: getArgon2KDF,
 };
 
-export interface BaseKeyDerivationOptions {
-    algorithm: string;
-}
-
-export type KeyDerivationOptions = Argon2Options;
-export type NormalizedKeyDerivationOptions = RequiredExcludeUndefined<KeyDerivationOptions>;
-
-export interface GetKDFResult<T extends NormalizedKeyDerivationOptions> {
-    deriveKey: (
-        password: InputDataType,
-        salt: Uint8Array,
-        keyLengthBytes: number,
-    ) => Promise<Uint8Array>;
-    saltLength: number;
-    normalizedOptions: T;
-}
-
-export const getKDF = (
-    options: Readonly<KeyDerivationOptions> | undefined,
-): GetKDFResult<NormalizedKeyDerivationOptions> =>
+export const getKDF: GetKDF = options =>
     cond(options)
         .case(isArgon2Options, getArgon2KDF)
         .case(

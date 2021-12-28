@@ -1,11 +1,11 @@
 import { createHeader, createSimpleHeader } from './header';
-import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { defaultCryptoAlgorithmName } from './node/cipher';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, CreateCompressor } from './types/compress';
 import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
+import type { GetKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './types/key-derivation-function';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
@@ -17,6 +17,7 @@ export interface EncryptOptions {
 
 export interface EncryptBuiltinAPIRecord {
     getRandomBytes: GetRandomBytesFn;
+    getKDF: GetKDF;
     getCryptoAlgorithm: GetCryptoAlgorithm;
     createCompressor: CreateCompressor;
 }
@@ -32,20 +33,23 @@ interface KeyResult {
 }
 
 async function generateKey(
-    { password, keyLength, keyDerivationOptions, getRandomBytes }: {
+    { builtin, password, keyLength, keyDerivationOptions }: {
+        builtin: {
+            getKDF: GetKDF;
+            getRandomBytes: GetRandomBytesFn;
+        };
         password: InputDataType;
         keyLength: number;
         keyDerivationOptions: KeyDerivationOptions | undefined;
-        getRandomBytes: GetRandomBytesFn;
     },
 ): Promise<KeyResult> {
     const {
         deriveKey,
         saltLength,
         normalizedOptions: normalizedKeyDerivationOptions,
-    } = getKDF(keyDerivationOptions);
-    const salt = await getRandomBytes(saltLength);
-    const key = await deriveKey(password, salt, keyLength);
+    } = builtin.getKDF(keyDerivationOptions);
+    const salt = await builtin.getRandomBytes(saltLength);
+    const key = await deriveKey(bufferFrom(password, 'utf8'), salt, keyLength);
 
     return {
         key,
@@ -163,10 +167,10 @@ export function createEncryptorIterator(
          * Generate key
          */
         const keyResult = await generateKey({
+            builtin,
             password,
             keyLength: algorithm.keyLength,
             keyDerivationOptions: options.keyDerivation,
-            getRandomBytes: builtin.getRandomBytes,
         });
 
         const bufferSourceIterable = convertIterableValue(
