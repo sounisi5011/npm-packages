@@ -15,9 +15,9 @@ import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { GetKDF } from './types/key-derivation-function';
+import type { AsyncIterableReturn } from './types/utils';
 import { bufferFrom } from './utils';
 import { StreamReader } from './utils/stream';
-import type { AsyncIterableReturn } from './utils/type';
 
 interface DecryptAlgorithmAndKeyAPIRecord {
     getKDF: GetKDF;

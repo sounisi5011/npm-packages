@@ -2,7 +2,7 @@ import { inspect, types } from 'util';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
-import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './type';
+import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from '../types/utils';
 
 function isString(value: unknown): value is string {
     return typeof value === 'string';

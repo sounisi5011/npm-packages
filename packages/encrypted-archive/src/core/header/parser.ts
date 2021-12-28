@@ -1,6 +1,6 @@
+import type { AsyncIterableReturn } from '../types/utils';
 import { number2hex } from '../utils';
 import type { StreamReaderInterface } from '../utils/stream';
-import type { AsyncIterableReturn } from '../utils/type';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';

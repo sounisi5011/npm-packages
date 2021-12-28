@@ -1,7 +1,7 @@
 import BufferListStream from 'bl';
 
 import { printObject } from '.';
-import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
+import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from '../types/utils';
 
 export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | Uint8Array> {
     read: (size: number, offset?: number) => Promise<T>;

@@ -1,5 +1,5 @@
+import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../types/utils';
 import { getPropFromValue, printObject } from '../../utils';
-import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../utils/type';
 
 function reportNonDefinedField(opts: { fieldName: string; dataName: string }): never {
     throw new Error(`${opts.fieldName} field in ${opts.dataName} is not defined`);

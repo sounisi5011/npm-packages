@@ -1,8 +1,8 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import type { GetKDF } from '../../types/key-derivation-function';
-import { defaultArgon2Options, isArgon2Options } from '../../types/key-derivation-function/argon2';
-import { cond, printObject } from '../../utils';
+import type { GetKDF } from '../../core/types/key-derivation-function';
+import { defaultArgon2Options, isArgon2Options } from '../../core/types/key-derivation-function/argon2';
+import { cond, printObject } from '../../core/utils';
 import { getArgon2KDF } from './argon2';
 
 const defaultValue = {

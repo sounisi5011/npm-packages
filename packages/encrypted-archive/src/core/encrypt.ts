@@ -1,13 +1,13 @@
+import { defaultCryptoAlgorithmName } from '../node/cipher';
 import { createHeader, createSimpleHeader } from './header';
-import { defaultCryptoAlgorithmName } from './node/cipher';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, CreateCompressor } from './types/compress';
 import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
 import type { GetKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './types/key-derivation-function';
+import type { AsyncIterableReturn } from './types/utils';
 import { bufferFrom, convertIterableValue } from './utils';
-import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName | undefined;

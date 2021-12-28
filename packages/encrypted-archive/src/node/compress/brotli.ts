@@ -1,6 +1,6 @@
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
-import { BrotliDisallowedOptions, brotliDisallowOptionNameList } from '../../types/compress';
+import { BrotliDisallowedOptions, brotliDisallowOptionNameList } from '../../core/types/compress';
 import { validateDisallowedOptions } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types

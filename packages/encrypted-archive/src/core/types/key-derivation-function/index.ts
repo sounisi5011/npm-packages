@@ -1,4 +1,4 @@
-import type { RequiredExcludeUndefined } from '../../utils/type';
+import type { RequiredExcludeUndefined } from '../utils';
 import type { Argon2Options } from './argon2';
 
 export interface BaseKeyDerivationOptions<TAlgorithm extends string> {

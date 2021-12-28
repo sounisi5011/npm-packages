@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv } from 'crypto';
 import type * as crypto from 'crypto';
 
-import type { CryptoAlgorithmName } from '../types/crypto';
+import type { CryptoAlgorithmName } from '../core/types/crypto';
 
 const cryptoAlgorithmList = [
     (() => {

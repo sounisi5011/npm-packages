@@ -1,6 +1,6 @@
 import { isArgon2Options } from '../../types/key-derivation-function/argon2';
+import { assertType } from '../../types/utils';
 import { cond, getPropFromValue, printObject } from '../../utils';
-import { assertType } from '../../utils/type';
 import type { HeaderData } from '../create';
 import { Header } from '../protocol-buffers/header_pb';
 import { createProtobufArgon2Options, parseProtobufArgon2Options } from './argon2Options';

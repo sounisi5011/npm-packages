@@ -4,16 +4,16 @@ import type * as stream from 'stream';
 import { transformFrom } from '@sounisi5011/stream-transform-from';
 
 import { getKDF } from './browser/key-derivation-function';
-import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './decrypt';
-import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './encrypt';
+import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './core/decrypt';
+import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './core/encrypt';
+import { validateChunk } from './core/stream';
+import type { InputDataType, IteratorConverter } from './core/types';
+import type { CompressOptions } from './core/types/compress';
+import type { CryptoAlgorithmName } from './core/types/crypto';
+import type { KeyDerivationOptions } from './core/types/key-derivation-function';
+import { asyncIterable2Buffer, bufferFrom, convertIterableValue, fixNodePrimordialsErrorInstance } from './core/utils';
 import { cryptoAlgorithmMap } from './node/cipher';
 import { createCompressor, decompressIterable } from './node/compress';
-import { validateChunk } from './stream';
-import type { InputDataType, IteratorConverter } from './types';
-import type { CompressOptions } from './types/compress';
-import type { CryptoAlgorithmName } from './types/crypto';
-import type { KeyDerivationOptions } from './types/key-derivation-function';
-import { asyncIterable2Buffer, bufferFrom, convertIterableValue, fixNodePrimordialsErrorInstance } from './utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     getRandomBytes: async size => randomBytes(size),

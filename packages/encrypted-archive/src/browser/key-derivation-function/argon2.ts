@@ -2,14 +2,20 @@ import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { ArgonType, hash as argonHash } from 'argon2-browser';
 import capitalize from 'capitalize';
 
-import type { KDFData } from '../../types/key-derivation-function';
+import type { KDFData } from '../../core/types/key-derivation-function';
 import {
     Argon2Options,
     defaultArgon2Options,
     NormalizedArgon2Options,
-} from '../../types/key-derivation-function/argon2';
-import { ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../../utils';
-import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../../utils/type';
+} from '../../core/types/key-derivation-function/argon2';
+import {
+    assertType,
+    isInteger,
+    objectEntries,
+    objectFromEntries,
+    RequiredExcludeUndefined,
+} from '../../core/types/utils';
+import { ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../../core/utils';
 
 const argon2TypeRecord = {
     argon2d: ArgonType.Argon2d,

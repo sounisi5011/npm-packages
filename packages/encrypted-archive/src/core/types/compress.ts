@@ -1,6 +1,6 @@
 import type { createBrotliCompress, createGzip } from 'zlib';
 
-import type { AsyncIterableReturn } from '../utils/type';
+import type { AsyncIterableReturn } from './utils';
 
 type GetOptions<T extends (options?: never) => unknown> = (
     T extends ((options?: infer U) => unknown) ? U : never

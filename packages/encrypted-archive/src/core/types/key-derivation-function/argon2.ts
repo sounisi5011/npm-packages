@@ -1,7 +1,7 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
 import type { BaseKeyDerivationOptions } from '.';
-import type { RequiredExcludeUndefined } from '../../utils/type';
+import type { RequiredExcludeUndefined } from '../utils';
 
 const argon2AlgorithmList = ['argon2d', 'argon2id'] as const;
 

@@ -1,4 +1,4 @@
-import type { AsyncIterableReturn } from '../../src/utils/type';
+import type { AsyncIterableReturn } from '../../src/core/types/utils';
 
 export function rangeArray(start: number, stop: number, step = 1): number[] {
     return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));

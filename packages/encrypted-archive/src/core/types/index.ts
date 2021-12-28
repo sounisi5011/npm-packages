@@ -1,6 +1,6 @@
 import { types } from 'util';
 
-import type { AsyncIterableIteratorReturn } from '../utils/type';
+import type { AsyncIterableIteratorReturn } from './utils';
 
 export type InputDataType = string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike;
 
