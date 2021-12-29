@@ -1,10 +1,11 @@
-import { inspect, types } from 'util';
+import { inspect } from 'util';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
+import type { EncodeStringFn } from '../types';
 import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from '../types/utils';
 
-function isString(value: unknown): value is string {
+export function isString(value: unknown): value is string {
     return typeof value === 'string';
 }
 
@@ -12,9 +13,26 @@ function isFunction(value: unknown): value is () => void {
     return typeof value === 'function';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isInstance<T extends abstract new (...args: any) => any>(instance: T) {
+    return (value: unknown): value is InstanceType<T> => value instanceof instance;
+}
+
 export function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
     return value !== undefined;
 }
+
+const isNever = (_: unknown): _ is never => false;
+
+export function isOrType<T1, T2, T3 = never>(
+    typeGuard1: (value: unknown) => value is T1,
+    typeGuard2: (value: unknown) => value is T2,
+    typeGuard3: (value: unknown) => value is T3 = isNever,
+) {
+    return (value: unknown): value is T1 | T2 | T3 => typeGuard1(value) || typeGuard2(value) || typeGuard3(value);
+}
+
+export const isArrayBufferLike = isOrType(isInstance(ArrayBuffer), isInstance(SharedArrayBuffer));
 
 function isOneArray<T>(value: T[]): value is [T];
 function isOneArray<T>(value: readonly T[]): value is readonly [T];
@@ -80,42 +98,53 @@ export function normalizeOptions<T extends object>(
     );
 }
 
-export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
-export function bufferFrom(value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer | string;
-export function bufferFrom(
-    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
-    encoding: BufferEncoding,
-): Buffer;
-export function bufferFrom(
-    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
-    encoding?: BufferEncoding,
-): Buffer | string {
-    if (Buffer.isBuffer(value)) return value;
-    if (typeof value === 'string') {
-        return encoding !== undefined
-            ? Buffer.from(value, encoding)
-            : value;
+/**
+ * @see https://stackoverflow.com/a/69998555/4907315
+ */
+export function uint8arrayConcat(...arrayList: ReadonlyArray<ArrayLike<number>>): Uint8Array {
+    const totalLength = arrayList.map(array => array.length).reduce((a, b) => a + b, 0);
+    const result = new Uint8Array(totalLength);
+
+    let offset = 0;
+    for (const array of arrayList) {
+        result.set(array, offset);
+        offset += array.length;
     }
+
+    return result;
+}
+
+const arrayBufferView2Uint8Array = (view: ArrayBufferView): Uint8Array =>
+    new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+
+export function arrayBuffer2Uint8Array(value: ArrayBufferView | ArrayBufferLike): Uint8Array {
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
      */
-    if (types.isArrayBufferView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    if (ArrayBuffer.isView(value)) return arrayBufferView2Uint8Array(value);
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
      */
-    return Buffer.from(value);
+    return new Uint8Array(value);
 }
 
-export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
+export function uint8arrayFrom(
+    encodeString: EncodeStringFn,
+    value: string | ArrayBufferView | ArrayBufferLike,
+): Uint8Array {
+    return arrayBuffer2Uint8Array(typeof value === 'string' ? encodeString(value) : value);
+}
+
+export async function asyncIterable2Uint8Array(iterable: AsyncIterable<Uint8Array>): Promise<Uint8Array> {
     const chunkList: Uint8Array[] = [];
     for await (const chunk of iterable) {
         chunkList.push(chunk);
     }
-    // The `Buffer.concat()` function will always copy the Buffer object.
+    // The `uint8arrayConcat()` function will always copy the Uint8Array object.
     // However, if the length of the array is 1, there is no need to copy it.
     return isOneArray(chunkList)
-        ? Buffer.from(chunkList[0].buffer, chunkList[0].byteOffset, chunkList[0].byteLength)
-        : Buffer.concat(chunkList);
+        ? arrayBufferView2Uint8Array(chunkList[0])
+        : uint8arrayConcat(...chunkList);
 }
 
 export async function* convertIterableValue<T, U>(

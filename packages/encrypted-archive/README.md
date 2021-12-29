@@ -244,22 +244,22 @@ const decryptor = decryptIterator(password);
 
 ## API
 
-[`Buffer` object]: https://nodejs.org/api/buffer.html
+[`Uint8Array` object]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
 [`Transform` stream]: https://nodejs.org/api/stream.html#stream_class_stream_transform
 [`EncryptOptions`]: #type-encrypt-options
 [`IteratorConverter` function]: #type-iterator-converter
 
 ### `encrypt(cleartext, password, options?)`
 
-Returns a Promise giving a [`Buffer` object].
+Returns a Promise giving a [`Uint8Array` object].
 
 * `cleartext`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 * `options`
 
@@ -267,15 +267,15 @@ Returns a Promise giving a [`Buffer` object].
 
 ### `decrypt(encryptedData, password)`
 
-Returns a Promise giving a [`Buffer` object].
+Returns a Promise giving a [`Uint8Array` object].
 
 * `encryptedData`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 ### `encryptStream(password, options?)`
 
@@ -283,7 +283,7 @@ Returns a [`Transform` stream].
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 * `options`
 
@@ -295,7 +295,7 @@ Returns a [`Transform` stream].
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 ### `encryptIterator(password, options?)`
 
@@ -303,7 +303,7 @@ Returns an [`IteratorConverter` function].
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 * `options`
 
@@ -315,19 +315,19 @@ Returns an [`IteratorConverter` function].
 
 * `password`
 
-    Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
+    Type: `string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 
 <h3 id="type-iterator-converter"><code>IteratorConverter(source)</code></h3>
 
-Returns an AsyncIterableIterator giving a [`Buffer` object].
+Returns an AsyncIterableIterator giving a [`Uint8Array` object].
 
 * `source`
 
     Type:
 
     ```ts
-      Iterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
-    | AsyncIterable<string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+      Iterable<string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
+    | AsyncIterable<string | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer>
     ```
 
 <h3 id="type-encrypt-options"><code>EncryptOptions</code></h3>

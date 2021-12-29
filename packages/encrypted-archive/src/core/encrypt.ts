@@ -2,12 +2,12 @@ import { defaultCryptoAlgorithmName } from '../node/cipher';
 import { createHeader, createSimpleHeader } from './header';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { InputDataType, IteratorConverter } from './types';
+import type { EncodeStringFn, InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, CreateCompressor } from './types/compress';
 import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
 import type { GetKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
-import { bufferFrom, convertIterableValue } from './utils';
+import { convertIterableValue, uint8arrayConcat, uint8arrayFrom } from './utils';
 
 export interface EncryptOptions {
     algorithm?: CryptoAlgorithmName | undefined;
@@ -16,6 +16,7 @@ export interface EncryptOptions {
 }
 
 export interface EncryptBuiltinAPIRecord {
+    encodeString: EncodeStringFn;
     getRandomBytes: GetRandomBytesFn;
     getKDF: GetKDF;
     getCryptoAlgorithm: GetCryptoAlgorithm;
@@ -23,7 +24,7 @@ export interface EncryptBuiltinAPIRecord {
 }
 
 interface EncryptorState {
-    nonce: Uint8Array | Buffer;
+    nonce: Uint8Array;
 }
 
 interface KeyResult {
@@ -35,6 +36,7 @@ interface KeyResult {
 async function generateKey(
     { builtin, password, keyLength, keyDerivationOptions }: {
         builtin: {
+            encodeString: EncodeStringFn;
             getKDF: GetKDF;
             getRandomBytes: GetRandomBytesFn;
         };
@@ -49,7 +51,7 @@ async function generateKey(
         normalizedOptions: normalizedKeyDerivationOptions,
     } = builtin.getKDF(keyDerivationOptions);
     const salt = await builtin.getRandomBytes(saltLength);
-    const key = await deriveKey(bufferFrom(password, 'utf8'), salt, keyLength);
+    const key = await deriveKey(uint8arrayFrom(builtin.encodeString, password), salt, keyLength);
 
     return {
         key,
@@ -108,7 +110,7 @@ async function* encryptChunk(compressedCleartext: Uint8Array, {
     keyResult: KeyResult;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
     prevState: EncryptorState | undefined;
-}): AsyncIterableReturn<Buffer, EncryptorState> {
+}): AsyncIterableReturn<Uint8Array, EncryptorState> {
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */
@@ -140,10 +142,10 @@ async function* encryptChunk(compressedCleartext: Uint8Array, {
     /**
      * Merge header and ciphertext
      */
-    const encryptedData = Buffer.concat([
+    const encryptedData = uint8arrayConcat(
         headerData,
         ciphertext,
-    ]);
+    );
     yield encryptedData;
 
     const newState: EncryptorState = {
@@ -173,15 +175,15 @@ export function createEncryptorIterator(
             keyDerivationOptions: options.keyDerivation,
         });
 
-        const bufferSourceIterable = convertIterableValue(
+        const uint8ArraySourceIterable = convertIterableValue(
             source,
-            chunk => bufferFrom(validateChunk(chunk), 'utf8'),
+            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(chunk)),
         );
 
         /**
          * Compress cleartext
          */
-        const compressedSourceIterable = compressIterable(bufferSourceIterable);
+        const compressedSourceIterable = compressIterable(uint8ArraySourceIterable);
 
         let prevState: EncryptorState | undefined;
         for await (const compressedCleartext of compressedSourceIterable) {

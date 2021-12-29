@@ -11,7 +11,7 @@ import {
     encryptStream,
     KeyDerivationOptions,
 } from '../src/index.node';
-import { createStreamFromBuffer } from './helpers/stream';
+import { createStreamFromArrayBufferView } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
 const password = 'dragon';
@@ -26,9 +26,9 @@ describe('encrypt()', () => {
         const encryptedData1 = await encrypt(cleartext, password);
         const encryptedData2 = await encrypt(cleartext, password);
         const encryptedData3 = await encrypt(cleartext, password);
-        expect(encryptedData1.equals(encryptedData2)).toBeFalse();
-        expect(encryptedData1.equals(encryptedData3)).toBeFalse();
-        expect(encryptedData2.equals(encryptedData3)).toBeFalse();
+        expect(encryptedData1).not.toBytesEqual(encryptedData2);
+        expect(encryptedData1).not.toBytesEqual(encryptedData3);
+        expect(encryptedData2).not.toBytesEqual(encryptedData3);
     });
 
     describe('should support one or more encryption algorithms', () => {
@@ -94,7 +94,7 @@ describe('encrypt()', () => {
 
 describe('decrypt()', () => {
     describe('should be decryptable', () => {
-        describe.each<[string, (options: EncryptOptions) => Promise<Buffer>]>([
+        describe.each<[string, (options: EncryptOptions) => Promise<Uint8Array>]>([
             [
                 'single chunk',
                 async options => await encrypt(cleartext, password, options),
@@ -104,7 +104,7 @@ describe('decrypt()', () => {
                 async options =>
                     await streamToBuffer(
                         stream.pipeline(
-                            createStreamFromBuffer(cleartext, 2),
+                            createStreamFromArrayBufferView(cleartext, 2),
                             encryptStream(password, options),
                             () => {
                                 //
@@ -120,7 +120,7 @@ describe('decrypt()', () => {
                 ])('%s', async algorithm => {
                     const encryptedData = await encrypt({ algorithm });
                     const decryptedData = await decrypt(encryptedData, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                    expect(decryptedData).toBytesEqual(cleartext);
                 });
             });
             describe('key derivation function', () => {
@@ -130,7 +130,7 @@ describe('decrypt()', () => {
                 ])('%s', async keyDerivationAlgorithm => {
                     const encryptedData = await encrypt({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
                     const decryptedData = await decrypt(encryptedData, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                    expect(decryptedData).toBytesEqual(cleartext);
                 });
             });
             describe('compression', () => {
@@ -140,7 +140,7 @@ describe('decrypt()', () => {
                 ])('%s', async compressAlgorithm => {
                     const encryptedData = await encrypt({ compress: compressAlgorithm });
                     const decryptedData = await decrypt(encryptedData, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
+                    expect(decryptedData).toBytesEqual(cleartext);
                 });
             });
         });

@@ -53,20 +53,22 @@ export function createChunkerStream({ chunkSize }: { chunkSize: number }): strea
     });
 }
 
-export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): stream.Readable {
+export function createStreamFromArrayBufferView(view: ArrayBufferView, highWaterMark = Infinity): stream.Readable {
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
-    return stream.Readable.from((function*() {
+    return stream.Readable.from((function*(): Iterable<Buffer> {
         let i = 0;
-        while (i < buf.byteLength) {
-            yield buf.subarray(i, i += highWaterMark);
+        while (i < view.byteLength) {
+            const length = Math.min(highWaterMark, view.byteLength - i);
+            yield Buffer.from(view.buffer, view.byteOffset + i, length);
+            i += length;
         }
     })());
 }
 
-export class DummyStreamReader implements StreamReaderInterface<Buffer> {
-    constructor(private data: Buffer) {}
+export class DummyStreamReader implements StreamReaderInterface<Uint8Array> {
+    constructor(private data: Uint8Array) {}
 
-    async read(size: number, offset = 0): Promise<Buffer> {
+    async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
         return this.data.subarray(offset, needByteLength);
     }
@@ -75,7 +77,7 @@ export class DummyStreamReader implements StreamReaderInterface<Buffer> {
         size: number,
         offset = 0,
     ): AsyncIterableIteratorReturn<
-        { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
+        { data?: Uint8Array; requestedSize: number; offset: number; readedSize: number },
         void
     > {
         const data = await this.read(size, offset);

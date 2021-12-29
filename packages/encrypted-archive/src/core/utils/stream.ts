@@ -3,7 +3,7 @@ import BufferListStream from 'bl';
 import { printObject } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from '../types/utils';
 
-export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | Uint8Array> {
+export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
     read: (size: number, offset?: number) => Promise<T>;
     readIterator: (
         size: number,
@@ -13,25 +13,24 @@ export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | 
     isEnd: () => Promise<boolean>;
 }
 
-export class StreamReader implements StreamReaderInterface<Buffer> {
+export class StreamReader implements StreamReaderInterface<Uint8Array> {
     private iterator: AsyncIterator<unknown> | undefined;
     private readonly bufferList = new BufferListStream();
 
     constructor(
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
-        private readonly convertChunk = (chunk: unknown): Buffer => {
-            if (Buffer.isBuffer(chunk)) return chunk;
-            if (typeof chunk === 'string' || chunk instanceof Uint8Array) return Buffer.from(chunk);
+        private readonly convertChunk = (chunk: unknown): Uint8Array => {
+            if (chunk instanceof Uint8Array) return chunk;
             throw new TypeError(
                 `Invalid type chunk received.`
-                    + ` Each chunk must be of type string or an instance of Buffer or Uint8Array.`
+                    + ` Each chunk must be an instance of Uint8Array.`
                     + ` Received: ${printObject(chunk)}`,
             );
         },
     ) {
     }
 
-    async read(size: number, offset = 0): Promise<Buffer> {
+    async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
         while (this.bufferList.length < needByteLength) {
             const chunk = await this.tryReadChunk();
@@ -46,7 +45,7 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         size: number,
         offset = 0,
     ): AsyncIterableIteratorReturn<
-        { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
+        { data?: Uint8Array; requestedSize: number; offset: number; readedSize: number },
         void
     > {
         const requestedSize = size;
@@ -79,14 +78,14 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         return this.bufferList.length < 1;
     }
 
-    private async tryReadChunk(): Promise<Buffer | undefined> {
+    private async tryReadChunk(): Promise<Uint8Array | undefined> {
         this.iterator = this.iterator ?? this.toAsyncIterator(this.source);
         const result = await this.iterator.next();
         if (result.done) return undefined;
         return this.convertChunk(result.value);
     }
 
-    private async *readNewChunks(requestedSize: number): AsyncIterableReturn<[Buffer, Buffer?], void> {
+    private async *readNewChunks(requestedSize: number): AsyncIterableReturn<[Uint8Array, Uint8Array?], void> {
         let readedSize = 0;
         while (readedSize < requestedSize) {
             const chunk = await this.tryReadChunk();
@@ -100,7 +99,7 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
         }
     }
 
-    private splitBuffer(buffer: Buffer, size: number, offset = 0): [Buffer, Buffer?] {
+    private splitBuffer(buffer: Uint8Array, size: number, offset = 0): [Uint8Array, Uint8Array?] {
         const endOffset = offset + size;
         if (buffer.byteLength <= endOffset) {
             const firstBuffer = offset < 1 ? buffer : buffer.subarray(offset);

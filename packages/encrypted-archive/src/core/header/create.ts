@@ -3,6 +3,7 @@ import { encode as varintEncode } from 'varint';
 import type { CompressOptions } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
 import type { NormalizedKeyDerivationOptions } from '../types/key-derivation-function';
+import { uint8arrayConcat } from '../utils';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
@@ -41,31 +42,29 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
     ciphertextLength: number;
 }
 
-export function createHeader(data: HeaderDataWithCiphertextLength): Buffer {
+export function createHeader(data: HeaderDataWithCiphertextLength): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
     const headerDataBinary = createProtobufHeader(headerData)
         .serializeBinary();
 
-    return Buffer.concat([
-        Buffer.from([
-            ...cidByteList,
-            ...varintEncode(headerDataBinary.byteLength),
-        ]),
+    return uint8arrayConcat(
+        cidByteList,
+        varintEncode(headerDataBinary.byteLength),
         headerDataBinary,
-        Buffer.from(varintEncode(ciphertextLength)),
-    ]);
+        varintEncode(ciphertextLength),
+    );
 }
 
-export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Buffer {
+export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
     const simpleHeaderDataBinary = createProtobufSimpleHeader(headerData)
         .serializeBinary();
 
-    return Buffer.concat([
-        Buffer.from(varintEncode(simpleHeaderDataBinary.byteLength)),
+    return uint8arrayConcat(
+        varintEncode(simpleHeaderDataBinary.byteLength),
         simpleHeaderDataBinary,
-        Buffer.from(varintEncode(ciphertextLength)),
-    ]);
+        varintEncode(ciphertextLength),
+    );
 }

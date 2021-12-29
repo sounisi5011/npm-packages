@@ -3,10 +3,15 @@ import * as stream from 'stream';
 import { writableNoopStream } from 'noop-stream';
 
 import { decryptStream, encrypt, encryptStream } from '../src/index.node';
-import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
+import {
+    createChunkerStream,
+    createCountStream,
+    createStreamFromArrayBufferView,
+    pipelineAsync,
+} from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
-    /^Invalid type chunk received\. Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer\. Received\b/;
+    /^Invalid type chunk received\. Each chunk must be of type string or an instance of ArrayBufferView \(TypedArray or DataView\), or ArrayBuffer\. Received\b/;
 
 describe('encryptStream()', () => {
     it.each<[string, number]>([
@@ -112,35 +117,35 @@ describe('decryptStream()', () => {
                 'full data',
                 async () => {
                     const encryptedData = await encrypt(cleartext, password);
-                    return createStreamFromBuffer(encryptedData);
+                    return createStreamFromArrayBufferView(encryptedData);
                 },
             ],
             [
                 'full data [torn]',
                 async () => {
                     const encryptedData = await encrypt(cleartext, password);
-                    return createStreamFromBuffer(encryptedData, 2);
+                    return createStreamFromArrayBufferView(encryptedData, 2);
                 },
             ],
             [
                 'single chunk',
-                createStreamFromBuffer(cleartext)
+                createStreamFromArrayBufferView(cleartext)
                     .pipe(encryptStream(password)),
             ],
             [
                 'single chunk [torn]',
-                createStreamFromBuffer(cleartext)
+                createStreamFromArrayBufferView(cleartext)
                     .pipe(encryptStream(password))
                     .pipe(createChunkerStream({ chunkSize: 2 })),
             ],
             [
                 'multi chunk',
-                createStreamFromBuffer(cleartext, 2)
+                createStreamFromArrayBufferView(cleartext, 2)
                     .pipe(encryptStream(password)),
             ],
             [
                 'multi chunk [torn]',
-                createStreamFromBuffer(cleartext, 2)
+                createStreamFromArrayBufferView(cleartext, 2)
                     .pipe(encryptStream(password))
                     .pipe(createChunkerStream({ chunkSize: 2 })),
             ],

@@ -11,15 +11,16 @@ import {
 } from './header';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { InputDataType, IteratorConverter } from './types';
+import type { EncodeStringFn, InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { GetKDF } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
-import { bufferFrom } from './utils';
+import { uint8arrayFrom } from './utils';
 import { StreamReader } from './utils/stream';
 
 interface DecryptAlgorithmAndKeyAPIRecord {
+    encodeString: EncodeStringFn;
     getKDF: GetKDF;
     getCryptoAlgorithm: GetCryptoAlgorithm;
 }
@@ -31,7 +32,7 @@ export interface DecryptBuiltinAPIRecord extends DecryptAlgorithmAndKeyAPIRecord
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithmData;
     key: Uint8Array;
-    nonce: Uint8Array | Buffer;
+    nonce: Uint8Array;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
 
@@ -50,7 +51,7 @@ async function getAlgorithmAndKey(
      */
     const key = await builtin.getKDF(headerData.key.keyDerivationFunctionOptions)
         .deriveKey(
-            bufferFrom(password, 'utf8'),
+            uint8arrayFrom(builtin.encodeString, password),
             headerData.key.salt,
             headerData.key.length,
         );
@@ -60,8 +61,8 @@ async function getAlgorithmAndKey(
 
 function createNonceFromDiff(
     nonceDiff: SimpleHeaderData['crypto']['nonceDiff'],
-    prevNonce: Buffer | Uint8Array,
-): Buffer | Uint8Array {
+    prevNonce: Uint8Array,
+): Uint8Array {
     if ('addFixed' in nonceDiff) {
         return nonceState.createFromFixedFieldDiff(
             prevNonce,
@@ -168,7 +169,7 @@ export function createDecryptorIterator(
     password: InputDataType,
 ): IteratorConverter {
     return async function* decryptor(source) {
-        const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
+        const reader = new StreamReader(source, chunk => uint8arrayFrom(builtin.encodeString, validateChunk(chunk)));
 
         const {
             compressedCleartextIterable: firstChunkCompressedCleartextIterable,

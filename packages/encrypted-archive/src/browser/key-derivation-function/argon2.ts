@@ -190,12 +190,12 @@ function validateBetweenLength<TValue extends number>(
 
 function validateBetweenByteLength(
     optionName: string,
-    value: string | NodeJS.ArrayBufferView,
+    value: ArrayBufferView,
     options: ValidateBetweenLengthOptions<number>,
 ): asserts value {
     validateBetweenLength(
         optionName,
-        typeof value === 'string' ? Buffer.byteLength(value) : value.byteLength,
+        value.byteLength,
         {
             startPrefix: options =>
                 (Object.fromEntries as objectFromEntries)((['min', 'max'] as const).map(mode => [
