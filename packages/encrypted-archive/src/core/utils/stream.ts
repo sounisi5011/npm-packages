@@ -89,15 +89,43 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
             return firstChunk.subarray(beginOffset, endOffset);
         }
 
-        const newChunk = uint8arrayConcat(...this.chunkList);
-        this.chunkList.splice(0, Infinity, newChunk);
-        return newChunk.subarray(beginOffset, endOffset);
+        const { index: chunkListIndex, beginOffset: beginOffsetInChunk } = getIndexContainsRange(this.chunkList, {
+            begin: beginOffset,
+            end: endOffset,
+        });
+        const endOffsetInChunk = beginOffsetInChunk + (endOffset - beginOffset);
+
+        const mergeChunkList = this.chunkList.slice(chunkListIndex.begin, chunkListIndex.end + 1);
+        const newChunk = isOneArray(mergeChunkList) ? mergeChunkList[0] : uint8arrayConcat(...mergeChunkList);
+
+        const deleteCount = chunkListIndex.end - chunkListIndex.begin + 1;
+        if (deleteCount > 1 && newChunk.byteLength !== 0) {
+            this.chunkList.splice(chunkListIndex.begin, deleteCount, newChunk);
+        }
+
+        return newChunk.subarray(beginOffsetInChunk, endOffsetInChunk);
     }
 
     private consume(bytes: number): void {
-        const newChunk = uint8arrayConcat(...this.chunkList).subarray(bytes);
-        this.currentByteLength = newChunk.byteLength;
-        this.chunkList.splice(0, Infinity, newChunk);
+        const { index: { begin: firstChunkIndex }, beginOffset: beginOffsetInFirstChunk } = getIndexContainsRange(
+            this.chunkList,
+            { begin: bytes, end: bytes },
+        );
+
+        let deleteCount = firstChunkIndex;
+        const firstChunk = this.chunkList[firstChunkIndex];
+        if (firstChunk && beginOffsetInFirstChunk !== 0) {
+            const newFirstChunk = firstChunk.subarray(beginOffsetInFirstChunk);
+            if (newFirstChunk.byteLength === 0) {
+                deleteCount += 1;
+            } else {
+                this.chunkList[firstChunkIndex] = newFirstChunk;
+            }
+        }
+
+        this.chunkList.splice(0, deleteCount);
+        this.currentByteLength = this.chunkList
+            .reduce((len, chunk) => len + chunk.byteLength, 0);
     }
 
     private async tryReadChunk(): Promise<Uint8Array | undefined> {
@@ -136,4 +164,44 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
     private async *toAsyncIterator<T>(source: Iterable<T> | AsyncIterable<T>): AsyncIterator<T> {
         yield* source;
     }
+}
+
+/**
+ * @private
+ */
+export function getIndexContainsRange(
+    arrayLikeList: ReadonlyArray<ArrayLike<number>>,
+    range: { begin: number; end: number },
+): {
+    index: {
+        begin: number;
+        end: number;
+    };
+    beginOffset: number;
+} {
+    let beginIndex = 0;
+    let endIndex = 0;
+    let beginOffset = 0;
+
+    let totalLength = 0;
+    for (const [index, arrayLike] of arrayLikeList.entries()) {
+        if (totalLength <= range.begin) {
+            beginIndex = index;
+            beginOffset = range.begin - totalLength;
+        }
+        if (totalLength < range.end) {
+            endIndex = index;
+        } else {
+            break;
+        }
+        totalLength += arrayLike.length;
+    }
+
+    return {
+        index: {
+            begin: beginIndex,
+            end: endIndex,
+        },
+        beginOffset,
+    };
 }

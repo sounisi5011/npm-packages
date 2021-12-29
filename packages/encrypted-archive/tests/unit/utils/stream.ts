@@ -1,6 +1,6 @@
 import * as stream from 'stream';
 
-import { StreamReader } from '../../../src/core/utils/stream';
+import { getIndexContainsRange, StreamReader } from '../../../src/core/utils/stream';
 
 describe('class StreamReader', () => {
     describe('read() method', () => {
@@ -187,7 +187,7 @@ describe('class StreamReader', () => {
                 }
                 expect(entryList).toStrictEqual([
                     {
-                        data: new Uint8Array([4, 5, 6, 7, 8, 9]),
+                        data: Buffer.from([4, 5, 6, 7, 8, 9]),
                         requestedSize: 999,
                         offset: 1,
                         readedSize: 6,
@@ -379,5 +379,72 @@ describe('class StreamReader', () => {
             await reader.seek(1);
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
+    });
+});
+
+describe('getIndexContainsRange()', () => {
+    const list = [[1, 2], [3, 4, 5]];
+    it.each<[
+        { begin: number; end: number },
+        ReturnType<typeof getIndexContainsRange>,
+    ]>([
+        [
+            { begin: 0, end: 1 },
+            {
+                index: { begin: 0, end: 0 },
+                beginOffset: 0,
+            },
+        ],
+        [
+            { begin: 0, end: 2 },
+            {
+                index: { begin: 0, end: 0 },
+                beginOffset: 0,
+            },
+        ],
+        [
+            { begin: 0, end: 3 },
+            {
+                index: { begin: 0, end: 1 },
+                beginOffset: 0,
+            },
+        ],
+        [
+            { begin: 0, end: 4 },
+            {
+                index: { begin: 0, end: 1 },
+                beginOffset: 0,
+            },
+        ],
+        [
+            { begin: 1, end: 2 },
+            {
+                index: { begin: 0, end: 0 },
+                beginOffset: 1,
+            },
+        ],
+        [
+            { begin: 2, end: 3 },
+            {
+                index: { begin: 1, end: 1 },
+                beginOffset: 0,
+            },
+        ],
+        [
+            { begin: 3, end: 4 },
+            {
+                index: { begin: 1, end: 1 },
+                beginOffset: 1,
+            },
+        ],
+        [
+            { begin: 1, end: 3 },
+            {
+                index: { begin: 0, end: 1 },
+                beginOffset: 1,
+            },
+        ],
+    ])('%p', (range, expected) => {
+        expect(getIndexContainsRange(list, range)).toStrictEqual(expected);
     });
 });
