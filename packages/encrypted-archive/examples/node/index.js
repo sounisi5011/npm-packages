@@ -23,7 +23,7 @@ const util = require('util');
   console.log('Encrypted Data:', encryptedData);
 
   const decryptedData = await decrypt(encryptedData, password);
-  console.log('Decrypted String:', decryptedData.toString('utf8'));
+  console.log('Decrypted String:', new TextDecoder('utf-8', { fatal: true }).decode(decryptedData));
 })().catch(error => {
   process.exitCode = 1;
   process.stderr.write(util.inspect(error) + '\n');
