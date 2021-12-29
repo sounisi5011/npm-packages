@@ -306,6 +306,7 @@ describe('class StreamReader', () => {
                     ['second chunk', 4, [5, 4]],
                     ['zero seek', 0, [9, 8, 7]],
                     ['over seek', 999, []],
+                    ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
                     // eslint-disable-next-line node/no-unsupported-features/node-builtins
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
@@ -322,6 +323,7 @@ describe('class StreamReader', () => {
                     ['second chunk', 4, [5, 4]],
                     ['zero seek', 0, [9, 8, 7]],
                     ['over seek', 999, []],
+                    ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
                     // eslint-disable-next-line node/no-unsupported-features/node-builtins
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
