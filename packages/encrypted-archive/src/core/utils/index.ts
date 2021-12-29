@@ -34,9 +34,9 @@ export function isOrType<T1, T2, T3 = never>(
 
 export const isArrayBufferLike = isOrType(isInstance(ArrayBuffer), isInstance(SharedArrayBuffer));
 
-function isOneArray<T>(value: T[]): value is [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T] {
+export function isOneArray<T>(value: T[]): value is [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T] {
     return value.length === 1;
 }
 

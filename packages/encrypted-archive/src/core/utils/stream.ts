@@ -1,6 +1,4 @@
-import BufferListStream from 'bl';
-
-import { printObject } from '.';
+import { isOneArray, printObject, uint8arrayConcat } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from '../types/utils';
 
 export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
@@ -15,7 +13,8 @@ export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
 
 export class StreamReader implements StreamReaderInterface<Uint8Array> {
     private iterator: AsyncIterator<unknown> | undefined;
-    private readonly bufferList = new BufferListStream();
+    private readonly chunkList: Uint8Array[] = [];
+    private currentByteLength = 0;
 
     constructor(
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
@@ -32,13 +31,13 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
 
     async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
-        while (this.bufferList.length < needByteLength) {
+        while (this.currentByteLength < needByteLength) {
             const chunk = await this.tryReadChunk();
             if (!chunk) break;
 
-            this.bufferList.append(chunk);
+            this.appendChunk(chunk);
         }
-        return this.bufferList.slice(offset, needByteLength);
+        return this.subarray(offset, needByteLength);
     }
 
     async *readIterator(
@@ -51,31 +50,54 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
         const requestedSize = size;
         let readedSize = 0;
 
-        if (readedSize < requestedSize && this.bufferList.length > 0) {
+        if (readedSize < requestedSize && this.currentByteLength > 0) {
             const endOffset = offset + requestedSize;
-            const data = this.bufferList.slice(offset, endOffset);
+            const data = this.subarray(offset, endOffset);
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            this.bufferList.consume(endOffset);
+            this.consume(endOffset);
         }
 
         for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            if (remainder) this.bufferList.append(remainder);
+            if (remainder) this.appendChunk(remainder);
         }
 
         yield { requestedSize, offset, readedSize };
     }
 
     async seek(offset: number): Promise<void> {
-        if (this.bufferList.length < offset) await this.read(offset);
-        this.bufferList.consume(offset);
+        if (this.currentByteLength < offset) await this.read(offset);
+        this.consume(offset);
     }
 
     async isEnd(): Promise<boolean> {
-        if (this.bufferList.length < 1) await this.read(1);
-        return this.bufferList.length < 1;
+        if (this.currentByteLength < 1) await this.read(1);
+        return this.currentByteLength < 1;
+    }
+
+    private appendChunk(chunk: Uint8Array): void {
+        if (chunk.byteLength < 1) return;
+        this.chunkList.push(chunk);
+        this.currentByteLength += chunk.byteLength;
+    }
+
+    private subarray(beginOffset: number, endOffset: number): Uint8Array {
+        if (isOneArray(this.chunkList)) {
+            const firstChunk = this.chunkList[0];
+            return firstChunk.subarray(beginOffset, endOffset);
+        }
+
+        const newChunk = uint8arrayConcat(...this.chunkList);
+        this.chunkList.splice(0, Infinity, newChunk);
+        return newChunk.subarray(beginOffset, endOffset);
+    }
+
+    private consume(bytes: number): void {
+        const newChunk = uint8arrayConcat(...this.chunkList).subarray(bytes);
+        this.currentByteLength = newChunk.byteLength;
+        this.chunkList.splice(0, Infinity, newChunk);
     }
 
     private async tryReadChunk(): Promise<Uint8Array | undefined> {
