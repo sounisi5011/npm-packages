@@ -7,6 +7,4 @@ export type IteratorConverter = (
     source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
 ) => AsyncIterableIteratorReturn<Uint8Array, void>;
 
-export type EncodeStringFn = (input: string) => ArrayBufferView | ArrayBufferLike;
-
 export const isInputDataType = isOrType(isString, ArrayBuffer.isView, isArrayBufferLike);

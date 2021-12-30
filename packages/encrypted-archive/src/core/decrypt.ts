@@ -1,4 +1,4 @@
-import type { BuiltinInspectRecord } from '../types/builtin';
+import type { BuiltinInspectRecord, EncodeStringFn } from '../types/builtin';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -12,7 +12,7 @@ import {
 } from './header';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { EncodeStringFn, InputDataType, IteratorConverter } from './types';
+import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { GetKDF } from './types/key-derivation-function';

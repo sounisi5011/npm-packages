@@ -1,9 +1,9 @@
 import { defaultCryptoAlgorithmName } from '../node/cipher';
-import type { BuiltinInspectRecord } from '../types/builtin';
+import type { BuiltinInspectRecord, EncodeStringFn } from '../types/builtin';
 import { createHeader, createSimpleHeader } from './header';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
-import type { EncodeStringFn, InputDataType, IteratorConverter } from './types';
+import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, CreateCompressor } from './types/compress';
 import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm, GetRandomBytesFn } from './types/crypto';
 import type { GetKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './types/key-derivation-function';

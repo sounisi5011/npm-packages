@@ -1,6 +1,6 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
-import type { EncodeStringFn } from '../types';
+import type { EncodeStringFn } from '../../types/builtin';
 import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from '../types/utils';
 
 export function isString(value: unknown): value is string {
