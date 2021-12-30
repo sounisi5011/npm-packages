@@ -18,7 +18,7 @@ import {
     uint8arrayConcat,
 } from './core/utils';
 import { cryptoAlgorithmMap } from './node/cipher';
-import { genCreateCompressor, genDecompressIterable } from './node/compress';
+import { createCompressor, decompressIterable } from './node/compress';
 import { arrayBufferView2NodeBuffer, bufferFrom, inspect } from './node/utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
@@ -65,8 +65,8 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
             },
         };
     },
-    createCompressor: genCreateCompressor({ inspect }),
-    decompressIterable: (algorithmName, source) => genDecompressIterable({ inspect })(source, algorithmName),
+    createCompressor,
+    decompressIterable: (algorithmName, source) => decompressIterable(source, algorithmName),
 };
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
