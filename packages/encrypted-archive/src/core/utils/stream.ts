@@ -179,29 +179,27 @@ export function getIndexContainsRange(
     };
     beginOffset: number;
 } {
-    let beginIndex = 0;
-    let endIndex = 0;
-    let beginOffset = 0;
-
-    let totalLength = 0;
-    for (const [index, arrayLike] of arrayLikeList.entries()) {
+    const { result } = arrayLikeList.reduce(({ totalLength, result }, arrayLike, index) => {
         if (totalLength <= range.begin) {
-            beginIndex = index;
-            beginOffset = range.begin - totalLength;
+            result.index.begin = index;
+            result.beginOffset = range.begin - totalLength;
         }
         if (totalLength < range.end) {
-            endIndex = index;
-        } else {
-            break;
+            result.index.end = index;
         }
-        totalLength += arrayLike.length;
-    }
-
-    return {
-        index: {
-            begin: beginIndex,
-            end: endIndex,
+        return {
+            totalLength: totalLength + arrayLike.length,
+            result,
+        };
+    }, {
+        totalLength: 0,
+        result: {
+            index: {
+                begin: 0,
+                end: 0,
+            },
+            beginOffset: 0,
         },
-        beginOffset,
-    };
+    });
+    return result;
 }
