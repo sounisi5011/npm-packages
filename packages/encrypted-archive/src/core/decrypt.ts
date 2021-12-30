@@ -169,11 +169,10 @@ export function createDecryptorIterator(
     builtin: DecryptBuiltinAPIRecord,
     password: InputDataType,
 ): IteratorConverter {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const convertChunk = (chunk: unknown) => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk));
     return async function* decryptor(source) {
-        const reader = new StreamReader(
-            source,
-            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
-        );
+        const reader = new StreamReader(source, convertChunk);
 
         const {
             compressedCleartextIterable: firstChunkCompressedCleartextIterable,
@@ -183,12 +182,10 @@ export function createDecryptorIterator(
             yield* firstChunkCompressedCleartextIterable;
             let prevDecryptorMetadata = decryptorMetadata;
             while (!(await reader.isEnd())) {
-                const { compressedCleartextIterable, decryptorMetadata: newDecryptorMetadata } = await decryptChunk(
-                    builtin,
-                    password,
-                    reader,
-                    prevDecryptorMetadata,
-                );
+                const {
+                    compressedCleartextIterable,
+                    decryptorMetadata: newDecryptorMetadata,
+                } = await decryptChunk(builtin, password, reader, prevDecryptorMetadata);
                 yield* compressedCleartextIterable;
                 prevDecryptorMetadata = newDecryptorMetadata;
             }
