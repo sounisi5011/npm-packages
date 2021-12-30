@@ -1,4 +1,5 @@
 import { defaultCryptoAlgorithmName } from '../node/cipher';
+import type { BuiltinInspectRecord } from '../types/builtin';
 import { createHeader, createSimpleHeader } from './header';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
@@ -15,7 +16,7 @@ export interface EncryptOptions {
     compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
 }
 
-export interface EncryptBuiltinAPIRecord {
+export interface EncryptBuiltinAPIRecord extends BuiltinInspectRecord {
     encodeString: EncodeStringFn;
     getRandomBytes: GetRandomBytesFn;
     getKDF: GetKDF;
@@ -61,6 +62,7 @@ async function generateKey(
 }
 
 function createHeaderData(
+    builtin: BuiltinInspectRecord,
     { algorithmName, keyResult, nonce, authTag, compressAlgorithmName, ciphertextLength, prevState }: {
         algorithmName: CryptoAlgorithmName;
         keyResult: KeyResult;
@@ -72,7 +74,7 @@ function createHeaderData(
     },
 ): Uint8Array {
     if (!prevState) {
-        return createHeader({
+        return createHeader(builtin, {
             crypto: {
                 algorithmName,
                 nonce,
@@ -89,7 +91,7 @@ function createHeaderData(
     }
 
     const nonceDiff = nonceState.getDiff(prevState.nonce, nonce);
-    return createSimpleHeader({
+    return createSimpleHeader(builtin, {
         crypto: {
             nonceDiff: 'fixedField' in nonceDiff
                 ? { addFixed: nonceDiff.fixedField, resetCounter: nonceDiff.resetInvocationCount }
@@ -100,17 +102,21 @@ function createHeaderData(
     });
 }
 
-async function* encryptChunk(compressedCleartext: Uint8Array, {
-    algorithm,
-    keyResult,
-    compressAlgorithmName,
-    prevState,
-}: {
-    algorithm: CryptoAlgorithmData;
-    keyResult: KeyResult;
-    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
-    prevState: EncryptorState | undefined;
-}): AsyncIterableReturn<Uint8Array, EncryptorState> {
+async function* encryptChunk(
+    builtin: BuiltinInspectRecord,
+    compressedCleartext: Uint8Array,
+    {
+        algorithm,
+        keyResult,
+        compressAlgorithmName,
+        prevState,
+    }: {
+        algorithm: CryptoAlgorithmData;
+        keyResult: KeyResult;
+        compressAlgorithmName: CompressOptions['algorithm'] | undefined;
+        prevState: EncryptorState | undefined;
+    },
+): AsyncIterableReturn<Uint8Array, EncryptorState> {
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */
@@ -129,7 +135,7 @@ async function* encryptChunk(compressedCleartext: Uint8Array, {
      * Generate header data
      * The data contained in the header will be used for decryption.
      */
-    const headerData = createHeaderData({
+    const headerData = createHeaderData(builtin, {
         algorithmName: algorithm.algorithmName,
         keyResult,
         nonce,
@@ -177,7 +183,7 @@ export function createEncryptorIterator(
 
         const uint8ArraySourceIterable = convertIterableValue(
             source,
-            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(chunk)),
+            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
         );
 
         /**
@@ -187,7 +193,7 @@ export function createEncryptorIterator(
 
         let prevState: EncryptorState | undefined;
         for await (const compressedCleartext of compressedSourceIterable) {
-            prevState = yield* encryptChunk(compressedCleartext, {
+            prevState = yield* encryptChunk(builtin, compressedCleartext, {
                 algorithm,
                 keyResult,
                 compressAlgorithmName,

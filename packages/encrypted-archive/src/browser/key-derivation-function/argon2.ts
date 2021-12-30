@@ -15,7 +15,8 @@ import {
     objectFromEntries,
     RequiredExcludeUndefined,
 } from '../../core/types/utils';
-import { ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../../core/utils';
+import { ifFuncThenExec, isNotUndefined, normalizeOptions, passThroughString } from '../../core/utils';
+import type { BuiltinInspectRecord } from '../../types/builtin';
 
 const argon2TypeRecord = {
     argon2d: ArgonType.Argon2d,
@@ -101,9 +102,9 @@ const ARGON2_OUTPUT = {
  */
 const SALT_LEN = 128 / 8;
 
-function validatePositiveInteger(optionName: string, value: unknown): asserts value {
+function validatePositiveInteger(builtin: BuiltinInspectRecord, optionName: string, value: unknown): asserts value {
     const messageSuffix = (
-        `The "${optionName}" option must be of positive integers without 0, but received: ${printObject(value)}`
+        `The "${optionName}" option must be of positive integers without 0, but received: ${builtin.inspect(value)}`
     );
     if (!(Number.isInteger as isInteger)(value)) {
         throw new TypeError(`Invalid type value received for Argon2's option "${optionName}". ${messageSuffix}`);
@@ -208,10 +209,13 @@ function validateBetweenByteLength(
     );
 }
 
-function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm'>): asserts options {
+function validateArgon2Options(
+    builtin: BuiltinInspectRecord,
+    options: Omit<NormalizedArgon2Options, 'algorithm'>,
+): asserts options {
     const memoryOptionName = 'memory';
     for (const [optionName, value] of (Object.entries as objectEntries)(options)) {
-        validatePositiveInteger(optionName, value);
+        validatePositiveInteger(builtin, optionName, value);
         if (optionName === 'iterations') {
             validateBetween(optionName, value, { min: ARGON2_ITERATIONS.MIN, max: ARGON2_ITERATIONS.MAX });
         } else if (optionName === 'parallelism') {
@@ -236,24 +240,27 @@ function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm
 
 type Argon2KDFData = KDFData<NormalizedArgon2Options>;
 
-function normalizeInternalError(error: unknown): never {
-    if (error instanceof Error) {
-        error.message = `Internal error from Argon2: ${error.message}`;
-        throw error;
-    }
-    if (typeof error === 'object' && isPropAccessible(error)) {
-        const { message, code, ...other } = error;
-        if (typeof message === 'string' && typeof code === 'number' && Object.keys(other).length === 0) {
-            throw Object.assign(
-                new Error(`Internal error from Argon2: ${message}`),
-                { code },
-            );
+function normalizeInternalError(builtin: BuiltinInspectRecord) {
+    return (error: unknown): never => {
+        if (error instanceof Error) {
+            error.message = `Internal error from Argon2: ${error.message}`;
+            throw error;
         }
-    }
-    throw new Error(`Internal error from Argon2: ${printObject(error)}`);
+        if (typeof error === 'object' && isPropAccessible(error)) {
+            const { message, code, ...other } = error;
+            if (typeof message === 'string' && typeof code === 'number' && Object.keys(other).length === 0) {
+                throw Object.assign(
+                    new Error(`Internal error from Argon2: ${message}`),
+                    { code },
+                );
+            }
+        }
+        throw new Error(`Internal error from Argon2: ${builtin.inspect(error)}`);
+    };
 }
 
 function createDeriveKeyFunc(
+    builtin: BuiltinInspectRecord,
     type: ArgonType,
     options: Omit<NormalizedArgon2Options, 'algorithm'>,
 ): Argon2KDFData['deriveKey'] {
@@ -280,23 +287,25 @@ function createDeriveKeyFunc(
             type,
         })
             .then(({ hash }) => hash)
-            .catch(normalizeInternalError);
+            .catch(normalizeInternalError(builtin));
     };
 }
 
-export function getArgon2KDF(options: Readonly<Argon2Options>): Argon2KDFData {
-    const { algorithm, ...argon2Options } = normalizeOptions(defaultArgon2Options, options);
-    const foundType = argon2TypeMap.get(algorithm);
-    if (!foundType) {
-        throw new TypeError(
-            `Invalid Argon2 type received: ${printObject(algorithm, { passThroughString: true })}`,
-        );
-    }
-    validateArgon2Options(argon2Options);
+export function createGetArgon2KDF(builtin: BuiltinInspectRecord) {
+    return (options: Readonly<Argon2Options>): Argon2KDFData => {
+        const { algorithm, ...argon2Options } = normalizeOptions(defaultArgon2Options, options);
+        const foundType = argon2TypeMap.get(algorithm);
+        if (!foundType) {
+            throw new TypeError(
+                `Invalid Argon2 type received: ${passThroughString(builtin.inspect, algorithm)}`,
+            );
+        }
+        validateArgon2Options(builtin, argon2Options);
 
-    return {
-        deriveKey: createDeriveKeyFunc(foundType.type, argon2Options),
-        saltLength: SALT_LEN,
-        normalizedOptions: { algorithm, ...argon2Options },
+        return {
+            deriveKey: createDeriveKeyFunc(builtin, foundType.type, argon2Options),
+            saltLength: SALT_LEN,
+            normalizedOptions: { algorithm, ...argon2Options },
+        };
     };
 }

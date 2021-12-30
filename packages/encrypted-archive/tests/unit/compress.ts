@@ -1,11 +1,14 @@
 import * as zlib from 'zlib';
 
 import type { CompressOptions } from '../../src/core/types/compress';
-import { createCompressor, decompressIterable } from '../../src/node/compress';
+import { genCreateCompressor, genDecompressIterable } from '../../src/node/compress';
+import { inspect } from '../../src/node/utils';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 
-describe('createCompressor()', () => {
+const builtin = { inspect };
+
+describe('genCreateCompressor()', () => {
     describe('compress data', () => {
         const data = Buffer.from('Hello World!'.repeat(20));
 
@@ -18,13 +21,13 @@ describe('createCompressor()', () => {
                 ['object options', { algorithm }],
             ])('%s', async (_, options) => {
                 const sourceAsyncIterable = buffer2asyncIterable(data);
-                const compressedIterable = createCompressor(options)
+                const compressedIterable = genCreateCompressor(builtin)(options)
                     .compressIterable(sourceAsyncIterable);
                 const compressedData = await iterable2buffer(compressedIterable);
                 expect(compressedData).toBeLessThanByteSize(data);
             });
             it('reuse compressIterable()', async () => {
-                const { compressIterable } = createCompressor(algorithm);
+                const { compressIterable } = genCreateCompressor(builtin)(algorithm);
 
                 const data1 = await iterable2buffer(compressIterable(buffer2asyncIterable(data)));
                 const data2 = await iterable2buffer(compressIterable(buffer2asyncIterable(data)));
@@ -35,10 +38,10 @@ describe('createCompressor()', () => {
     });
 
     it('unknown algorithm', () => {
-        const algorithm = 'foooooooooooooo';
+        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"gzip" | "brotli"'.
+        const algorithm: CompressOptions['algorithm'] = 'foooooooooooooo';
 
-        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli" | CompressOptions | undefined'.
-        expect(() => createCompressor(algorithm)).toThrowWithMessage(
+        expect(() => genCreateCompressor(builtin)(algorithm)).toThrowWithMessage(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
         );
@@ -53,7 +56,7 @@ describe('createCompressor()', () => {
                 ['info=false', { info: false }],
                 ['info=undefined', { info: undefined }],
             ])('%s', (_, options) => {
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: info`,
                 );
@@ -64,7 +67,7 @@ describe('createCompressor()', () => {
                 ['flush=undefined', { flush: undefined }],
                 // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: flush`,
                 );
@@ -75,7 +78,7 @@ describe('createCompressor()', () => {
                 ['finishFlush=undefined', { finishFlush: undefined }],
                 // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: finishFlush`,
                 );
@@ -85,7 +88,7 @@ describe('createCompressor()', () => {
                     flush: zlib.constants.Z_SYNC_FLUSH,
                     finishFlush: undefined,
                 };
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: flush, finishFlush`,
                 );
@@ -96,7 +99,7 @@ describe('createCompressor()', () => {
                     flush: zlib.constants.Z_SYNC_FLUSH,
                     finishFlush: undefined,
                 };
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: flush, finishFlush, info`,
                 );
@@ -114,7 +117,7 @@ describe('createCompressor()', () => {
                     info: undefined,
                     maxOutputLength: undefined,
                 };
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following gzip compress options are not allowed: flush, finishFlush, dictionary, info, maxOutputLength`,
                 );
@@ -129,7 +132,7 @@ describe('createCompressor()', () => {
                 ['flush=0', { flush: 0 }],
                 ['flush=undefined', { flush: undefined }],
             ])('%s', (_, options) => {
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following brotli compress options are not allowed: flush`,
                 );
@@ -140,7 +143,7 @@ describe('createCompressor()', () => {
                 ['finishFlush=undefined', { finishFlush: undefined }],
                 // eslint-disable-next-line jest/no-identical-title
             ])('%s', (_, options) => {
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following brotli compress options are not allowed: finishFlush`,
                 );
@@ -150,7 +153,7 @@ describe('createCompressor()', () => {
                     flush: zlib.constants.BROTLI_OPERATION_FLUSH,
                     finishFlush: undefined,
                 };
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following brotli compress options are not allowed: flush, finishFlush`,
                 );
@@ -163,7 +166,7 @@ describe('createCompressor()', () => {
                     params: undefined,
                     maxOutputLength: undefined,
                 };
-                expect(() => createCompressor({ ...options, algorithm })).toThrowWithMessage(
+                expect(() => genCreateCompressor(builtin)({ ...options, algorithm })).toThrowWithMessage(
                     Error,
                     `The following brotli compress options are not allowed: flush, finishFlush, maxOutputLength`,
                 );
@@ -172,7 +175,7 @@ describe('createCompressor()', () => {
     });
 });
 
-describe('decompressIterable()', () => {
+describe('genDecompressIterable()', () => {
     describe('decompress data', () => {
         const data = Buffer.from('Hello World!'.repeat(20));
         it.each<CompressOptions['algorithm']>([
@@ -180,23 +183,24 @@ describe('decompressIterable()', () => {
             'brotli',
         ])('%s', async algorithm => {
             const sourceAsyncIterable = buffer2asyncIterable(data);
-            const compressedIterable = createCompressor(algorithm)
+            const compressedIterable = genCreateCompressor(builtin)(algorithm)
                 .compressIterable(sourceAsyncIterable);
-            const decompressedIterable = decompressIterable(compressedIterable, algorithm);
+            const decompressedIterable = genDecompressIterable(builtin)(compressedIterable, algorithm);
             const decompressedData = await iterable2buffer(decompressedIterable);
             expect(decompressedData.equals(data)).toBeTrue();
         });
     });
 
     it('unknown algorithm', async () => {
-        const algorithm = 'foooooooooooooo';
+        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"gzip" | "brotli"'.
+        const algorithm: CompressOptions['algorithm'] = 'foooooooooooooo';
         const emptyIterable = buffer2asyncIterable(Buffer.from(''));
 
-        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli"'.
-        await expect(iterable2buffer(decompressIterable(emptyIterable, algorithm))).rejects.toThrowWithMessage(
-            TypeError,
-            `Unknown compress algorithm was received: ${algorithm}`,
-        );
+        await expect(iterable2buffer(genDecompressIterable(builtin)(emptyIterable, algorithm))).rejects
+            .toThrowWithMessage(
+                TypeError,
+                `Unknown compress algorithm was received: ${algorithm}`,
+            );
     });
 
     describe('decompress with options', () => {
@@ -210,9 +214,9 @@ describe('decompressIterable()', () => {
                 strategy: [undefined, 0, 1, 2, 3, 4],
             }))('{ %s }', async (_, options) => {
                 const sourceAsyncIterable = buffer2asyncIterable(data);
-                const compressedIterable = createCompressor({ ...options, algorithm: 'gzip' })
+                const compressedIterable = genCreateCompressor(builtin)({ ...options, algorithm: 'gzip' })
                     .compressIterable(sourceAsyncIterable);
-                const decompressedIterable = decompressIterable(compressedIterable, 'gzip');
+                const decompressedIterable = genDecompressIterable(builtin)(compressedIterable, 'gzip');
                 const decompressedData = await iterable2buffer(decompressedIterable);
                 expect(decompressedData.equals(data)).toBeTrue();
             });

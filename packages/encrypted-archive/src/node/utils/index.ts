@@ -1,3 +1,9 @@
+import { inspect as nodeInspect } from 'util';
+
+import type { InspectFn } from '../../types/builtin';
+
+export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
+
 /**
  * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L108
  */

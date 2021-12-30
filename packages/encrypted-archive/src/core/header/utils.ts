@@ -75,18 +75,30 @@ export function validateDataLength(
     }
 }
 
-export function createHeaderDataParser<T>(
-    { name, longname, genHeaderData, autoSeek: defaultAutoSeek }: {
-        name: string;
-        longname: string;
-        genHeaderData: (headerDataBytes: Uint8Array) => T;
-        autoSeek?: true | undefined;
-    },
+interface CreateHeaderDataParserOptions {
+    name: string;
+    longname: string;
+    autoSeek?: true | undefined;
+}
+export interface HeaderDataParserOptions {
+    headerByteLength: number;
+    offset?: number | undefined;
+    autoSeek?: boolean | undefined;
+}
+type HeaderDataParserResult<THeaderData> = Promise<{ headerData: THeaderData; endOffset: number }>;
+
+export function createHeaderDataParserWithBuiltin<TBuiltin, THeaderData>(
+    { name, longname, genHeaderData, autoSeek: defaultAutoSeek }:
+        & CreateHeaderDataParserOptions
+        & {
+            genHeaderData: (builtin: TBuiltin, headerDataBytes: Uint8Array) => THeaderData;
+        },
 ): (
+    builtin: TBuiltin,
     reader: StreamReaderInterface,
-    opts: { headerByteLength: number; offset?: number | undefined; autoSeek?: boolean | undefined },
-) => Promise<{ headerData: T; endOffset: number }> {
-    return async (reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
+    opts: HeaderDataParserOptions,
+) => HeaderDataParserResult<THeaderData> {
+    return async (builtin, reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
         const headerDataBytes = await reader.read(headerByteLength, offset);
         validateDataLength({
             requiredLength: headerByteLength,
@@ -98,8 +110,25 @@ export function createHeaderDataParser<T>(
         const endOffset = offset + headerDataBytes.byteLength;
         if (autoSeek) await reader.seek(endOffset);
 
-        const headerData = genHeaderData(headerDataBytes);
+        const headerData = genHeaderData(builtin, headerDataBytes);
 
         return { headerData, endOffset };
     };
+}
+
+export function createHeaderDataParser<THeaderData>(
+    { genHeaderData, ...args }:
+        & CreateHeaderDataParserOptions
+        & {
+            genHeaderData: (headerDataBytes: Uint8Array) => THeaderData;
+        },
+): (
+    reader: StreamReaderInterface,
+    opts: HeaderDataParserOptions,
+) => HeaderDataParserResult<THeaderData> {
+    const parser = createHeaderDataParserWithBuiltin({
+        ...args,
+        genHeaderData: (_, headerDataBytes) => genHeaderData(headerDataBytes),
+    });
+    return parser.bind(null, null);
 }

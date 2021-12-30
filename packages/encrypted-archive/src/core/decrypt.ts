@@ -1,3 +1,4 @@
+import type { BuiltinInspectRecord } from '../types/builtin';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -25,7 +26,7 @@ interface DecryptAlgorithmAndKeyAPIRecord {
     getCryptoAlgorithm: GetCryptoAlgorithm;
 }
 
-export interface DecryptBuiltinAPIRecord extends DecryptAlgorithmAndKeyAPIRecord {
+export interface DecryptBuiltinAPIRecord extends DecryptAlgorithmAndKeyAPIRecord, BuiltinInspectRecord {
     decompressIterable: DecompressIterable;
 }
 
@@ -78,7 +79,7 @@ function createNonceFromDiff(
 }
 
 async function parseHeader(
-    builtin: DecryptAlgorithmAndKeyAPIRecord,
+    builtin: DecryptAlgorithmAndKeyAPIRecord & BuiltinInspectRecord,
     password: InputDataType,
     reader: StreamReader,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
@@ -93,7 +94,7 @@ async function parseHeader(
          * Parse header
          */
         const { dataByteLength: headerByteLength } = await parseHeaderLength(reader);
-        const { headerData } = await parseHeaderData(reader, { headerByteLength });
+        const { headerData } = await parseHeaderData(builtin, reader, { headerByteLength });
 
         /**
          * Read algorithm and generate key
@@ -124,7 +125,7 @@ async function parseHeader(
 }
 
 async function decryptChunk(
-    builtin: DecryptAlgorithmAndKeyAPIRecord,
+    builtin: DecryptAlgorithmAndKeyAPIRecord & BuiltinInspectRecord,
     password: InputDataType,
     reader: StreamReader,
     prevDecryptorMetadata?: DecryptorMetadata,
@@ -169,7 +170,10 @@ export function createDecryptorIterator(
     password: InputDataType,
 ): IteratorConverter {
     return async function* decryptor(source) {
-        const reader = new StreamReader(source, chunk => uint8arrayFrom(builtin.encodeString, validateChunk(chunk)));
+        const reader = new StreamReader(
+            source,
+            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
+        );
 
         const {
             compressedCleartextIterable: firstChunkCompressedCleartextIterable,

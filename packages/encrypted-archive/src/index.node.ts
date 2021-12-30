@@ -3,7 +3,7 @@ import type * as stream from 'stream';
 
 import { transformFrom } from '@sounisi5011/stream-transform-from';
 
-import { getKDF } from './browser/key-derivation-function';
+import { createGetKDF } from './browser/key-derivation-function';
 import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './core/decrypt';
 import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './core/encrypt';
 import { validateChunk } from './core/stream';
@@ -18,13 +18,14 @@ import {
     uint8arrayConcat,
 } from './core/utils';
 import { cryptoAlgorithmMap } from './node/cipher';
-import { createCompressor, decompressIterable } from './node/compress';
-import { arrayBufferView2NodeBuffer, bufferFrom } from './node/utils';
+import { genCreateCompressor, genDecompressIterable } from './node/compress';
+import { arrayBufferView2NodeBuffer, bufferFrom, inspect } from './node/utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
+    inspect,
     encodeString: str => Buffer.from(str, 'utf8'),
     getRandomBytes: async size => randomBytes(size),
-    getKDF,
+    getKDF: createGetKDF({ inspect }),
     getCryptoAlgorithm(algorithmName) {
         const algorithm = cryptoAlgorithmMap.get(algorithmName);
         if (!algorithm) return undefined;
@@ -64,8 +65,8 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
             },
         };
     },
-    createCompressor,
-    decompressIterable: (algorithmName, source) => decompressIterable(source, algorithmName),
+    createCompressor: genCreateCompressor({ inspect }),
+    decompressIterable: (algorithmName, source) => genDecompressIterable({ inspect })(source, algorithmName),
 };
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
@@ -93,7 +94,7 @@ const createTransformStream = (
         (source): AsyncIterable<Buffer> => {
             const inputIterable = convertIterableValue(
                 source,
-                ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding),
+                ({ chunk, encoding }) => bufferFrom(validateChunk({ inspect }, chunk), encoding),
             );
             const transformedIterable = transformFn(inputIterable);
             return convertIterableValue(transformedIterable, arrayBufferView2NodeBuffer);

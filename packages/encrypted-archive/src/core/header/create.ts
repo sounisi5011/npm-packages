@@ -1,5 +1,6 @@
 import { encode as varintEncode } from 'varint';
 
+import type { BuiltinInspectRecord } from '../../types/builtin';
 import type { CompressOptions } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
 import type { NormalizedKeyDerivationOptions } from '../types/key-derivation-function';
@@ -42,10 +43,10 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
     ciphertextLength: number;
 }
 
-export function createHeader(data: HeaderDataWithCiphertextLength): Uint8Array {
+export function createHeader(builtin: BuiltinInspectRecord, data: HeaderDataWithCiphertextLength): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
-    const headerDataBinary = createProtobufHeader(headerData)
+    const headerDataBinary = createProtobufHeader(builtin, headerData)
         .serializeBinary();
 
     return uint8arrayConcat(
@@ -56,10 +57,13 @@ export function createHeader(data: HeaderDataWithCiphertextLength): Uint8Array {
     );
 }
 
-export function createSimpleHeader(data: SimpleHeaderDataWithCiphertextLength): Uint8Array {
+export function createSimpleHeader(
+    builtin: BuiltinInspectRecord,
+    data: SimpleHeaderDataWithCiphertextLength,
+): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
-    const simpleHeaderDataBinary = createProtobufSimpleHeader(headerData)
+    const simpleHeaderDataBinary = createProtobufSimpleHeader(builtin, headerData)
         .serializeBinary();
 
     return uint8arrayConcat(

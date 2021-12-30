@@ -1,3 +1,4 @@
+import type { BuiltinInspectRecord } from '../../types/builtin';
 import type { AsyncIterableReturn } from '../types/utils';
 import { number2hex } from '../utils';
 import type { StreamReaderInterface } from '../utils/stream';
@@ -5,7 +6,13 @@ import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 import { Header, SimpleHeader } from './protocol-buffers/header_pb';
-import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
+import {
+    createHeaderDataParser,
+    createHeaderDataParserWithBuiltin,
+    parseDataLength,
+    readVarint,
+    validateDataLength,
+} from './utils';
 
 export async function validateCID(reader: StreamReaderInterface): Promise<void> {
     const result = await readVarint(
@@ -26,10 +33,11 @@ export const parseHeaderLength = parseDataLength({ name: 'header', autoSeek: tru
 
 export const parseSimpleHeaderLength = parseDataLength({ name: 'simple header', autoSeek: true });
 
-export const parseHeaderData = createHeaderDataParser({
+export const parseHeaderData = createHeaderDataParserWithBuiltin({
     name: 'header',
     longname: 'header data',
-    genHeaderData: headerDataBytes => parseProtobufHeader(Header.deserializeBinary(headerDataBytes)),
+    genHeaderData: (builtin: BuiltinInspectRecord, headerDataBytes) =>
+        parseProtobufHeader(builtin, Header.deserializeBinary(headerDataBytes)),
     autoSeek: true,
 });
 

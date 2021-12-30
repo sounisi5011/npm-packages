@@ -1,4 +1,4 @@
-import { isOneArray, printObject, uint8arrayConcat } from '.';
+import { isOneArray, uint8arrayConcat } from '.';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from '../types/utils';
 
 export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
@@ -20,11 +20,7 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
         private readonly convertChunk = (chunk: unknown): Uint8Array => {
             if (chunk instanceof Uint8Array) return chunk;
-            throw new TypeError(
-                `Invalid type chunk received.`
-                    + ` Each chunk must be an instance of Uint8Array.`
-                    + ` Received: ${printObject(chunk)}`,
-            );
+            throw new TypeError('Invalid type chunk received. Each chunk must be an instance of Uint8Array.');
         },
     ) {
     }

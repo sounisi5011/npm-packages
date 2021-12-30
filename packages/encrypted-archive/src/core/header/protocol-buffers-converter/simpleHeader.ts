@@ -1,3 +1,4 @@
+import type { BuiltinInspectRecord } from '../../../types/builtin';
 import type { SimpleHeaderData } from '../create';
 import { SimpleHeader } from '../protocol-buffers/header_pb';
 import { validateBytesField, validateNumberFieldInRange, validateNumberOptionInRange } from './utils';
@@ -5,13 +6,17 @@ import { validateBytesField, validateNumberFieldInRange, validateNumberOptionInR
 const dataName = 'SimpleHeader data';
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
-export function createProtobufSimpleHeader(simpleHeaderData: SimpleHeaderData): SimpleHeader {
+export function createProtobufSimpleHeader(
+    builtin: BuiltinInspectRecord,
+    simpleHeaderData: SimpleHeaderData,
+): SimpleHeader {
     const header = new SimpleHeader()
         .setCryptoAuthTag(simpleHeaderData.crypto.authTag);
 
     const { nonceDiff } = simpleHeaderData.crypto;
     const validateNonceInput = (paramName: string, value: bigint, min: number): bigint =>
         validateNumberOptionInRange(
+            builtin,
             value,
             { min, max: MAX_UINT64 },
             { paramName: `simpleHeaderData.crypto.nonceDiff.${paramName}` },

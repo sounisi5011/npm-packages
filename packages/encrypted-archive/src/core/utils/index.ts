@@ -1,5 +1,3 @@
-import { inspect } from 'util';
-
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
 import type { EncodeStringFn } from '../types';
@@ -169,8 +167,8 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
         .join('');
 }
 
-export function printObject(value: unknown, opts?: { passThroughString?: boolean | undefined }): string {
-    return (opts?.passThroughString && typeof value === 'string') ? value : inspect(value, { breakLength: Infinity });
+export function passThroughString<T, U>(fn: (value: T) => U, value: T): string | U {
+    return typeof value === 'string' ? value : fn(value);
 }
 
 interface CondResult<TArg, TPrevResult> {
