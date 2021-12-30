@@ -1,7 +1,6 @@
 import type * as stream from 'stream';
 
-import type { CompressOptions, CreateCompressor } from '../../core/types/compress';
-import type { AsyncIterableReturn } from '../../core/types/utils';
+import type { CreateCompressor, DecompressIterable } from '../../core/types/compress';
 import { fixNodePrimordialsErrorStackTrace, passThroughString } from '../../core/utils';
 import { inspect } from '../utils';
 import { writeFromIterableToStream } from '../utils/stream';
@@ -50,12 +49,8 @@ const createCompressor: CreateCompressor = options => {
         },
     };
 };
-export { createCompressor };
 
-export async function* decompressIterable(
-    data: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
-    algorithm: CompressOptions['algorithm'],
-): AsyncIterableReturn<Buffer, void> {
+const decompressIterable: DecompressIterable = async function*(algorithm, data) {
     const entry = compressorTable[algorithm];
     if (!entry) {
         throw new TypeError(
@@ -69,4 +64,6 @@ export async function* decompressIterable(
     } catch (error) {
         fixNodePrimordialsErrorStackTrace(error);
     }
-}
+};
+
+export { createCompressor, decompressIterable };

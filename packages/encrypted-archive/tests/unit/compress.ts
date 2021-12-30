@@ -182,7 +182,7 @@ describe('decompressIterable()', () => {
             const sourceAsyncIterable = buffer2asyncIterable(data);
             const compressedIterable = createCompressor(algorithm)
                 .compressIterable(sourceAsyncIterable);
-            const decompressedIterable = decompressIterable(compressedIterable, algorithm);
+            const decompressedIterable = decompressIterable(algorithm, compressedIterable);
             const decompressedData = await iterable2buffer(decompressedIterable);
             expect(decompressedData.equals(data)).toBeTrue();
         });
@@ -193,7 +193,7 @@ describe('decompressIterable()', () => {
         const algorithm: CompressOptions['algorithm'] = 'foooooooooooooo';
         const emptyIterable = buffer2asyncIterable(Buffer.from(''));
 
-        await expect(iterable2buffer(decompressIterable(emptyIterable, algorithm))).rejects.toThrowWithMessage(
+        await expect(iterable2buffer(decompressIterable(algorithm, emptyIterable))).rejects.toThrowWithMessage(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
         );
@@ -212,7 +212,7 @@ describe('decompressIterable()', () => {
                 const sourceAsyncIterable = buffer2asyncIterable(data);
                 const compressedIterable = createCompressor({ ...options, algorithm: 'gzip' })
                     .compressIterable(sourceAsyncIterable);
-                const decompressedIterable = decompressIterable(compressedIterable, 'gzip');
+                const decompressedIterable = decompressIterable('gzip', compressedIterable);
                 const decompressedData = await iterable2buffer(decompressedIterable);
                 expect(decompressedData.equals(data)).toBeTrue();
             });

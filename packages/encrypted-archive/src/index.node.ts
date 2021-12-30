@@ -66,7 +66,7 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
         };
     },
     createCompressor,
-    decompressIterable: (algorithmName, source) => decompressIterable(source, algorithmName),
+    decompressIterable,
 };
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
