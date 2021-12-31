@@ -9,7 +9,7 @@ import {
     createSimpleHeader,
     HeaderData,
     HeaderDataWithCiphertextLength,
-    parseCiphertextIterable,
+    parseCiphertext,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -21,7 +21,7 @@ import {
 } from '../../src/core/header';
 import { cidByteList } from '../../src/core/header/content-identifier';
 import { inspect } from '../../src/node/utils';
-import { iterable2buffer, padStartArray } from '../helpers';
+import { padStartArray } from '../helpers';
 import { DummyStreamReader } from '../helpers/stream';
 
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
@@ -868,8 +868,8 @@ describe('parseCiphertextLength()', () => {
     });
 });
 
-describe('parseCiphertextIterable()', () => {
-    type Optsions = Parameters<typeof parseCiphertextIterable>[1];
+describe('parseCiphertext()', () => {
+    type Optsions = Parameters<typeof parseCiphertext>[1];
     describe('larger data than needed byte length', () => {
         const data = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
         const ciphertextByteLength = 6;
@@ -891,8 +891,8 @@ describe('parseCiphertextIterable()', () => {
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextIterable(reader, { ciphertextByteLength: 6, ...opts });
-            await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
+            const result = parseCiphertext(reader, { ciphertextByteLength: 6, ...opts });
+            await expect(result).resolves.toBytesEqual(expected);
         });
     });
     describe('same size data as needed byte length', () => {
@@ -915,8 +915,8 @@ describe('parseCiphertextIterable()', () => {
             ],
         ])('%s', async (_, opts, expected) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextIterable(reader, opts);
-            await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
+            const result = parseCiphertext(reader, opts);
+            await expect(result).resolves.toBytesEqual(expected);
         });
     });
     describe('smaller data than required byte length', () => {
@@ -945,8 +945,8 @@ describe('parseCiphertextIterable()', () => {
             ],
         ])('%s', async (_, opts, expectedErrorMessage) => {
             const reader = new DummyStreamReader(data);
-            const resultIterable = parseCiphertextIterable(reader, opts);
-            await expect(iterable2buffer(resultIterable)).rejects.toThrowWithMessage(
+            const result = parseCiphertext(reader, opts);
+            await expect(result).rejects.toThrowWithMessage(
                 Error,
                 expectedErrorMessage,
             );
