@@ -51,14 +51,15 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
 
                 return { authTag, ciphertext };
             },
-            async *decrypt({ key, nonce, authTag, ciphertext }) {
+            async decrypt({ key, nonce, authTag, ciphertext }) {
                 try {
                     const decipher = algorithm.createDecipher(key, nonce);
                     decipher.setAuthTag(authTag);
-                    for await (const ciphertextChunk of ciphertext) {
-                        yield decipher.update(ciphertextChunk);
-                    }
-                    yield decipher.final();
+                    const cleartext = uint8arrayConcat(
+                        decipher.update(ciphertext),
+                        decipher.final(),
+                    );
+                    return { cleartext };
                 } catch (error) {
                     fixNodePrimordialsErrorInstance(error);
                 }

@@ -1,5 +1,4 @@
 import type { BuiltinInspectRecord } from '../../types/builtin';
-import type { AsyncIterableReturn } from '../types/utils';
 import { number2hex } from '../utils';
 import type { StreamReaderInterface } from '../utils/stream';
 import { cidNumber } from './content-identifier';
@@ -50,19 +49,19 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
-export async function* parseCiphertextIterable<T extends Uint8Array>(
+export async function parseCiphertext<T extends Uint8Array>(
     reader: StreamReaderInterface<T>,
     { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number | undefined },
-): AsyncIterableReturn<T, void> {
-    for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {
-        if (data) {
-            yield data;
-        } else {
-            validateDataLength({
-                requiredLength: ciphertextByteLength,
-                received: readedSize,
-                name: 'ciphertext',
-            });
-        }
-    }
+): Promise<T> {
+    const ciphertextBytes = await reader.read(ciphertextByteLength, offset);
+    validateDataLength({
+        requiredLength: ciphertextByteLength,
+        received: ciphertextBytes,
+        name: 'ciphertext',
+    });
+
+    const endOffset = offset + ciphertextBytes.byteLength;
+    await reader.seek(endOffset);
+
+    return ciphertextBytes;
 }

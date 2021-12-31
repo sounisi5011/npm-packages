@@ -20,8 +20,10 @@ export interface CryptoAlgorithmData {
             key: Uint8Array;
             nonce: Uint8Array;
             authTag: Uint8Array;
-            ciphertext: Iterable<Uint8Array> | AsyncIterable<Uint8Array>;
+            ciphertext: Uint8Array;
         },
-    ) => AsyncIterable<Uint8Array>;
+    ) => Promise<{
+        cleartext: Uint8Array;
+    }>;
 }
 export type GetCryptoAlgorithm = (algorithmName: CryptoAlgorithmName) => CryptoAlgorithmData | undefined;

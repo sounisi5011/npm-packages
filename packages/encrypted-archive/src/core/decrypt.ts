@@ -1,7 +1,7 @@
 import type { BuiltinInspectRecord, EncodeStringFn } from '../types/builtin';
 import {
     HeaderData,
-    parseCiphertextIterable,
+    parseCiphertext,
     parseCiphertextLength,
     parseHeaderData,
     parseHeaderLength,
@@ -16,7 +16,6 @@ import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { GetKDF } from './types/key-derivation-function';
-import type { AsyncIterableReturn } from './types/utils';
 import { uint8arrayFrom } from './utils';
 import { StreamReader } from './utils/stream';
 
@@ -130,7 +129,7 @@ async function decryptChunk(
     reader: StreamReader,
     prevDecryptorMetadata?: DecryptorMetadata,
 ): Promise<{
-    compressedCleartextIterable: AsyncIterableReturn<Uint8Array, void>;
+    compressedCleartext: Uint8Array;
     decryptorMetadata: DecryptorMetadata;
 }> {
     /**
@@ -147,20 +146,20 @@ async function decryptChunk(
      * Read ciphertext
      */
     const { dataByteLength: ciphertextByteLength } = await parseCiphertextLength(reader);
-    const ciphertextDataIterable = parseCiphertextIterable(reader, { ciphertextByteLength });
+    const ciphertext = await parseCiphertext(reader, { ciphertextByteLength });
 
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartextIterable = decryptorMetadata.algorithm.decrypt({
+    const { cleartext: compressedCleartext } = await decryptorMetadata.algorithm.decrypt({
         key: decryptorMetadata.key,
         nonce: decryptorMetadata.nonce,
         authTag: headerData.crypto.authTag,
-        ciphertext: ciphertextDataIterable,
+        ciphertext,
     });
 
     return {
-        compressedCleartextIterable,
+        compressedCleartext,
         decryptorMetadata,
     };
 }
@@ -175,18 +174,18 @@ export function createDecryptorIterator(
         const reader = new StreamReader(source, convertChunk);
 
         const {
-            compressedCleartextIterable: firstChunkCompressedCleartextIterable,
+            compressedCleartext: firstChunkCompressedCleartext,
             decryptorMetadata,
         } = await decryptChunk(builtin, password, reader);
         const compressedCleartextIterable = async function*() {
-            yield* firstChunkCompressedCleartextIterable;
+            yield firstChunkCompressedCleartext;
             let prevDecryptorMetadata = decryptorMetadata;
             while (!(await reader.isEnd())) {
                 const {
-                    compressedCleartextIterable,
+                    compressedCleartext,
                     decryptorMetadata: newDecryptorMetadata,
                 } = await decryptChunk(builtin, password, reader, prevDecryptorMetadata);
-                yield* compressedCleartextIterable;
+                yield compressedCleartext;
                 prevDecryptorMetadata = newDecryptorMetadata;
             }
         }();
