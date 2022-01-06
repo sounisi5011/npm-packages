@@ -30,11 +30,14 @@ jobs:
         # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
         # https://stackoverflow.com/a/59352240/4907315
         # https://docs.github.com/ja/actions/learn-github-actions/workflow-commands-for-github-actions
+        # https://qiita.com/ryo0301/items/de8ce43fe61ede66f80a
+        # https://stedolan.github.io/jq/manual/v1.6/#keys,keys_unsorted
+        # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
         run: |
           readonly DATE_FORMAT='+%Y/%m/%d %T %Z'
 
           RATE_LIMIT_JSON="$(gh api 'rate_limit')"
-          for type in 'core' 'search' 'graphql' 'integration_manifest' 'source_import' 'code_scanning_upload' 'actions_runner_registration' 'scim' ; do
+          echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
             echo '::group::' "${type}"
             echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
             echo "::notice::Reset time is $(date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}")"
