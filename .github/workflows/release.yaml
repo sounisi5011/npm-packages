@@ -30,7 +30,7 @@ jobs:
           readonly needs_remaining="$((submodules_count * 4))"
 
           echo '::group::RATE_LIMIT_JSON'
-          echo "${RATE_LIMIT_JSON}"
+          echo "${RATE_LIMIT_JSON}" | jq
           echo '::endgroup::'
           echo '::group::RATE_LIMIT_JSON_ARRAY'
           echo "${RATE_LIMIT_JSON_ARRAY}"
