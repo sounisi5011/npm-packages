@@ -22,11 +22,12 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUBMODULES_JSON: ${{ steps.interrogate.outputs.result }}
         run: |
           readonly RATE_LIMIT_JSON="$(gh api 'rate_limit')"
           readonly RATE_LIMIT_JSON_ARRAY="$(echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]')"
           readonly RATE_LIMIT_REMAINING="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.remaining) | min')"
-          readonly submodules_count="$(echo '${{ steps.interrogate.outputs.result }}' | jq -r '. | length')"
+          readonly submodules_count="$(echo "${SUBMODULES_JSON}" | jq -r '. | length')"
           readonly needs_remaining="$((submodules_count * 4))"
 
           echo '::group::RATE_LIMIT_JSON'
