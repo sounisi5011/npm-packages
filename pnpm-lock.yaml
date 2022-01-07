@@ -113,7 +113,7 @@ importers:
       '@types/node': 12.20.41
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
-      '@types/write-file-atomic': 3.0.2
+      '@types/write-file-atomic': 3.0.3
       execa: 5.1.1
       find-process: ^1.4.4
       jest: 27.4.5
@@ -134,7 +134,7 @@ importers:
       '@types/node': 12.20.41
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
-      '@types/write-file-atomic': 3.0.2
+      '@types/write-file-atomic': 3.0.3
       execa: 5.1.1
       jest: 27.4.5
       readline-transform: 1.0.0
@@ -1448,8 +1448,8 @@ packages:
       '@types/node': 17.0.0
     dev: true
 
-  /@types/write-file-atomic/3.0.2:
-    resolution: {integrity: sha512-dTP8L3SaqbcmQEbeDcNDnv4vUXB7di125C2Ws5w1UhPIgC4hfa54aOxEHOSUkdTSWNJ4clpGLbN9LHX4qaA2rg==}
+  /@types/write-file-atomic/3.0.3:
+    resolution: {integrity: sha512-RfbL28ev+HeIcQyl8TDU5pxHdDQrKyuKHXfz2bKFJn4/IFa34SGDT1DDXYsIf9s/KuW6zGBR+yZoe8pAlvMPXg==}
     dependencies:
       '@types/node': 17.0.0
     dev: true
