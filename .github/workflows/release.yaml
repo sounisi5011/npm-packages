@@ -17,6 +17,35 @@ jobs:
         with:
           ignore-private: true
           only-changed-since: latest release
+      - name: Check GitHub API rate limit
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUBMODULES_JSON: ${{ steps.interrogate.outputs.result }}
+        run: |
+          readonly RATE_LIMIT_JSON="$(gh api 'rate_limit')"
+          readonly RATE_LIMIT_JSON_ARRAY="$(echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]')"
+          readonly RATE_LIMIT_REMAINING="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.remaining) | min')"
+          readonly submodules_count="$(echo "${SUBMODULES_JSON}" | jq -r '. | length')"
+          readonly needs_remaining="$((submodules_count * 4))"
+
+          echo '::group::RATE_LIMIT_JSON'
+          echo "${RATE_LIMIT_JSON}" | jq
+          echo '::endgroup::'
+          echo '::group::RATE_LIMIT_JSON_ARRAY'
+          echo "${RATE_LIMIT_JSON_ARRAY}"
+          echo '::endgroup::'
+          echo '::group::debug'
+          echo RATE_LIMIT_REMAINING ":${RATE_LIMIT_REMAINING};"
+          echo submodules_count ":${submodules_count};"
+          echo needs_remaining ":${needs_remaining};"
+          echo '::endgroup::'
+
+          if [ "${RATE_LIMIT_REMAINING}" -lt "${needs_remaining}" ]; then
+            readonly RATE_LIMIT_RESET="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.reset) | max')"
+            echo "::error::Rate limit is approaching. Requires ${needs_remaining}, but remainder is ${RATE_LIMIT_REMAINING}. Please wait until $(date -ud "@${RATE_LIMIT_RESET}" '+%Y/%m/%d %T %Z')"
+            exit 1
+          fi
   release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder
