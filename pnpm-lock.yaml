@@ -65,7 +65,7 @@ importers:
       '@sounisi5011/run-if-supported': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/jest': 27.0.3
-      '@types/node': 16.11.14
+      '@types/node': 16.11.19
       '@types/validate-npm-package-name': 3.0.3
       '@vercel/ncc': 0.33.1
       cross-env: 7.0.3
@@ -93,7 +93,7 @@ importers:
       '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/jest': 27.0.3
-      '@types/node': 16.11.14
+      '@types/node': 16.11.19
       '@types/validate-npm-package-name': 3.0.3
       '@vercel/ncc': 0.33.1
       cross-env: 7.0.3
@@ -1398,8 +1398,8 @@ packages:
     resolution: {integrity: sha512-f6xOqucbDirG7LOzedpvzjP3UTmHttRou3Mosx3vL9wr9AIQGhcPgVnqa8ihpZYnxyM1rxeNCvTyukPKZtq10Q==}
     dev: true
 
-  /@types/node/16.11.14:
-    resolution: {integrity: sha512-mK6BKLpL0bG6v2CxHbm0ed6RcZrAtTHBTd/ZpnlVPVa3HkumsqLE4BC4u6TQ8D7pnrRbOU0am6epuALs+Ncnzw==}
+  /@types/node/16.11.19:
+    resolution: {integrity: sha512-BPAcfDPoHlRQNKktbsbnpACGdypPFBuX4xQlsWDE7B8XXcfII+SpOLay3/qZmCLb39kV5S1RTYwXdkx2lwLYng==}
     dev: true
 
   /@types/node/17.0.0:
