@@ -28,7 +28,7 @@ jobs:
           readonly RATE_LIMIT_JSON_ARRAY="$(echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]')"
           readonly RATE_LIMIT_REMAINING="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.remaining) | min')"
           readonly submodules_count="$(echo "${SUBMODULES_JSON}" | jq -r '. | length')"
-          readonly needs_remaining="$((submodules_count * 4))"
+          readonly needs_remaining="$((submodules_count * 101))"
 
           echo '::group::RATE_LIMIT_JSON'
           echo "${RATE_LIMIT_JSON}" | jq
