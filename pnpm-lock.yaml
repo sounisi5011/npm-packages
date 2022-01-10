@@ -171,7 +171,7 @@ importers:
       command-join: ^3.0.0
       cross-spawn: ^7.0.3
       execa: 5.1.1
-      is-plain-obj: 3.0.0
+      is-plain-obj: 4.0.0
       jest: 27.4.7
       npm-install-checks: ^4.0.0
       ow: ^0.28.0
@@ -196,7 +196,7 @@ importers:
       '@types/node': 12.20.41
       '@types/parse-json': 4.0.0
       execa: 5.1.1
-      is-plain-obj: 3.0.0
+      is-plain-obj: 4.0.0
       jest: 27.4.7
       ts-jest: 27.1.2_9364f2ad0b7b67f00a4d081c662c6871
       type-fest: 2.9.0
@@ -4152,9 +4152,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /is-plain-obj/3.0.0:
-    resolution: {integrity: sha512-gwsOE28k+23GP1B6vFl1oVh/WOzmawBrKwo5Ev6wMKzPkaXaCDIQKzLnvsA42DRlbVTWorkgTKIviAKCWkfUwA==}
-    engines: {node: '>=10'}
+  /is-plain-obj/4.0.0:
+    resolution: {integrity: sha512-NXRbBtUdBioI73y/HmOhogw/U5msYPC9DAtGkJXeFcFWSFZw0mCUsPxk/snTuJHzNKA8kLBK4rH97RMB1BfCXw==}
+    engines: {node: '>=12'}
     dev: true
 
   /is-plain-object/2.0.4:

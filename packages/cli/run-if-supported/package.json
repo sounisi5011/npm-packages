@@ -73,7 +73,7 @@
     "@types/node": "12.20.41",
     "@types/parse-json": "4.0.0",
     "execa": "5.1.1",
-    "is-plain-obj": "3.0.0",
+    "is-plain-obj": "4.0.0",
     "jest": "27.4.7",
     "ts-jest": "27.1.2",
     "type-fest": "2.9.0",
