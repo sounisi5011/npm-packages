@@ -239,7 +239,29 @@ jobs:
       - run: pnpm exec npm-run-all build-all --parallel 'build-!(all|only-packages)'
       - name: Check changes
         if: ${{ always() }}
-        run: git diff --name-only --exit-code
+        shell: bash
+        env:
+          PR_BODY: github.event.pull_request.body
+        # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
+        run: |
+          readonly pathList=()
+          node -p '
+            const pattern = /(?<=^#+ *ci: +build +changes +check +(?:exclude|exclusion) +list\s+^(`{3,})\s+)^.+(?=^\1`*\s*$)/ims;
+            const match = pattern.exec(process.env.PR_BODY)
+            match ? match[0].trim() : ``
+          ' | while read -r filePattern; do
+            if [ ! -z "${filePattern}" ]; then
+              pathList+=(":(top,glob,exclude)${filePattern}")
+            fi
+          done
+
+          echo '::group::pathList'
+          for path in "${pathList[@]}"; do
+            echo "- ```${path}```"
+          done
+          echo '::endgroup::'
+
+          git diff --name-only --exit-code -- "${pathList[@]}"
       - name: Check new files
         if: ${{ always() }}
         run: |
