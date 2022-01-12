@@ -257,14 +257,28 @@ jobs:
           done
           echo '::endgroup::'
 
-          git diff --name-only --exit-code -- "${pathList[@]}"
-      - name: Check new files
-        if: ${{ always() }}
-        run: |
+          readonly changesText="$(git diff --name-only -- "${pathList[@]}")"
+          if [ -n "${changesText}" ]; then
+            echo '::group::changed file list'
+            echo "${changesText}"
+            echo '::endgroup::'
+          fi
+
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
-          git diff --name-only --exit-code
+          readonly changesWithNewFilesText="$(git diff --name-only -- "${pathList[@]}")"
+          if [ -n "${changesWithNewFilesText}" ]; then
+            echo '::group::changed file list (with new files)'
+            echo "${changesWithNewFilesText}"
+            echo '::endgroup::'
+          fi
+
+          if [ -n "${changesText}" ] || [ -n "${changesWithNewFilesText}" ]; then
+            exit 1
+          else
+            echo '::notice::No uncommitted changes by build'
+          fi
   unit-test:
     needs: if-run-ci
     runs-on: ubuntu-latest
