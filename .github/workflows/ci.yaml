@@ -264,6 +264,14 @@ jobs:
             echo "${changesText}"
             echo '::endgroup::'
           fi
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            readonly changesTextIgnoreExclude="$(git diff --name-only)"
+            if [ -n "${changesTextIgnoreExclude}" ]; then
+              echo '::group::changed files (ignore exclude list)'
+              echo "${changesTextIgnoreExclude}"
+              echo '::endgroup::'
+            fi
+          fi
 
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
@@ -273,6 +281,14 @@ jobs:
             echo '::group::new files'
             echo "${newFilesText}"
             echo '::endgroup::'
+          fi
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            readonly newFilesTextIgnoreExclude="$(echo "${changesTextIgnoreExclude}"$'\n\n'"$(git diff --name-only)" | sort | uniq -u)"
+            if [ -n "${newFilesTextIgnoreExclude}" ]; then
+              echo '::group::new files (ignore exclude list)'
+              echo "${newFilesTextIgnoreExclude}"
+              echo '::endgroup::'
+            fi
           fi
 
           if [ -n "${changesText}" ] || [ -n "${newFilesText}" ]; then
