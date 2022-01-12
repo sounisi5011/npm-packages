@@ -17,7 +17,7 @@ export function padEndArray<T, U>(array: readonly T[], length: number, value: U)
 }
 
 export function addNegativeNumber(values: readonly number[]): number[];
-export function addNegativeNumber(values: ReadonlyArray<bigint>): Array<bigint>;
+export function addNegativeNumber(values: readonly bigint[]): bigint[];
 export function addNegativeNumber(values: ReadonlyArray<number | bigint>): Array<number | bigint>;
 export function addNegativeNumber(values: ReadonlyArray<number | bigint>): Array<number | bigint> {
     return values.flatMap(num => {
