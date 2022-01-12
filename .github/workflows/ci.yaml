@@ -245,19 +245,19 @@ jobs:
         # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
         run: |
           readonly pathList=()
-          node -p '
+          while read -r filePattern; do
+            if [ -n "${filePattern}" ]; then
+              pathList+=(":(top,glob,exclude)${filePattern}")
+            fi
+          done < <(node -p '
             const pattern = /(?<=^#+ *ci: +build +changes +check +(?:exclude|exclusion) +list\s+^(`{3,})\s+)^.+(?=^\1`*\s*$)/ims;
             const match = pattern.exec(process.env.PR_BODY)
             match ? match[0].trim() : ``
-          ' | while read -r filePattern; do
-            if [ ! -z "${filePattern}" ]; then
-              pathList+=(":(top,glob,exclude)${filePattern}")
-            fi
-          done
+          ')
 
           echo '::group::pathList'
           for path in "${pathList[@]}"; do
-            echo "- ```${path}```"
+            echo "- ${path}"
           done
           echo '::endgroup::'
 
