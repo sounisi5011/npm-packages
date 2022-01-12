@@ -245,22 +245,22 @@ jobs:
         # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
         # https://www.cyberciti.biz/faq/unix-linux-shell-removing-duplicate-lines/
         run: |
-          pathList=()
+          pathspecArray=()
           while read -r filePattern; do
             if [ -n "${filePattern}" ]; then
-              pathList+=(":(top,glob,exclude)${filePattern}")
+              pathspecArray+=(":(top,glob,exclude)${filePattern}")
             fi
           done < <(node .github/workflows/ci/read-build-changes-check-exclusion-list-from-pr-body.js)
 
-          echo '::group::pathList'
-          for path in "${pathList[@]}"; do
-            echo "- ${path}"
+          echo '::group::exclude pathspecs'
+          for pathspec in "${pathspecArray[@]}"; do
+            echo "${pathspec}"
           done
           echo '::endgroup::'
 
-          readonly changesText="$(git diff --name-only -- "${pathList[@]}")"
+          readonly changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
           if [ -n "${changesText}" ]; then
-            echo '::group::changed file list'
+            echo '::group::changed files'
             echo "${changesText}"
             echo '::endgroup::'
           fi
@@ -268,11 +268,11 @@ jobs:
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
-          readonly changesWithNewFilesText="$(git diff --name-only -- "${pathList[@]}")"
+          readonly changesWithNewFilesText="$(git diff --name-only -- "${pathspecArray[@]}")"
 
           readonly newFilesText="$(echo "${changesText}"$'\n\n'"${changesWithNewFilesText}" | sort | uniq -u)"
           if [ -n "${newFilesText}" ]; then
-            echo '::group::new files list'
+            echo '::group::new files'
             echo "${newFilesText}"
             echo '::endgroup::'
           fi
