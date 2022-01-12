@@ -268,9 +268,7 @@ jobs:
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
-          readonly changesWithNewFilesText="$(git diff --name-only -- "${pathspecArray[@]}")"
-
-          readonly newFilesText="$(echo "${changesText}"$'\n\n'"${changesWithNewFilesText}" | sort | uniq -u)"
+          readonly newFilesText="$(echo "${changesText}"$'\n\n'"$(git diff --name-only -- "${pathspecArray[@]}")" | sort | uniq -u)"
           if [ -n "${newFilesText}" ]; then
             echo '::group::new files'
             echo "${newFilesText}"
