@@ -249,11 +249,7 @@ jobs:
             if [ -n "${filePattern}" ]; then
               pathList+=(":(top,glob,exclude)${filePattern}")
             fi
-          done < <(node -p '
-            const pattern = /(?<=^#+ *ci: +build +changes +check +(?:exclude|exclusion) +list\s+^(`{3,})\s+)^.+(?=^\1`*\s*$)/ims;
-            const match = pattern.exec(process.env.PR_BODY)
-            match ? match[0].trim() : ``
-          ')
+          done < <(node .github/workflows/ci/read-build-changes-check-exclusion-list-from-pr-body.js)
 
           echo '::group::pathList'
           for path in "${pathList[@]}"; do
