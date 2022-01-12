@@ -245,6 +245,15 @@ jobs:
         # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
         # https://www.cyberciti.biz/faq/unix-linux-shell-removing-duplicate-lines/
         run: |
+          print_diff() {
+            readonly title="$1"
+            readonly diffText="$1"
+
+            echo "::group::${title} / $(echo "${diffText}" | wc -l) files"
+            echo "${diffText}"
+            echo '::endgroup::'
+          }
+
           pathspecArray=()
           while read -r filePattern; do
             if [ -n "${filePattern}" ]; then
@@ -261,36 +270,20 @@ jobs:
           fi
 
           readonly changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
-          if [ -n "${changesText}" ]; then
-            echo '::group::changed files'
-            echo "${changesText}"
-            echo '::endgroup::'
-          fi
+          print_diff 'changed files' "${changesText}"
           if [ "${#pathspecArray[@]}" -ne 0 ]; then
             readonly changesTextIgnoreExclude="$(git diff --name-only)"
-            if [ -n "${changesTextIgnoreExclude}" ]; then
-              echo '::group::changed files (ignore exclude list)'
-              echo "${changesTextIgnoreExclude}"
-              echo '::endgroup::'
-            fi
+            print_diff 'changed files (ignore exclude list)' "${changesTextIgnoreExclude}"
           fi
 
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
           readonly newFilesText="$(echo "${changesText}"$'\n\n'"$(git diff --name-only -- "${pathspecArray[@]}")" | sort | uniq -u)"
-          if [ -n "${newFilesText}" ]; then
-            echo '::group::new files'
-            echo "${newFilesText}"
-            echo '::endgroup::'
-          fi
+          print_diff 'new files' "${newFilesText}"
           if [ "${#pathspecArray[@]}" -ne 0 ]; then
             readonly newFilesTextIgnoreExclude="$(echo "${changesTextIgnoreExclude}"$'\n\n'"$(git diff --name-only)" | sort | uniq -u)"
-            if [ -n "${newFilesTextIgnoreExclude}" ]; then
-              echo '::group::new files (ignore exclude list)'
-              echo "${newFilesTextIgnoreExclude}"
-              echo '::endgroup::'
-            fi
+            print_diff 'new files (ignore exclude list)' "${newFilesTextIgnoreExclude}"
           fi
 
           if [ -n "${changesText}" ] || [ -n "${newFilesText}" ]; then
