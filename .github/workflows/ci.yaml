@@ -249,8 +249,12 @@ jobs:
             local -r title="$1"
             local -r diffText="$2"
 
-            echo "::group::${title} / $(echo "${diffText}" | wc -l) files"
-            echo "${diffText}"
+            if [ -z "${diffText}" ]; then
+              echo "::group::${title} / 0 file"
+            else
+              echo "::group::${title} / $(echo "${diffText}" | wc -l) files"
+              echo "${diffText}"
+            fi
             echo '::endgroup::'
           }
 
