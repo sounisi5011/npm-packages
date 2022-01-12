@@ -243,6 +243,7 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
+        # https://www.cyberciti.biz/faq/unix-linux-shell-removing-duplicate-lines/
         run: |
           pathList=()
           while read -r filePattern; do
@@ -268,13 +269,15 @@ jobs:
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
           readonly changesWithNewFilesText="$(git diff --name-only -- "${pathList[@]}")"
-          if [ -n "${changesWithNewFilesText}" ]; then
-            echo '::group::changed file list (with new files)'
-            echo "${changesWithNewFilesText}"
+
+          readonly newFilesText="$(echo "${changesText}"$'\n'"${changesWithNewFilesText}" | sort | uniq -u)"
+          if [ -n "${newFilesText}" ]; then
+            echo '::group::new files list'
+            echo "${newFilesText}"
             echo '::endgroup::'
           fi
 
-          if [ -n "${changesText}" ] || [ -n "${changesWithNewFilesText}" ]; then
+          if [ -n "${changesText}" ] || [ -n "${newFilesText}" ]; then
             exit 1
           else
             echo '::notice::No uncommitted changes by build'
