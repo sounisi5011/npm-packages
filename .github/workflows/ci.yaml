@@ -241,7 +241,7 @@ jobs:
         if: ${{ always() }}
         shell: bash
         env:
-          PR_BODY: github.event.pull_request.body
+          PR_BODY: ${{ github.event.pull_request.body }}
         # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
         run: |
           readonly pathList=()
