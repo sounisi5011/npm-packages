@@ -239,14 +239,63 @@ jobs:
       - run: pnpm exec npm-run-all build-all --parallel 'build-!(all|only-packages)'
       - name: Check changes
         if: ${{ always() }}
-        run: git diff --name-only --exit-code
-      - name: Check new files
-        if: ${{ always() }}
+        shell: bash
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        # https://footaku.hatenablog.com/entry/2018/09/03/140000
+        # https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
+        # https://www.cyberciti.biz/faq/unix-linux-shell-removing-duplicate-lines/
         run: |
+          print_diff() {
+            local -r title="$1"
+            local -r diffText="$2"
+
+            if [ -z "${diffText}" ]; then
+              echo "::group::${title} / 0 file"
+            else
+              echo "::group::${title} / $(echo "${diffText}" | wc -l) files"
+              echo "${diffText}"
+            fi
+            echo '::endgroup::'
+          }
+
+          pathspecArray=()
+          while read -r filePattern; do
+            if [ -n "${filePattern}" ]; then
+              pathspecArray+=(":(top,glob,exclude)${filePattern}")
+            fi
+          done < <(node .github/workflows/ci/read-build-changes-check-exclusion-list-from-pr-body.js)
+
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            echo '::group::exclude pathspecs'
+            for pathspec in "${pathspecArray[@]}"; do
+              echo "${pathspec}"
+            done
+            echo '::endgroup::'
+          fi
+
+          readonly changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
+          print_diff 'changed files' "${changesText}"
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            readonly changesTextIgnoreExclude="$(git diff --name-only)"
+            print_diff 'changed files (ignore exclude list)' "${changesTextIgnoreExclude}"
+          fi
+
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
-          git diff --name-only --exit-code
+          readonly newFilesText="$(echo "${changesText}"$'\n\n'"$(git diff --name-only -- "${pathspecArray[@]}")" | sort | uniq -u)"
+          print_diff 'new files' "${newFilesText}"
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            readonly newFilesTextIgnoreExclude="$(echo "${changesTextIgnoreExclude}"$'\n\n'"$(git diff --name-only)" | sort | uniq -u)"
+            print_diff 'new files (ignore exclude list)' "${newFilesTextIgnoreExclude}"
+          fi
+
+          if [ -n "${changesText}" ] || [ -n "${newFilesText}" ]; then
+            exit 1
+          else
+            echo '::notice::No uncommitted changes by build'
+          fi
   unit-test:
     needs: if-run-ci
     runs-on: ubuntu-latest
