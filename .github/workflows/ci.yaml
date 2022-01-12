@@ -252,11 +252,13 @@ jobs:
             fi
           done < <(node .github/workflows/ci/read-build-changes-check-exclusion-list-from-pr-body.js)
 
-          echo '::group::exclude pathspecs'
-          for pathspec in "${pathspecArray[@]}"; do
-            echo "${pathspec}"
-          done
-          echo '::endgroup::'
+          if [ "${#pathspecArray[@]}" -ne 0 ]; then
+            echo '::group::exclude pathspecs'
+            for pathspec in "${pathspecArray[@]}"; do
+              echo "${pathspec}"
+            done
+            echo '::endgroup::'
+          fi
 
           readonly changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
           if [ -n "${changesText}" ]; then
