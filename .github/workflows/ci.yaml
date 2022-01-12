@@ -89,115 +89,115 @@ jobs:
         run: pnpm install
       - run: pnpm run build-only-packages
       - run: pnpm run lint
-  # format:
-  #   needs: if-run-ci
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version:
-  #         - 12.x
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Setup Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - name: Cache .pnpm-store
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ~/.pnpm-store
-  #         key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-node-${{ matrix.node-version }}-
-  #           ${{ runner.os }}-node-
-  #           ${{ runner.os }}-
-  #     - name: Setup pnpm
-  #       uses: ./actions/setup-pnpm
-  #     - name: Install Dependencies
-  #       run: pnpm install
-  #     - name: Setup dprint
-  #       # The dprint command may fail to deserialize the wasm module.
-  #       # This only happens on CI, and in some cases no error occurs.
-  #       # Since we cannot identify the condition under which the error occurred,
-  #       # we will set up the dprint command in multiple ways and start the next step in a way that does not cause the error.
-  #       #
-  #       # 1. Try to run the dprint command installed from npm
-  #       # 2. If failed, directly execute the dprint binary file extracted in the npm package
-  #       # 3. If failed, download and set up dprint from the official website.
-  #       #    The version should be the one we are using in our project.
-  #       #    see https://dprint.dev/ci/
-  #       # 4. If failed, download and set up dprint from the official website.
-  #       #    Without specifying the version, download the latest version of dprint.
-  #       shell: bash
-  #       run: |
-  #         echo '::group::' ls -alp ./node_modules/.bin/dprint
-  #                          ls -alp ./node_modules/.bin/dprint
-  #         echo '::endgroup::'
+  format:
+    needs: if-run-ci
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 12.x
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Setup dprint
+        # The dprint command may fail to deserialize the wasm module.
+        # This only happens on CI, and in some cases no error occurs.
+        # Since we cannot identify the condition under which the error occurred,
+        # we will set up the dprint command in multiple ways and start the next step in a way that does not cause the error.
+        #
+        # 1. Try to run the dprint command installed from npm
+        # 2. If failed, directly execute the dprint binary file extracted in the npm package
+        # 3. If failed, download and set up dprint from the official website.
+        #    The version should be the one we are using in our project.
+        #    see https://dprint.dev/ci/
+        # 4. If failed, download and set up dprint from the official website.
+        #    Without specifying the version, download the latest version of dprint.
+        shell: bash
+        run: |
+          echo '::group::' ls -alp ./node_modules/.bin/dprint
+                           ls -alp ./node_modules/.bin/dprint
+          echo '::endgroup::'
 
-  #         echo '::group::' pnpm exec dprint '[npm installed]'
-  #         pnpm exec dprint || {
-  #           echo '::endgroup::'
+          echo '::group::' pnpm exec dprint '[npm installed]'
+          pnpm exec dprint || {
+            echo '::endgroup::'
 
-  #           echo '::group::' rm -rf ./node_modules/.bin/dprint
-  #                            rm -rf ./node_modules/.bin/dprint
-  #           echo '::endgroup::'
+            echo '::group::' rm -rf ./node_modules/.bin/dprint
+                             rm -rf ./node_modules/.bin/dprint
+            echo '::endgroup::'
 
-  #           echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
-  #                            mv ./node_modules/dprint/dprint ./node_modules/.bin/
-  #           echo '::endgroup::'
+            echo '::group::' mv ./node_modules/dprint/dprint ./node_modules/.bin/
+                             mv ./node_modules/dprint/dprint ./node_modules/.bin/
+            echo '::endgroup::'
 
-  #           echo '::group::' ls -alp ./node_modules/.bin/dprint
-  #                            ls -alp ./node_modules/.bin/dprint
-  #           echo '::endgroup::'
+            echo '::group::' ls -alp ./node_modules/.bin/dprint
+                             ls -alp ./node_modules/.bin/dprint
+            echo '::endgroup::'
 
-  #           echo '::group::' pnpm exec dprint '[npm binary]'
-  #           pnpm exec dprint || {
-  #             echo '::endgroup::'
+            echo '::group::' pnpm exec dprint '[npm binary]'
+            pnpm exec dprint || {
+              echo '::endgroup::'
 
-  #             echo '::group::' Detect dprint version
-  #             readonly dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
-  #             echo dprint version':' "${dprintVersion}"
-  #             echo '::endgroup::'
+              echo '::group::' Detect dprint version
+              readonly dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
+              echo dprint version':' "${dprintVersion}"
+              echo '::endgroup::'
 
-  #             echo '::group::' Install dprint
-  #             curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
-  #             echo '::endgroup::'
+              echo '::group::' Install dprint
+              curl -fsSL https://dprint.dev/install.sh | sh -s "${dprintVersion}"
+              echo '::endgroup::'
 
-  #             echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-  #                              mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-  #             echo '::endgroup::'
+              echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                               mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+              echo '::endgroup::'
 
-  #             echo '::group::' ls -alp ./node_modules/.bin/dprint
-  #                              ls -alp ./node_modules/.bin/dprint
-  #             echo '::endgroup::'
+              echo '::group::' ls -alp ./node_modules/.bin/dprint
+                               ls -alp ./node_modules/.bin/dprint
+              echo '::endgroup::'
 
-  #             echo '::group::' pnpm exec dprint '[download from official with version]'
-  #             pnpm exec dprint || {
-  #               echo '::endgroup::'
+              echo '::group::' pnpm exec dprint '[download from official with version]'
+              pnpm exec dprint || {
+                echo '::endgroup::'
 
-  #               echo '::group::' Install dprint
-  #               curl -fsSL https://dprint.dev/install.sh | sh -s
-  #               echo '::endgroup::'
+                echo '::group::' Install dprint
+                curl -fsSL https://dprint.dev/install.sh | sh -s
+                echo '::endgroup::'
 
-  #               echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-  #                                mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
-  #               echo '::endgroup::'
+                echo '::group::' mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                                 mv "${HOME}/.dprint/bin/dprint" ./node_modules/.bin/
+                echo '::endgroup::'
 
-  #               echo '::group::' ls -alp ./node_modules/.bin/dprint
-  #                                ls -alp ./node_modules/.bin/dprint
-  #               echo '::endgroup::'
+                echo '::group::' ls -alp ./node_modules/.bin/dprint
+                                 ls -alp ./node_modules/.bin/dprint
+                echo '::endgroup::'
 
-  #               echo '::group::' pnpm exec dprint '[download from official with latest version]'
-  #               pnpm exec dprint
-  #             }
-  #           }
-  #         }
-  #         echo '::endgroup::'
-  #     - run: pnpm run build-only-packages
-  #     - run: pnpm run fmt
-  #     - name: Check changes
-  #       if: ${{ always() }}
-  #       run: git diff --name-only --exit-code
+                echo '::group::' pnpm exec dprint '[download from official with latest version]'
+                pnpm exec dprint
+              }
+            }
+          }
+          echo '::endgroup::'
+      - run: pnpm run build-only-packages
+      - run: pnpm run fmt
+      - name: Check changes
+        if: ${{ always() }}
+        run: git diff --name-only --exit-code
   build:
     needs: if-run-ci
     runs-on: ubuntu-latest
@@ -296,48 +296,47 @@ jobs:
           else
             echo '::notice::No uncommitted changes by build'
           fi
-  # unit-test:
-  #   needs: if-run-ci
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       node-version:
-  #         - 12.x
-  #         - 14.x
-  #         - 15.x
-  #         - 16.x
-  #         - 17.x
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Git Setting
-  #       run: |
-  #         git config --global user.name  CI
-  #         git config --global user.email dummy@example.com
-  #     - name: Setup Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - name: Cache .pnpm-store
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ~/.pnpm-store
-  #         key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-node-${{ matrix.node-version }}-
-  #           ${{ runner.os }}-node-
-  #           ${{ runner.os }}-
-  #     - name: Setup pnpm
-  #       uses: ./actions/setup-pnpm
-  #     - name: Install Dependencies
-  #       run: pnpm install
-  #     - run: pnpm run build-only-packages
-  #     - run: pnpm run test-only
+  unit-test:
+    needs: if-run-ci
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 12.x
+          - 14.x
+          - 15.x
+          - 16.x
+          - 17.x
+    steps:
+      - uses: actions/checkout@v2
+      - name: Git Setting
+        run: |
+          git config --global user.name  CI
+          git config --global user.email dummy@example.com
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
+      - name: Install Dependencies
+        run: pnpm install
+      - run: pnpm run build-only-packages
+      - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI
-    # needs: [lint, format, build, unit-test]
-    needs: [lint, build]
+    needs: [lint, format, build, unit-test]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
