@@ -270,7 +270,7 @@ jobs:
           git add -N .
           readonly changesWithNewFilesText="$(git diff --name-only -- "${pathList[@]}")"
 
-          readonly newFilesText="$(echo "${changesText}"$'\n'"${changesWithNewFilesText}" | sort | uniq -u)"
+          readonly newFilesText="$(echo "${changesText}"$'\n\n'"${changesWithNewFilesText}" | sort | uniq -u)"
           if [ -n "${newFilesText}" ]; then
             echo '::group::new files list'
             echo "${newFilesText}"
