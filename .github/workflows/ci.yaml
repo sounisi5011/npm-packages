@@ -246,8 +246,8 @@ jobs:
         # https://www.cyberciti.biz/faq/unix-linux-shell-removing-duplicate-lines/
         run: |
           print_diff() {
-            readonly title="$1"
-            readonly diffText="$1"
+            local -r title="$1"
+            local -r diffText="$2"
 
             echo "::group::${title} / $(echo "${diffText}" | wc -l) files"
             echo "${diffText}"
