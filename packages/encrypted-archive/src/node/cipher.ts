@@ -5,6 +5,46 @@ import type { CryptoAlgorithmData, CryptoAlgorithmName, GetCryptoAlgorithm } fro
 import { uint8arrayConcat } from '../core/utils';
 import { fixNodePrimordialsErrorInstance } from './utils';
 
+function encrypt(args: {
+    cipher: crypto.CipherCCM | crypto.CipherGCM;
+    cleartext: Uint8Array;
+}): {
+    authTag: Uint8Array;
+    ciphertext: Uint8Array;
+} {
+    /**
+     * Encrypt cleartext
+     */
+    const ciphertext = uint8arrayConcat(
+        args.cipher.update(args.cleartext),
+        args.cipher.final(),
+    );
+
+    /**
+     * Get authentication tag
+     */
+    const authTag = args.cipher.getAuthTag();
+
+    return { authTag, ciphertext };
+}
+
+function decrypt(args: {
+    decipher: crypto.DecipherCCM | crypto.DecipherGCM;
+    ciphertext: Uint8Array;
+    authTag: Uint8Array;
+}): { cleartext: Uint8Array } {
+    try {
+        args.decipher.setAuthTag(args.authTag);
+        const cleartext = uint8arrayConcat(
+            args.decipher.update(args.ciphertext),
+            args.decipher.final(),
+        );
+        return { cleartext };
+    } catch (error) {
+        fixNodePrimordialsErrorInstance(error);
+    }
+}
+
 const cryptoAlgorithmList: readonly CryptoAlgorithmData[] = [
     (() => {
         const ALGORITHM_NAME = 'aes-256-gcm';
@@ -18,34 +58,17 @@ const cryptoAlgorithmList: readonly CryptoAlgorithmData[] = [
              */
             nonceLength: 96 / 8,
             async encrypt({ key, nonce, cleartext }) {
-                /**
-                 * Encrypt cleartext
-                 */
-                const cipher = createCipheriv(ALGORITHM_NAME, key, nonce);
-                const ciphertext = uint8arrayConcat(
-                    cipher.update(cleartext),
-                    cipher.final(),
-                );
-
-                /**
-                 * Get authentication tag
-                 */
-                const authTag = cipher.getAuthTag();
-
-                return { authTag, ciphertext };
+                return encrypt({
+                    cipher: createCipheriv(ALGORITHM_NAME, key, nonce),
+                    cleartext,
+                });
             },
             async decrypt({ key, nonce, authTag, ciphertext }) {
-                try {
-                    const decipher = createDecipheriv(ALGORITHM_NAME, key, nonce);
-                    decipher.setAuthTag(authTag);
-                    const cleartext = uint8arrayConcat(
-                        decipher.update(ciphertext),
-                        decipher.final(),
-                    );
-                    return { cleartext };
-                } catch (error) {
-                    fixNodePrimordialsErrorInstance(error);
-                }
+                return decrypt({
+                    decipher: createDecipheriv(ALGORITHM_NAME, key, nonce),
+                    ciphertext,
+                    authTag,
+                });
             },
         };
     })(),
@@ -75,34 +98,17 @@ const cryptoAlgorithmList: readonly CryptoAlgorithmData[] = [
              */
             nonceLength: 96 / 8,
             async encrypt({ key, nonce, cleartext }) {
-                /**
-                 * Encrypt cleartext
-                 */
-                const cipher = createCipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN });
-                const ciphertext = uint8arrayConcat(
-                    cipher.update(cleartext),
-                    cipher.final(),
-                );
-
-                /**
-                 * Get authentication tag
-                 */
-                const authTag = cipher.getAuthTag();
-
-                return { authTag, ciphertext };
+                return encrypt({
+                    cipher: createCipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN }),
+                    cleartext,
+                });
             },
             async decrypt({ key, nonce, authTag, ciphertext }) {
-                try {
-                    const decipher = createDecipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN });
-                    decipher.setAuthTag(authTag);
-                    const cleartext = uint8arrayConcat(
-                        decipher.update(ciphertext),
-                        decipher.final(),
-                    );
-                    return { cleartext };
-                } catch (error) {
-                    fixNodePrimordialsErrorInstance(error);
-                }
+                return decrypt({
+                    decipher: createDecipheriv(algorithm, key, nonce, { authTagLength: AUTH_TAG_LEN }),
+                    ciphertext,
+                    authTag,
+                });
             },
         };
     })(),
