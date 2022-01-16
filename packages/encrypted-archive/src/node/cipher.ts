@@ -1,7 +1,9 @@
 import { createCipheriv, createDecipheriv } from 'crypto';
 import type * as crypto from 'crypto';
 
-import type { CryptoAlgorithmName } from '../core/types/crypto';
+import type { CryptoAlgorithmName, GetCryptoAlgorithm } from '../core/types/crypto';
+import { uint8arrayConcat } from '../core/utils';
+import { fixNodePrimordialsErrorInstance } from './utils';
 
 const cryptoAlgorithmList = [
     (() => {
@@ -54,5 +56,46 @@ const cryptoAlgorithmList = [
     })(),
 ];
 
-export const cryptoAlgorithmMap = new Map(cryptoAlgorithmList.map(data => [data.name, data]));
+const cryptoAlgorithmMap = new Map(cryptoAlgorithmList.map(data => [data.name, data]));
 export const defaultCryptoAlgorithmName: CryptoAlgorithmName = 'chacha20-poly1305';
+
+export const getCryptoAlgorithm: GetCryptoAlgorithm = algorithmName => {
+    const algorithm = cryptoAlgorithmMap.get(algorithmName);
+    if (!algorithm) return undefined;
+
+    return {
+        algorithmName,
+        keyLength: algorithm.keyLength,
+        nonceLength: algorithm.nonceLength,
+        async encrypt({ key, nonce, cleartext }) {
+            /**
+             * Encrypt cleartext
+             */
+            const cipher = algorithm.createCipher(key, nonce);
+            const ciphertext = uint8arrayConcat(
+                cipher.update(cleartext),
+                cipher.final(),
+            );
+
+            /**
+             * Get authentication tag
+             */
+            const authTag = cipher.getAuthTag();
+
+            return { authTag, ciphertext };
+        },
+        async decrypt({ key, nonce, authTag, ciphertext }) {
+            try {
+                const decipher = algorithm.createDecipher(key, nonce);
+                decipher.setAuthTag(authTag);
+                const cleartext = uint8arrayConcat(
+                    decipher.update(ciphertext),
+                    decipher.final(),
+                );
+                return { cleartext };
+            } catch (error) {
+                fixNodePrimordialsErrorInstance(error);
+            }
+        },
+    };
+};

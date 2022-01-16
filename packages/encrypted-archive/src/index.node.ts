@@ -11,13 +11,8 @@ import type { InputDataType, IteratorConverter } from './core/types';
 import type { CompressOptions } from './core/types/compress';
 import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
-import {
-    asyncIterable2Uint8Array,
-    convertIterableValue,
-    fixNodePrimordialsErrorInstance,
-    uint8arrayConcat,
-} from './core/utils';
-import { cryptoAlgorithmMap } from './node/cipher';
+import { asyncIterable2Uint8Array, convertIterableValue } from './core/utils';
+import { getCryptoAlgorithm } from './node/cipher';
 import { createCompressor, decompressIterable } from './node/compress';
 import { arrayBufferView2NodeBuffer, bufferFrom, inspect } from './node/utils';
 
@@ -26,46 +21,7 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     encodeString: str => Buffer.from(str, 'utf8'),
     getRandomBytes: async size => randomBytes(size),
     getKDF: createGetKDF({ inspect }),
-    getCryptoAlgorithm(algorithmName) {
-        const algorithm = cryptoAlgorithmMap.get(algorithmName);
-        if (!algorithm) return undefined;
-
-        return {
-            algorithmName,
-            keyLength: algorithm.keyLength,
-            nonceLength: algorithm.nonceLength,
-            async encrypt({ key, nonce, cleartext }) {
-                /**
-                 * Encrypt cleartext
-                 */
-                const cipher = algorithm.createCipher(key, nonce);
-                const ciphertext = uint8arrayConcat(
-                    cipher.update(cleartext),
-                    cipher.final(),
-                );
-
-                /**
-                 * Get authentication tag
-                 */
-                const authTag = cipher.getAuthTag();
-
-                return { authTag, ciphertext };
-            },
-            async decrypt({ key, nonce, authTag, ciphertext }) {
-                try {
-                    const decipher = algorithm.createDecipher(key, nonce);
-                    decipher.setAuthTag(authTag);
-                    const cleartext = uint8arrayConcat(
-                        decipher.update(ciphertext),
-                        decipher.final(),
-                    );
-                    return { cleartext };
-                } catch (error) {
-                    fixNodePrimordialsErrorInstance(error);
-                }
-            },
-        };
-    },
+    getCryptoAlgorithm,
     createCompressor,
     decompressIterable,
 };
