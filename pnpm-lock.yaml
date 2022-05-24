@@ -214,7 +214,7 @@ importers:
       '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
-      '@types/google-protobuf': 3.15.5
+      '@types/google-protobuf': 3.15.6
       '@types/jest': 27.5.1
       '@types/node': 12.20.52
       '@types/varint': 6.0.0
@@ -253,7 +253,7 @@ importers:
       '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
-      '@types/google-protobuf': 3.15.5
+      '@types/google-protobuf': 3.15.6
       '@types/jest': 27.5.1
       '@types/node': 12.20.52
       '@types/varint': 6.0.0
@@ -1381,8 +1381,8 @@ packages:
       '@types/node': 17.0.8
     dev: true
 
-  /@types/google-protobuf/3.15.5:
-    resolution: {integrity: sha512-6bgv24B+A2bo9AfzReeg5StdiijKzwwnRflA8RLd1V4Yv995LeTmo0z69/MPbBDFSiZWdZHQygLo/ccXhMEDgw==}
+  /@types/google-protobuf/3.15.6:
+    resolution: {integrity: sha512-pYVNNJ+winC4aek+lZp93sIKxnXt5qMkuKmaqS3WGuTq0Bw1ZDYNBgzG5kkdtwcv+GmYJGo3yEg6z2cKKAiEdw==}
     dev: true
 
   /@types/graceful-fs/4.1.5:
