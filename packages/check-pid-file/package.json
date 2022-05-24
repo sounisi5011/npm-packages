@@ -46,7 +46,7 @@
   "dependencies": {
     "find-process": "^1.4.4",
     "signal-exit": "^3.0.3",
-    "write-file-atomic": "^3.0.3"
+    "write-file-atomic": "^4.0.0"
   },
   "devDependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
@@ -55,7 +55,7 @@
     "@types/node": "12.20.41",
     "@types/readline-transform": "1.0.1",
     "@types/signal-exit": "3.0.1",
-    "@types/write-file-atomic": "3.0.3",
+    "@types/write-file-atomic": "4.0.0",
     "execa": "5.1.1",
     "jest": "27.4.7",
     "readline-transform": "1.0.0",
@@ -64,6 +64,6 @@
     "ultra-runner": "3.10.5"
   },
   "engines": {
-    "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x"
+    "node": "^12.17.x || ^14.15.x || 15.x || 16.x || 17.x"
   }
 }
