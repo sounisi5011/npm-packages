@@ -3,14 +3,15 @@
 
 /* eslint-disable node/no-missing-import, import/no-unresolved */
 
-import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
-import crossSpawn from 'cross-spawn';
-import fetch from 'node-fetch';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import * as stream from 'node:stream';
 import * as util from 'node:util';
+
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
+import crossSpawn from 'cross-spawn';
+import fetch from 'node-fetch';
 
 import { dirname as dirpath } from './dirname.js';
 
