@@ -11,7 +11,7 @@ jobs:
     outputs:
       result: ${{ steps.interrogate.outputs.result }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: interrogate
         uses: ./actions/monorepo-workspace-submodules-finder
         with:
@@ -82,7 +82,7 @@ jobs:
           echo "::set-output name=ref::${ref}"
         if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ steps.release-pr.outputs.ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
@@ -164,7 +164,7 @@ jobs:
         # Publish
         #
       - name: Publish / Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish / Setup Node.js
         uses: actions/setup-node@v2

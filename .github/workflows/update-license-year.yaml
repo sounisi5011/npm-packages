@@ -7,7 +7,7 @@ jobs:
   update-license-year:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: FantasticFiasco/action-update-license-year@v2
         with:
           # Use personal access token instead of GITHUB_TOKEN to execute CI for pull requests.
