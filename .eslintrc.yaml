@@ -86,6 +86,7 @@ overrides:
         - allowAsStatement: true
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
+      import/no-unresolved: off
       node/no-missing-import: off
       # The "node/no-unpublished-import" rule does not support "import type ... from '...'" statements.
       # This causes an error when importing a type definition file that is not published.
