@@ -15,7 +15,7 @@
   "author": "sounisi5011",
   "main": "dist/index.js",
   "scripts": {
-    "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/index.ts --minify --out ./dist/",
+    "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/index.ts --minify --transpile-only --out ./dist/",
     "build-with-cache": "ultra build",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
