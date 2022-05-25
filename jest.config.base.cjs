@@ -1,5 +1,7 @@
-const path = require('path');
-
 module.exports = {
-  resolver: path.resolve(__dirname, 'scripts/enhanced-resolver-jest'),
+  /**
+   * Jest 2.7.51 does not detect the `exports` field in `package.json`.
+   * So change resolver to `jest-node-exports-resolver`.
+   */
+  resolver: 'jest-node-exports-resolver',
 };
