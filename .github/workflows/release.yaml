@@ -90,15 +90,15 @@ jobs:
       - name: Commit to Release PR / Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16.x
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-12.x-
+            ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
         if: ${{ steps.release-pr.outputs.ref }}
@@ -169,7 +169,7 @@ jobs:
       - name: Publish / Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16.x
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
@@ -178,9 +178,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-12.x-
+            ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
         if: ${{ steps.release.outputs.release_created }}
