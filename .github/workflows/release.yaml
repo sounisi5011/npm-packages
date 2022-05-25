@@ -93,7 +93,7 @@ jobs:
           node-version: 12.x
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Cache .pnpm-store
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -175,7 +175,7 @@ jobs:
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish / Cache .pnpm-store
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node-12.x-${{ hashFiles('**/pnpm-lock.yaml') }}
