@@ -2,7 +2,7 @@
 
 import { expectType } from 'tsd';
 
-import { isPropertyAccessible } from '..';
+import { isPropertyAccessible } from '../dist/index.js';
 
 declare const unknownValue: unknown;
 
