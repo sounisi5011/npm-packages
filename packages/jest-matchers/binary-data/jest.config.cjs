@@ -1,7 +1,7 @@
 module.exports = {
+  ...require('../../../jest.config.base.cjs'),
   preset: 'ts-jest',
   coverageDirectory: 'coverage',
-  resolver: '<rootDir>/../../../scripts/enhanced-resolver-jest',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tests/tsconfig.json',

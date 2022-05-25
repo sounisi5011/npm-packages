@@ -1,4 +1,5 @@
 module.exports = {
+  ...require('../../jest.config.base.cjs'),
   preset: 'ts-jest',
   coverageDirectory: 'coverage',
   globals: {
