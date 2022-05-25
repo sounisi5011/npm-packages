@@ -314,7 +314,7 @@ importers:
       '@types/node': 12.20.52
       jest: 27.5.1
       ts-jest: 27.1.5
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
     devDependencies:
@@ -323,7 +323,7 @@ importers:
       '@types/node': 12.20.52
       jest: 27.5.1
       ts-jest: 27.1.5_503bfb847900ba876dcec7308e1e7b81
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -335,21 +335,21 @@ importers:
 
   packages/ts-type-utils/has-own-property:
     specifiers:
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.19.1
+      tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -362,7 +362,7 @@ importers:
       jest: 27.5.1
       rollup: 2.74.1
       ts-jest: 27.1.5
-      tsd: 0.19.1
+      tsd: 0.20.0
       tslib: 2.3.1
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -374,7 +374,7 @@ importers:
       jest: 27.5.1
       rollup: 2.74.1
       ts-jest: 27.1.5_503bfb847900ba876dcec7308e1e7b81
-      tsd: 0.19.1
+      tsd: 0.20.0
       tslib: 2.3.1
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -1322,8 +1322,8 @@ packages:
     dev: true
     optional: true
 
-  /@tsd/typescript/4.5.4:
-    resolution: {integrity: sha512-iDlLkdg3sCjUSNdoUCsYM/SXheHrdxHsR6msIkbFDW4pV6gHTMwg/8te/paLtywDjGL4S4ByDdUKA3RbfdBX0g==}
+  /@tsd/typescript/4.6.4:
+    resolution: {integrity: sha512-+9o716aWbcjKLbV4bCrGlJKJbS0UZNogfVk9U7ffooYSf/9GOJ6wwahTSrRjW7mWQdywQ/sIg9xxbuPLnkmhwg==}
     hasBin: true
     dev: true
 
@@ -2009,7 +2009,7 @@ packages:
     dev: true
 
   /arrify/1.0.1:
-    resolution: {integrity: sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0=}
+    resolution: {integrity: sha512-3CYzex9M9FGQjCGMGyi6/31c8GJbgb0qGyrx5HWxPd0aCwh4cB2YjMb2Xf9UuoogrMrlO9cTqnB5rI5GHZTcUA==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -3878,6 +3878,7 @@ packages:
       ignore: 5.2.0
       merge2: 1.4.1
       slash: 3.0.0
+    dev: false
 
   /globby/11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
@@ -5683,7 +5684,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.21.0
+      resolve: 1.22.0
       semver: 5.7.1
       validate-npm-package-license: 3.0.4
     dev: true
@@ -5694,7 +5695,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.8.1
-      semver: 7.3.5
+      semver: 7.3.7
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -7125,14 +7126,14 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd/0.19.1:
-    resolution: {integrity: sha512-pSwchclr+ADdxlahRUQXUrdAIOjXx1T1PQV+fLfVLuo/S4z+T00YU84fH8iPlZxyA2pWgJjo42BG1p9SDb4NOw==}
+  /tsd/0.20.0:
+    resolution: {integrity: sha512-iba/JlyT3qtnA9t8VrX2Fipu3L31U48oRIf1PNs+lIwQ7n63GTkt9eQlB5bLtfb7nYfy9t8oZzs+K4QEoEIS8Q==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
-      '@tsd/typescript': 4.5.4
+      '@tsd/typescript': 4.6.4
       eslint-formatter-pretty: 4.1.0
-      globby: 11.0.4
+      globby: 11.1.0
       meow: 9.0.0
       path-exists: 4.0.0
       read-pkg-up: 7.0.1
