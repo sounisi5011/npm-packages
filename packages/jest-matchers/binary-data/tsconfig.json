@@ -4,7 +4,6 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Modules */
-    "moduleResolution": "Node16",
     "types": [],
 
     /* Emit */

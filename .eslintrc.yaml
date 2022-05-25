@@ -10,6 +10,13 @@ parserOptions:
   # Node.js 12 and above almost supports features up to ES2019
   # see https://node.green/#ES2019
   ecmaVersion: 2019
+settings:
+  # `eslint-plugin-import@2.26.0` does not detect the `exports` field in `package.json`.
+  # So change resolver to `eslint-import-resolver-enhanced-resolve`.
+  # see https://github.com/import-js/eslint-plugin-import/issues/1810
+  import/resolver:
+    node: # This is the default resolver for `eslint-plugin-import`. If omitted, Node.js modules cannot be loaded.
+    enhanced-resolve: {}
 rules:
   import/newline-after-import: error
   import/no-extraneous-dependencies:
@@ -79,6 +86,7 @@ overrides:
         - allowAsStatement: true
       # TypeScript checks the import statement path.
       # Therefore, there is no need to verify the file path imported by ESLint.
+      import/no-unresolved: off
       node/no-missing-import: off
       # The "node/no-unpublished-import" rule does not support "import type ... from '...'" statements.
       # This causes an error when importing a type definition file that is not published.
@@ -122,11 +130,16 @@ overrides:
   - files:
       - .lintstagedrc.js
       - scripts/*.js
+      - jest.config.base.cjs
+      - "**/jest.config.{js,cjs}"
     rules:
       import/no-extraneous-dependencies:
         - error
         - devDependencies: true
       node/no-unpublished-require: off
+      node/no-unsupported-features/es-syntax:
+        - error
+        - version: 12.x
       node/no-unsupported-features/node-builtins:
         - error
         - version: 12.x

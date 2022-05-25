@@ -17,7 +17,9 @@
 
     /* Modules */
     "module": "CommonJS",
-    "moduleResolution": "Node",
+    // Starting with TypeScript 4.7, we can use the `exports` field in `package.json`.
+    // To use it, the `moduleResolution` option must be 'node16' or 'nodenext'.
+    "moduleResolution": "Node16",
     "types": [],
 
     /* Emit */

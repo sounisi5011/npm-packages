@@ -1,4 +1,4 @@
-import { isPropertyAccessible } from '../src';
+import { isPropertyAccessible } from '../src/index.js';
 
 const numList = [0, -0, 1, -1];
 const anyValues: ReadonlyArray<
