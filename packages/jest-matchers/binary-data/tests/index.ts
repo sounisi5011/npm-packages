@@ -1,9 +1,6 @@
 import '../src';
 
-// eslint-disable-next-line import/no-unresolved
 import ConvertAnsiPlugin from 'pretty-format/ConvertAnsi';
-// Note: eslint-plugin-import@2.26.0 does not detect the `exports` field in `package.json`.
-//       see https://github.com/import-js/eslint-plugin-import/issues/1810
 
 import { getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 

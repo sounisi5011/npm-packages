@@ -10,6 +10,12 @@ parserOptions:
   # Node.js 12 and above almost supports features up to ES2019
   # see https://node.green/#ES2019
   ecmaVersion: 2019
+settings:
+  # `eslint-plugin-import@2.26.0` does not detect the `exports` field in `package.json`.
+  # So change resolver to `eslint-import-resolver-enhanced-resolve`.
+  # see https://github.com/import-js/eslint-plugin-import/issues/1810
+  import/resolver:
+    enhanced-resolve: {}
 rules:
   import/newline-after-import: error
   import/no-extraneous-dependencies:
