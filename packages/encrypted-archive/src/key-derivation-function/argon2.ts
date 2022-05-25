@@ -1,3 +1,4 @@
+// @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { ArgonType, hash as argonHash } from 'argon2-browser';
 import capitalize from 'capitalize';
