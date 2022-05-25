@@ -15,6 +15,7 @@ settings:
   # So change resolver to `eslint-import-resolver-enhanced-resolve`.
   # see https://github.com/import-js/eslint-plugin-import/issues/1810
   import/resolver:
+    node: # This is the default resolver for `eslint-plugin-import`. If omitted, Node.js modules cannot be loaded.
     enhanced-resolve: {}
 rules:
   import/newline-after-import: error
