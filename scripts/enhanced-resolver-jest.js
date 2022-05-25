@@ -23,18 +23,22 @@ const { ResolverFactory } = require('enhanced-resolve');
  * @see https://github.com/jamiebuilds/jest-enhanced-resolve/blob/a4fb6ad538f8ccc2911f0383fa4a24dbdc943510/src/jest-enhanced-resolve.ts
  */
 module.exports = (modulePath, options) => {
-  if (!(modulePath.startsWith('.') || modulePath.startsWith(path.sep))) {
-    const enhancedResolver = ResolverFactory.createResolver({
-      // @ts-expect-error
-      fileSystem: fs,
-      mainFields: ['source', 'module', 'main'],
-      useSyncFileSystemCalls: true,
-    });
+  try {
+    return options.defaultResolver(modulePath, options);
+  } catch (error) {
+    if (!(modulePath.startsWith('.') || modulePath.startsWith(path.sep))) {
+      const enhancedResolver = ResolverFactory.createResolver({
+        // @ts-expect-error
+        fileSystem: fs,
+        mainFields: ['source', 'module', 'main'],
+        useSyncFileSystemCalls: true,
+      });
 
-    const result = enhancedResolver.resolveSync({}, options.basedir, modulePath);
-    if (result) {
-      return fs.realpathSync(result);
+      const result = enhancedResolver.resolveSync({}, options.basedir, modulePath);
+      if (result) {
+        return fs.realpathSync(result);
+      }
     }
+    throw error;
   }
-  return options.defaultResolver(modulePath, options);
 };
