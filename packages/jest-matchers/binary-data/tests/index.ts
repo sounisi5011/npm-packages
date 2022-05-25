@@ -1,10 +1,13 @@
 import '../src';
 
-import { plugins as prettyFormatPlugins } from 'pretty-format';
+// eslint-disable-next-line import/no-unresolved
+import ConvertAnsiPlugin from 'pretty-format/ConvertAnsi';
+// Note: eslint-plugin-import@2.26.0 does not detect the `exports` field in `package.json`.
+//       see https://github.com/import-js/eslint-plugin-import/issues/1810
 
 import { getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 
-expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
+expect.addSnapshotSerializer(ConvertAnsiPlugin);
 
 {
     const byteSizeList: number[] = [0, 1, 2 ** 10, 2 ** 20, 2 ** 30, 2 ** 40, 2 ** 50];
