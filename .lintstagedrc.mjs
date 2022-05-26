@@ -1,8 +1,11 @@
 // @ts-check
-const { execFile } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+import { execFile } from 'node:child_process';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as url from 'node:url';
+import { promisify } from 'node:util';
+
+const __dirname = url.fileURLToPath(new URL('.', 'import.meta.url'));
 
 const execFileAsync = promisify(execFile);
 
@@ -58,9 +61,13 @@ async function dprintCommandList(filenames, config) {
 }
 
 /**
- * @type {(filenames: string[]) => Promise<string | string[]>}
+ * @typedef {(filenames: string[]) => string | string[] | Promise<string | string[]>} ConfigFunc
  */
-module.exports = async filenames => {
+
+/**
+ * @type {ConfigFunc}
+ */
+export default async filenames => {
   /** @type {string[]} */
   const commands = [];
 
@@ -133,6 +140,8 @@ module.exports = async filenames => {
       `git add ${submoduleReadmeFiles.join(' ')}`,
     );
   }
+
+  console.log({ filenames, commands });
 
   return commands;
 };
