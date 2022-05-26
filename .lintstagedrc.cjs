@@ -101,8 +101,8 @@ module.exports = async filenames => {
 
   // Prettier will find the configuration files based on cwd.
   // If inside submodule directories, Prettier will fail because cwd is not the project root.
-  // To work around this, Prettier is run using the project root npm-script.
-  commands.push(`pnpm run --workspace-root root:prettier -- --write ${filenames.join(' ')}`);
+  // To avoid this, run Prettier using the "pnpm exec" command with the "--workspace-root" option.
+  commands.push(`pnpm --workspace-root exec prettier --write ${filenames.join(' ')}`);
 
   const pkgFiles = filenames.filter(baseFilter('package.json'));
   if (pkgFiles.length >= 1) {
@@ -146,12 +146,10 @@ module.exports = async filenames => {
 
   const tsOrJsFiles = [...tsFiles, ...jsFiles];
   if (tsOrJsFiles.length >= 1) {
-    commands.push(
-      // ESLint will find the configuration files based on cwd.
-      // If inside submodule directories, ESLint will fail because cwd is not the project root.
-      // To work around this, ESLint is run using the project root npm-script.
-      `pnpm run --workspace-root root:eslint -- --cache --fix ${tsOrJsFiles.join(' ')}`,
-    );
+    // ESLint will find the configuration files based on cwd.
+    // If inside submodule directories, ESLint will fail because cwd is not the project root.
+    // To avoid this, run ESLint using the "pnpm exec" command with the "--workspace-root" option.
+    commands.push(`pnpm --workspace-root exec eslint --cache --fix ${tsOrJsFiles.join(' ')}`);
   }
 
   if (
