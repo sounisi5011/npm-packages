@@ -4,18 +4,4 @@
 # Note: This file should be POSIX compliant.
 #       If you edit this file, use "checkbashisms" to check it does not contain bash, zsh, or other features.
 
-# see https://qiita.com/richmikan@github/items/2aee77ae13bee2c648f4
-pnpm exec ultra --recursive --raw pwd | while read -r dirpath; do
-  if [ -d "${dirpath}" ]; then
-    cd "${dirpath}"
-    if git diff --staged --exit-code --quiet -- .; then
-      :
-    elif [ -f ./.lintstagedrc.yaml -o -f ./.lintstagedrc.js -o -f ./.lintstagedrc.cjs ]; then
-      echo lint-staged at "${dirpath}"
-      pnpm exec lint-staged
-    fi
-  fi
-done
-
-echo lint-staged at "$(pwd)"
 ./node_modules/.bin/lint-staged
