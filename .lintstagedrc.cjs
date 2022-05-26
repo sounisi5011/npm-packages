@@ -169,7 +169,7 @@ module.exports = async filenames => {
     .filter(filename => fs.existsSync(filename));
   if (submoduleReadmeFiles.length >= 1) {
     commands.push(
-      `node ${rootPath('scripts/update-readme-badge.js')} ${submoduleReadmeFiles.join(' ')}`,
+      `node ${rootPath('scripts/update-readme-badge')} ${submoduleReadmeFiles.join(' ')}`,
       `git add ${submoduleReadmeFiles.join(' ')}`,
     );
   }

@@ -4,6 +4,7 @@ const { promises: fsAsync } = require('fs');
 const path = require('path');
 
 const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
+const { getWorkspaceRoot } = require('workspace-tools');
 
 /**
  * @param {string} str
@@ -156,6 +157,7 @@ async function main() {
     return;
   }
 
+  const repoRootpath = getWorkspaceRoot(process.cwd()) || process.cwd();
   for (const filepath of filepathList) {
     try {
       const readmeText = await fsAsync.readFile(filepath, 'utf8');
@@ -166,7 +168,7 @@ async function main() {
         .replace(NODE_VERSION_BADGE, replaceNodeVersion(pkg))
         .replace(BUNDLEPHOBIA_BADGE, replaceBundlephobia(pkg))
         .replace(PACKAGEPHOBIA_BADGE, replacePackagephobia(pkg))
-        .replace(DAVID_DM_BADGE, replaceDavidDM(pkg, path.relative(process.cwd(), path.dirname(filepath))));
+        .replace(DAVID_DM_BADGE, replaceDavidDM(pkg, path.relative(repoRootpath, path.dirname(filepath))));
 
       if (readmeText !== updatedReadmeText) {
         await fsAsync.writeFile(filepath, updatedReadmeText);
