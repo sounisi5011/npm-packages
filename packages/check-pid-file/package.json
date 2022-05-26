@@ -57,9 +57,9 @@
     "@types/signal-exit": "3.0.1",
     "@types/write-file-atomic": "4.0.0",
     "execa": "5.1.1",
-    "jest": "27.5.1",
+    "jest": "28.1.0",
     "readline-transform": "1.0.0",
-    "ts-jest": "27.1.5",
+    "ts-jest": "28.0.3",
     "typescript": "4.7.2",
     "ultra-runner": "3.10.5"
   },
