@@ -1,6 +1,7 @@
 // @ts-check
 
 const path = require('path');
+
 const baseConfig = require('../../.lintstagedrc.cjs');
 
 /**
