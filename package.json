@@ -40,6 +40,8 @@
     "lint:eslint": "eslint --cache ./",
     "lint:tsc": "ultra --recursive --serial lint:tsc",
     "prepare": "husky install",
+    "root:eslint": "eslint",
+    "root:prettier": "prettier",
     "test": "run-s lint test-only",
     "test-only": "run-s test:unit-test",
     "test:unit-test": "ultra --recursive --serial test"
