@@ -58,7 +58,13 @@ async function dprintCommandList(filenames, config) {
 }
 
 /**
- * @type {(filenames: string[]) => Promise<string | string[]>}
+ * @typedef {(filenames: string[]) => string | string[] | Promise<string | string[]>} LintStagedConfigFunc
+ * @typedef {LintStagedConfigFunc | Object<string, string | string[] | LintStagedConfigFunc>} LintStagedConfig
+ * @see https://github.com/okonet/lint-staged/tree/v12.4.2#using-js-configuration-files
+ */
+
+/**
+ * @type {LintStagedConfigFunc}
  */
 module.exports = async filenames => {
   /** @type {string[]} */
