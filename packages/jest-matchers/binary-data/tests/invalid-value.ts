@@ -1,10 +1,15 @@
 import '../src';
 
+// import ConvertAnsiPlugin from 'pretty-format/ConvertAnsi';
 import { plugins as prettyFormatPlugins } from 'pretty-format';
 
 import * as matcherList from '../src/matchers';
 
-expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
+// @ts-expect-error TS2322: Type 'NewPlugin' is not assignable to type 'Plugin'.
+// TODO: Once `@types/jest` is updated to support Jest 28, this type hack will be removed.
+const ConvertAnsiPlugin: Parameters<typeof expect.addSnapshotSerializer>[0] = prettyFormatPlugins.ConvertAnsi;
+
+expect.addSnapshotSerializer(ConvertAnsiPlugin);
 
 const invalidValueList = [
     undefined,
