@@ -68,7 +68,11 @@ async function dprintCommandList(filenames, config) {
   if (filenames.length < 1) return [];
   const configOption = ['-c', rootPath(config)];
 
-  const { stdout } = await execFileAsync('pnpm', ['exec', 'dprint', 'output-file-paths', ...configOption]);
+  const { stdout } = await execFileAsync(
+    'pnpm',
+    ['exec', 'dprint', 'output-file-paths', ...configOption],
+    { cwd: __dirname },
+  );
   const dprintTargetFilepathList = stdout
     .split(/\r?\n|\r/)
     .filter(filepath => filepath.trim() !== '');
