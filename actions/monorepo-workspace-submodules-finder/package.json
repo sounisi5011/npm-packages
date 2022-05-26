@@ -29,7 +29,7 @@
     "@octokit/endpoint": "6.0.12",
     "find-git-root": "1.0.4",
     "path-starts-with": "2.0.0",
-    "validate-npm-package-name": "3.0.0",
+    "validate-npm-package-name": "4.0.0",
     "workspace-tools": "0.19.0"
   },
   "devDependencies": {
