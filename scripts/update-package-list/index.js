@@ -76,8 +76,7 @@ function omitScopeName(packageName) {
     );
   }
 
-  const match = validateNpmPkgName.scopedPackagePattern.exec(packageName);
-  return match ? match[2] : packageName;
+  return packageName.replace(/^@[^/]+\//, '');
 }
 
 /**
