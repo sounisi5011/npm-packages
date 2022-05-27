@@ -13,7 +13,7 @@ import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 import crossSpawn from 'cross-spawn';
 import fetch from 'node-fetch';
 
-import { dirname as dirpath } from './dirname.js';
+import { dirname as dirpath } from './dirname.cjs';
 
 /**
  * @see https://github.com/rhysd/actionlint/blob/v1.6.7/docs/install.md#download-script
