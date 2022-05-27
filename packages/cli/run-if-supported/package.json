@@ -55,7 +55,7 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "jest"
+    "test": "pnpm --package=@sounisi5011/run-if-supported@1.x dlx run-if-supported --verbose jest"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
