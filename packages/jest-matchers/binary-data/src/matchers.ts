@@ -33,21 +33,16 @@ function createCompareByteSizeMatcher(
         const expectedByteLength = isBytesData(expected) ? expected.byteLength : expected;
         const receivedByteLength = isBytesData(received) ? received.byteLength : received;
 
-        return {
-            message: toMessageFn(() => [
-                this.utils.matcherHint(matcherName, undefined, undefined, options),
-                ``,
-                padTextColumns([
-                    [
-                        'Expected:',
-                        [isNot ? 'not' : '', operator],
-                        this.utils.EXPECTED_COLOR(byteSize(expectedByteLength)),
-                    ],
-                    ['Received:', '', this.utils.RECEIVED_COLOR(byteSize(receivedByteLength))],
-                ]),
+        const message = toMessageFn(() => [
+            this.utils.matcherHint(matcherName, undefined, undefined, options),
+            ``,
+            padTextColumns([
+                ['Expected:', [isNot ? 'not' : '', operator], this.utils.EXPECTED_COLOR(byteSize(expectedByteLength))],
+                ['Received:', '', this.utils.RECEIVED_COLOR(byteSize(receivedByteLength))],
             ]),
-            pass: passFn({ expected: expectedByteLength, received: receivedByteLength }),
-        };
+        ]);
+        const pass = passFn({ expected: expectedByteLength, received: receivedByteLength });
+        return { message, pass };
     };
 }
 
