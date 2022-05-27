@@ -1,9 +1,9 @@
 // @ts-check
 
-const { promises: fsAsync } = require('fs');
-const path = require('path');
+import { promises as fsAsync } from 'node:fs';
+import * as path from 'node:path';
 
-const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 
 /**
  * @param {string} str
@@ -101,7 +101,8 @@ async function main() {
   for (const filepath of filepathList) {
     try {
       const readmeText = await fsAsync.readFile(filepath, 'utf8');
-      const pkg = require(path.resolve(path.dirname(filepath), 'package.json')) || {};
+      const pkg = JSON.parse(await fsAsync.readFile(path.resolve(path.dirname(filepath), 'package.json'), 'utf8'))
+        || {};
 
       const repoURL = pkg.repository
         && (typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url)
