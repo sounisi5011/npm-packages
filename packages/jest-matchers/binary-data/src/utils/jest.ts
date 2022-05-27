@@ -1,16 +1,9 @@
 import { diffLinesUnified2 } from 'jest-diff';
-import {
-    EXPECTED_COLOR,
-    matcherErrorMessage,
-    matcherHint,
-    printExpected,
-    printReceived,
-    printWithType,
-    RECEIVED_COLOR,
-} from 'jest-matcher-utils';
-import type { MatcherHintOptions } from 'jest-matcher-utils';
 
 import { bytes2DataView, BytesData, inspectSingleline, isBytesData, isNonNegativeInteger, or, padTextColumns } from '.';
+
+type MatcherUtils = jest.MatcherContext['utils'];
+export type MatcherHintOptions = Exclude<Parameters<MatcherUtils['matcherHint']>[3], undefined>;
 
 interface EnsureFuncPredicateOptions<T> {
     predicate: (value: unknown) => value is T;
@@ -18,6 +11,7 @@ interface EnsureFuncPredicateOptions<T> {
 }
 
 type EnsureFunc<TActual> = (
+    utils: MatcherUtils,
     actual: unknown,
     expected: unknown,
     matcherName: string,
@@ -37,7 +31,7 @@ function printValues(valueNameList: readonly string[]): string {
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/jest-matcher-utils/src/index.ts#L218-L238
  */
 function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
-    return (actual, expected, matcherName, options) => {
+    return (utils, actual, expected, matcherName, options) => {
         const isValidActual = opts.predicate(actual);
         const isValidExpected = opts.predicate(expected);
         if (isValidActual && isValidExpected) return;
@@ -45,16 +39,16 @@ function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
         const labelList: string[] = [];
         const specificList: string[] = [];
         if (!isValidActual) {
-            labelList.push(RECEIVED_COLOR('received'));
-            specificList.push(printWithType('Received', actual, printReceived));
+            labelList.push(utils.RECEIVED_COLOR('received'));
+            specificList.push(utils.printWithType('Received', actual, utils.printReceived));
         }
         if (!isValidExpected) {
-            labelList.push(EXPECTED_COLOR('expected'));
-            specificList.push(printWithType('Expected', expected, printExpected));
+            labelList.push(utils.EXPECTED_COLOR('expected'));
+            specificList.push(utils.printWithType('Expected', expected, utils.printExpected));
         }
 
-        throw new Error(matcherErrorMessage(
-            matcherHint(matcherName, undefined, undefined, options),
+        throw new Error(utils.matcherErrorMessage(
+            utils.matcherHint(matcherName, undefined, undefined, options),
             `${printValues(labelList)} must be ${opts.typeName}`,
             specificList.join('\n\n'),
         ));
@@ -100,6 +94,7 @@ function getByteDataLines(byteData: BytesData): {
  * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L955-L972
  */
 export function printBytesDiff(
+    utils: MatcherUtils,
     expected: BytesData,
     received: BytesData,
     options: {
@@ -127,9 +122,9 @@ export function printBytesDiff(
     }
 
     return padTextColumns([
-        ['Expected:', 'not', EXPECTED_COLOR(inspectSingleline(expected))],
+        ['Expected:', 'not', utils.EXPECTED_COLOR(inspectSingleline(expected))],
         expected.constructor !== received.constructor
-            ? ['Received:', '', RECEIVED_COLOR(inspectSingleline(received))]
+            ? ['Received:', '', utils.RECEIVED_COLOR(inspectSingleline(received))]
             : null,
     ]);
 }
