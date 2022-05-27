@@ -1,8 +1,6 @@
-import { EXPECTED_COLOR, matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import type { MatcherHintOptions } from 'jest-matcher-utils';
-
 import { BytesData, bytesEqual, byteSize, isBytesData, padTextColumns, toMessageFn } from './utils';
 import { ensureBytes, ensureByteSizeOrBytes, printBytesDiff } from './utils/jest';
+import type { MatcherHintOptions } from './utils/jest';
 
 function createCompareByteSizeMatcher(
     opts: {
@@ -31,21 +29,20 @@ function createCompareByteSizeMatcher(
             promise: this.promise,
         };
 
-        ensureByteSizeOrBytes(received, expected, matcherName, options);
+        ensureByteSizeOrBytes(this.utils, received, expected, matcherName, options);
         const expectedByteLength = isBytesData(expected) ? expected.byteLength : expected;
         const receivedByteLength = isBytesData(received) ? received.byteLength : received;
 
-        return {
-            message: toMessageFn(() => [
-                matcherHint(matcherName, undefined, undefined, options),
-                ``,
-                padTextColumns([
-                    ['Expected:', [isNot ? 'not' : '', operator], EXPECTED_COLOR(byteSize(expectedByteLength))],
-                    ['Received:', '', RECEIVED_COLOR(byteSize(receivedByteLength))],
-                ]),
+        const message = toMessageFn(() => [
+            this.utils.matcherHint(matcherName, undefined, undefined, options),
+            ``,
+            padTextColumns([
+                ['Expected:', [isNot ? 'not' : '', operator], this.utils.EXPECTED_COLOR(byteSize(expectedByteLength))],
+                ['Received:', '', this.utils.RECEIVED_COLOR(byteSize(receivedByteLength))],
             ]),
-            pass: passFn({ expected: expectedByteLength, received: receivedByteLength }),
-        };
+        ]);
+        const pass = passFn({ expected: expectedByteLength, received: receivedByteLength });
+        return { message, pass };
     };
 }
 
@@ -106,12 +103,12 @@ export function toBytesEqual(
         promise: this.promise,
     };
 
-    ensureBytes(received, expected, matcherName, options);
+    ensureBytes(this.utils, received, expected, matcherName, options);
     const pass = bytesEqual(expected, received);
     const message = toMessageFn(() => [
-        matcherHint(matcherName, undefined, undefined, options),
+        this.utils.matcherHint(matcherName, undefined, undefined, options),
         ``,
-        printBytesDiff(expected, received, {
+        printBytesDiff(this.utils, expected, received, {
             expectedLabel: 'Expected',
             receivedLabel: 'Received',
             expand: this.expand,
