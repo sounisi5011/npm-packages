@@ -1,4 +1,4 @@
-import { ParsedArgs, parseOptions } from '../../src/options.mjs';
+import { ParsedArgs, parseOptions } from '../../src/options';
 
 function m<K extends string, V>(obj: Record<K, V>): Map<K, V> {
     return new Map(Object.entries(obj) as Array<[K, V]>);

@@ -6,7 +6,6 @@
     /* Modules */
     // When the `composite` option is `true` and the `rootDir` option is undefined,
     // files will not be created directly under the `outDir`
-    "module": "Node16",
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
