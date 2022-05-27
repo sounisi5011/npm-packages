@@ -28,7 +28,7 @@
     "fmt:pkg:prettier": "globby-exec prettier-package-json --write '{{**/package.json}}'",
     "fmt:pkg:sort": "globby-exec sort-package-json '{{**/package.json}}'",
     "fmt:readme": "run-s fmt:readme:*",
-    "fmt:readme:update-badge": "globby-exec node ./scripts/update-readme-badge '{{*/**/README.md}}'",
+    "fmt:readme:update-badge": "globby-exec node ./scripts/update-readme-badge/index.mjs '{{*/**/README.md}}'",
     "fmt:ts": "run-s fmt:ts:dprint fmt:ts:eslint",
     "fmt:ts:dprint": "dprint fmt -c ./.dprint.json",
     "fmt:ts:eslint": "eslint --cache --fix --ext .ts ./",
