@@ -1,6 +1,6 @@
 import isPlainObject from 'is-plain-obj';
 
-import { isNotSupported } from '../../src/is-supported';
+import { isNotSupported } from '../../src/is-supported.mjs';
 
 const anyValues: Array<undefined | null | boolean | number | string | Record<PropertyKey, unknown> | unknown[]> = [
     undefined,

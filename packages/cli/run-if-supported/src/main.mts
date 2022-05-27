@@ -1,7 +1,6 @@
-import { promises as fsAsync } from 'fs';
-import { dirname, resolve as resolvePath } from 'path';
+import { promises as fsAsync } from 'node:fs';
+import { dirname, resolve as resolvePath } from 'node:path';
 
-// @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
 import { ArgumentError } from 'ow';
@@ -9,9 +8,9 @@ import parseJson from 'parse-json';
 import pkgUp from 'pkg-up';
 import type { JsonValue } from 'type-fest';
 
-import { isNotSupported } from './is-supported';
-import { parseOptions } from './options';
-import { filterObjectEntry, isString } from './utils';
+import { isNotSupported } from './is-supported.mjs';
+import { parseOptions } from './options.mjs';
+import { filterObjectEntry, isString } from './utils.mjs';
 
 function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entryFilepath: string): string | undefined {
     if (isPropAccessible(pkg['bin'])) {
