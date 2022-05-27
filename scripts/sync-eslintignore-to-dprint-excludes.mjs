@@ -1,9 +1,9 @@
 // @ts-check
 
-const { promises: fsAsync } = require('fs');
-const path = require('path');
+import { promises as fsAsync } from 'node:fs';
+import * as path from 'node:path';
 
-const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 
 /**
  * @param {string} message
