@@ -1,13 +1,13 @@
 // @ts-check
 
-const { promises: fsAsync } = require('fs');
-const path = require('path');
+import { promises as fsAsync } from 'node:fs';
+import * as path from 'node:path';
 
-const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
-const hostedGitInfo = require('hosted-git-info');
-const strictUriEncode = require('strict-uri-encode');
-const validateNpmPkgName = require('validate-npm-package-name');
-const { getWorkspaces, getWorkspaceRoot } = require('workspace-tools');
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
+import hostedGitInfo from 'hosted-git-info';
+import strictUriEncode from 'strict-uri-encode';
+import validateNpmPkgName from 'validate-npm-package-name';
+import { getWorkspaceRoot, getWorkspaces } from 'workspace-tools';
 
 /**
  * @typedef {Object<string, string | Partial<HeaderData>>} HeaderTable
@@ -155,10 +155,9 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
   const filedir = path.dirname(filepath);
 
   /** @type {Object<string, string | { header?: string, getVersionLink?: function(object): string }>} */
-  let headerTable = {};
-  try {
-    headerTable = require(path.resolve(filedir, '.package-list.js'));
-  } catch {}
+  const headerTable = await import(path.resolve(filedir, '.package-list.js'))
+    .then(mod => mod.default)
+    .catch(() => ({}));
 
   const packageList = rootPackageList
     .filter(({ name, path: packagePath }) => name && pathStartsWith(packagePath, filedir))

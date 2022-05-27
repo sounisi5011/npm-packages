@@ -16,7 +16,7 @@
     "build-only-packages": "ultra --recursive --filter 'packages/**' build",
     "build-protobuf": "pnpm recursive run build-protobuf --filter '*'",
     "build:dprint-config": "globby-exec node ./scripts/sync-eslintignore-to-dprint-excludes.js ./.eslintignore '{{./{dprint,.dprint}{,-*}.json}}' && globby-exec prettier --write '{{./{dprint,.dprint}{,-*}.json}}'",
-    "build:package-list": "node ./scripts/update-package-list.js ./README.md",
+    "build:package-list": "node ./scripts/update-package-list/index.mjs ./README.md",
     "build:scripts": "ultra --recursive --filter '+scripts/**' build",
     "build:submodule": "ultra --recursive build",
     "fmt": "run-p 'fmt:!(ts|js)'",
