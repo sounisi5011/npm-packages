@@ -49,11 +49,14 @@ overrides:
       # The `parserOptions.sourceType` is already defined within `plugin:n/recommended-module`.
       # However, it is written in case `eslint-plugin-n` makes destructive changes in the future.
       sourceType: module
+      # To allow ESLint to parse dynamic `import()` and `import.meta` meta properties, the `parserOptions.ecmaVersion` must be 2020 or higher.
+      ecmaVersion: 2020
     rules:
       node/no-unsupported-features/es-syntax:
         - error
         - ignores:
             - modules
+            - dynamicImport
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
