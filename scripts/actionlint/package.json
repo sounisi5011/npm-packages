@@ -2,6 +2,7 @@
   "name": "@sounisi5011/actionlint",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "bin": "bin.mjs",
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",

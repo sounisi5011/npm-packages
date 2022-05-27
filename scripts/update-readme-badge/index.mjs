@@ -1,10 +1,10 @@
 // @ts-check
 
-const { promises: fsAsync } = require('fs');
-const path = require('path');
+import { promises as fsAsync } from 'node:fs';
+import * as path from 'node:path';
 
-const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
-const { getWorkspaceRoot } = require('workspace-tools');
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
+import { getWorkspaceRoot } from 'workspace-tools';
 
 /**
  * @param {string} str
@@ -41,10 +41,12 @@ function reportError(message) {
 
 /**
  * @param {string} filepath
+ * @returns {Promise<object|undefined>}
  */
-function tryReadJson(filepath) {
+async function tryReadJson(filepath) {
   try {
-    return require(filepath);
+    const fileText = await fsAsync.readFile(filepath, 'utf8');
+    return JSON.parse(fileText);
   } catch {}
 }
 
@@ -161,7 +163,7 @@ async function main() {
   for (const filepath of filepathList) {
     try {
       const readmeText = await fsAsync.readFile(filepath, 'utf8');
-      const pkg = tryReadJson(path.resolve(path.dirname(filepath), 'package.json')) || {};
+      const pkg = (await tryReadJson(path.resolve(path.dirname(filepath), 'package.json'))) || {};
 
       const updatedReadmeText = readmeText
         .replace(NPM_BADGE, replaceNpm(pkg))

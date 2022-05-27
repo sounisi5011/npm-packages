@@ -1,16 +1,16 @@
 // @ts-check
 
 /*
- * This file is used by `./scripts/update-package-list.js`
+ * This file is used by `./scripts/update-package-list`
  */
 
-/** @type {import("./scripts/update-package-list").HeaderData['getVersionLink']} */
+/** @type {import("./scripts/update-package-list/index.mjs").HeaderData['getVersionLink']} */
 function createNpmBadge(data) {
   const npmBadge = `![npm](https://img.shields.io/npm/v/${data.name}.svg)`;
   return `[${npmBadge}](https://www.npmjs.com/package/${data.name})`;
 }
 
-/** @type {import("./scripts/update-package-list").HeaderTable} */
+/** @type {import("./scripts/update-package-list/index.mjs").HeaderTable} */
 const list = {
   'packages': {
     header: 'Packages',

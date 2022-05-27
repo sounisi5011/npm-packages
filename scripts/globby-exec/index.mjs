@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // @ts-check
 
-const { awaitMainFn } = require('@sounisi5011/cli-utils-top-level-await');
-const spawn = require('cross-spawn');
-const globby = require('globby');
+import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
+import { spawn } from 'cross-spawn';
+import globby from 'globby';
 
 /**
  * @param {readonly string[]} args

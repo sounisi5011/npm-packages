@@ -206,7 +206,7 @@ jobs:
       - name: Publish / Update README
         run: |
           pnpm run build:scripts
-          node ./scripts/publish-convert-readme.js '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
+          node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish
         env:
