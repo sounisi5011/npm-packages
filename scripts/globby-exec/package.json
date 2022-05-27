@@ -2,12 +2,16 @@
   "name": "@sounisi5011/scripts--globby-exec",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "bin": {
-    "globby-exec": "index.js"
+    "globby-exec": "index.mjs"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "cross-spawn": "^7.0.3",
     "globby": "^11.0.3"
+  },
+  "engines": {
+    "node": "^12.20 || >=14.13"
   }
 }
