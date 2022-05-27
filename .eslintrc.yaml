@@ -4,6 +4,7 @@ extends:
   - plugin:import/errors
   - plugin:import/warnings
   - plugin:node/recommended-script
+  - plugin:n/recommended-script
   - plugin:promise/recommended
   - standard
 parserOptions:
@@ -42,7 +43,11 @@ overrides:
   - files:
       - "*.mjs"
       - "**/rollup.config.js"
+    extends:
+      - plugin:n/recommended-module
     parserOptions:
+      # The `parserOptions.sourceType` is already defined within `plugin:n/recommended-module`.
+      # However, it is written in case `eslint-plugin-n` makes destructive changes in the future.
       sourceType: module
     rules:
       node/no-unsupported-features/es-syntax:
@@ -52,10 +57,13 @@ overrides:
   - files: "*.ts"
     extends:
       - plugin:node/recommended-module
+      - plugin:n/recommended-module
       - plugin:@typescript-eslint/recommended
       - plugin:import/typescript
       - standard-with-typescript
     parserOptions:
+      # The `parserOptions.sourceType` is already defined within `plugin:n/recommended-module`.
+      # However, it is written in case `eslint-plugin-n` makes destructive changes in the future.
       sourceType: module
       project:
         - ./packages/{*,*/*}/src/tsconfig.json
@@ -88,9 +96,22 @@ overrides:
       # Therefore, there is no need to verify the file path imported by ESLint.
       import/no-unresolved: off
       node/no-missing-import: off
+      n/no-missing-import: off
       # The "node/no-unpublished-import" rule does not support "import type ... from '...'" statements.
       # This causes an error when importing a type definition file that is not published.
       node/no-unpublished-import: off
+      n/no-unpublished-import: off
+      # TypeScript converts some ECMAScript syntax. So, disable the syntax available in TypeScript.
+      n/no-unsupported-features/es-syntax:
+        - error
+        - ignores:
+            - optionalChaining
+            - nullishCoalescingOperators
+            # The `modules` is specified by `plugin:n/recommended-module`.
+            # However, it is lost when the rules are overwritten.
+            # For this reason, it is necessary to write it here.
+            # see https://github.com/weiran-zsd/eslint-plugin-node/blob/15.2.0/lib/configs/recommended-module.js#L22-L25
+            - modules
       # I don't want to use "nodeify" package.
       promise/no-callback-in-promise: off
       # The "@typescript-eslint/strict-boolean-expressions" rule is very strict and stressful.
@@ -127,6 +148,7 @@ overrides:
   - files: "**/examples/**"
     rules:
       node/no-missing-require: off
+      n/no-missing-require: off
   - files:
       - "**/.lintstagedrc.{js,cjs,mjs}"
       - scripts/*.js
@@ -137,12 +159,13 @@ overrides:
         - error
         - devDependencies: true
       node/no-unpublished-require: off
-      node/no-unsupported-features/es-syntax:
+      n/no-unpublished-require: off
+      node/no-unsupported-features/es-syntax: &no-unsupported-features-node-12
         - error
         - version: 12.x
-      node/no-unsupported-features/node-builtins:
-        - error
-        - version: 12.x
+      n/no-unsupported-features/es-syntax: *no-unsupported-features-node-12
+      node/no-unsupported-features/node-builtins: *no-unsupported-features-node-12
+      n/no-unsupported-features/node-builtins: *no-unsupported-features-node-12
   - files: "**/rollup.config.js"
     rules:
       import/no-extraneous-dependencies:
