@@ -55,8 +55,7 @@
   },
   "dependencies": {
     "@sounisi5011/ts-type-util-is-readonly-array": "workspace:^1.0.0",
-    "jest-diff": "^28.0.0",
-    "jest-matcher-utils": "^27.3.1"
+    "jest-diff": "^28.0.0"
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
