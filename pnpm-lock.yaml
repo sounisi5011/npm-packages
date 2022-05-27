@@ -411,11 +411,11 @@ importers:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       cross-spawn: ^7.0.3
-      globby: ^11.0.3
+      globby: ^13.0.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       cross-spawn: 7.0.3
-      globby: 11.0.4
+      globby: 13.1.1
 
   scripts/update-package-list:
     specifiers:
@@ -3188,7 +3188,6 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.4
-    dev: true
 
   /fast-glob/3.2.7:
     resolution: {integrity: sha512-rYGMRwip6lUMvYD3BTScMwT1HtAs2d71SMv66Vrxs0IekGZEjhM0pcMfjQPnknBt2zeCwQMEupiN02ZP4DiT1Q==}
@@ -3578,7 +3577,6 @@ packages:
       ignore: 5.2.0
       merge2: 1.4.1
       slash: 4.0.0
-    dev: true
 
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
@@ -5976,7 +5974,6 @@ packages:
   /slash/4.0.0:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
-    dev: true
 
   /slice-ansi/3.0.0:
     resolution: {integrity: sha512-pSyv7bSTC7ig9Dcgbw9AuRNUb5k5V6oDudjZoMBSr13qpLBG7tB+zgCkARjq7xIUgdz5P1Qe8u+rSGdouOOIyQ==}
