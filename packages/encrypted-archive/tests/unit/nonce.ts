@@ -743,7 +743,7 @@ describe('class Nonce', () => {
                     expect(nonceState.getDiff(prevNonce, currentNonce))
                         .toStrictEqual({
                             fixedField: expect.any(BigInt),
-                            resetInvocationCount: resetInvocationCount,
+                            resetInvocationCount,
                         });
                 });
             });
