@@ -38,13 +38,14 @@ function createEnsure<T>(opts: EnsureFuncPredicateOptions<T>): EnsureFunc<T> {
 
         const labelList: string[] = [];
         const specificList: string[] = [];
+        const { printWithType, printExpected, printReceived, EXPECTED_COLOR, RECEIVED_COLOR } = utils;
         if (!isValidActual) {
-            labelList.push(utils.RECEIVED_COLOR('received'));
-            specificList.push(utils.printWithType('Received', actual, utils.printReceived));
+            labelList.push(RECEIVED_COLOR('received'));
+            specificList.push(printWithType('Received', actual, printReceived));
         }
         if (!isValidExpected) {
-            labelList.push(utils.EXPECTED_COLOR('expected'));
-            specificList.push(utils.printWithType('Expected', expected, utils.printExpected));
+            labelList.push(EXPECTED_COLOR('expected'));
+            specificList.push(printWithType('Expected', expected, printExpected));
         }
 
         throw new Error(utils.matcherErrorMessage(
