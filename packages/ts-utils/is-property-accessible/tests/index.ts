@@ -9,7 +9,7 @@ const anyValues: ReadonlyArray<
     true,
     false,
     ...numList,
-    // eslint-disable-next-line node/no-unsupported-features/es-builtins
+    // eslint-disable-next-line node/no-unsupported-features/es-builtins, n/no-unsupported-features/es-builtins
     ...(typeof BigInt === 'function' ? numList.map(v => BigInt(v)) : []),
     NaN,
     Infinity,
