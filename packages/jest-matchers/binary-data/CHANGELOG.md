@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.2](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.1...jest-binary-data-matchers-v1.1.2) (2022-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-diff to v28 ([#413](https://www.github.com/sounisi5011/npm-packages/issues/413)) ([a44157d](https://www.github.com/sounisi5011/npm-packages/commit/a44157dbf67238e88d83cb7c934b158875d3e6dd))
+
 ### [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)
 
 
