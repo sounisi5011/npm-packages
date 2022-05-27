@@ -3,7 +3,7 @@
 
 import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 import { spawn } from 'cross-spawn';
-import globby from 'globby';
+import { globby } from 'globby';
 
 /**
  * @param {readonly string[]} args
@@ -29,7 +29,7 @@ function parseCommandArgs(args) {
  * @param {Set<string>} globbyArgsSet
  */
 function getGlobbyOptions(globbyArgsSet) {
-  /** @type {globby.GlobbyOptions} */
+  /** @type {import('globby').Options} */
   const globbyOptions = {
     absolute: globbyArgsSet.has('--absolute'),
     dot: globbyArgsSet.has('--dot'),
@@ -43,7 +43,7 @@ function getGlobbyOptions(globbyArgsSet) {
 }
 
 /**
- * @param {globby.GlobbyOptions} globbyOptions
+ * @param {import('globby').Options} globbyOptions
  * @returns {(arg: string) => Promise<string[]>}
  */
 function replaceGlob(globbyOptions) {
