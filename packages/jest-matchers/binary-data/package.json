@@ -51,7 +51,7 @@
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose run-p test:*",
-    "test:jest": "jest --color=true"
+    "test:jest": "cross-env FORCE_COLOR=1 jest"
   },
   "dependencies": {
     "@sounisi5011/ts-type-util-is-readonly-array": "workspace:^1.0.0",
@@ -61,6 +61,7 @@
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@types/jest": "27.5.1",
     "@types/node": "12.20.52",
+    "cross-env": "7.0.3",
     "jest": "28.1.0",
     "pretty-format": "28.1.0",
     "ts-jest": "28.0.3",
