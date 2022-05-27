@@ -48,7 +48,7 @@
     "@sounisi5011/actionlint": "link:scripts/actionlint",
     "@sounisi5011/scripts--fix-flatbuffers-generated-ts": "workspace:^0.0.0",
     "@sounisi5011/scripts--globby-exec": "workspace:^0.0.0",
-    "@tsconfig/node12": "1.0.9",
+    "@tsconfig/node14": "1.0.1",
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
     "commitizen": "4.2.4",
