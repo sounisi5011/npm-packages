@@ -55,14 +55,14 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "jest"
+    "test": "pnpm --package=@sounisi5011/run-if-supported@1.x dlx run-if-supported --verbose jest"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
     "command-join": "^3.0.0",
     "cross-spawn": "^7.0.3",
-    "npm-install-checks": "^4.0.0",
+    "npm-install-checks": "^5.0.0",
     "ow": "^0.28.0",
     "parse-json": "^5.2.0",
     "pkg-up": "^3.1.0"
@@ -81,6 +81,6 @@
     "ultra-runner": "3.10.5"
   },
   "engines": {
-    "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x"
+    "node": "^12.17.x || ^14.15.0 || 16.x || 17.x"
   }
 }

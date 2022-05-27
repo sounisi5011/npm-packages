@@ -177,7 +177,7 @@ importers:
       execa: 5.1.1
       is-plain-obj: 3.0.0
       jest: 28.1.0
-      npm-install-checks: ^4.0.0
+      npm-install-checks: ^5.0.0
       ow: ^0.28.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
@@ -190,7 +190,7 @@ importers:
       '@sounisi5011/ts-utils-is-property-accessible': link:../../ts-utils/is-property-accessible
       command-join: 3.0.0
       cross-spawn: 7.0.3
-      npm-install-checks: 4.0.0
+      npm-install-checks: 5.0.0
       ow: 0.28.1
       parse-json: 5.2.0
       pkg-up: 3.1.0
@@ -5175,11 +5175,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /npm-install-checks/4.0.0:
-    resolution: {integrity: sha512-09OmyDkNLYwqKPOnbI8exiOZU2GVVmQp7tgez2BPi5OZC8M82elDAps7sxC4l//uSUtotWqoEIDwjRvWH4qz8w==}
-    engines: {node: '>=10'}
+  /npm-install-checks/5.0.0:
+    resolution: {integrity: sha512-65lUsMI8ztHCxFz5ckCEC44DRvEGdZX5usQFriauxHEwt7upv1FKaQEmAtU0YnOAdwuNWCmk64xYiQABNrEyLA==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
-      semver: 7.3.5
+      semver: 7.3.7
     dev: false
 
   /npm-run-all/4.1.5:
@@ -5881,14 +5881,6 @@ packages:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
     dev: true
-
-  /semver/7.3.5:
-    resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      lru-cache: 6.0.0
-    dev: false
 
   /semver/7.3.7:
     resolution: {integrity: sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==}
