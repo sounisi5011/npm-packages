@@ -7,13 +7,14 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import * as stream from 'node:stream';
+import * as url from 'node:url';
 import * as util from 'node:util';
 
 import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 import crossSpawn from 'cross-spawn';
 import fetch from 'node-fetch';
 
-import { dirname as dirpath } from './dirname.cjs';
+const dirpath = path.dirname(url.fileURLToPath(import.meta.url));
 
 /**
  * @see https://github.com/rhysd/actionlint/blob/v1.6.7/docs/install.md#download-script
