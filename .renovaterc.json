@@ -6,6 +6,7 @@
     "helpers:disableTypesNodeMajor"
   ],
   "ignorePresets": ["group:monorepos"],
+  "ignoreDeps": ["argon2"],
   "packageRules": [
     {
       "matchPaths": ["actions/**"],
