@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.1.2](https://www.github.com/sounisi5011/npm-packages/compare/check-pid-file-v1.1.1...check-pid-file-v1.1.2) (2022-05-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency write-file-atomic to v4 ([#378](https://www.github.com/sounisi5011/npm-packages/issues/378)) ([bcb6f81](https://www.github.com/sounisi5011/npm-packages/commit/bcb6f8117864ea90c6f69c8ebb31609b7ad2627c))
+* **node:** support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428)) ([fe3aa4d](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1))
+
+
+### Reverts
+
+* **check-pid-file:** remove unintentionally included breaking changes ([#432](https://www.github.com/sounisi5011/npm-packages/issues/432)) ([fa63d1f](https://www.github.com/sounisi5011/npm-packages/commit/fa63d1ff29bfd4b5ed89de2cc6942661f66d8367))
+
 ### [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/check-pid-file-v1.1.0...check-pid-file-v1.1.1) (2021-12-09)
 
 
