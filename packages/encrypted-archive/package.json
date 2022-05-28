@@ -89,7 +89,6 @@
   "dependencies": {
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
-    "argon2": "0.27.2",
     "argon2-browser": "^1.15.4",
     "bl": "^5.0.0",
     "capitalize": "^2.0.3",
@@ -122,6 +121,9 @@
     "ts-jest": "28.0.3",
     "typescript": "4.7.2",
     "ultra-runner": "3.10.5"
+  },
+  "optionalDependencies": {
+    "argon2": "0.27.2"
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x || >=18.x"
