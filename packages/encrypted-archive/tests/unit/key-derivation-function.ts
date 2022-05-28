@@ -359,7 +359,7 @@ describe('algorithm: Argon2', () => {
         const salt = Buffer.alloc(saltLength);
         await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
             Error,
-            `Internal error from Argon2: Memory cost is too large`,
+            /^Internal error from Argon2: /,
         );
     });
 });
