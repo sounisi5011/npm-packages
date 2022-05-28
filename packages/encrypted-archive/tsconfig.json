@@ -5,6 +5,7 @@
 
     /* Modules */
     "rootDir": "./",
+    "moduleResolution": "Node",
     "types": [],
 
     /* Emit */

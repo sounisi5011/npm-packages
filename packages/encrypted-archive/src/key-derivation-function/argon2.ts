@@ -1,6 +1,5 @@
 import { version as nodeVersion } from 'process';
 
-// @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import capitalize from 'capitalize';
 
@@ -283,13 +282,13 @@ export type Argon2HashFn = (options: Argon2HashOptions) => Promise<Uint8Array>;
  */
 let argon2Hash: Argon2HashFn = async options => {
     const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
-    ({ argon2Hash } = (await (
+    ({ argon2Hash } = await (
         (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
             ? // In Node.js >=18.1.0, use node-argon2
                 import('./argon2/node.js') // eslint-disable-line node/no-unsupported-features/es-syntax
             : // For Node.js <18.1.0, use argon2-browser
                 import('./argon2/wasm.js') // eslint-disable-line node/no-unsupported-features/es-syntax
-    )).default);
+    ));
     return await argon2Hash(options);
 };
 
