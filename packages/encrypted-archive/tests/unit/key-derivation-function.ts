@@ -344,22 +344,37 @@ describe('algorithm: Argon2', () => {
         });
     });
 
-    it('internal error', async () => {
-        const { deriveKey, saltLength } = getKDF({
-            algorithm: 'argon2d',
-            iterations: ARGON2_MIN_TIME,
-            parallelism: ARGON2_MIN_THREADS,
-            /**
-             * This option tells Argon2 to use 1TiB of memory.
-             * However, at present (May 2021), there is no computer in this world with such a huge memory.
-             * Therefore, this process will always fail and Argon2's internal error will be output.
-             */
-            memory: 2 ** 40 / 2 ** 10,
+    if (process.env['CI']) {
+        /**
+         * This test is run on CI only.
+         * When run on a local computer, this test does not work as expected.
+         * At least it works properly on Ubuntu 20.04 on GitHub Actions.
+         */
+        it('internal error', async () => {
+            const { deriveKey, saltLength } = getKDF({
+                algorithm: 'argon2d',
+                iterations: ARGON2_MIN_TIME,
+                parallelism: ARGON2_MIN_THREADS,
+                /**
+                 * This option tells Argon2 to use 1TiB of memory.
+                 * However, at present (May 2021), there is no computer in this world with such a huge memory.
+                 * Therefore, this process will always fail and Argon2's internal error will be output.
+                 */
+                memory: 2 ** 40 / 2 ** 10,
+            });
+            const salt = Buffer.alloc(saltLength);
+            await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                Error,
+                /^Internal error from Argon2: /,
+            );
         });
-        const salt = Buffer.alloc(saltLength);
-        await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
-            Error,
-            /^Internal error from Argon2: /,
-        );
-    });
+    } else {
+        /**
+         * This test case is a dummy
+         */
+        // eslint-disable-next-line jest/no-identical-title, jest/no-disabled-tests
+        it.skip('internal error', () => {
+            expect.anything();
+        });
+    }
 });
