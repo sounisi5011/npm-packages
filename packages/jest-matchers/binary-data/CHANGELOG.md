@@ -5,6 +5,7 @@
 
 ### Features
 
+* Support Jest 28 ([#409](https://github.com/sounisi5011/npm-packages/pull/409)) ([aa545ea](https://github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011))
 * **jest-binary-data-matchers:** remove unnecessary dependencies: jest-matcher-utils ([#425](https://www.github.com/sounisi5011/npm-packages/issues/425)) ([7ea12c6](https://www.github.com/sounisi5011/npm-packages/commit/7ea12c6163527a3ea1da0d7a2c84a9dfa84d1a55))
 
 
