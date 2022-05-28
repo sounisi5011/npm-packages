@@ -33,10 +33,7 @@ export const defaultOptions: NormalizedArgon2Options = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=5
  */
-const ARGON2_ITERATIONS = {
-    MIN: 1,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_ITERATIONS = { MIN: 1, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -57,10 +54,7 @@ const ARGON2_MEMORY = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_PARALLELISM = {
-    MIN: 1,
-    MAX: 2 ** 24 - 1,
-};
+const ARGON2_PARALLELISM = { MIN: 1, MAX: 2 ** 24 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -68,10 +62,7 @@ const ARGON2_PARALLELISM = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_PASSWORD = {
-    MIN: 0,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_PASSWORD = { MIN: 0, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -79,10 +70,7 @@ const ARGON2_PASSWORD = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_SALT = {
-    MIN: 8,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_SALT = { MIN: 8, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -90,10 +78,7 @@ const ARGON2_SALT = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_OUTPUT = {
-    MIN: 4,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_OUTPUT = { MIN: 4, MAX: 2 ** 32 - 1 };
 /**
  * > 9 Recommended parameters
  * > 5. Select the salt length. 128 bits is sufficient for all applications, but can be reduced to 64 bits in the case
@@ -292,11 +277,8 @@ let argon2Hash: Argon2HashFn = async options => {
     return await argon2Hash(options);
 };
 
-function createDeriveKeyFunc(
-    algorithm: Argon2Algorithm,
-    options: Omit<NormalizedArgon2Options, 'algorithm'>,
-): GetArgon2KDFResult['deriveKey'] {
-    return async (password, salt, keyLengthBytes) => {
+const createDeriveKeyFunc = (options: NormalizedArgon2Options): GetArgon2KDFResult['deriveKey'] =>
+    async (password, salt, keyLengthBytes) => {
         validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
         validateBetweenLength(
             'keyLengthBytes',
@@ -313,14 +295,12 @@ function createDeriveKeyFunc(
 
         return await argon2Hash({
             ...options,
-            algorithm,
             password: passwordBufferOrString,
             salt,
             hashLength: keyLengthBytes,
         })
             .catch(normalizeInternalError);
     };
-}
 
 export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResult {
     const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
@@ -332,7 +312,7 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResu
     validateArgon2Options(argon2Options);
 
     return {
-        deriveKey: createDeriveKeyFunc(algorithm, argon2Options),
+        deriveKey: createDeriveKeyFunc({ algorithm, ...argon2Options }),
         saltLength: SALT_LEN,
         normalizedOptions: { algorithm, ...argon2Options },
     };
