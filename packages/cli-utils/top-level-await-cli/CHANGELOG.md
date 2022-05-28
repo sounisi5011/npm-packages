@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.3](https://www.github.com/sounisi5011/npm-packages/compare/cli-utils-top-level-await-v1.1.2...cli-utils-top-level-await-v1.1.3) (2022-05-28)
+
+
+### Bug Fixes
+
+* **node:** support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428)) ([fe3aa4d](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1))
+
 ### [1.1.2](https://www.github.com/sounisi5011/npm-packages/compare/cli-utils-top-level-await-v1.1.1...cli-utils-top-level-await-v1.1.2) (2021-12-09)
 
 

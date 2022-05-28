@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.2...ts-utils-is-property-accessible-v1.0.3) (2022-05-28)
+
+
+### Bug Fixes
+
+* **ts-utils-is-property-accessible:** add "types" import condition into `exports` field in `package.json` ([#406](https://www.github.com/sounisi5011/npm-packages/issues/406)) ([deb7ab2](https://www.github.com/sounisi5011/npm-packages/commit/deb7ab23503f6cd4dcd861538b2f790e376fbfe5))
+
 ### [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.1...ts-utils-is-property-accessible-v1.0.2) (2021-12-09)
 
 
