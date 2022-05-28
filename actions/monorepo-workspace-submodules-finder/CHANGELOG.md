@@ -1,5 +1,16 @@
 # Changelog
 
+### [1.2.4](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.3...monorepo-workspace-submodules-finder-action-v1.2.4) (2022-05-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @actions/core to v1.8.2 ([#396](https://www.github.com/sounisi5011/npm-packages/issues/396)) ([bc582a6](https://www.github.com/sounisi5011/npm-packages/commit/bc582a6581c4894c618aa5c10a7b01b81911c833))
+* **deps:** update dependency @actions/exec to v1.1.1 ([#388](https://www.github.com/sounisi5011/npm-packages/issues/388)) ([2c3d831](https://www.github.com/sounisi5011/npm-packages/commit/2c3d831854eec3781768c6e23e8567b7ac15ba28))
+* **deps:** update dependency @actions/github to v5.0.3 ([#389](https://www.github.com/sounisi5011/npm-packages/issues/389)) ([c9fcd06](https://www.github.com/sounisi5011/npm-packages/commit/c9fcd066462e8702056453d059f24587811de366))
+* **deps:** update dependency validate-npm-package-name to v4 ([#418](https://www.github.com/sounisi5011/npm-packages/issues/418)) ([b30d8a5](https://www.github.com/sounisi5011/npm-packages/commit/b30d8a51414ea0520e97995c2404a2e2980b34b6))
+* **deps:** update dependency workspace-tools to v0.19.0 ([#356](https://www.github.com/sounisi5011/npm-packages/issues/356)) ([452dfc3](https://www.github.com/sounisi5011/npm-packages/commit/452dfc3721000c7aa66e2081fd6b1474382a0601))
+
 ### [1.2.3](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.2...monorepo-workspace-submodules-finder-action-v1.2.3) (2022-01-07)
 
 
