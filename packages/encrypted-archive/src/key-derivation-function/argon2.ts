@@ -274,54 +274,24 @@ interface Argon2HashOptions extends NormalizedArgon2Options {
     salt: Uint8Array;
     hashLength: number;
 }
+export type Argon2HashFn = (options: Argon2HashOptions) => Promise<Uint8Array>;
 
-let argon2Node: typeof import('argon2') | undefined;
-let argon2Browser: typeof import('argon2-browser') | undefined;
-const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
 /**
  * For Node.js 18.1.0 and later, use node-argon2 instead of argon2-browser.
  * Because argon2-browser fails in Node.js 18.1.0 or later.
  * @see https://github.com/antelle/argon2-browser/issues/81
  */
-const argon2Hash: (options: Argon2HashOptions) => Promise<Uint8Array> =
-    (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
-        ? // In Node.js >=18.1.0, use node-argon2
-            async options => {
-                // eslint-disable-next-line node/no-unsupported-features/es-syntax
-                if (!argon2Node) argon2Node = (await import('argon2')).default;
-                const typeRecord = {
-                    argon2d: argon2Node.argon2d,
-                    argon2id: argon2Node.argon2id,
-                } as const;
-                return await argon2Node.hash(options.password, {
-                    salt: Buffer.from(options.salt),
-                    timeCost: options.iterations,
-                    memoryCost: options.memory,
-                    hashLength: options.hashLength,
-                    parallelism: options.parallelism,
-                    type: typeRecord[options.algorithm],
-                    raw: true,
-                });
-            }
-        : // For Node.js <18.1.0, use argon2-browser
-            async options => {
-                // eslint-disable-next-line node/no-unsupported-features/es-syntax
-                if (!argon2Browser) argon2Browser = (await import('argon2-browser')).default;
-                const typeRecord = {
-                    argon2d: argon2Browser.ArgonType.Argon2d,
-                    argon2id: argon2Browser.ArgonType.Argon2id,
-                } as const;
-                const result = await argon2Browser.hash({
-                    pass: options.password,
-                    salt: options.salt,
-                    time: options.iterations,
-                    mem: options.memory,
-                    hashLen: options.hashLength,
-                    parallelism: options.parallelism,
-                    type: typeRecord[options.algorithm],
-                });
-                return result.hash;
-            };
+let argon2Hash: Argon2HashFn = async options => {
+    const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
+    ({ argon2Hash } = (await (
+        (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
+            ? // In Node.js >=18.1.0, use node-argon2
+                import('./argon2/node.js') // eslint-disable-line node/no-unsupported-features/es-syntax
+            : // For Node.js <18.1.0, use argon2-browser
+                import('./argon2/wasm.js') // eslint-disable-line node/no-unsupported-features/es-syntax
+    )).default);
+    return await argon2Hash(options);
+};
 
 function createDeriveKeyFunc(
     algorithm: Argon2Algorithm,
