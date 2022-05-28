@@ -78,7 +78,7 @@ To define the supported Node.js versions, use the [`engines.node` field](https:/
 ```json
 {
   "engines": {
-    "node": "12.x || 14.x || 16.x"
+    "node": "14.x || 16.x || 18.x"
   }
 }
 ```
