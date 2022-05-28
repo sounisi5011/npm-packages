@@ -1,15 +1,18 @@
 // @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
-import { ArgonType, hash as argonHash } from 'argon2-browser';
+import argon2 from 'argon2';
+import type { Options } from 'argon2';
 import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
 
+type ArgonType = Exclude<Options['type'], undefined>;
+
 const argon2TypeRecord = {
-    argon2d: ArgonType.Argon2d,
-    argon2id: ArgonType.Argon2id,
+    argon2d: argon2.argon2d,
+    argon2id: argon2.argon2id,
 };
 const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
 const typeNameList = [...argon2TypeMap.keys()];
@@ -288,16 +291,15 @@ function createDeriveKeyFunc(
             { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
-        return await argonHash({
-            pass: passwordBufferOrString,
-            salt,
-            time: options.iterations,
-            mem: options.memory,
-            hashLen: keyLengthBytes,
+        return await argon2.hash(passwordBufferOrString, {
+            salt: Buffer.from(salt),
+            timeCost: options.iterations,
+            memoryCost: options.memory,
+            hashLength: keyLengthBytes,
             parallelism: options.parallelism,
             type,
+            raw: true,
         })
-            .then(({ hash }) => hash)
             .catch(normalizeInternalError);
     };
 }
