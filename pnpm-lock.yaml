@@ -215,6 +215,7 @@ importers:
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
+      '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.6
@@ -222,6 +223,7 @@ importers:
       '@types/node': 12.20.52
       '@types/varint': 6.0.0
       argon2: 0.27.2
+      argon2-browser: ^1.15.4
       bl: ^5.0.0
       bytefield-svg: 1.6.1
       capitalize: ^2.0.3
@@ -244,6 +246,7 @@ importers:
       '@sounisi5011/stream-transform-from': link:../stream-transform-from
       '@sounisi5011/ts-utils-is-property-accessible': link:../ts-utils/is-property-accessible
       argon2: 0.27.2
+      argon2-browser: 1.18.0
       bl: 5.0.0
       capitalize: 2.0.4
       google-protobuf: 3.20.1
@@ -253,6 +256,7 @@ importers:
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': link:../cli/run-if-supported
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
+      '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.6
@@ -1383,6 +1387,10 @@ packages:
     hasBin: true
     dev: true
 
+  /@types/argon2-browser/1.18.1:
+    resolution: {integrity: sha512-PZffP/CqH9m2kovDSRQMfMMxUC3V98I7i7/caa0RB0/nvsXzYbL9bKyqZpNMFmLFGZslROlG1R60ONt7abrwlA==}
+    dev: true
+
   /@types/babel__core/7.1.19:
     resolution: {integrity: sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==}
     dependencies:
@@ -1911,6 +1919,10 @@ packages:
     resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
     dev: true
     optional: true
+
+  /argon2-browser/1.18.0:
+    resolution: {integrity: sha512-ImVAGIItnFnvET1exhsQB7apRztcoC5TnlSqernMJDUjbc/DLq3UEYeXFrLPrlaIl8cVfwnXb6wX2KpFf2zxHw==}
+    dev: false
 
   /argon2/0.27.2:
     resolution: {integrity: sha512-evnzS/Q9rj6ahaaCJjLDoJo9ZuXHhVL2BrBz3wFHb5/i9zAJovBuIY+5t2En7tJjhFXs4O3rUZDeGZxBiDOLwQ==}
