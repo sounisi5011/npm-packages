@@ -94,7 +94,7 @@ describe('isProcessExist()', () => {
                     }));
                 break;
             }
-        });
+        }, 15 * 1000);
     });
 
     it('detect existing pid', async () => {
