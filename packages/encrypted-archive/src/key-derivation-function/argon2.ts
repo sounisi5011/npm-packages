@@ -275,17 +275,16 @@ interface Argon2HashOptions extends NormalizedArgon2Options {
     hashLength: number;
 }
 
+let argon2Node: typeof import('argon2') | undefined;
+let argon2Browser: typeof import('argon2-browser') | undefined;
+const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
 /**
  * For Node.js 18.1.0 and later, use node-argon2 instead of argon2-browser.
  * Because argon2-browser fails in Node.js 18.1.0 or later.
  * @see https://github.com/antelle/argon2-browser/issues/81
  */
-const argon2Hash: (options: Argon2HashOptions) => Promise<Uint8Array> = (() => {
-    let argon2Browser: typeof import('argon2-browser') | undefined;
-    let argon2Node: typeof import('argon2') | undefined;
-
-    const match = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
-    return (Number(match?.[1]) >= 18 && Number(match?.[2]) >= 1)
+const argon2Hash: (options: Argon2HashOptions) => Promise<Uint8Array> =
+    (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
         ? // In Node.js >=18.1.0, use node-argon2
             async options => {
                 // eslint-disable-next-line node/no-unsupported-features/es-syntax
@@ -323,7 +322,6 @@ const argon2Hash: (options: Argon2HashOptions) => Promise<Uint8Array> = (() => {
                 });
                 return result.hash;
             };
-})();
 
 function createDeriveKeyFunc(
     algorithm: Argon2Algorithm,
