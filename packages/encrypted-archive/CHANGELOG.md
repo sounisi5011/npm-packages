@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.1.0...encrypted-archive-v0.1.1) (2022-05-29)
+
+
+### Bug Fixes
+
+* **encrypted-archive:** support Node.js v18+ ([#433](https://www.github.com/sounisi5011/npm-packages/issues/433)) ([61952dd](https://www.github.com/sounisi5011/npm-packages/commit/61952dd4acacf24d3eb8990b033c220786727624))
+
 ## [0.1.0](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.4...encrypted-archive-v0.1.0) (2021-12-09)
 
 
