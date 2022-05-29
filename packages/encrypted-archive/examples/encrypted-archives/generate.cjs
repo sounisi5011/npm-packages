@@ -66,6 +66,7 @@ const { version: encryptedArchiveVersion } = require('@sounisi5011/encrypted-arc
           await fsAsync.writeFile(
             path.resolve(outputDirpath, outputFilename),
             encryptor(cleartextChunks),
+            { mode: 0o444, flag: 'wx' },
           );
         }
       }
