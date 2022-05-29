@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/ts-utils-is-property-accessible",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Check if a value is property accessible",
   "keywords": [
     "assert",
@@ -82,7 +82,7 @@
     "@types/jest": "27.5.1",
     "glob-exec": "0.1.1",
     "jest": "28.1.0",
-    "rollup": "2.75.0",
+    "rollup": "2.75.1",
     "ts-jest": "28.0.3",
     "tsd": "0.20.0",
     "tslib": "2.4.0",

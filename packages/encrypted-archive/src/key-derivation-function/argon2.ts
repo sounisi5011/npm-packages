@@ -1,20 +1,15 @@
-// @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
+import { version as nodeVersion } from 'process';
+
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
-import { ArgonType, hash as argonHash } from 'argon2-browser';
 import capitalize from 'capitalize';
 
 import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
 
-const argon2TypeRecord = {
-    argon2d: ArgonType.Argon2d,
-    argon2id: ArgonType.Argon2id,
-};
-const argon2TypeMap = new Map((Object.entries as objectEntries)(argon2TypeRecord).map(([k, type]) => [k, { type }]));
-const typeNameList = [...argon2TypeMap.keys()];
+const argon2TypeNameList = ['argon2d', 'argon2id'] as const;
 
-export type Argon2Algorithm = (typeof typeNameList)[number];
+export type Argon2Algorithm = (typeof argon2TypeNameList)[number];
 export interface Argon2Options extends BaseKeyDerivationOptions {
     algorithm: Argon2Algorithm;
     iterations?: number | undefined;
@@ -38,10 +33,7 @@ export const defaultOptions: NormalizedArgon2Options = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=5
  */
-const ARGON2_ITERATIONS = {
-    MIN: 1,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_ITERATIONS = { MIN: 1, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -62,10 +54,7 @@ const ARGON2_MEMORY = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_PARALLELISM = {
-    MIN: 1,
-    MAX: 2 ** 24 - 1,
-};
+const ARGON2_PARALLELISM = { MIN: 1, MAX: 2 ** 24 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -73,10 +62,7 @@ const ARGON2_PARALLELISM = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_PASSWORD = {
-    MIN: 0,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_PASSWORD = { MIN: 0, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -84,10 +70,7 @@ const ARGON2_PASSWORD = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_SALT = {
-    MIN: 8,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_SALT = { MIN: 8, MAX: 2 ** 32 - 1 };
 /**
  * > # 3 Specification of Argon2
  * > ## 3.1 Inputs
@@ -95,10 +78,7 @@ const ARGON2_SALT = {
  * @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/argon2-specs.pdf
  * @see https://www.password-hashing.net/argon2-specs.pdf#page=4
  */
-const ARGON2_OUTPUT = {
-    MIN: 4,
-    MAX: 2 ** 32 - 1,
-};
+const ARGON2_OUTPUT = { MIN: 4, MAX: 2 ** 32 - 1 };
 /**
  * > 9 Recommended parameters
  * > 5. Select the salt length. 128 bits is sufficient for all applications, but can be reduced to 64 bits in the case
@@ -108,13 +88,17 @@ const ARGON2_OUTPUT = {
  */
 const SALT_LEN = 128 / 8;
 
-export function isArgon2Options<T>(options: T): options is T extends Argon2Options ? T : never {
-    if (!isPropAccessible(options) || typeof options !== 'object') return false;
-    const { algorithm } = options;
-    for (const type of typeNameList) {
+function isArgon2Algorithm(algorithm: unknown): algorithm is Argon2Algorithm {
+    // Note: The `Array.prototype.includes()` method cannot be used because its argument cannot be assigned the type `unknown`.
+    for (const type of argon2TypeNameList) {
         if (algorithm === type) return true;
     }
     return false;
+}
+
+export function isArgon2Options<T>(options: T): options is T extends Argon2Options ? T : never {
+    if (!isPropAccessible(options) || typeof options !== 'object') return false;
+    return isArgon2Algorithm(options['algorithm']);
 }
 
 function validatePositiveInteger(optionName: string, value: unknown): asserts value {
@@ -269,11 +253,32 @@ function normalizeInternalError(error: unknown): never {
     throw new Error(`Internal error from Argon2: ${printObject(error)}`);
 }
 
-function createDeriveKeyFunc(
-    type: ArgonType,
-    options: Omit<NormalizedArgon2Options, 'algorithm'>,
-): GetArgon2KDFResult['deriveKey'] {
-    return async (password, salt, keyLengthBytes) => {
+interface Argon2HashOptions extends NormalizedArgon2Options {
+    password: string | Buffer;
+    salt: Uint8Array;
+    hashLength: number;
+}
+export type Argon2HashFn = (options: Argon2HashOptions) => Promise<Uint8Array>;
+
+/**
+ * For Node.js 18.1.0 and later, use node-argon2 instead of argon2-browser.
+ * Because argon2-browser fails in Node.js 18.1.0 or later.
+ * @see https://github.com/antelle/argon2-browser/issues/81
+ */
+let argon2Hash: Argon2HashFn = async options => {
+    const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
+    ({ argon2Hash } = await (
+        (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
+            ? // In Node.js >=18.1.0, use node-argon2
+                import('./argon2/node.js') // eslint-disable-line node/no-unsupported-features/es-syntax
+            : // For Node.js <18.1.0, use argon2-browser
+                import('./argon2/wasm.js') // eslint-disable-line node/no-unsupported-features/es-syntax
+    ));
+    return await argon2Hash(options);
+};
+
+const createDeriveKeyFunc = (options: NormalizedArgon2Options): GetArgon2KDFResult['deriveKey'] =>
+    async (password, salt, keyLengthBytes) => {
         validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
         validateBetweenLength(
             'keyLengthBytes',
@@ -288,24 +293,18 @@ function createDeriveKeyFunc(
             { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
-        return await argonHash({
-            pass: passwordBufferOrString,
+        return await argon2Hash({
+            ...options,
+            password: passwordBufferOrString,
             salt,
-            time: options.iterations,
-            mem: options.memory,
-            hashLen: keyLengthBytes,
-            parallelism: options.parallelism,
-            type,
+            hashLength: keyLengthBytes,
         })
-            .then(({ hash }) => hash)
             .catch(normalizeInternalError);
     };
-}
 
 export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResult {
     const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
-    const foundType = argon2TypeMap.get(algorithm);
-    if (!foundType) {
+    if (!isArgon2Algorithm(algorithm)) {
         throw new TypeError(
             `Invalid Argon2 type received: ${printObject(algorithm, { passThroughString: true })}`,
         );
@@ -313,7 +312,7 @@ export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResu
     validateArgon2Options(argon2Options);
 
     return {
-        deriveKey: createDeriveKeyFunc(foundType.type, argon2Options),
+        deriveKey: createDeriveKeyFunc({ algorithm, ...argon2Options }),
         saltLength: SALT_LEN,
         normalizedOptions: { algorithm, ...argon2Options },
     };
