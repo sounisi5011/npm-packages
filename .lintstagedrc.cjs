@@ -136,35 +136,36 @@ module.exports = async filenames => {
   const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
 
   const tsOrJsFiles = [...tsFiles, ...jsFiles];
-  // ESLint will find the configuration files based on cwd.
-  // If inside submodule directories, ESLint will fail because cwd is not the project root.
-  // To avoid this, run ESLint using the "pnpm exec" command with the "--workspace-root" option.
-  const eslintCommand = `pnpm --workspace-root exec eslint --cache --report-unused-disable-directives --fix ${
-    tsOrJsFiles.join(' ')
-  }`;
-
-  /**
-   * First, format code with ESLint.
-   * This includes removing unused ESLint directive comments, but ESLint will not remove lines that had directive comments.
-   */
-  if (tsOrJsFiles.length >= 1) commands.push(eslintCommand);
-  /**
-   * Next, format code with dprint.
-   * dprint removes the unneeded lines that ESLint did not remove.
-   */
-  commands.push(
-    ...(
-      await Promise.all([
-        dprintCommandList(tsFiles, './.dprint.json'),
-        dprintCommandList(jsFiles, './.dprint-js.json'),
-      ])
-    ).flat(),
-  );
-  /**
-   * Finally, format code again with ESLint.
-   * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
-   */
-  if (tsOrJsFiles.length >= 1) commands.push(eslintCommand);
+  if (tsOrJsFiles.length >= 1) {
+    // ESLint will find the configuration files based on cwd.
+    // If inside submodule directories, ESLint will fail because cwd is not the project root.
+    // To avoid this, run ESLint using the "pnpm exec" command with the "--workspace-root" option.
+    const eslintCommand = (
+      `pnpm --workspace-root exec eslint --cache --report-unused-disable-directives --fix ${tsOrJsFiles.join(' ')}`
+    );
+    /**
+     * First, format code with ESLint.
+     * This includes removing unused ESLint directive comments, but ESLint will not remove lines that had directive comments.
+     */
+    commands.push(eslintCommand);
+    /**
+      * Next, format code with dprint.
+      * dprint removes the unneeded lines that ESLint did not remove.
+      */
+    commands.push(
+      ...(
+        await Promise.all([
+          dprintCommandList(tsFiles, './.dprint.json'),
+          dprintCommandList(jsFiles, './.dprint-js.json'),
+        ])
+      ).flat(),
+    );
+    /**
+      * Finally, format code again with ESLint.
+      * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
+      */
+    commands.push(eslintCommand);
+  }
 
   if (
     pkgFiles.length >= 1
