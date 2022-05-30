@@ -41,19 +41,21 @@ jobs:
           {
             echo '# GitHub API rate limit'
             echo
-            echo '<table><tr><th>Type</th><th>Reset time</th><th>Raw Response</th></tr>'
+            echo '<table><tr><th>Type</th><th>Used</th><th>Remaining</th><th>Reset time</th><th>Raw Response</th></tr>'
             echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
-              echo "<tr><th>${type}</th><td>"
+              rate_limit_max="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.limit")"
+              echo "<tr><th>${type}</th>"
+              echo "<td>$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.used")/${rate_limit_max}</td>"
+              echo "<td>$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.remaining")/${rate_limit_max}</td><td>"
               date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}"
-              echo "</td><td><pre lang=json>"
+              echo "</td><td><details><pre lang=json>"
               echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
-              echo "</pre></td></tr>"
+              echo "</pre></details></td></tr>"
             done
             echo '</table>'
-            echo ''
-            echo '## Raw Response'
-            echo ''
-            echo "<pre lang=json>${RATE_LIMIT_JSON}</pre>"
+            echo '<details><summary>Raw Response</summary><pre lang=json>'
+            echo "${RATE_LIMIT_JSON}" | jq .
+            echo '</pre></details>'
           } >> "${GITHUB_STEP_SUMMARY}"
 
           core_remaining="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.remaining")"
