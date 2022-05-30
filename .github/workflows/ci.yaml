@@ -38,21 +38,23 @@ jobs:
           readonly DATE_FORMAT='+%Y/%m/%d %T %Z'
           readonly RATE_LIMIT_JSON="$(gh api 'rate_limit')"
 
-          echo '# GitHub API rate limit' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo '<table><tr><th>Type</th><th>Reset time</th><th>Raw Response</th></tr>' >> $GITHUB_STEP_SUMMARY
-          echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
-            echo "<tr><th>${type}</th><td>" >> $GITHUB_STEP_SUMMARY
-            date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}" >> $GITHUB_STEP_SUMMARY
-            echo "</td><td><pre lang=json>" >> $GITHUB_STEP_SUMMARY
-            echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}" >> $GITHUB_STEP_SUMMARY
-            echo "</pre></td></tr>" >> $GITHUB_STEP_SUMMARY
-          done
-          echo '</table>' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo '## Raw Response' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo "<pre lang=json>${RATE_LIMIT_JSON}</pre>" >> $GITHUB_STEP_SUMMARY
+          {
+            echo '# GitHub API rate limit'
+            echo
+            echo '<table><tr><th>Type</th><th>Reset time</th><th>Raw Response</th></tr>'
+            echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
+              echo "<tr><th>${type}</th><td>"
+              date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}"
+              echo "</td><td><pre lang=json>"
+              echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
+              echo "</pre></td></tr>"
+            done
+            echo '</table>'
+            echo ''
+            echo '## Raw Response'
+            echo ''
+            echo "<pre lang=json>${RATE_LIMIT_JSON}</pre>"
+          } >> "${GITHUB_STEP_SUMMARY}"
 
           core_remaining="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.core.remaining")"
           if [ "${core_remaining}" == 0 ]; then
