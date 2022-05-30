@@ -42,16 +42,26 @@ jobs:
             echo '# GitHub API rate limit'
             echo
             echo '<table><tr><th>Type</th><th>Used</th><th>Remaining</th><th>Reset time</th><th>Raw Response</th></tr>'
-            echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
-              rate_limit_max="$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.limit")"
+          } >> "${GITHUB_STEP_SUMMARY}"
+          echo "${RATE_LIMIT_JSON}" | jq -r '.resources | keys_unsorted[]' | while read -r type; do
+            rate_limit_json_per_type="$(echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}")"
+            rate_limit_max="$(echo "${rate_limit_json_per_type}" | jq -r ".limit")"
+            rate_limit_reset_time="$(date -ud "@$(echo "${rate_limit_json_per_type}" | jq -r ".reset")" "${DATE_FORMAT}")"
+
+            echo '::group::' "${type}"
+            echo "${rate_limit_json_per_type}"
+            echo "::notice::Reset time is ${rate_limit_reset_time} ("${type}")"
+            echo '::endgroup::'
+
+            {
               echo "<tr><th>${type}</th>"
-              echo "<td>$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.used")/${rate_limit_max}</td>"
-              echo "<td>$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.remaining")/${rate_limit_max}</td><td>"
-              date -ud "@$(echo "${RATE_LIMIT_JSON}" | jq -r ".resources.${type}.reset")" "${DATE_FORMAT}"
-              echo "</td><td><details><pre lang=json>"
-              echo "${RATE_LIMIT_JSON}" | jq ".resources.${type}"
-              echo "</pre></details></td></tr>"
-            done
+              echo "<td>$(echo "${rate_limit_json_per_type}" | jq -r ".used")/${rate_limit_max}</td>"
+              echo "<td>$(echo "${rate_limit_json_per_type}" | jq -r ".remaining")/${rate_limit_max}</td>"
+              echo "<td>${rate_limit_reset_time}</td>"
+              echo "<td><details><pre lang=json>${rate_limit_json_per_type}</pre></details></td></tr>"
+            } >> "${GITHUB_STEP_SUMMARY}"
+          done
+          {
             echo '</table>'
             echo '<details><summary>Raw Response</summary><pre lang=json>'
             echo "${RATE_LIMIT_JSON}" | jq .
