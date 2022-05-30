@@ -3,15 +3,13 @@ import path from 'path';
 
 import { decrypt } from '../src';
 
-const isSemver = (str: string): boolean => /^v\d+\.\d+\.\d+$/.test(str);
-
 describe('backward compatibility (decrypt)', () => {
     const dataDirpath = path.resolve(__dirname, '../examples/encrypted-archives');
     const cleartextPromise = fsAsync.readFile(path.resolve(dataDirpath, 'cleartext.txt'));
     const passwordPromise = fsAsync.readFile(path.resolve(dataDirpath, 'password.txt'));
 
     const testTable = fs.readdirSync(dataDirpath, { withFileTypes: true })
-        .filter(dirEntry => isSemver(dirEntry.name) && dirEntry.isDirectory())
+        .filter(dirEntry => /^v\d+\.\d+\.\d+$/.test(dirEntry.name) && dirEntry.isDirectory())
         .map(dirEntry => {
             const subDirpath = path.resolve(dataDirpath, dirEntry.name);
             return fs.readdirSync(subDirpath, { withFileTypes: true })
