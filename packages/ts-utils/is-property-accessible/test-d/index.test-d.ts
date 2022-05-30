@@ -103,3 +103,5 @@ if (isPropertyAccessible(multiValue)) {
         expectType<number | string>(value.valueOf());
         expectType<unknown>(value['foo']);
     });
+
+/* eslint-enable */

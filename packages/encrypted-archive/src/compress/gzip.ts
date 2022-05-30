@@ -8,7 +8,7 @@ type GzipDisallowOptionName = (typeof gzipDisallowOptionNameList)[number];
 type GzipOptions = GetOptions<typeof createGzip>;
 type GzipDisallowedOptions = Omit<GzipOptions, GzipDisallowOptionName>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createCompress(options: GzipDisallowedOptions) {
     validateDisallowedOptions(
         options,

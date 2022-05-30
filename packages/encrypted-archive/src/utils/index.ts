@@ -54,7 +54,6 @@ export function getPropFromValue<T extends string, U>(rec: Record<T, U>, value: 
  * // 👍
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function normalizeOptions<T extends object>(
     defaultOptions: Readonly<Required<T>>,
     ...optionsList: Array<Readonly<PartialWithUndefined<T>>>

@@ -28,7 +28,6 @@ describe('encryptStream()', () => {
 
         expect.assertions(chunkCount - 1);
         for await (const chunk of stream) {
-            // eslint-disable-next-line jest/no-if
             if (typeof firstChunkLen === 'number') {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(chunk).toBeLessThanByteSize(firstChunkLen);
@@ -59,7 +58,6 @@ describe('encryptStream()', () => {
             ['SharedArrayBuffer', new SharedArrayBuffer(5)],
         ])('%s', async (_, chunk) => {
             await expect(pipelineAsync(
-                // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 encryptStream(''),
                 writableNoopStream(),
@@ -68,10 +66,8 @@ describe('encryptStream()', () => {
         it.each<[string, unknown]>([
             ['number', 42],
             ['object', { hoge: 'fuga' }],
-            // eslint-disable-next-line jest/no-identical-title
         ])('%s', async (_, chunk) => {
             const resultPromise = pipelineAsync(
-                // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 encryptStream(''),
                 writableNoopStream(),
@@ -182,7 +178,6 @@ describe('decryptStream()', () => {
             ['SharedArrayBuffer', new SharedArrayBuffer(5)],
         ])('%s', async (_, chunk) => {
             const resultPromise = pipelineAsync(
-                // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 decryptStream(''),
                 writableNoopStream(),
@@ -192,10 +187,8 @@ describe('decryptStream()', () => {
         it.each<[string, unknown]>([
             ['number', 42],
             ['object', { hoge: 'fuga' }],
-            // eslint-disable-next-line jest/no-identical-title
         ])('%s', async (_, chunk) => {
             const resultPromise = pipelineAsync(
-                // eslint-disable-next-line node/no-unsupported-features/node-builtins
                 stream.Readable.from([chunk]),
                 decryptStream(''),
                 writableNoopStream(),

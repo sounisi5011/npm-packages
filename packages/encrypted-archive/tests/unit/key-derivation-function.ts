@@ -197,7 +197,6 @@ describe('algorithm: Argon2', () => {
                 'zero': addNegativeNumber([0]),
                 'negative integer': [-1],
             }),
-            // eslint-disable-next-line jest/no-identical-title
         )('%s', (_, valueList) => {
             describe.each(valueList)('%p', value => {
                 it.each(optionNameList.map<[Argon2Opts, keyof Argon2Opts]>(optionName => [

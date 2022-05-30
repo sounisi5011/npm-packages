@@ -25,7 +25,6 @@ export function createFillBytesReadableStream(
 }
 
 export function createCountStream(chunkCount: number): stream.Readable {
-    // eslint-disable-next-line node/no-unsupported-features/node-builtins
     return stream.Readable.from((function*() {
         for (let i = 0; i < chunkCount; i++) {
             yield Buffer.from([i]);
@@ -54,7 +53,6 @@ export function createChunkerStream({ chunkSize }: { chunkSize: number }): strea
 }
 
 export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): stream.Readable {
-    // eslint-disable-next-line node/no-unsupported-features/node-builtins
     return stream.Readable.from((function*() {
         let i = 0;
         while (i < buf.byteLength) {
