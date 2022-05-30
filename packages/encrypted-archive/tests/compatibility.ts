@@ -3,7 +3,6 @@ import path from 'path';
 
 import { decrypt } from '../src';
 
-// eslint-disable-next-line jest/require-top-level-describe, jest/expect-expect, jest/valid-title
 const isSemver = (str: string): boolean => /^v\d+\.\d+\.\d+$/.test(str);
 
 describe('backward compatibility (decrypt)', () => {

@@ -186,9 +186,7 @@ describe('isProcessExist()', () => {
                             )
                                 .on('data', (logLine: string) => {
                                     if (
-                                        // eslint-disable-next-line jest/consistent-test-it, jest/no-disabled-tests, jest/expect-expect
                                         /^\[\d+ \d{2}:\d{2}:\d{2}(?:\.\d{1,})?~\d{2}:\d{2}:\d{2}(?:\.\d{1,})?\] [^\r\n]+$/m
-                                            // eslint-disable-next-line jest/valid-title
                                             .test(logLine)
                                     ) {
                                         resolve(logLine);
@@ -211,10 +209,8 @@ describe('isProcessExist()', () => {
         }
 
         try {
-            // eslint-disable-next-line jest/consistent-test-it, jest/no-disabled-tests, jest/expect-expect, jest/valid-title
             expect(logList.filter(line => / done$/m.test(line)))
                 .toHaveLength(1);
-            // eslint-disable-next-line jest/consistent-test-it, jest/no-disabled-tests, jest/expect-expect, jest/valid-title
             expect(logList.filter(line => / other process is running$/m.test(line)))
                 .toHaveLength(childProcessCount - 1);
         } catch (error) {

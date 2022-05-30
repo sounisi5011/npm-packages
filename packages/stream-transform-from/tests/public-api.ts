@@ -150,7 +150,6 @@ describe('transforms objects', () => {
     const data = [{ name: 'first' }, { name: 'second' }, { name: 'third' }];
     const outputData = [['first'], ['second'], ['third']];
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
     function hasProp<T extends PropertyKey>(obj: object, propName: T): obj is Record<T, unknown> {
         return propName in obj;
     }
@@ -649,7 +648,6 @@ describe('throw error from Transform', () => {
 
         const noBugTable = table.filter(([, { hasBug }]) => !hasBug);
         if (noBugTable.length >= 1) {
-            // eslint-disable-next-line jest/no-identical-title
             describe.each(noBugTable)('%s', (_, { createTransform }) => {
                 it('not pipe to WritableStream', async () => {
                     const resultPromise = promisify(stream.pipeline)(
@@ -664,7 +662,6 @@ describe('throw error from Transform', () => {
 
         const hasBugTable = table.filter(([, { hasBug }]) => hasBug);
         if (hasBugTable.length >= 1) {
-            // eslint-disable-next-line jest/no-identical-title
             describe.each(hasBugTable)('%s', (_, { createTransform }) => {
                 it('not pipe to WritableStream (error cannot be detected)', async () => {
                     const transform = createTransform();
@@ -777,7 +774,6 @@ describe('options that affect functionality should be ignored', () => {
                 done(new Error('???'));
             },
         },
-        // eslint-disable-next-line jest/no-identical-title
     ])('%p', async options => {
         const resultPromise = promisify(stream.pipeline)(
             stream.Readable.from(data),
