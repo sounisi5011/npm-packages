@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 // @ts-check
 
-/* eslint-disable node/no-missing-import, import/no-unresolved */
-
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
