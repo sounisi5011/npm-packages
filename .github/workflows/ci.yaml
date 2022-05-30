@@ -50,7 +50,7 @@ jobs:
 
             echo '::group::' "${type}"
             echo "${rate_limit_json_per_type}"
-            echo "::notice::Reset time is ${rate_limit_reset_time} ("${type}")"
+            echo "::notice::Reset time is ${rate_limit_reset_time} (${type})"
             echo '::endgroup::'
 
             {
