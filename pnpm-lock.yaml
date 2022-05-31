@@ -236,6 +236,7 @@ importers:
       glob-exec: 0.1.1
       google-protobuf: ^3.15.8
       grpc_tools_node_protoc_ts: 5.3.2
+      import-from: 4.0.0
       jest: 28.1.0
       jest-extended: 2.0.0
       multicodec: 3.2.1
@@ -273,6 +274,7 @@ importers:
       execa: 5.1.1
       glob-exec: 0.1.1
       grpc_tools_node_protoc_ts: 5.3.2
+      import-from: 4.0.0
       jest: 28.1.0_@types+node@12.20.52
       jest-extended: 2.0.0_jest@28.1.0
       multicodec: 3.2.1
@@ -3934,6 +3936,11 @@ packages:
     dependencies:
       parent-module: 1.0.1
       resolve-from: 4.0.0
+    dev: true
+
+  /import-from/4.0.0:
+    resolution: {integrity: sha512-P9J71vT5nLlDeV8FHs5nNxaLbrpfAV5cF5srvbZfpwpcJoM/xZR3hiv+q+SAnuSmuGbXMWud063iIMx/V/EWZQ==}
+    engines: {node: '>=12.2'}
     dev: true
 
   /import-local/3.1.0:
