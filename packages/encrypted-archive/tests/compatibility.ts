@@ -1,8 +1,10 @@
 import fs, { promises as fsAsync } from 'fs';
 import path from 'path';
+import { version as nodeVersion } from 'process';
 
 import execa from 'execa';
 import importFrom from 'import-from';
+import semverSatisfies from 'semver/functions/satisfies';
 
 import {
     CompressOptions,
@@ -56,12 +58,34 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         multi: cleartextPromise.then(buffer2chunkArray),
     };
     const versionsList = dataDirList.map(({ dirname }) => dirname);
+    const supportedNodeVersionsRecord: Record<string, string> = {
+        // package version range : support node version range
+        '<=0.1.0': '<18.1.0',
+    };
+    /**
+     * Checks if the specified version of `@sounisi5011/encrypted-archive` works with the current version of Node.js.
+     * @param packageVersion target version of `@sounisi5011/encrypted-archive`
+     * @returns if `@sounisi5011/encrypted-archive` works, return `true`
+     */
+    const isWorkWithCurrentNode = (packageVersion: string): boolean =>
+        Object.entries(supportedNodeVersionsRecord)
+            .filter(([packageVersionRange]) => semverSatisfies(packageVersion, packageVersionRange))
+            .every(([, nodeVersionRange]) => semverSatisfies(nodeVersion, nodeVersionRange));
 
     const oldVersionsStoreDirpath = path.resolve(__dirname, 'fixtures/old-versions');
     /**
      * Install older versions of `@sounisi5011/encrypted-archive`
      */
     beforeAll(async () => {
+        const packageNameList = versionsList
+            .map(version => version.replace(/^v(.+)$/, '$1'))
+            .filter(isWorkWithCurrentNode)
+            .map(version => `encrypted-archive-v${version}@npm:@sounisi5011/encrypted-archive@${version}`);
+        /**
+         * If all published `@sounisi5011/encrypted-archive` do not support the current version of Node.js, skips installation.
+         */
+        if (packageNameList.length < 1) return;
+
         /**
          * Create a directory
          */
@@ -103,11 +127,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
          */
         await execa(
             'pnpm',
-            ['add', '--save-exact'].concat(
-                versionsList.map(version =>
-                    version.replace(/^v(.+)$/, 'encrypted-archive-$&@npm:@sounisi5011/encrypted-archive@$1')
-                ),
-            ),
+            ['add', '--save-exact', ...packageNameList],
             { cwd: oldVersionsStoreDirpath },
         );
     }, 30 * 1000);
@@ -125,18 +145,32 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
     });
     describe.each(testTable)('%s', (_, { 'input-chunk': inputChunkType, ...opts }) => {
         const options: Required<EncryptOptions> = { ...opts, keyDerivation: { algorithm: opts.keyDerivation } };
-        it.each(versionsList)('%s', async version => {
-            const cleartext = await cleartextPromise;
-            const cleartextChunkList = await inputChunkTypeRecord[inputChunkType];
-            const password = await passwordPromise;
-            const oldEncryptedArchive: Omit<typeof import('../src'), `encrypt${string}`> = importFrom(
-                oldVersionsStoreDirpath,
-                `encrypted-archive-${version}`,
-            ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+        for (const version of versionsList) {
+            /**
+             * If the target version of `@sounisi5011/encrypted-archives` does not support the current version of Node.js, skip the forward compatibility test.
+             */
+            if (!isWorkWithCurrentNode(version)) {
+                // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect, jest/valid-title
+                it.skip(version, () => undefined);
+                continue;
+            }
 
-            const encryptedData = await asyncIterable2Buffer(encryptIterator(password, options)(cleartextChunkList));
-            const decryptedData = await oldEncryptedArchive.decrypt(encryptedData, password);
-            expect(decryptedData.equals(cleartext)).toBeTrue();
-        });
+            // eslint-disable-next-line jest/valid-title
+            it(version, async () => {
+                const cleartext = await cleartextPromise;
+                const cleartextChunkList = await inputChunkTypeRecord[inputChunkType];
+                const password = await passwordPromise;
+                const oldEncryptedArchive: Omit<typeof import('../src'), `encrypt${string}`> = importFrom(
+                    oldVersionsStoreDirpath,
+                    `encrypted-archive-${version}`,
+                ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+                const encryptedData = await asyncIterable2Buffer(
+                    encryptIterator(password, options)(cleartextChunkList),
+                );
+                const decryptedData = await oldEncryptedArchive.decrypt(encryptedData, password);
+                expect(decryptedData.equals(cleartext)).toBeTrue();
+            });
+        }
     });
 });
