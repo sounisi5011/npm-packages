@@ -75,7 +75,7 @@
     "execa": "5.1.1",
     "is-plain-obj": "3.0.0",
     "jest": "28.1.0",
-    "ts-jest": "28.0.3",
+    "ts-jest": "28.0.4",
     "type-fest": "2.13.0",
     "typescript": "4.7.2",
     "ultra-runner": "3.10.5"

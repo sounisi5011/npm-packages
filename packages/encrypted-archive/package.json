@@ -121,7 +121,7 @@
     "multicodec": "3.2.1",
     "noop-stream": "0.1.0",
     "semver": "7.3.7",
-    "ts-jest": "28.0.3",
+    "ts-jest": "28.0.4",
     "typescript": "4.7.2",
     "ultra-runner": "3.10.5"
   },
