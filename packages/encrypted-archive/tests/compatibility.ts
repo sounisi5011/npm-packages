@@ -18,6 +18,7 @@ import { asyncIterable2Buffer } from '../src/utils';
 import { buffer2chunkArray } from './helpers';
 import { optGen } from './helpers/combinations';
 
+const supportedRuntimeFilepath = path.resolve(__dirname, '../docs/supported-runtime.md');
 const dataDirpath = path.resolve(__dirname, '../examples/encrypted-archives');
 const dataDirList = fs.readdirSync(dataDirpath, { withFileTypes: true })
     .filter(dirEntry => /^v\d+\.\d+\.\d+$/.test(dirEntry.name) && dirEntry.isDirectory())
@@ -58,10 +59,20 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         multi: cleartextPromise.then(buffer2chunkArray),
     };
     const versionsList = dataDirList.map(({ dirname }) => dirname);
-    const supportedNodeVersionsRecord: Record<string, string> = {
-        // package version range : support node version range
-        '<=0.1.0': '<18.1.0',
-    };
+    const supportedNodeVersionsRecord = (() => {
+        const supportedRuntimeText = fs.readFileSync(supportedRuntimeFilepath, 'utf8');
+        const supportedNodeTable =
+            /^\| *`@sounisi5011\/encrypted-archive` version range *\| *Supported Node\.js version range *\|[^\n]*\n\|(?::?-+:?\|){2,}[^\n]*((?:\n\|(?:[^\n|]*\|){2,}[^\n]*)+)/m
+                .exec(supportedRuntimeText)?.[1];
+        if (!supportedNodeTable) throw new Error(`Parsing failed: ${supportedRuntimeFilepath}`);
+        return Object.fromEntries([...supportedNodeTable.matchAll(/^\| *`([^`]+)` *\| *`([^`]+)` *\|/gm)]
+            .flatMap(([, packageVersionRange, nodeVersionRange]) => {
+                if (typeof packageVersionRange === 'string' && typeof nodeVersionRange === 'string') {
+                    return [[packageVersionRange, nodeVersionRange]] as const;
+                }
+                return [] as const;
+            }));
+    })();
     /**
      * Checks if the specified version of `@sounisi5011/encrypted-archive` works with the current version of Node.js.
      * @param packageVersion target version of `@sounisi5011/encrypted-archive`
