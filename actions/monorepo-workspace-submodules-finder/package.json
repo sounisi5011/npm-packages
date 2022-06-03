@@ -44,7 +44,7 @@
     "jest-mock-process": "1.5.1",
     "nock": "13.2.4",
     "spawk": "1.7.1",
-    "ts-jest": "28.0.3",
+    "ts-jest": "28.0.4",
     "typescript": "4.7.2",
     "ultra-runner": "3.10.5"
   },

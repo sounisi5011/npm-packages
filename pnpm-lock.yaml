@@ -81,7 +81,7 @@ importers:
       nock: 13.2.4
       path-starts-with: 2.0.0
       spawk: 1.7.1
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       typescript: 4.7.2
       ultra-runner: 3.10.5
       validate-npm-package-name: 4.0.0
@@ -107,7 +107,7 @@ importers:
       jest-mock-process: 1.5.1_jest@28.1.0
       nock: 13.2.4
       spawk: 1.7.1
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -125,7 +125,7 @@ importers:
       jest: 28.1.0
       readline-transform: 1.0.0
       signal-exit: ^3.0.3
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       typescript: 4.7.2
       ultra-runner: 3.10.5
       write-file-atomic: ^4.0.0
@@ -144,7 +144,7 @@ importers:
       execa: 5.1.1
       jest: 28.1.0_@types+node@12.20.54
       readline-transform: 1.0.0
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -154,7 +154,7 @@ importers:
       '@types/node': 12.20.54
       execa: 5.1.1
       jest: 28.1.0
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       typescript: 4.7.2
       ultra-runner: 3.10.5
     devDependencies:
@@ -162,7 +162,7 @@ importers:
       '@types/node': 12.20.54
       execa: 5.1.1
       jest: 28.1.0_@types+node@12.20.54
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -183,7 +183,7 @@ importers:
       ow: ^0.28.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       type-fest: 2.13.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -204,7 +204,7 @@ importers:
       execa: 5.1.1
       is-plain-obj: 3.0.0
       jest: 28.1.0_@types+node@12.20.54
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       type-fest: 2.13.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -243,7 +243,7 @@ importers:
       multicodec: 3.2.1
       noop-stream: 0.1.0
       semver: 7.3.7
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       typescript: 4.7.2
       ultra-runner: 3.10.5
       varint: ^6.0.0
@@ -283,7 +283,7 @@ importers:
       multicodec: 3.2.1
       noop-stream: 0.1.0
       semver: 7.3.7
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       typescript: 4.7.2
       ultra-runner: 3.10.5
 
@@ -303,7 +303,7 @@ importers:
       jest: 28.1.0
       jest-diff: ^28.0.0
       pretty-format: 28.1.0
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       typescript: 4.7.2
     dependencies:
       '@sounisi5011/ts-type-util-is-readonly-array': link:../../ts-type-utils/is-readonly-array
@@ -315,7 +315,7 @@ importers:
       cross-env: 7.0.3
       jest: 28.1.0_@types+node@12.20.54
       pretty-format: 28.1.0
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       typescript: 4.7.2
 
   packages/stream-transform-from:
@@ -324,7 +324,7 @@ importers:
       '@types/jest': 28.1.0
       '@types/node': 12.20.54
       jest: 28.1.0
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -333,7 +333,7 @@ importers:
       '@types/jest': 28.1.0
       '@types/node': 12.20.54
       jest: 28.1.0_@types+node@12.20.54
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       tsd: 0.20.0
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -372,7 +372,7 @@ importers:
       glob-exec: 0.1.1
       jest: 28.1.0
       rollup: 2.75.5
-      ts-jest: 28.0.3
+      ts-jest: 28.0.4
       tsd: 0.20.0
       tslib: 2.4.0
       typescript: 4.7.2
@@ -384,7 +384,7 @@ importers:
       glob-exec: 0.1.1
       jest: 28.1.0
       rollup: 2.75.5
-      ts-jest: 28.0.3_c7a2878ab563eaa9a59ac94cd77db071
+      ts-jest: 28.0.4_jest@28.1.0+typescript@4.7.2
       tsd: 0.20.0
       tslib: 2.4.0
       typescript: 4.7.2
@@ -5105,7 +5105,7 @@ packages:
     dev: true
 
   /lodash.memoize/4.1.2:
-    resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=}
+    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
     dev: true
 
   /lodash.merge/4.6.2:
@@ -6657,13 +6657,12 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ts-jest/28.0.3_c7a2878ab563eaa9a59ac94cd77db071:
-    resolution: {integrity: sha512-HzgbEDQ2KgVtDmpXToqAcKTyGHdHsG23i/iUjfxji92G5eT09S1m9UHZd7csF0Bfgh9txM4JzwHnv7r1waFPlw==}
+  /ts-jest/28.0.4_jest@28.1.0+typescript@4.7.2:
+    resolution: {integrity: sha512-S6uRDDdCJBvnZqyGjB4VCnwbQrbgdL8WPeP4jevVSpYsBaeGRQAIS08o3Svav2Ex+oXwLgJ/m7F24TNq62kA1A==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
       '@babel/core': '>=7.0.0-beta.0 <8'
-      '@types/jest': ^27.0.0
       babel-jest: ^28.0.0
       esbuild: '*'
       jest: ^28.0.0
@@ -6671,14 +6670,11 @@ packages:
     peerDependenciesMeta:
       '@babel/core':
         optional: true
-      '@types/jest':
-        optional: true
       babel-jest:
         optional: true
       esbuild:
         optional: true
     dependencies:
-      '@types/jest': 28.1.0
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       jest: 28.1.0_@types+node@12.20.54
