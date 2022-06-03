@@ -6,6 +6,7 @@ import execa from 'execa';
 import importFrom from 'import-from';
 import semverSatisfies from 'semver/functions/satisfies';
 
+import { version as latestPackageVersion } from '../package.json';
 import {
     CompressOptions,
     CryptoAlgorithmName,
@@ -90,13 +91,21 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
     beforeAll(async () => {
         const packageNameList = packageVersionList
             .filter(isWorkWithCurrentNode)
-            .map(packageVersion =>
-                `encrypted-archive-v${packageVersion}@npm:@sounisi5011/encrypted-archive@${packageVersion}`
-            );
+            .map(packageVersion => ({
+                packageName:
+                    `encrypted-archive-v${packageVersion}@npm:@sounisi5011/encrypted-archive@${packageVersion}`,
+                isLatest: packageVersion === latestPackageVersion,
+            }));
         /**
          * If all published `@sounisi5011/encrypted-archive` do not support the current version of Node.js, skips installation.
          */
         if (packageNameList.length < 1) return;
+        const oldPackageNameList = packageNameList
+            .filter(({ isLatest }) => !isLatest)
+            .map(({ packageName }) => packageName);
+        const latestPackageNameList = packageNameList
+            .filter(({ isLatest }) => isLatest)
+            .map(({ packageName }) => packageName);
 
         /**
          * Create a directory
@@ -139,9 +148,37 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
          */
         await execa(
             'pnpm',
-            ['add', '--save-exact', ...packageNameList],
+            ['add', '--save-exact', ...oldPackageNameList],
             { cwd: oldVersionsStoreDirpath },
         );
+        /**
+         * Install the latest package.
+         * If failed, use latest package from local disk.
+         * Note: For example, if we try to release a new version, only the latest version will not be able to be installed from npm.
+         */
+        await execa(
+            'pnpm',
+            ['add', '--save-exact', ...latestPackageNameList],
+            { cwd: oldVersionsStoreDirpath, all: true },
+        ).catch(async err => {
+            if (!/\bERR_PNPM_NO_MATCHING_VERSION\b/.test(err.all ?? '')) throw err;
+            /**
+             * Enable `link-workspace-packages` option
+             */
+            await fsAsync.writeFile(
+                path.resolve(oldVersionsStoreDirpath, '.npmrc'),
+                '\nlink-workspace-packages=true',
+                { flag: 'a' },
+            );
+            /**
+             * Retry
+             */
+            await execa(
+                'pnpm',
+                ['add', '--save-exact', ...latestPackageNameList],
+                { cwd: oldVersionsStoreDirpath },
+            );
+        });
     }, 30 * 1000);
 
     const testTable = optGen<{
