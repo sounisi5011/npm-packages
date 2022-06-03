@@ -1,5 +1,11 @@
 import type { AsyncIterableReturn } from '../../src/utils/type';
 
+export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
+export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]];
+export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]] {
+    return value.length >= 1;
+}
+
 export function rangeArray(start: number, stop: number, step = 1): number[] {
     return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }
