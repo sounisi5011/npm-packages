@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
-    "@types/jest": "27.5.1",
+    "@types/jest": "28.1.0",
     "@types/node": "12.20.54",
     "cross-env": "7.0.3",
     "jest": "28.1.0",
