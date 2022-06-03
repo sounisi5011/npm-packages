@@ -60,6 +60,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         multi: cleartextPromise.then(buffer2chunkArray),
     };
     const packageVersionList = dataDirList.map(({ dirname }) => dirname.replace(/^v/, ''));
+    const packageVersion2packageName = (packageVersion: string): string => `encrypted-archive-v${packageVersion}`;
     const supportedNodeVersionsRecord = (() => {
         const supportedRuntimeText = fs.readFileSync(supportedRuntimeFilepath, 'utf8');
         const supportedNodeTable =
@@ -89,23 +90,15 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
      * Install older versions of `@sounisi5011/encrypted-archive`
      */
     beforeAll(async () => {
-        const packageNameList = packageVersionList
-            .filter(isWorkWithCurrentNode)
-            .map(packageVersion => ({
-                packageName:
-                    `encrypted-archive-v${packageVersion}@npm:@sounisi5011/encrypted-archive@${packageVersion}`,
-                isLatest: packageVersion === latestPackageVersion,
-            }));
+        const testTargetPackageVersionList = packageVersionList.filter(isWorkWithCurrentNode);
         /**
          * If all published `@sounisi5011/encrypted-archive` do not support the current version of Node.js, skips installation.
          */
-        if (packageNameList.length < 1) return;
-        const oldPackageNameList = packageNameList
-            .filter(({ isLatest }) => !isLatest)
-            .map(({ packageName }) => packageName);
-        const latestPackageNameList = packageNameList
-            .filter(({ isLatest }) => isLatest)
-            .map(({ packageName }) => packageName);
+        if (testTargetPackageVersionList.length < 1) return;
+        const oldPackageVersionList = testTargetPackageVersionList
+            .filter(packageVersion => packageVersion !== latestPackageVersion);
+        const latestPackageVersionList = testTargetPackageVersionList
+            .filter(packageVersion => packageVersion === latestPackageVersion);
 
         /**
          * Create a directory
@@ -145,27 +138,31 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         ]);
 
         const installOldPackages = (
-            packageNameList: [string, ...string[]],
+            packageVersionList: [string, ...string[]],
             options?: Omit<execa.Options, 'cwd'>,
-        ): execa.ExecaChildProcess =>
-            execa(
+        ): execa.ExecaChildProcess => {
+            const packageNameList = packageVersionList.map(packageVersion =>
+                `${packageVersion2packageName(packageVersion)}@npm:@sounisi5011/encrypted-archive@${packageVersion}`
+            );
+            return execa(
                 'pnpm',
                 ['add', '--save-exact', ...packageNameList],
                 { ...options, cwd: oldVersionsStoreDirpath },
             );
+        };
         /**
          * Install the old packages.
          */
-        if (isOneOrMoreArray(oldPackageNameList)) {
-            await installOldPackages(oldPackageNameList);
+        if (isOneOrMoreArray(oldPackageVersionList)) {
+            await installOldPackages(oldPackageVersionList);
         }
         /**
          * Install the latest package.
          * If failed, use latest package from local disk.
          * Note: For example, if we try to release a new version, only the latest version will not be able to be installed from npm.
          */
-        if (isOneOrMoreArray(latestPackageNameList)) {
-            await installOldPackages(latestPackageNameList, { all: true }).catch(async err => {
+        if (isOneOrMoreArray(latestPackageVersionList)) {
+            await installOldPackages(latestPackageVersionList, { all: true }).catch(async err => {
                 if (!/\bERR_PNPM_NO_MATCHING_VERSION\b/.test(err.all ?? '')) throw err;
                 /**
                  * Enable `link-workspace-packages` option
@@ -180,7 +177,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
                  */
                 await execa(
                     'pnpm',
-                    ['add', '--save-exact', ...latestPackageNameList],
+                    ['add', '--save-exact', ...latestPackageVersionList],
                     { cwd: oldVersionsStoreDirpath },
                 );
             });
@@ -216,7 +213,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
                 const password = await passwordPromise;
                 const oldEncryptedArchive: Omit<typeof import('../src'), `encrypt${string}`> = importFrom(
                     oldVersionsStoreDirpath,
-                    `encrypted-archive-v${packageVersion}`,
+                    packageVersion2packageName(packageVersion),
                 ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
                 const encryptedData = await asyncIterable2Buffer(
