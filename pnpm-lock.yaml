@@ -77,7 +77,7 @@ importers:
       cross-env: 7.0.3
       find-git-root: 1.0.4
       jest: 28.1.0
-      jest-mock-process: 1.4.1
+      jest-mock-process: 1.5.1
       nock: 13.2.4
       path-starts-with: 2.0.0
       spawk: 1.7.1
@@ -104,7 +104,7 @@ importers:
       '@vercel/ncc': 0.34.0
       cross-env: 7.0.3
       jest: 28.1.0_@types+node@16.11.36
-      jest-mock-process: 1.4.1_jest@28.1.0
+      jest-mock-process: 1.5.1_jest@28.1.0
       nock: 13.2.4
       spawk: 1.7.1
       ts-jest: 28.0.3_fc81a27b80351b0ea93cc89cb3c5aa0b
@@ -4650,10 +4650,10 @@ packages:
       stack-utils: 2.0.5
     dev: true
 
-  /jest-mock-process/1.4.1_jest@28.1.0:
-    resolution: {integrity: sha512-ZZUKRlEBizutngoO4KngzN30YoeAYP3nnwimk4cpi9WqLxQUf6SlAPK5p1D9usEpxDS3Uif2MIez3Bq0vGYR+g==}
+  /jest-mock-process/1.5.1_jest@28.1.0:
+    resolution: {integrity: sha512-CPu46KyUiVSxE+LkqBuscqGmy1bvW2vJQuNstt83iLtFaFjgrgmp6LY04IKuOhhlGhcrdi86Gqq5/fTE2wG6lg==}
     peerDependencies:
-      jest: '>=23.4 <28'
+      jest: '>=23.4 <29'
     dependencies:
       jest: 28.1.0_@types+node@16.11.36
     dev: true
