@@ -223,6 +223,7 @@ importers:
       '@types/google-protobuf': 3.15.6
       '@types/jest': 27.5.1
       '@types/node': 12.20.54
+      '@types/semver': 7.3.9
       '@types/varint': 6.0.0
       argon2: 0.27.2
       argon2-browser: ^1.15.4
@@ -236,10 +237,12 @@ importers:
       glob-exec: 0.1.1
       google-protobuf: ^3.15.8
       grpc_tools_node_protoc_ts: 5.3.2
+      import-from: 4.0.0
       jest: 28.1.0
       jest-extended: 2.0.0
       multicodec: 3.2.1
       noop-stream: 0.1.0
+      semver: 7.3.7
       ts-jest: 28.0.3
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -265,6 +268,7 @@ importers:
       '@types/google-protobuf': 3.15.6
       '@types/jest': 27.5.1
       '@types/node': 12.20.54
+      '@types/semver': 7.3.9
       '@types/varint': 6.0.0
       bytefield-svg: 1.6.1
       combinate: 1.1.11
@@ -273,10 +277,12 @@ importers:
       execa: 5.1.1
       glob-exec: 0.1.1
       grpc_tools_node_protoc_ts: 5.3.2
+      import-from: 4.0.0
       jest: 28.1.0_@types+node@12.20.54
       jest-extended: 2.0.0_jest@28.1.0
       multicodec: 3.2.1
       noop-stream: 0.1.0
+      semver: 7.3.7
       ts-jest: 28.0.3_fc81a27b80351b0ea93cc89cb3c5aa0b
       typescript: 4.7.2
       ultra-runner: 3.10.5
@@ -1551,6 +1557,10 @@ packages:
     resolution: {integrity: sha512-rKBZLUW/UZVZ9NoyrYVxXZ/XpZEXtXThZdKR/jWKTlDmRGw47LWxCjjkyYXiQWS2GpGJAhgs9yaDepWj3zFYeQ==}
     dependencies:
       '@types/node': 17.0.36
+    dev: true
+
+  /@types/semver/7.3.9:
+    resolution: {integrity: sha512-L/TMpyURfBkf+o/526Zb6kd/tchUP3iBDEPjqjb+U2MAJhVRxxrmr2fwpe08E7QsV7YLcpq0tUaQ9O9x97ZIxQ==}
     dev: true
 
   /@types/signal-exit/3.0.1:
@@ -3941,6 +3951,11 @@ packages:
     dependencies:
       parent-module: 1.0.1
       resolve-from: 4.0.0
+    dev: true
+
+  /import-from/4.0.0:
+    resolution: {integrity: sha512-P9J71vT5nLlDeV8FHs5nNxaLbrpfAV5cF5srvbZfpwpcJoM/xZR3hiv+q+SAnuSmuGbXMWud063iIMx/V/EWZQ==}
+    engines: {node: '>=12.2'}
     dev: true
 
   /import-local/3.1.0:

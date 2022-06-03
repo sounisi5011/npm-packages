@@ -47,9 +47,17 @@ export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable
     return Buffer.concat(bufferList);
 }
 
-export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): AsyncIterableReturn<Buffer, void> {
+export function* buffer2iterable(buffer: Buffer, chunkSize = 5): Iterable<Buffer> {
     while (buffer.byteLength > 0) {
         yield buffer.subarray(0, chunkSize);
         buffer = buffer.subarray(chunkSize);
     }
+}
+
+export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): AsyncIterableReturn<Buffer, void> {
+    yield* buffer2iterable(buffer, chunkSize);
+}
+
+export function buffer2chunkArray(buffer: Buffer, chunkSize = 5): Buffer[] {
+    return [...buffer2iterable(buffer, chunkSize)];
 }
