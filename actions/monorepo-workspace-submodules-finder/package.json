@@ -36,7 +36,7 @@
     "@sounisi5011/run-if-supported": "workspace:^1.0.0",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
     "@types/jest": "28.1.0",
-    "@types/node": "16.11.36",
+    "@types/node": "16.11.38",
     "@types/validate-npm-package-name": "3.0.3",
     "@vercel/ncc": "0.34.0",
     "cross-env": "7.0.3",
