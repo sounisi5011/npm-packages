@@ -58,7 +58,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         single: cleartextPromise.then(cleartext => [cleartext]),
         multi: cleartextPromise.then(buffer2chunkArray),
     };
-    const versionsList = dataDirList.map(({ dirname }) => dirname);
+    const packageVersionList = dataDirList.map(({ dirname }) => dirname.replace(/^v/, ''));
     const supportedNodeVersionsRecord = (() => {
         const supportedRuntimeText = fs.readFileSync(supportedRuntimeFilepath, 'utf8');
         const supportedNodeTable =
@@ -88,10 +88,11 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
      * Install older versions of `@sounisi5011/encrypted-archive`
      */
     beforeAll(async () => {
-        const packageNameList = versionsList
-            .map(version => version.replace(/^v(.+)$/, '$1'))
+        const packageNameList = packageVersionList
             .filter(isWorkWithCurrentNode)
-            .map(version => `encrypted-archive-v${version}@npm:@sounisi5011/encrypted-archive@${version}`);
+            .map(packageVersion =>
+                `encrypted-archive-v${packageVersion}@npm:@sounisi5011/encrypted-archive@${packageVersion}`
+            );
         /**
          * If all published `@sounisi5011/encrypted-archive` do not support the current version of Node.js, skips installation.
          */
@@ -156,24 +157,23 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
     });
     describe.each(testTable)('%s', (_, { 'input-chunk': inputChunkType, ...opts }) => {
         const options: Required<EncryptOptions> = { ...opts, keyDerivation: { algorithm: opts.keyDerivation } };
-        for (const version of versionsList) {
+        for (const packageVersion of packageVersionList) {
             /**
              * If the target version of `@sounisi5011/encrypted-archives` does not support the current version of Node.js, skip the forward compatibility test.
              */
-            if (!isWorkWithCurrentNode(version)) {
-                // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect, jest/valid-title
-                it.skip(version, () => undefined);
+            if (!isWorkWithCurrentNode(packageVersion)) {
+                // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+                it.skip(`v${packageVersion}`, () => undefined);
                 continue;
             }
 
-            // eslint-disable-next-line jest/valid-title
-            it(version, async () => {
+            it(`v${packageVersion}`, async () => {
                 const cleartext = await cleartextPromise;
                 const cleartextChunkList = await inputChunkTypeRecord[inputChunkType];
                 const password = await passwordPromise;
                 const oldEncryptedArchive: Omit<typeof import('../src'), `encrypt${string}`> = importFrom(
                     oldVersionsStoreDirpath,
-                    `encrypted-archive-${version}`,
+                    `encrypted-archive-v${packageVersion}`,
                 ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
                 const encryptedData = await asyncIterable2Buffer(
