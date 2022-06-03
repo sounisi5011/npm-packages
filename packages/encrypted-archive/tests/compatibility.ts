@@ -16,7 +16,7 @@ import {
     KeyDerivationOptions,
 } from '../src';
 import { asyncIterable2Buffer } from '../src/utils';
-import { buffer2chunkArray } from './helpers';
+import { buffer2chunkArray, isOneOrMoreArray } from './helpers';
 import { optGen } from './helpers/combinations';
 
 const supportedRuntimeFilepath = path.resolve(__dirname, '../docs/supported-runtime.md');
@@ -143,42 +143,48 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
              */
             fsAsync.writeFile(path.resolve(oldVersionsStoreDirpath, '.gitignore'), '*'),
         ]);
+
+        const installOldPackages = (
+            packageNameList: [string, ...string[]],
+            options?: Omit<execa.Options, 'cwd'>,
+        ): execa.ExecaChildProcess =>
+            execa(
+                'pnpm',
+                ['add', '--save-exact', ...packageNameList],
+                { ...options, cwd: oldVersionsStoreDirpath },
+            );
         /**
          * Install the old packages.
          */
-        await execa(
-            'pnpm',
-            ['add', '--save-exact', ...oldPackageNameList],
-            { cwd: oldVersionsStoreDirpath },
-        );
+        if (isOneOrMoreArray(oldPackageNameList)) {
+            await installOldPackages(oldPackageNameList);
+        }
         /**
          * Install the latest package.
          * If failed, use latest package from local disk.
          * Note: For example, if we try to release a new version, only the latest version will not be able to be installed from npm.
          */
-        await execa(
-            'pnpm',
-            ['add', '--save-exact', ...latestPackageNameList],
-            { cwd: oldVersionsStoreDirpath, all: true },
-        ).catch(async err => {
-            if (!/\bERR_PNPM_NO_MATCHING_VERSION\b/.test(err.all ?? '')) throw err;
-            /**
-             * Enable `link-workspace-packages` option
-             */
-            await fsAsync.writeFile(
-                path.resolve(oldVersionsStoreDirpath, '.npmrc'),
-                '\nlink-workspace-packages=true',
-                { flag: 'a' },
-            );
-            /**
-             * Retry
-             */
-            await execa(
-                'pnpm',
-                ['add', '--save-exact', ...latestPackageNameList],
-                { cwd: oldVersionsStoreDirpath },
-            );
-        });
+        if (isOneOrMoreArray(latestPackageNameList)) {
+            await installOldPackages(latestPackageNameList, { all: true }).catch(async err => {
+                if (!/\bERR_PNPM_NO_MATCHING_VERSION\b/.test(err.all ?? '')) throw err;
+                /**
+                 * Enable `link-workspace-packages` option
+                 */
+                await fsAsync.writeFile(
+                    path.resolve(oldVersionsStoreDirpath, '.npmrc'),
+                    '\nlink-workspace-packages=true',
+                    { flag: 'a' },
+                );
+                /**
+                 * Retry
+                 */
+                await execa(
+                    'pnpm',
+                    ['add', '--save-exact', ...latestPackageNameList],
+                    { cwd: oldVersionsStoreDirpath },
+                );
+            });
+        }
     }, 30 * 1000);
 
     const testTable = optGen<{
