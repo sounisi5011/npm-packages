@@ -59,7 +59,8 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
         single: cleartextPromise.then(cleartext => [cleartext]),
         multi: cleartextPromise.then(buffer2chunkArray),
     };
-    const packageVersionList = dataDirList.map(({ dirname }) => dirname.replace(/^v/, ''));
+    const packageVersionList = dataDirList
+        .map(({ dirname }) => dirname.replace(/^v/, ''));
     const packageVersion2packageName = (packageVersion: string): string => `encrypted-archive-v${packageVersion}`;
     const supportedNodeVersionsRecord = (() => {
         const supportedRuntimeText = fs.readFileSync(supportedRuntimeFilepath, 'utf8');
@@ -90,7 +91,8 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
      * Install older versions of `@sounisi5011/encrypted-archive`
      */
     beforeAll(async () => {
-        const testTargetPackageVersionList = packageVersionList.filter(isWorkWithCurrentNode);
+        const testTargetPackageVersionList = packageVersionList
+            .filter(isWorkWithCurrentNode);
         /**
          * If all published `@sounisi5011/encrypted-archive` do not support the current version of Node.js, skips installation.
          */
@@ -141,9 +143,10 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
             packageVersionList: [string, ...string[]],
             options?: Omit<execa.Options, 'cwd'>,
         ): execa.ExecaChildProcess => {
-            const packageNameList = packageVersionList.map(packageVersion =>
-                `${packageVersion2packageName(packageVersion)}@npm:@sounisi5011/encrypted-archive@${packageVersion}`
-            );
+            const packageNameList = packageVersionList
+                .map(packageVersion =>
+                    `${packageVersion2packageName(packageVersion)}@npm:@sounisi5011/encrypted-archive@${packageVersion}`
+                );
             return execa(
                 'pnpm',
                 ['add', '--save-exact', ...packageNameList],
