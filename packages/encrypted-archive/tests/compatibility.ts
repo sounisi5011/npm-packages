@@ -175,11 +175,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
                 /**
                  * Retry
                  */
-                await execa(
-                    'pnpm',
-                    ['add', '--save-exact', ...latestPackageVersionList],
-                    { cwd: oldVersionsStoreDirpath },
-                );
+                await installOldPackages(latestPackageVersionList);
             });
         }
     }, 30 * 1000);
