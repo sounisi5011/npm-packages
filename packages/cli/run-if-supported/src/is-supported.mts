@@ -1,8 +1,10 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { checkEngine, checkPlatform } from 'npm-install-checks';
-import ow from 'ow';
+import _ow from 'ow';
 
 import { isString } from './utils.mjs';
+
+const { default: ow } = _ow;
 
 function readProp<T>(
     obj: unknown,
@@ -54,7 +56,12 @@ export function isNotSupported(
     pkg: unknown,
     nodeVersion: string,
 ): string | false {
-    ow(pkg, '', validatePkgPredicate);
+    // @ts-expect-error TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
+    ow(
+        pkg,
+        '',
+        validatePkgPredicate
+    );
 
     try {
         checkEngine(pkg, null, nodeVersion);
