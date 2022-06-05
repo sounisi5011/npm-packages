@@ -1,5 +1,7 @@
 !.*
 **/flatbuffers/*_generated.ts
+**/flatbuffers/*_generated.cts
+**/flatbuffers/*_generated.mts
 **/protocol-buffers/*_pb.js
 **/protocol-buffers/*_pb.d.ts
 **/runkit-example.js
@@ -8,3 +10,5 @@ node_modules/
 dist/
 /packages/ts-type-utils/**/*.js
 /packages/ts-type-utils/**/*.d.ts
+/packages/ts-type-utils/**/*.d.cts
+/packages/ts-type-utils/**/*.d.mts
