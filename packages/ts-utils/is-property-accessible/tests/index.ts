@@ -25,7 +25,6 @@ const anyValues: ReadonlyArray<
 describe('isPropertyAccessible()', () => {
     describe('accessible', () => {
         it.each(anyValues.filter(isPropertyAccessible))('%p', value => {
-            // eslint-disable-next-line @typescript-eslint/dot-notation
             expect(() => value['foo']).not.toThrow();
         });
     });

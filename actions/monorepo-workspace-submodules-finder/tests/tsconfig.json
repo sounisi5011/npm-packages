@@ -5,13 +5,7 @@
 
     /* Modules */
     "types": ["node", "jest"],
-    "resolveJsonModule": true,
-
-    /* Completeness */
-    // jest-mock-process@1.4.1's type definition has a problem, causing an error in TypeScript 4.5.
-    // To avoid this, enable the skipLibCheck option.
-    /** @todo Comment out when jest-mock-process is fixed */
-    "skipLibCheck": true
+    "resolveJsonModule": true
   },
   "include": ["./**/*", "../src/**/*", "../package.json"]
 }

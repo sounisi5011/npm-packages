@@ -1,5 +1,11 @@
 import type { AsyncIterableReturn } from '../../src/utils/type';
 
+export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
+export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]];
+export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]] {
+    return value.length >= 1;
+}
+
 export function rangeArray(start: number, stop: number, step = 1): number[] {
     return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }
@@ -47,9 +53,17 @@ export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable
     return Buffer.concat(bufferList);
 }
 
-export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): AsyncIterableReturn<Buffer, void> {
+export function* buffer2iterable(buffer: Buffer, chunkSize = 5): Iterable<Buffer> {
     while (buffer.byteLength > 0) {
         yield buffer.subarray(0, chunkSize);
         buffer = buffer.subarray(chunkSize);
     }
+}
+
+export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): AsyncIterableReturn<Buffer, void> {
+    yield* buffer2iterable(buffer, chunkSize);
+}
+
+export function buffer2chunkArray(buffer: Buffer, chunkSize = 5): Buffer[] {
+    return [...buffer2iterable(buffer, chunkSize)];
 }

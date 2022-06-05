@@ -8,7 +8,7 @@ type BrotliDisallowOptionName = (typeof brotliDisallowOptionNameList)[number];
 type BrotliOptions = GetOptions<typeof createBrotliCompress>;
 type BrotliDisallowedOptions = Omit<BrotliOptions, BrotliDisallowOptionName>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createCompress(options: BrotliDisallowedOptions) {
     validateDisallowedOptions(
         options,

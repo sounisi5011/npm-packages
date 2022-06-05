@@ -6,6 +6,7 @@ extends:
   - plugin:node/recommended-script
   - plugin:n/recommended-script
   - plugin:promise/recommended
+  - plugin:eslint-comments/recommended
   - standard
 parserOptions:
   # Node.js 14 or newer supports all new functions and properties introduced in ES2020
