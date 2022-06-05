@@ -1,4 +1,5 @@
 import { promises as fsAsync } from 'fs';
+import * as url from 'node:url';
 import { dirname, resolve as resolvePath } from 'path';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
@@ -29,14 +30,18 @@ function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entry
     return undefined;
 }
 
-function getCliData(entryFilepath: string): {
+async function readJson(filepath:string): Promise<JsonValue> {
+    const jsonText = await fsAsync.readFile(filepath, 'utf8');
+    return parseJson(jsonText, filepath);
+}
+
+async function getCliData(entryFilepath: string): Promise<{
     binName: string | undefined;
     version: string | undefined;
     description: string;
-} {
-    const pkgPath = resolvePath(__dirname, '../package.json');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const PKG: unknown = require(pkgPath);
+}> {
+    const pkgPath = resolvePath(dirname(url.fileURLToPath(import.meta.url)), '../package.json');
+    const PKG = await readJson(pkgPath);
     let version: string | undefined;
     let description = '';
 
@@ -53,8 +58,7 @@ async function readPkg(opts: { cwd: string }): Promise<{ pkgPath: string; pkg: J
     const pkgPath = await pkgUp({ cwd: opts.cwd });
     if (!pkgPath) throw new Error(`"package.json" file is not found`);
 
-    const pkgText = await fsAsync.readFile(pkgPath, 'utf8');
-    const pkg: JsonValue = parseJson(pkgText, pkgPath);
+    const pkg = await readJson(pkgPath);
 
     return { pkgPath, pkg };
 }
@@ -90,14 +94,14 @@ function createHelpText(opts: {
     return helpTextLines.map(lines => lines.join('\n')).join('\n\n');
 }
 
-function printHelpAndVersion(opts: { options: Map<string, unknown>; entryFilepath: string }): boolean {
+async function printHelpAndVersion(opts: { options: Map<string, unknown>; entryFilepath: string }): Promise<boolean> {
     if (opts.options.has('-h') || opts.options.has('--help')) {
-        const { binName, version, description } = getCliData(opts.entryFilepath);
+        const { binName, version, description } = await getCliData(opts.entryFilepath);
         console.log(createHelpText({ binName, version, description }));
         return true;
     }
     if (opts.options.has('-v') || opts.options.has('-V') || opts.options.has('--version')) {
-        const { version } = getCliData(opts.entryFilepath);
+        const { version } = await getCliData(opts.entryFilepath);
         console.log(version ?? 'unknown');
         return true;
     }
@@ -157,7 +161,7 @@ export async function main(input: {
     spawnAsync: SpawnAsyncFn;
 }): Promise<void> {
     const { options, command, commandArgs } = parseOptions(input.argv);
-    if (printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
+    if (await printHelpAndVersion({ options, entryFilepath: input.entryFilepath })) return;
     validateCommandName(command);
 
     const { pkgPath, pkg } = await readPkg({ cwd: input.cwd });
