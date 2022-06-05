@@ -35,9 +35,9 @@
   },
   "license": "MIT",
   "author": "sounisi5011",
-  "type": "commonjs",
+  "type": "module",
   "bin": {
-    "run-if-supported": "./cli.js"
+    "run-if-supported": "./cli.mjs"
   },
   "directories": {
     "lib": "./src/",
@@ -46,8 +46,8 @@
   "files": [
     "dist/",
     "/CHANGELOG.md",
-    "cli.js",
-    "!**/*.d.ts",
+    "cli.mjs",
+    "!**/*.d.mts",
     "!**/*.tsbuildinfo"
   ],
   "scripts": {
@@ -81,6 +81,6 @@
     "ultra-runner": "3.10.5"
   },
   "engines": {
-    "node": "^12.17.x || ^14.15.0 || 16.x || 17.x || >=18.x"
+    "node": "^12.20.x || ^14.13.1 || 16.x || 17.x || >=18.x"
   }
 }
