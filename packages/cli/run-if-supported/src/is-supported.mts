@@ -4,7 +4,9 @@ import _ow from 'ow';
 
 import { isString } from './utils.mjs';
 
-const { default: ow } = _ow;
+// Note: If this type annotation is omitted, the following error occurs:
+//     TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
+const ow: (typeof _ow.default) = _ow.default;
 
 function readProp<T>(
     obj: unknown,
@@ -56,12 +58,7 @@ export function isNotSupported(
     pkg: unknown,
     nodeVersion: string,
 ): string | false {
-    // @ts-expect-error TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
-    ow(
-        pkg,
-        '',
-        validatePkgPredicate
-    );
+    ow(pkg, '', validatePkgPredicate);
 
     try {
         checkEngine(pkg, null, nodeVersion);
