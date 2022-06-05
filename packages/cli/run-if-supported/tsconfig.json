@@ -17,7 +17,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "*": ["./types.node_modules/*"]
+      "*": ["./types.node_modules/*.d.ts"]
     },
     "types": ["node"],
 
