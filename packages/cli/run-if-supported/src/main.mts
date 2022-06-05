@@ -30,7 +30,7 @@ function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entry
     return undefined;
 }
 
-async function readJson(filepath:string): Promise<JsonValue> {
+async function readJson(filepath: string): Promise<JsonValue> {
     const jsonText = await fsAsync.readFile(filepath, 'utf8');
     return parseJson(jsonText, filepath);
 }
