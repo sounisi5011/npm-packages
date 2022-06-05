@@ -132,7 +132,7 @@ module.exports = async filenames => {
     );
   }
 
-  const tsFiles = filenames.filter(extFilter('ts'));
+  const tsFiles = filenames.filter(extFilter('ts', 'cts', 'mts'));
   const jsFiles = filenames.filter(extFilter('js', 'cjs', 'mjs'));
 
   const tsOrJsFiles = [...tsFiles, ...jsFiles];
@@ -149,9 +149,9 @@ module.exports = async filenames => {
      */
     commands.push(eslintCommand);
     /**
-      * Next, format code with dprint.
-      * dprint removes the unneeded lines that ESLint did not remove.
-      */
+     * Next, format code with dprint.
+     * dprint removes the unneeded lines that ESLint did not remove.
+     */
     commands.push(
       ...(
         await Promise.all([
@@ -161,9 +161,9 @@ module.exports = async filenames => {
       ).flat(),
     );
     /**
-      * Finally, format code again with ESLint.
-      * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
-      */
+     * Finally, format code again with ESLint.
+     * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
+     */
     commands.push(eslintCommand);
   }
 

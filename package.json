@@ -31,7 +31,7 @@
     "fmt:readme:update-badge": "globby-exec node ./scripts/update-readme-badge/index.mjs '{{*/**/README.md}}'",
     "fmt:ts": "run-s fmt:ts:eslint fmt:ts:dprint fmt:ts:eslint",
     "fmt:ts:dprint": "dprint fmt -c ./.dprint.json",
-    "fmt:ts:eslint": "eslint --cache --report-unused-disable-directives --fix --ext .ts ./",
+    "fmt:ts:eslint": "eslint --cache --report-unused-disable-directives --fix --ext .ts,.cts,.mts ./",
     "fmt:xs": "npm-run-all fmt:xs:eslint --parallel fmt:{ts,js}:dprint fmt:xs:eslint",
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
     "preinstall": "npx only-allow pnpm",
