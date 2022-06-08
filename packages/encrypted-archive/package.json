@@ -105,7 +105,7 @@
     "@types/capitalize": "2.0.0",
     "@types/google-protobuf": "3.15.6",
     "@types/jest": "28.1.1",
-    "@types/node": "12.20.54",
+    "@types/node": "12.20.55",
     "@types/semver": "7.3.9",
     "@types/varint": "6.0.0",
     "bytefield-svg": "1.6.1",
