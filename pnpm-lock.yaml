@@ -244,6 +244,7 @@ importers:
       noop-stream: 0.1.0
       semver: 7.3.7
       ts-jest: 28.0.4
+      ts-pattern: ^4.0.3
       typescript: 4.7.3
       ultra-runner: 3.10.5
       varint: ^6.0.0
@@ -254,6 +255,7 @@ importers:
       bl: 5.0.0
       capitalize: 2.0.4
       google-protobuf: 3.20.1
+      ts-pattern: 4.0.3
       varint: 6.0.0
     optionalDependencies:
       argon2: 0.27.2
@@ -6786,6 +6788,10 @@ packages:
       yn: 3.1.1
     dev: true
     optional: true
+
+  /ts-pattern/4.0.3:
+    resolution: {integrity: sha512-OxQStbr1MKcYYz3YaXsFSBkMo3zjFODVkV8kaLfOak+sWSfx4B+jkOm/VoaWLhnMP+icnIcJ7ENYEnmpAv3jLg==}
+    dev: false
 
   /tsconfig-paths/3.14.1:
     resolution: {integrity: sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==}

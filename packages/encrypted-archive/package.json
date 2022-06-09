@@ -93,6 +93,7 @@
     "bl": "^5.0.0",
     "capitalize": "^2.0.3",
     "google-protobuf": "^3.15.8",
+    "ts-pattern": "^4.0.3",
     "varint": "^6.0.0"
   },
   "devDependencies": {
