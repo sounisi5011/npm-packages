@@ -32,10 +32,11 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "pnpm --package=@sounisi5011/run-if-supported@1.x dlx run-if-supported --verbose run-p test:*",
+    "test": "run-if-supported --verbose run-p test:*",
     "test:jest": "jest"
   },
   "devDependencies": {
+    "@sounisi5011/run-if-supported": "1.1.1",
     "@types/jest": "28.1.1",
     "@types/node": "12.20.55",
     "execa": "5.1.1",

@@ -43,6 +43,10 @@
       "packageNames": ["jest", "@types/jest", "ts-jest"],
       "groupName": "test packages",
       "groupSlug": "tester-packages"
+    },
+    {
+      "matchPackageNames": ["@sounisi5011/run-if-supported"],
+      "extends": [":disableMajorUpdates"]
     }
   ]
 }
