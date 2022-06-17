@@ -6,7 +6,7 @@ import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
 import { ArgumentError } from 'ow';
 import parseJson from 'parse-json';
-import pkgUp from 'pkg-up';
+import { pkgUp } from 'pkg-up';
 import type { JsonValue } from 'type-fest';
 
 import { isNotSupported } from './is-supported.mjs';
