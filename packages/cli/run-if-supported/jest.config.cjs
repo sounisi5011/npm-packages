@@ -1,13 +1,6 @@
 module.exports = {
   ...require('../../../jest.config.base.cjs'),
-  preset: 'ts-jest/presets/default-esm',
   coverageDirectory: 'coverage',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tests/tsconfig.json',
-      useESM: true,
-    },
-  },
   extensionsToTreatAsEsm: ['.mts', '.ts'],
   moduleFileExtensions: ['js', 'mjs', 'cjs', 'ts', 'mts', 'cts', 'json', 'node'],
   moduleNameMapper: {
@@ -20,5 +13,5 @@ module.exports = {
     '<rootDir>/tests/fixtures/',
     '<rootDir>/tests/helpers/',
   ],
-  transform: { '^.+\\.[mc]?ts$': 'ts-jest' },
+  transform: { '^.+\\.[mc]?ts$': '@swc/jest' },
 };
