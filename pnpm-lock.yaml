@@ -7,7 +7,7 @@ importers:
       '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': workspace:^0.0.0
       '@sounisi5011/scripts--globby-exec': workspace:^0.0.0
-      '@tsconfig/node12': 1.0.9
+      '@tsconfig/node12': 1.0.11
       '@typescript-eslint/eslint-plugin': 5.28.0
       '@typescript-eslint/parser': 5.28.0
       commitizen: 4.2.4
@@ -36,7 +36,7 @@ importers:
       '@sounisi5011/actionlint': link:scripts/actionlint
       '@sounisi5011/scripts--fix-flatbuffers-generated-ts': link:scripts/fix-flatbuffers-generated-ts
       '@sounisi5011/scripts--globby-exec': link:scripts/globby-exec
-      '@tsconfig/node12': 1.0.9
+      '@tsconfig/node12': 1.0.11
       '@typescript-eslint/eslint-plugin': 5.28.0_fe28c36a09305ff6004282ca7beab41d
       '@typescript-eslint/parser': 5.28.0_eslint@8.17.0+typescript@4.7.3
       commitizen: 4.2.4
@@ -1584,8 +1584,8 @@ packages:
     dev: true
     optional: true
 
-  /@tsconfig/node12/1.0.9:
-    resolution: {integrity: sha512-/yBMcem+fbvhSREH+s14YJi18sp7J9jpuhYByADT2rypfajMZZN4WQ6zBGgBKp53NKmqI36wFYDb3yaMPurITw==}
+  /@tsconfig/node12/1.0.11:
+    resolution: {integrity: sha512-cqefuRsh12pWyGsIoBKJA9luFu3mRxCA+ORZvA4ktLSzIuCUtWVxGIuXigEwO5/ywWFMZ2QEGKWvkZG1zDMTag==}
     dev: true
 
   /@tsconfig/node14/1.0.1:
@@ -7161,7 +7161,7 @@ packages:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.8
-      '@tsconfig/node12': 1.0.9
+      '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
       '@types/node': 17.0.40
