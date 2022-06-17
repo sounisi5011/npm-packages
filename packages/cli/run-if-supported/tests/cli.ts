@@ -10,7 +10,7 @@ describe('cli', () => {
         await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
     }, 60 * 1000);
 
-    const CLI_PATH = path.resolve(PACKAGE_ROOT, 'cli.js');
+    const CLI_PATH = path.resolve(PACKAGE_ROOT, typeof pkg.bin === 'string' ? pkg.bin : pkg.bin['run-if-supported']);
     const binName = Object.keys(pkg.bin)[0] ?? 'run-if-supported';
     const version = String(pkg.version);
 
