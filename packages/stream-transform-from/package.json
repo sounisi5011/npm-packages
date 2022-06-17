@@ -83,7 +83,7 @@
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
-    "@sounisi5011/run-if-supported": "workspace:^1.0.0",
+    "@sounisi5011/run-if-supported": "1.1.1",
     "@types/jest": "28.1.1",
     "@types/node": "12.20.55",
     "jest": "28.1.1",
