@@ -3,13 +3,21 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
+    /* Projects */
+    // In TypeScript 4.7.3, if the `incremental` option is `true`, the 'import.meta' meta-property is not allowed.
+    "incremental": false,
+    // If the `incremental` option is disabled, the `composite` option must also be disabled
+    "composite": false,
+
     /* Modules */
+    // The 'import.meta' meta-property is only allowed when the `module` option is `es2020`, `es2022`, `esnext`, `system`, `node16`, or `nodenext`.
+    "module": "Node16",
     // When the `composite` option is `true` and the `rootDir` option is undefined,
     // files will not be created directly under the `outDir`
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "*": ["./types.node_modules/*"]
+      "*": ["./types.node_modules/*.d.ts"]
     },
     "types": ["node"],
 

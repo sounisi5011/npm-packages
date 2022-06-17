@@ -1,9 +1,12 @@
-// @ts-expect-error TS1471: Module '@sounisi5011/ts-utils-is-property-accessible' cannot be imported using this construct. The specifier only resolves to an ES module, which cannot be imported synchronously. Use dynamic import instead.
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { checkEngine, checkPlatform } from 'npm-install-checks';
-import ow from 'ow';
+import _ow from 'ow';
 
-import { isString } from './utils';
+import { isString } from './utils.mjs';
+
+// Note: If this type annotation is omitted, the following error occurs:
+//     TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
+const ow: (typeof _ow.default) = _ow.default;
 
 function readProp<T>(
     obj: unknown,
