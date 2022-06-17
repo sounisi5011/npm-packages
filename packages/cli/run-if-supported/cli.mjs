@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // @ts-check
 
-import * as process from 'node:process';
-import * as url from 'node:url';
+import process from 'node:process';
+import url from 'node:url';
 
 import { awaitMainFn } from '@sounisi5011/cli-utils-top-level-await';
 

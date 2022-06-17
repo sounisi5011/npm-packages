@@ -1,6 +1,6 @@
 import { promises as fsAsync } from 'node:fs';
-import { dirname, resolve as resolvePath } from 'node:path';
-import * as url from 'node:url';
+import path from 'node:path';
+import url from 'node:url';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
@@ -19,7 +19,7 @@ function getBinName(pkg: Record<PropertyKey, unknown>, pkgDirpath: string, entry
             .filter(filterObjectEntry(isString))
             .map(([binName, binPath]) => ({ binName, binPath }))
             .find(({ binPath }) => {
-                const binFullpath = resolvePath(pkgDirpath, binPath);
+                const binFullpath = path.resolve(pkgDirpath, binPath);
                 return binFullpath === entryFilepath;
             });
         if (binEntry) return binEntry.binName;
@@ -40,14 +40,14 @@ async function getCliData(entryFilepath: string): Promise<{
     version: string | undefined;
     description: string;
 }> {
-    const pkgPath = resolvePath(dirname(url.fileURLToPath(import.meta.url)), '../package.json');
+    const pkgPath = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '../package.json');
     const PKG = await readJson(pkgPath);
     let version: string | undefined;
     let description = '';
 
     if (!isPropAccessible(PKG)) return { binName: undefined, version, description };
 
-    const binName = getBinName(PKG, dirname(pkgPath), entryFilepath);
+    const binName = getBinName(PKG, path.dirname(pkgPath), entryFilepath);
     if (typeof PKG['version'] === 'string') version = PKG['version'];
     if (typeof PKG['description'] === 'string') description = PKG['description'];
 
