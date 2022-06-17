@@ -1,6 +1,6 @@
-import { promises as fsAsync } from 'fs';
+import { promises as fsAsync } from 'node:fs';
+import { dirname, resolve as resolvePath } from 'node:path';
 import * as url from 'node:url';
-import { dirname, resolve as resolvePath } from 'path';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { commandJoin } from 'command-join';
