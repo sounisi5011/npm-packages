@@ -68,7 +68,7 @@ importers:
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
       '@octokit/endpoint': 6.0.12
-      '@sounisi5011/run-if-supported': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@types/jest': 28.1.1
       '@types/node': 16.11.39
@@ -96,7 +96,7 @@ importers:
       validate-npm-package-name: 4.0.0
       workspace-tools: 0.19.1_typescript@4.7.3
     devDependencies:
-      '@sounisi5011/run-if-supported': link:../../packages/cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
       '@types/jest': 28.1.1
       '@types/node': 16.11.39
@@ -114,7 +114,7 @@ importers:
   packages/check-pid-file:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
-      '@sounisi5011/run-if-supported': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       '@types/readline-transform': 1.0.1
@@ -135,7 +135,7 @@ importers:
       write-file-atomic: 4.0.1
     devDependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../cli-utils/top-level-await-cli
-      '@sounisi5011/run-if-supported': link:../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       '@types/readline-transform': 1.0.1
@@ -150,6 +150,7 @@ importers:
 
   packages/cli-utils/top-level-await-cli:
     specifiers:
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       execa: 5.1.1
@@ -158,6 +159,7 @@ importers:
       typescript: 4.7.3
       ultra-runner: 3.10.5
     devDependencies:
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       execa: 5.1.1
@@ -169,6 +171,7 @@ importers:
   packages/cli/run-if-supported:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@swc/core': 1.2.203
       '@swc/jest': 0.2.21
@@ -199,6 +202,7 @@ importers:
       parse-json: 5.2.0
       pkg-up: 3.1.0
     devDependencies:
+      '@sounisi5011/run-if-supported': 1.1.1
       '@swc/core': 1.2.203
       '@swc/jest': 0.2.21_@swc+core@1.2.203
       '@types/cross-spawn': 6.0.2
@@ -217,7 +221,7 @@ importers:
     specifiers:
       '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/jest-binary-data-matchers': workspace:^0.0.0 || ^1.0.0
-      '@sounisi5011/run-if-supported': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
@@ -264,7 +268,7 @@ importers:
     devDependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
-      '@sounisi5011/run-if-supported': link:../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
       '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
@@ -299,7 +303,7 @@ importers:
 
   packages/jest-matchers/binary-data:
     specifiers:
-      '@sounisi5011/run-if-supported': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-is-readonly-array': workspace:^1.0.0
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
@@ -313,7 +317,7 @@ importers:
       '@sounisi5011/ts-type-util-is-readonly-array': link:../../ts-type-utils/is-readonly-array
       jest-diff: 28.1.0
     devDependencies:
-      '@sounisi5011/run-if-supported': link:../../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       cross-env: 7.0.3
@@ -324,7 +328,7 @@ importers:
 
   packages/stream-transform-from:
     specifiers:
-      '@sounisi5011/run-if-supported': workspace:^1.0.0
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       jest: 28.1.1
@@ -333,7 +337,7 @@ importers:
       typescript: 4.7.3
       ultra-runner: 3.10.5
     devDependencies:
-      '@sounisi5011/run-if-supported': link:../cli/run-if-supported
+      '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.1
       '@types/node': 12.20.55
       jest: 28.1.1_@types+node@12.20.55
@@ -920,7 +924,6 @@ packages:
 
   /@improved/node/1.1.1:
     resolution: {integrity: sha512-ePDxG9UuU9Kobk90ZUjtmDW8IT9U7aRb1/Rl9683MRNM+ur0ocHL2v7TPH2ajTiVSBUFbbeW8vKIt9jrb0JIAA==}
-    dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
@@ -1380,6 +1383,11 @@ packages:
   /@sinclair/typebox/0.23.5:
     resolution: {integrity: sha512-AFBVi/iT4g20DHoujvMH1aEDn8fGJh4xsRGCP6d8RpLPMqsNPvW01Jcn0QysXTsg++/xj25NmJsGyH9xug/wKg==}
 
+  /@sindresorhus/is/4.6.0:
+    resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
+    engines: {node: '>=10'}
+    dev: true
+
   /@sindresorhus/is/5.1.0:
     resolution: {integrity: sha512-TsEUyp3jzFpAMVO/+iFt+8nRoGJcU9ZE4mfyi3SpFry8j6CaxzLDuC7HefHCQ9/+IykpypZanfPPfeHpUAziyg==}
     engines: {node: '>=14.16'}
@@ -1395,6 +1403,30 @@ packages:
     resolution: {integrity: sha512-BPS4ynJW/o92PUR4wgriz2Ud5gpST5vz6GQfMixEDK0Z8ZCUv2M7SkBLykH56T++Xs+8ln9zTGbOvNGIe02/jw==}
     dependencies:
       '@sinonjs/commons': 1.8.3
+    dev: true
+
+  /@sounisi5011/cli-utils-top-level-await/1.1.3:
+    resolution: {integrity: sha512-xW/JYyDYMcaVhCwwfjZ3j6rjz7GlkHPseNkyo9KxhbxXxFJcCbL4t/329EtIFvPDbxTYBWRec05WN1Eb12Sfjg==}
+    engines: {node: ^12.17.x || 14.x || 15.x || 16.x || 17.x || >=18.x}
+    dev: true
+
+  /@sounisi5011/run-if-supported/1.1.1:
+    resolution: {integrity: sha512-/dzTeopn+dDM8pImm554U5+JHOrmeac8DQuRW1QpaYREu8cWtuFHaUW/AaEL5KJdCGr/0gHgVAblYMNm+AeV5w==}
+    engines: {node: ^12.17.x || 14.x || 15.x || 16.x || 17.x}
+    hasBin: true
+    dependencies:
+      '@sounisi5011/cli-utils-top-level-await': 1.1.3
+      '@sounisi5011/ts-utils-is-property-accessible': 1.0.3
+      command-join: 3.0.0
+      cross-spawn: 7.0.3
+      npm-install-checks: 4.0.0
+      ow: 0.28.1
+      parse-json: 5.2.0
+      pkg-up: 3.1.0
+    dev: true
+
+  /@sounisi5011/ts-utils-is-property-accessible/1.0.3:
+    resolution: {integrity: sha512-W4EftDXZsjJn6NCVSSC/kGpHYqKzNsuJjLXp2GPEtdZbQHvOYPSiqZyYbJYxYcK1OsKNcGAPiP9uBqZQ0lyHPw==}
     dev: true
 
   /@swc/core-android-arm-eabi/1.2.203:
@@ -2630,7 +2662,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@improved/node': 1.1.1
-    dev: false
 
   /command-line-args/5.2.1:
     resolution: {integrity: sha512-H4UfQhZyakIjC74I9d34fGYDwk3XpSr17QhEd0Q3I9Xq1CETHo4Hcuo87WyWHpAF1aSLjLRf5lD9ZGX2qStUvg==}
@@ -2997,6 +3028,13 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+    dev: true
+
+  /dot-prop/6.0.1:
+    resolution: {integrity: sha512-tE7ztYzXHIeyvc7N+hR3oi7FIbf/NIjVP9hmAt3yMXzrQ072/fpjGLx2GxNxGxUl5V73MEqYzioOMoVhGMJ5cA==}
+    engines: {node: '>=10'}
+    dependencies:
+      is-obj: 2.0.0
     dev: true
 
   /dot-prop/7.2.0:
@@ -3683,7 +3721,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       locate-path: 3.0.0
-    dev: false
 
   /find-up/4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
@@ -4308,6 +4345,11 @@ packages:
   /is-number/7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
+
+  /is-obj/2.0.0:
+    resolution: {integrity: sha512-drqDG3cbczxxEJRoOXcOjtdp1J/lyp1mNn0xaznRs8+muBhgQcrnbspox5X5fOw0HnMnbfDzvnEMEtqDEJEo8w==}
+    engines: {node: '>=8'}
+    dev: true
 
   /is-plain-obj/1.1.0:
     resolution: {integrity: sha512-yvkRyxmFKEOQ4pNXCmJG5AEQNlXJS5LaONXo5/cLdTZdWvsZ1ioJEonLGAosKlMWE8lwUy/bJzMjcw8az73+Fg==}
@@ -5391,7 +5433,6 @@ packages:
     dependencies:
       p-locate: 3.0.0
       path-exists: 3.0.0
-    dev: false
 
   /locate-path/5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
@@ -5412,7 +5453,6 @@ packages:
 
   /lodash.isequal/4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
-    dev: false
 
   /lodash.map/4.6.0:
     resolution: {integrity: sha512-worNHGKLDetmcEYDvh2stPCrrQRkP20E4l0iIS7F8EvzMqBBi7ltvFN5m1HvTf1P7Jk1txKhvFcmYsCr8O2F1Q==}
@@ -5793,6 +5833,13 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
+  /npm-install-checks/4.0.0:
+    resolution: {integrity: sha512-09OmyDkNLYwqKPOnbI8exiOZU2GVVmQp7tgez2BPi5OZC8M82elDAps7sxC4l//uSUtotWqoEIDwjRvWH4qz8w==}
+    engines: {node: '>=10'}
+    dependencies:
+      semver: 7.3.7
+    dev: true
+
   /npm-install-checks/5.0.0:
     resolution: {integrity: sha512-65lUsMI8ztHCxFz5ckCEC44DRvEGdZX5usQFriauxHEwt7upv1FKaQEmAtU0YnOAdwuNWCmk64xYiQABNrEyLA==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
@@ -5922,6 +5969,18 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /ow/0.28.1:
+    resolution: {integrity: sha512-1EZTywPZeUKac9gD7q8np3Aj+V54kvfIcjNEVNDSbG2Ys5xA5foW2HquvMMqgyWGLqIFMlc0Iq/HmyMHqN48sA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sindresorhus/is': 4.6.0
+      callsites: 3.1.0
+      dot-prop: 6.0.1
+      lodash.isequal: 4.5.0
+      type-fest: 2.13.0
+      vali-date: 1.0.0
+    dev: true
+
   /ow/1.0.0:
     resolution: {integrity: sha512-e7Bu8LOhWACzlx89dZb64K2p3KusY0s4BhkVLewsVuKA4Pp1lq+Nxicp0k6ZP4G5GO3YdkVVd6+qUclQRcl6fg==}
     engines: {node: '>=14.16'}
@@ -5985,7 +6044,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       p-limit: 2.3.0
-    dev: false
 
   /p-locate/4.1.0:
     resolution: {integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==}
@@ -6180,7 +6238,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 3.0.0
-    dev: false
 
   /plur/4.0.0:
     resolution: {integrity: sha512-4UGewrYgqDFw9vV6zNV+ADmPAUAfJPKtGvb/VdpQAx25X5f3xXdGdyOEVFwkl8Hl/tl7+xbeHqSEM+D5/TirUg==}
@@ -7277,7 +7334,6 @@ packages:
   /vali-date/1.0.0:
     resolution: {integrity: sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

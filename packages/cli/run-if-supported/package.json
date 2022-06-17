@@ -55,7 +55,7 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "pnpm --package=@sounisi5011/run-if-supported@1.x dlx run-if-supported --verbose cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "run-if-supported --verbose cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
@@ -68,6 +68,7 @@
     "pkg-up": "^3.1.0"
   },
   "devDependencies": {
+    "@sounisi5011/run-if-supported": "1.1.1",
     "@swc/core": "1.2.203",
     "@swc/jest": "0.2.21",
     "@types/cross-spawn": "6.0.2",
