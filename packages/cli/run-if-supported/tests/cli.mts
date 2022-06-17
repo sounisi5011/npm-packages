@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import execa from 'execa';
 
 import pkg from '../package.json';
-import { getFixturesPath, PACKAGE_ROOT } from './helpers/index.js';
+import { getFixturesPath, PACKAGE_ROOT } from './helpers/index.cjs';
 
 describe('cli', () => {
     beforeAll(async () => {
