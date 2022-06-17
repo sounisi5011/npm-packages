@@ -21,7 +21,7 @@ module.exports = {
     '^(\\.{1,2}/.*\\.[mc])js$': '$1ts',
   },
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/tests/**/*.ts'],
+  testMatch: ['<rootDir>/tests/**/*.{ts,mts,cts}'],
   testPathIgnorePatterns: [
     '<rootDir>/tests/fixtures/',
     '<rootDir>/tests/helpers/',
