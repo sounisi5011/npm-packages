@@ -1,4 +1,4 @@
-import * as path from 'node:path';
+import * as path from 'path';
 
 export const PACKAGE_ROOT = path.resolve(__dirname, '../..');
 
