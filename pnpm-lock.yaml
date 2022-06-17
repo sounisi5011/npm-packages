@@ -186,7 +186,7 @@ importers:
       is-plain-obj: 3.0.0
       jest: 28.1.1
       npm-install-checks: ^5.0.0
-      ow: ^0.28.0
+      ow: ^1.0.0
       parse-json: ^5.2.0
       pkg-up: ^3.1.0
       type-fest: 2.13.0
@@ -198,7 +198,7 @@ importers:
       command-join: 3.0.0
       cross-spawn: 7.0.3
       npm-install-checks: 5.0.0
-      ow: 0.28.1
+      ow: 1.0.0
       parse-json: 5.2.0
       pkg-up: 3.1.0
     devDependencies:
@@ -1386,6 +1386,12 @@ packages:
   /@sindresorhus/is/4.6.0:
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
     engines: {node: '>=10'}
+    dev: true
+
+  /@sindresorhus/is/5.1.0:
+    resolution: {integrity: sha512-TsEUyp3jzFpAMVO/+iFt+8nRoGJcU9ZE4mfyi3SpFry8j6CaxzLDuC7HefHCQ9/+IykpypZanfPPfeHpUAziyg==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /@sinonjs/commons/1.8.3:
     resolution: {integrity: sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==}
@@ -2474,6 +2480,12 @@ packages:
   /callsites/3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+    dev: true
+
+  /callsites/4.0.0:
+    resolution: {integrity: sha512-y3jRROutgpKdz5vzEhWM34TidDU8vkJppF8dszITeb1PQmSqV3DTxyV8G/lyO/DNvtE1YTedehmw9MPZsCBHxQ==}
+    engines: {node: '>=12.20'}
+    dev: false
 
   /camelcase-keys/6.2.2:
     resolution: {integrity: sha512-YrwaA0vEKazPBkn0ipTiMpSajYDSe+KjQfrjhcBMxJt/znbvlHd8Pw/Vamaz5EB4Wfhs3SUR3Z9mwRu/P3s3Yg==}
@@ -3023,6 +3035,14 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       is-obj: 2.0.0
+    dev: true
+
+  /dot-prop/7.2.0:
+    resolution: {integrity: sha512-Ol/IPXUARn9CSbkrdV4VJo7uCy1I3VuSiWCaFSg+8BdUOzF9n3jefIpcgAydvUZbTdEBZs2vEiTiS9m61ssiDA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      type-fest: 2.13.0
+    dev: false
 
   /dprint/0.29.1:
     resolution: {integrity: sha512-6x20DOUzx8/3LhQWU9qix+uEuo1uI1x7x5CN6/KaAsARk9JOJx3qs0kDI5Fp4WUQpRHs7TN5bQ08W5Exe8Yv9g==}
@@ -4329,6 +4349,7 @@ packages:
   /is-obj/2.0.0:
     resolution: {integrity: sha512-drqDG3cbczxxEJRoOXcOjtdp1J/lyp1mNn0xaznRs8+muBhgQcrnbspox5X5fOw0HnMnbfDzvnEMEtqDEJEo8w==}
     engines: {node: '>=8'}
+    dev: true
 
   /is-plain-obj/1.1.0:
     resolution: {integrity: sha512-yvkRyxmFKEOQ4pNXCmJG5AEQNlXJS5LaONXo5/cLdTZdWvsZ1ioJEonLGAosKlMWE8lwUy/bJzMjcw8az73+Fg==}
@@ -5958,6 +5979,19 @@ packages:
       lodash.isequal: 4.5.0
       type-fest: 2.13.0
       vali-date: 1.0.0
+    dev: true
+
+  /ow/1.0.0:
+    resolution: {integrity: sha512-e7Bu8LOhWACzlx89dZb64K2p3KusY0s4BhkVLewsVuKA4Pp1lq+Nxicp0k6ZP4G5GO3YdkVVd6+qUclQRcl6fg==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      '@sindresorhus/is': 5.1.0
+      callsites: 4.0.0
+      dot-prop: 7.2.0
+      lodash.isequal: 4.5.0
+      type-fest: 2.13.0
+      vali-date: 1.0.0
+    dev: false
 
   /p-event/4.2.0:
     resolution: {integrity: sha512-KXatOjCRXXkSePPb1Nbi0p0m+gQAwdlbhi4wQKJPI1HsMQS9g+Sqp2o+QHziPr7eYJyOZet836KoHEVM1mwOrQ==}
@@ -7298,7 +7332,7 @@ packages:
     dev: true
 
   /vali-date/1.0.0:
-    resolution: {integrity: sha1-G5BKWWCfsyjvB4E4Qgk09rhnCaY=}
+    resolution: {integrity: sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==}
     engines: {node: '>=0.10.0'}
 
   /validate-npm-package-license/3.0.4:
