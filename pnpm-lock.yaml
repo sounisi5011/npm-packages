@@ -64,7 +64,7 @@ importers:
 
   actions/monorepo-workspace-submodules-finder:
     specifiers:
-      '@actions/core': 1.8.2
+      '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
       '@octokit/endpoint': 6.0.12
@@ -87,7 +87,7 @@ importers:
       validate-npm-package-name: 4.0.0
       workspace-tools: 0.19.1
     dependencies:
-      '@actions/core': 1.8.2
+      '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
       '@octokit/endpoint': 6.0.12
@@ -460,8 +460,8 @@ importers:
 
 packages:
 
-  /@actions/core/1.8.2:
-    resolution: {integrity: sha512-FXcBL7nyik8K5ODeCKlxi+vts7torOkoDAKfeh61EAkAy1HAvwn9uVzZBY0f15YcQTcZZ2/iSGBFHEuioZWfDA==}
+  /@actions/core/1.9.0:
+    resolution: {integrity: sha512-5pbM693Ih59ZdUhgk+fts+bUWTnIdHV3kwOSr+QIoFHMLg7Gzhwm0cifDY/AG68ekEJAkHnQVpcy4f6GjmzBCA==}
     dependencies:
       '@actions/http-client': 2.0.1
     dev: false
