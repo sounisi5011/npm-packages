@@ -88,7 +88,7 @@
     "@types/node": "12.20.55",
     "jest": "28.1.1",
     "ts-jest": "28.0.4",
-    "tsd": "0.20.0",
+    "tsd": "0.21.0",
     "typescript": "4.7.3",
     "ultra-runner": "3.10.5"
   },
