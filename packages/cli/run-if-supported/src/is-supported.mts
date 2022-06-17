@@ -1,12 +1,8 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import { checkEngine, checkPlatform } from 'npm-install-checks';
-import _ow from 'ow';
+import ow from 'ow';
 
 import { isString } from './utils.mjs';
-
-// Note: If this type annotation is omitted, the following error occurs:
-//     TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
-const ow: (typeof _ow.default) = _ow.default;
 
 function readProp<T>(
     obj: unknown,
