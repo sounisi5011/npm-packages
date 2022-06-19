@@ -304,7 +304,10 @@ jobs:
       matrix:
         node-version:
           - 12.x
+          - 12.17.0 # smallest version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
+          - 12.20.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
           - 14.x
+          - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
           - 15.x
           - 16.x
           - 17.x
