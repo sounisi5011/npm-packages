@@ -1,7 +1,7 @@
 # @sounisi5011/encrypted-archive
 
 [![Go to the latest release page on npm](https://img.shields.io/npm/v/@sounisi5011/encrypted-archive.svg)](https://www.npmjs.com/package/@sounisi5011/encrypted-archive)
-![Supported Node.js version: ^14.19.x || 16.x || >=18.x](https://img.shields.io/static/v1?label=node&message=%5E14.19.x%20%7C%7C%2016.x%20%7C%7C%20%3E%3D18.x&color=brightgreen)
+![Supported Node.js version: ^14.6.x || 16.x || >=18.x](https://img.shields.io/static/v1?label=node&message=%5E14.6.x%20%7C%7C%2016.x%20%7C%7C%20%3E%3D18.x&color=brightgreen)
 [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/encrypted-archive)](https://bundlephobia.com/result?p=%40sounisi5011%2Fencrypted-archive)

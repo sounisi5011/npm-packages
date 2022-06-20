@@ -4,6 +4,6 @@
     "@sounisi5011/encrypted-archive": "file:.."
   },
   "engines": {
-    "node": "^14.19.x || 16.x || >=18.x"
+    "node": "^14.6.x || 16.x || >=18.x"
   }
 }
