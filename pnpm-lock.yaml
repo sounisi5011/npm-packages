@@ -116,7 +116,7 @@ importers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
       '@types/write-file-atomic': 4.0.0
@@ -137,12 +137,12 @@ importers:
       '@sounisi5011/cli-utils-top-level-await': link:../cli-utils/top-level-await-cli
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       '@types/readline-transform': 1.0.1
       '@types/signal-exit': 3.0.1
       '@types/write-file-atomic': 4.0.0
       execa: 5.1.1
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       readline-transform: 1.0.0
       ts-jest: 28.0.5_jest@28.1.1+typescript@4.7.4
       typescript: 4.7.4
@@ -152,7 +152,7 @@ importers:
     specifiers:
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       execa: 5.1.1
       jest: 28.1.1
       ts-jest: 28.0.5
@@ -161,9 +161,9 @@ importers:
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       execa: 5.1.1
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       ts-jest: 28.0.5_jest@28.1.1+typescript@4.7.4
       typescript: 4.7.4
       ultra-runner: 3.10.5
@@ -230,7 +230,7 @@ importers:
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.6
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       '@types/semver': 7.3.10
       '@types/varint': 6.0.0
       argon2: 0.27.2
@@ -275,7 +275,7 @@ importers:
       '@types/capitalize': 2.0.0
       '@types/google-protobuf': 3.15.6
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       '@types/semver': 7.3.10
       '@types/varint': 6.0.0
       bytefield-svg: 1.6.1
@@ -286,7 +286,7 @@ importers:
       glob-exec: 0.1.1
       grpc_tools_node_protoc_ts: 5.3.2
       import-from: 4.0.0
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       jest-extended: 2.0.0_jest@28.1.1
       multicodec: 3.2.1
       noop-stream: 0.1.0
@@ -306,7 +306,7 @@ importers:
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-is-readonly-array': workspace:^1.0.0
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       cross-env: 7.0.3
       jest: 28.1.1
       jest-diff: ^28.0.0
@@ -319,9 +319,9 @@ importers:
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       cross-env: 7.0.3
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       pretty-format: 28.1.1
       ts-jest: 28.0.5_jest@28.1.1+typescript@4.7.4
       typescript: 4.7.4
@@ -330,7 +330,7 @@ importers:
     specifiers:
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
+      '@types/node': 14.18.21
       jest: 28.1.1
       ts-jest: 28.0.5
       tsd: 0.21.0
@@ -339,8 +339,8 @@ importers:
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@types/jest': 28.1.2
-      '@types/node': 14.18.18
-      jest: 28.1.1_@types+node@14.18.18
+      '@types/node': 14.18.21
+      jest: 28.1.1_@types+node@14.18.21
       ts-jest: 28.0.5_jest@28.1.1+typescript@4.7.4
       tsd: 0.21.0
       typescript: 4.7.4
@@ -1739,10 +1739,6 @@ packages:
 
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
-    dev: true
-
-  /@types/node/14.18.18:
-    resolution: {integrity: sha512-B9EoJFjhqcQ9OmQrNorItO+OwEOORNn3S31WuiHvZY/dm9ajkB7AKD/8toessEtHHNL+58jofbq7hMMY9v4yig==}
     dev: true
 
   /@types/node/14.18.21:
@@ -4867,34 +4863,6 @@ packages:
       - ts-node
     dev: true
 
-  /jest-cli/28.1.1_@types+node@14.18.18:
-    resolution: {integrity: sha512-+sUfVbJqb1OjBZ0OdBbI6OWfYM1i7bSfzYy6gze1F1w3OKWq8ZTEKkZ8a7ZQPq6G/G1qMh/uKqpdWhgl11NFQQ==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 28.1.1
-      '@jest/test-result': 28.1.1
-      '@jest/types': 28.1.1
-      chalk: 4.1.2
-      exit: 0.1.2
-      graceful-fs: 4.2.10
-      import-local: 3.1.0
-      jest-config: 28.1.1_@types+node@14.18.18
-      jest-util: 28.1.1
-      jest-validate: 28.1.1
-      prompts: 2.4.2
-      yargs: 17.5.1
-    transitivePeerDependencies:
-      - '@types/node'
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest-cli/28.1.1_@types+node@14.18.21:
     resolution: {integrity: sha512-+sUfVbJqb1OjBZ0OdBbI6OWfYM1i7bSfzYy6gze1F1w3OKWq8ZTEKkZ8a7ZQPq6G/G1qMh/uKqpdWhgl11NFQQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
@@ -4966,45 +4934,6 @@ packages:
       '@babel/core': 7.18.5
       '@jest/test-sequencer': 28.1.1
       '@jest/types': 28.1.1
-      babel-jest: 28.1.1_@babel+core@7.18.5
-      chalk: 4.1.2
-      ci-info: 3.3.2
-      deepmerge: 4.2.2
-      glob: 7.2.3
-      graceful-fs: 4.2.10
-      jest-circus: 28.1.1
-      jest-environment-node: 28.1.1
-      jest-get-type: 28.0.2
-      jest-regex-util: 28.0.2
-      jest-resolve: 28.1.1
-      jest-runner: 28.1.1
-      jest-util: 28.1.1
-      jest-validate: 28.1.1
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 28.1.1
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /jest-config/28.1.1_@types+node@14.18.18:
-    resolution: {integrity: sha512-tASynMhS+jVV85zKvjfbJ8nUyJS/jUSYZ5KQxLUN2ZCvcQc/OmhQl2j6VEL3ezQkNofxn5pQ3SPYWPHb0unTZA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    peerDependencies:
-      '@types/node': '*'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      '@babel/core': 7.18.5
-      '@jest/test-sequencer': 28.1.1
-      '@jest/types': 28.1.1
-      '@types/node': 14.18.18
       babel-jest: 28.1.1_@babel+core@7.18.5
       chalk: 4.1.2
       ci-info: 3.3.2
@@ -5200,7 +5129,7 @@ packages:
     peerDependencies:
       jest: '>=27.2.5'
     dependencies:
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       jest-diff: 27.5.1
       jest-get-type: 27.5.1
     dev: true
@@ -5475,26 +5404,6 @@ packages:
       '@jest/types': 28.1.1
       import-local: 3.1.0
       jest-cli: 28.1.1
-    transitivePeerDependencies:
-      - '@types/node'
-      - supports-color
-      - ts-node
-    dev: true
-
-  /jest/28.1.1_@types+node@14.18.18:
-    resolution: {integrity: sha512-qw9YHBnjt6TCbIDMPMpJZqf9E12rh6869iZaN08/vpOGgHJSAaLLUn6H8W3IAEuy34Ls3rct064mZLETkxJ2XA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 28.1.1
-      '@jest/types': 28.1.1
-      import-local: 3.1.0
-      jest-cli: 28.1.1_@types+node@14.18.18
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -7620,7 +7529,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.1_@types+node@14.18.18
+      jest: 28.1.1_@types+node@14.18.21
       jest-util: 28.1.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
