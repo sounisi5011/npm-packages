@@ -54,7 +54,7 @@
     "commitizen": "4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "dprint": "0.29.1",
-    "eslint": "8.17.0",
+    "eslint": "8.18.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-standard": "17.0.0",
     "eslint-config-standard-with-typescript": "21.0.1",
@@ -71,7 +71,7 @@
     "prettier": "2.7.1",
     "prettier-package-json": "2.6.3",
     "sort-package-json": "1.57.0",
-    "typescript": "4.7.3",
+    "typescript": "4.7.4",
     "ultra-runner": "3.10.5"
   },
   "engines": {
