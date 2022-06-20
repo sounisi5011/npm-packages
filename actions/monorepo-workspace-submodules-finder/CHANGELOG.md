@@ -2,10 +2,15 @@
 
 ### [1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)
 
-
 ### Bug Fixes
 
 * **monorepo-workspace-submodules-finder-action:** update Node.js used on the environment where the action is executed to Node.js v16 ([#503](https://www.github.com/sounisi5011/npm-packages/issues/503)) ([7244df5](https://www.github.com/sounisi5011/npm-packages/commit/7244df5b357338fe5dc500843cb2b53fc103770f))
+
+### Commits
+
+* [`7244df5`](https://www.github.com/sounisi5011/npm-packages/commit/7244df5b357338fe5dc500843cb2b53fc103770f) fix(monorepo-workspace-submodules-finder-action): update Node.js used on the environment where the action is executed to Node.js v16 (#503)
+* [`7dc0b7d`](https://www.github.com/sounisi5011/npm-packages/commit/7dc0b7dc6e99ec0b123b193a199d6c7f19a6835c) chore(deps): lock file maintenance (#501)
+* [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 (#497)
 
 ### [1.2.6](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.5...monorepo-workspace-submodules-finder-action-v1.2.6) (2022-06-17)
 
