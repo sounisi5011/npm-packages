@@ -10,8 +10,12 @@ exclude_patterns:
   - "**/jest.config.js"
   # Test files for tsd ( https://www.npmjs.com/package/tsd )
   - "**/*.test-d.ts"
+  - "**/*.test-d.cts"
+  - "**/*.test-d.mts"
   # Generated files by the FlatBuffers compiler
   - "**/flatbuffers/*_generated.ts"
+  - "**/flatbuffers/*_generated.cts"
+  - "**/flatbuffers/*_generated.mts"
   # Generated files by the Protocol Buffers compiler
   - "**/protocol-buffers/*_pb.js"
   - "**/protocol-buffers/*_pb.d.ts"
@@ -30,3 +34,5 @@ exclude_patterns:
   - "**/vendor/"
   - "**/*_test.go"
   - "**/*.d.ts"
+  - "**/*.d.cts"
+  - "**/*.d.mts"

@@ -83,13 +83,13 @@
     "test:tsd:exec": "tsd"
   },
   "devDependencies": {
-    "@sounisi5011/run-if-supported": "workspace:^1.0.0",
-    "@types/jest": "28.1.0",
+    "@sounisi5011/run-if-supported": "1.1.1",
+    "@types/jest": "28.1.2",
     "@types/node": "14.18.18",
-    "jest": "28.1.0",
-    "ts-jest": "28.0.4",
-    "tsd": "0.20.0",
-    "typescript": "4.7.3",
+    "jest": "28.1.1",
+    "ts-jest": "28.0.5",
+    "tsd": "0.21.0",
+    "typescript": "4.7.4",
     "ultra-runner": "3.10.5"
   },
   "engines": {

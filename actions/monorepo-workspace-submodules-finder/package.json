@@ -1,6 +1,6 @@
 {
   "name": "monorepo-workspace-submodules-finder-action",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/monorepo-workspace-submodules-finder#readme",
   "bugs": {
@@ -23,7 +23,7 @@
     "test": "run-if-supported --verbose jest"
   },
   "dependencies": {
-    "@actions/core": "1.8.2",
+    "@actions/core": "1.9.0",
     "@actions/exec": "1.1.1",
     "@actions/github": "5.0.3",
     "@octokit/endpoint": "6.0.12",
@@ -33,19 +33,19 @@
     "workspace-tools": "0.19.1"
   },
   "devDependencies": {
-    "@sounisi5011/run-if-supported": "workspace:^1.0.0",
+    "@sounisi5011/run-if-supported": "1.1.1",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
-    "@types/jest": "28.1.0",
-    "@types/node": "16.11.38",
+    "@types/jest": "28.1.2",
+    "@types/node": "16.11.41",
     "@types/validate-npm-package-name": "3.0.3",
     "@vercel/ncc": "0.34.0",
     "cross-env": "7.0.3",
-    "jest": "28.1.0",
+    "jest": "28.1.1",
     "jest-mock-process": "1.5.1",
-    "nock": "13.2.4",
+    "nock": "13.2.7",
     "spawk": "1.7.1",
-    "ts-jest": "28.0.4",
-    "typescript": "4.7.3",
+    "ts-jest": "28.0.5",
+    "typescript": "4.7.4",
     "ultra-runner": "3.10.5"
   },
   "engines": {

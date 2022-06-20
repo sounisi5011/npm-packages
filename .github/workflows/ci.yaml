@@ -304,6 +304,7 @@ jobs:
       matrix:
         node-version:
           - 14.x
+          - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
           - 16.x
           - 18.x
     steps:

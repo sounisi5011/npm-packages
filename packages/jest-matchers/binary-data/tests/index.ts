@@ -5,11 +5,7 @@ import { plugins as prettyFormatPlugins } from 'pretty-format';
 
 import { getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 
-// @ts-expect-error TS2322: Type 'NewPlugin' is not assignable to type 'Plugin'.
-// TODO: Once `@types/jest` is updated to support Jest 28, this type hack will be removed.
-const ConvertAnsiPlugin: Parameters<typeof expect.addSnapshotSerializer>[0] = prettyFormatPlugins.ConvertAnsi;
-
-expect.addSnapshotSerializer(ConvertAnsiPlugin);
+expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
 
 {
     const byteSizeList: number[] = [0, 1, 2 ** 10, 2 ** 20, 2 ** 30, 2 ** 40, 2 ** 50];

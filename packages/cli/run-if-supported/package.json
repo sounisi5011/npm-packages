@@ -35,9 +35,9 @@
   },
   "license": "MIT",
   "author": "sounisi5011",
-  "type": "commonjs",
+  "type": "module",
   "bin": {
-    "run-if-supported": "./cli.js"
+    "run-if-supported": "./cli.mjs"
   },
   "directories": {
     "lib": "./src/",
@@ -46,8 +46,8 @@
   "files": [
     "dist/",
     "/CHANGELOG.md",
-    "cli.js",
-    "!**/*.d.ts",
+    "cli.mjs",
+    "!**/*.d.mts",
     "!**/*.tsbuildinfo"
   ],
   "scripts": {
@@ -55,7 +55,7 @@
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "test": "pnpm --package=@sounisi5011/run-if-supported@1.x dlx run-if-supported --verbose jest"
+    "test": "run-if-supported --verbose cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
@@ -63,24 +63,27 @@
     "command-join": "^3.0.0",
     "cross-spawn": "^7.0.3",
     "npm-install-checks": "^5.0.0",
-    "ow": "^0.28.0",
-    "parse-json": "^5.2.0",
-    "pkg-up": "^3.1.0"
+    "ow": "^1.0.0",
+    "parse-json": "^6.0.0",
+    "pkg-up": "^4.0.0"
   },
   "devDependencies": {
+    "@sounisi5011/run-if-supported": "1.1.1",
+    "@swc/core": "1.2.204",
+    "@swc/jest": "0.2.21",
     "@types/cross-spawn": "6.0.2",
-    "@types/jest": "28.1.0",
-    "@types/node": "14.18.18",
+    "@types/jest": "28.1.2",
+    "@types/node": "14.18.21",
     "@types/parse-json": "4.0.0",
+    "cross-env": "7.0.3",
     "execa": "5.1.1",
-    "is-plain-obj": "3.0.0",
-    "jest": "28.1.0",
-    "ts-jest": "28.0.4",
-    "type-fest": "2.13.0",
-    "typescript": "4.7.3",
+    "is-plain-obj": "4.1.0",
+    "jest": "28.1.1",
+    "type-fest": "2.13.1",
+    "typescript": "4.7.4",
     "ultra-runner": "3.10.5"
   },
   "engines": {
-    "node": "^14.15.0 || 16.x || >=18.x"
+    "node": "^14.13.1 || 16.x || >=18.x"
   }
 }

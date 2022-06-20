@@ -3,5 +3,6 @@ export function isString(value: unknown): value is string {
 }
 
 export function filterObjectEntry<TValue>(validateValue: (value: unknown) => value is TValue) {
-    return <TProp>(value: [TProp, unknown]): value is [TProp, TValue] => validateValue(value[1]);
+    // dprint-ignore
+    return <TProp,>(value: [TProp, unknown]): value is [TProp, TValue] => validateValue(value[1]);
 }
