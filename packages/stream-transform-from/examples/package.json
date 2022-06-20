@@ -4,6 +4,6 @@
     "@sounisi5011/stream-transform-from": "link:.."
   },
   "engines": {
-    "node": "^12.3.x || 14.x || 16.x || >=18.x"
+    "node": ">=14.6.x"
   }
 }

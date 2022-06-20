@@ -9,9 +9,11 @@ extends:
   - plugin:eslint-comments/recommended
   - standard
 parserOptions:
-  # Node.js 12 and above almost supports features up to ES2019
-  # see https://node.green/#ES2019
-  ecmaVersion: 2019
+  # Node.js 14 or newer supports all new functions and properties introduced in ES2020
+  # see https://node.green/#ES2020
+  # see https://stackoverflow.com/a/61305579/4907315
+  # see https://qiita.com/suin/items/32f76c9b88b8daa286c4#nodejs-14
+  ecmaVersion: 2020
 settings:
   # `eslint-plugin-import@2.26.0` does not detect the `exports` field in `package.json`.
   # So change resolver to `eslint-import-resolver-enhanced-resolve`.
@@ -173,12 +175,13 @@ overrides:
         - devDependencies: true
       node/no-unpublished-require: off
       n/no-unpublished-require: off
-      node/no-unsupported-features/es-syntax: &no-unsupported-features-node-12
+      node/no-unsupported-features/es-syntax:
+        &no-unsupported-features-node-for-local-scripts
         - error
-        - version: 12.x
-      n/no-unsupported-features/es-syntax: *no-unsupported-features-node-12
-      node/no-unsupported-features/node-builtins: *no-unsupported-features-node-12
-      n/no-unsupported-features/node-builtins: *no-unsupported-features-node-12
+        - version: 14.x
+      n/no-unsupported-features/es-syntax: *no-unsupported-features-node-for-local-scripts
+      node/no-unsupported-features/node-builtins: *no-unsupported-features-node-for-local-scripts
+      n/no-unsupported-features/node-builtins: *no-unsupported-features-node-for-local-scripts
   - files: "**/rollup.config.js"
     rules:
       import/no-extraneous-dependencies:

@@ -19,7 +19,7 @@ const password = '123456';
     fs.createReadStream(cleartextFilepath, {
       // If you want to convert every chunk of a specific length,
       // specify the "highWaterMark" option when creating the ReadableStream.
-      // see https://nodejs.org/docs/latest-v12.x/api/stream.html#stream_buffering
+      // see https://nodejs.org/docs/latest-v14.x/api/stream.html#stream_buffering
       highWaterMark: 10,
     }),
     encryptStream(password, {
