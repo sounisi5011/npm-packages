@@ -130,6 +130,15 @@ jobs:
 
           readonly beforeCommitHash="$(git log --format=%H -n 1)"
 
+          echo '::group::' fix changelog
+          {
+            pnpm run build:scripts &&
+            node scripts/fix-changelog.mjs '${{ matrix.path-git-relative }}' &&
+            git add '${{ matrix.path-git-relative }}/CHANGELOG.md' &&
+            git commit -m 'docs(${{ matrix.package-name }}): fix changelog' ;
+          } || true
+          echo '::endgroup::'
+
           echo '::group::' update package list
           {
             pnpm run build:scripts &&
