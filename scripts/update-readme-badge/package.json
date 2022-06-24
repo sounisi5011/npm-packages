@@ -3,7 +3,7 @@
   "type": "module",
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
-    "workspace-tools": "^0.19.0"
+    "workspace-tools": "^0.20.0"
   },
   "engines": {
     "node": ">=14.13.1"
