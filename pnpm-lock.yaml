@@ -189,7 +189,7 @@ importers:
       ow: ^1.0.0
       parse-json: ^6.0.0
       pkg-up: ^4.0.0
-      type-fest: 2.13.1
+      type-fest: 2.14.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
     dependencies:
@@ -213,7 +213,7 @@ importers:
       execa: 5.1.1
       is-plain-obj: 4.1.0
       jest: 28.1.1_@types+node@14.18.21
-      type-fest: 2.13.1
+      type-fest: 2.14.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
 
@@ -3168,7 +3168,7 @@ packages:
     resolution: {integrity: sha512-Ol/IPXUARn9CSbkrdV4VJo7uCy1I3VuSiWCaFSg+8BdUOzF9n3jefIpcgAydvUZbTdEBZs2vEiTiS9m61ssiDA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
-      type-fest: 2.13.1
+      type-fest: 2.14.0
     dev: false
 
   /dprint/0.29.1:
@@ -6400,7 +6400,7 @@ packages:
       callsites: 4.0.0
       dot-prop: 7.2.0
       lodash.isequal: 4.5.0
-      type-fest: 2.13.1
+      type-fest: 2.14.0
       vali-date: 1.0.0
     dev: false
 
@@ -7776,6 +7776,11 @@ packages:
 
   /type-fest/2.13.1:
     resolution: {integrity: sha512-hXYyrPFwETT2swFLHeoKtJrvSF/ftG/sA15/8nGaLuaDGfVAaq8DYFpu4yOyV4tzp082WqnTEoMsm3flKMI2FQ==}
+    engines: {node: '>=12.20'}
+    dev: true
+
+  /type-fest/2.14.0:
+    resolution: {integrity: sha512-hQnTQkFjL5ik6HF2fTAM8ycbr94UbQXK364wF930VHb0dfBJ5JBP8qwrR8TaK9zwUEk7meruo2JAUDMwvuxd/w==}
     engines: {node: '>=12.20'}
 
   /typedoc/0.22.17_typescript@4.7.4:
