@@ -76,7 +76,7 @@
     "@types/node": "14.18.21",
     "@types/parse-json": "4.0.0",
     "cross-env": "7.0.3",
-    "execa": "5.1.1",
+    "execa": "6.1.0",
     "is-plain-obj": "4.1.0",
     "jest": "28.1.1",
     "type-fest": "2.14.0",
