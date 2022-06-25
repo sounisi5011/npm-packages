@@ -95,16 +95,37 @@ function replaceMulti(input, replaceList) {
  */
 async function getCommitList(targetDirpath, defaultBrunch) {
   /**
+   * @param {string} revision
+   * @returns {string[]}
    * @see https://qiita.com/isuke/items/35b192b0899872aa7b03
    */
-  const commandResult = await execa('git', [
+  const args = revision => [
     'log',
     '--pretty=format:hash:%h %H\ntitle:%s\ntags:%D\n',
     '--decorate-refs=tags',
-    defaultBrunch,
+    revision,
     '--',
     targetDirpath,
-  ]);
+  ];
+  const commandResult = await execa('git', args(defaultBrunch))
+    .catch(async error => {
+      /**
+       * @see https://github.com/actions/checkout/issues/118
+       */
+      if (/^fatal: *bad revision '\S+'/.test(error.stderr)) {
+        return await execa('git', args(`origin/${defaultBrunch}`));
+      }
+      throw error;
+    })
+    .catch(async error => {
+      /**
+       * @see https://github.com/actions/checkout/issues/118
+       */
+      if (/^fatal: *bad revision '\S+'/.test(error.stderr)) {
+        return await execa('git', args(`refs/remotes/origin/${defaultBrunch}`));
+      }
+      throw error;
+    });
   return commandResult.stdout.split(/\n{2,}/)
     .flatMap(line => {
       const match = /^hash:(\w+) (\w+)\ntitle:([^\n]+)\ntags:(.*)$/.exec(line);
