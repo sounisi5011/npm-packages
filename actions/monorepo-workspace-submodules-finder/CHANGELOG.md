@@ -10,9 +10,11 @@
 ### Commits
 
 <details><summary>show 3 commits</summary>
+
 * [`7244df5`](https://www.github.com/sounisi5011/npm-packages/commit/7244df5b357338fe5dc500843cb2b53fc103770f) fix(monorepo-workspace-submodules-finder-action): update Node.js used on the environment where the action is executed to Node.js v16 ([#503](https://www.github.com/sounisi5011/npm-packages/issues/503))
 * [`7dc0b7d`](https://www.github.com/sounisi5011/npm-packages/commit/7dc0b7dc6e99ec0b123b193a199d6c7f19a6835c) chore(deps): lock file maintenance ([#501](https://www.github.com/sounisi5011/npm-packages/issues/501))
 * [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 ([#497](https://www.github.com/sounisi5011/npm-packages/issues/497))
+
 </details>
 
 
@@ -25,6 +27,7 @@
 ### Commits
 
 <details><summary>show 10 commits</summary>
+
 * [`6306d1b`](https://www.github.com/sounisi5011/npm-packages/commit/6306d1b71754f5f49bfb90a939dc2d237d38345a) fix(deps): update dependency @actions/core to v1.9.0 ([#494](https://www.github.com/sounisi5011/npm-packages/issues/494))
 * [`d5728e6`](https://www.github.com/sounisi5011/npm-packages/commit/d5728e6a7e28b95c16ad541ee0ea1245592c2201) chore(deps): update dependency @types/node to v16.11.41 ([#491](https://www.github.com/sounisi5011/npm-packages/issues/491))
 * [`20158d9`](https://www.github.com/sounisi5011/npm-packages/commit/20158d93f6823382944e017d84f18816d8305b88) chore(deps): update dependency nock to v13.2.7 ([#493](https://www.github.com/sounisi5011/npm-packages/issues/493))
@@ -35,6 +38,7 @@
 * [`b48655d`](https://www.github.com/sounisi5011/npm-packages/commit/b48655d20b35498dbb50355134e2e9ad8dcfc59b) chore: support .cts and .mts file extensions ([#472](https://www.github.com/sounisi5011/npm-packages/issues/472))
 * [`36050e7`](https://www.github.com/sounisi5011/npm-packages/commit/36050e75f43a1ae07510b1457e3aca662a0f7959) chore(deps): update dependency @types/jest to v28.1.1 ([#470](https://www.github.com/sounisi5011/npm-packages/issues/470))
 * [`bc003fb`](https://www.github.com/sounisi5011/npm-packages/commit/bc003fbb3171f46b3772e364668fa8de32f19b3a) chore(deps): update dependency nock to v13.2.6 ([#465](https://www.github.com/sounisi5011/npm-packages/issues/465))
+
 </details>
 
 
@@ -47,12 +51,14 @@
 ### Commits
 
 <details><summary>show 6 commits</summary>
+
 * [`8acee49`](https://www.github.com/sounisi5011/npm-packages/commit/8acee49cc87994fc89e70c69a1e3597fa16d32f6) chore(deps): update dependency typescript to v4.7.3 ([#466](https://www.github.com/sounisi5011/npm-packages/issues/466))
 * [`a9d2e44`](https://www.github.com/sounisi5011/npm-packages/commit/a9d2e44500a37cf7389f4da5976d2e3ebdc11a44) fix(deps): update dependency workspace-tools to v0.19.1 ([#464](https://www.github.com/sounisi5011/npm-packages/issues/464))
 * [`5cc3766`](https://www.github.com/sounisi5011/npm-packages/commit/5cc37664477941080721a5d4246cbcb90b0e6e97) chore(deps): update dependency @types/node to v16.11.38 ([#456](https://www.github.com/sounisi5011/npm-packages/issues/456))
 * [`8c787fa`](https://www.github.com/sounisi5011/npm-packages/commit/8c787fad5833ed47d4534b1f457d45308aebc1a8) chore(deps): update dependency ts-jest to v28.0.4 ([#458](https://www.github.com/sounisi5011/npm-packages/issues/458))
 * [`6e0f615`](https://www.github.com/sounisi5011/npm-packages/commit/6e0f61590b7bd7e76af37e27deb2c60a3bab9a8a) chore(deps): update dependency @types/jest to v28 ([#460](https://www.github.com/sounisi5011/npm-packages/issues/460))
 * [`c311103`](https://www.github.com/sounisi5011/npm-packages/commit/c311103f6ad4dfc8a8c8ac6307c102c3a0a9c879) chore(deps): update dependency jest-mock-process to v1.5.1 ([#459](https://www.github.com/sounisi5011/npm-packages/issues/459))
+
 </details>
 
 
@@ -69,6 +75,7 @@
 ### Commits
 
 <details><summary>show 15 commits</summary>
+
 * [`2c8a6af`](https://www.github.com/sounisi5011/npm-packages/commit/2c8a6afbd56d057044654a061796630a836c42a3) chore(deps): lock file maintenance ([#357](https://www.github.com/sounisi5011/npm-packages/issues/357))
 * [`aa545ea`](https://www.github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011) chore(deps): update test packages to v28 (major) ([#409](https://www.github.com/sounisi5011/npm-packages/issues/409))
 * [`b30d8a5`](https://www.github.com/sounisi5011/npm-packages/commit/b30d8a51414ea0520e97995c2404a2e2980b34b6) fix(deps): update dependency validate-npm-package-name to v4 ([#418](https://www.github.com/sounisi5011/npm-packages/issues/418))
@@ -84,6 +91,7 @@
 * [`452dfc3`](https://www.github.com/sounisi5011/npm-packages/commit/452dfc3721000c7aa66e2081fd6b1474382a0601) fix(deps): update dependency workspace-tools to v0.19.0 ([#356](https://www.github.com/sounisi5011/npm-packages/issues/356))
 * [`e29af6a`](https://www.github.com/sounisi5011/npm-packages/commit/e29af6a9f4f7f1c7947660235329776fdb40372f) chore(deps): update dependency nock to v13.2.4 ([#366](https://www.github.com/sounisi5011/npm-packages/issues/366))
 * [`70d79ca`](https://www.github.com/sounisi5011/npm-packages/commit/70d79ca740e38b1881099f65c29bdc1bc7e87c14) chore(deps): update test packages ([#375](https://www.github.com/sounisi5011/npm-packages/issues/375))
+
 </details>
 
 
@@ -96,6 +104,7 @@
 ### Commits
 
 <details><summary>show 12 commits</summary>
+
 * [`df41ba9`](https://www.github.com/sounisi5011/npm-packages/commit/df41ba91ae7133349c77214016f6474cace179c7) chore(deps): lock file maintenance ([#336](https://www.github.com/sounisi5011/npm-packages/issues/336))
 * [`8877bcc`](https://www.github.com/sounisi5011/npm-packages/commit/8877bcc0b8f753e7a9eea770cd40f571a2614efa) chore(deps): update test packages ([#345](https://www.github.com/sounisi5011/npm-packages/issues/345))
 * [`ed7d960`](https://www.github.com/sounisi5011/npm-packages/commit/ed7d9608827506aaa5e3900c76f908a862268345) fix(deps): update dependency workspace-tools to v0.18.0 ([#349](https://www.github.com/sounisi5011/npm-packages/issues/349))
@@ -108,6 +117,7 @@
 * [`b84232b`](https://www.github.com/sounisi5011/npm-packages/commit/b84232b2183bc425ed7815ebd6f556b3f3c4e41d) chore(deps): update dependency ts-jest to v27.1.1 ([#307](https://www.github.com/sounisi5011/npm-packages/issues/307))
 * [`6a038a0`](https://www.github.com/sounisi5011/npm-packages/commit/6a038a074977cb578c2786d0773bbcefdd8f6796) chore(deps): update dependency @types/node to v16.11.12 ([#306](https://www.github.com/sounisi5011/npm-packages/issues/306))
 * [`82d8639`](https://www.github.com/sounisi5011/npm-packages/commit/82d8639c18fbd0c0a1d072ebf80bd802aa729933) chore(deps): update dependency ts-jest to v27.1.0 ([#302](https://www.github.com/sounisi5011/npm-packages/issues/302))
+
 </details>
 
 
@@ -120,6 +130,7 @@
 ### Commits
 
 <details><summary>show 8 commits</summary>
+
 * [`4d73128`](https://www.github.com/sounisi5011/npm-packages/commit/4d7312871f2adee9661bfc1cca9f3fd685e2a2da) chore(monorepo-workspace-submodules-finder-action): pin dependency @types/node to v16.11.11 ([#298](https://www.github.com/sounisi5011/npm-packages/issues/298))
 * [`2b6090c`](https://www.github.com/sounisi5011/npm-packages/commit/2b6090c91e9f4675bd9869dae0f3bcac9e4eb487) chore(deps): update dependency jest to v27.4.3 ([#284](https://www.github.com/sounisi5011/npm-packages/issues/284))
 * [`283947f`](https://www.github.com/sounisi5011/npm-packages/commit/283947f72ed747f4a651843b170fa955548c1fa0) chore(deps): update dependency @vercel/ncc to v0.33.0 ([#293](https://www.github.com/sounisi5011/npm-packages/issues/293))
@@ -128,6 +139,7 @@
 * [`13c58d0`](https://www.github.com/sounisi5011/npm-packages/commit/13c58d0cfc891160e679890edb894c252ffdfbc9) chore(deps): update dependency @types/jest to v27.0.3 ([#269](https://www.github.com/sounisi5011/npm-packages/issues/269))
 * [`ffd4345`](https://www.github.com/sounisi5011/npm-packages/commit/ffd4345497fb85b9de5a48d12f7602f51eea5f26) chore(deps): update dependency @vercel/ncc to v0.32.0 ([#265](https://www.github.com/sounisi5011/npm-packages/issues/265))
 * [`568498f`](https://www.github.com/sounisi5011/npm-packages/commit/568498f7ea73b612c3b46677ab28646bcae8add6) chore(deps): update dependency nock to v13.2.1 ([#257](https://www.github.com/sounisi5011/npm-packages/issues/257))
+
 </details>
 
 
@@ -141,6 +153,7 @@
 ### Commits
 
 <details><summary>show 13 commits</summary>
+
 * [`e20c457`](https://www.github.com/sounisi5011/npm-packages/commit/e20c457825b86965bd10bc36a9609dd5a1748907) chore(deps): lock file maintenance ([#204](https://www.github.com/sounisi5011/npm-packages/issues/204))
 * [`3d30444`](https://www.github.com/sounisi5011/npm-packages/commit/3d30444c7e8ee0b592fd3e52f73bfd2e83410313) chore(deps): update dependency typescript to v4.4.4 ([#234](https://www.github.com/sounisi5011/npm-packages/issues/234))
 * [`1d764ef`](https://www.github.com/sounisi5011/npm-packages/commit/1d764ef07b497f75241986c113abaad02c169c94) fix(deps): update node.js to v16 ([#239](https://www.github.com/sounisi5011/npm-packages/issues/239))
@@ -154,6 +167,7 @@
 * [`204a644`](https://www.github.com/sounisi5011/npm-packages/commit/204a644ee8890b47abc35b85de745018a4f64e70) chore(deps): update dependency @types/jest to v26.0.24 ([#195](https://www.github.com/sounisi5011/npm-packages/issues/195))
 * [`230337f`](https://www.github.com/sounisi5011/npm-packages/commit/230337f8a81ea1ee67613de74996de2ef243726a) chore(deps): update dependency jest-mock-process to v1.4.1 ([#191](https://www.github.com/sounisi5011/npm-packages/issues/191))
 * [`e35e937`](https://www.github.com/sounisi5011/npm-packages/commit/e35e9373a30e46bd14085038ce6684d630ac583a) chore(deps): move the dependencies defined in the project root to within each submodule ([#200](https://www.github.com/sounisi5011/npm-packages/issues/200))
+
 </details>
 
 
@@ -173,6 +187,7 @@
 ### Commits
 
 <details><summary>show 16 commits</summary>
+
 * [`bd3bdde`](https://www.github.com/sounisi5011/npm-packages/commit/bd3bdde26aabbc842404f2b8d4e1999a332d1df3) chore(deps): lock file maintenance ([#187](https://www.github.com/sounisi5011/npm-packages/issues/187))
 * [`0b3d3cf`](https://www.github.com/sounisi5011/npm-packages/commit/0b3d3cfcf0608440ee5d79f478a1588d749b547d) chore(deps): update dependency nock to v13.1.1 ([#188](https://www.github.com/sounisi5011/npm-packages/issues/188))
 * [`506d321`](https://www.github.com/sounisi5011/npm-packages/commit/506d3219dac227c71863db38992a837a945fbb1b) chore(deps): update dependency @types/validate-npm-package-name to v3.0.3 ([#185](https://www.github.com/sounisi5011/npm-packages/issues/185))
@@ -189,6 +204,7 @@
 * [`f302a5a`](https://www.github.com/sounisi5011/npm-packages/commit/f302a5ab9fe56086701713f01a66cf1cb15fed22) chore(eslint): enable `import/order` rules for `*.ts` files ([#137](https://www.github.com/sounisi5011/npm-packages/issues/137))
 * [`e5bde51`](https://www.github.com/sounisi5011/npm-packages/commit/e5bde5108bbdcdc4facd9bfcf602e70bd6592b32) chore(dprint): use the dprint CLI instead of eslint-plugin-dprint ([#116](https://www.github.com/sounisi5011/npm-packages/issues/116))
 * [`d9ae618`](https://www.github.com/sounisi5011/npm-packages/commit/d9ae6185db87f2e0fa220e40354d566246debe95) chore(deps): update dependency @sounisi5011/run-if-supported to v1.0.1 ([#115](https://www.github.com/sounisi5011/npm-packages/issues/115))
+
 </details>
 
 
@@ -201,12 +217,14 @@
 ### Commits
 
 <details><summary>show 6 commits</summary>
+
 * [`0d390ad`](https://www.github.com/sounisi5011/npm-packages/commit/0d390adae3ebaec0ff71be3b8fd3d6a728cc4892) fix(deps): update dependency workspace-tools to ^0.16.0 ([#89](https://www.github.com/sounisi5011/npm-packages/issues/89))
 * [`b79d71a`](https://www.github.com/sounisi5011/npm-packages/commit/b79d71a50b0dab622bc63b6db2d5c25c73ed5fbc) build(lint-staged): run lint-staged in submodules on commit ([#90](https://www.github.com/sounisi5011/npm-packages/issues/90))
 * [`a885957`](https://www.github.com/sounisi5011/npm-packages/commit/a88595784597975dc88fb8bf1c0e3cba638cb92b) chore(deps): update dependency @vercel/ncc to v0.28.6 ([#86](https://www.github.com/sounisi5011/npm-packages/issues/86))
 * [`f6ac3e1`](https://www.github.com/sounisi5011/npm-packages/commit/f6ac3e1814a68f7490d6920b2ea23edc2a5cfe93) chore: remove `@sounisi5011/scripts--run-if-supported-node` ([#85](https://www.github.com/sounisi5011/npm-packages/issues/85))
 * [`26bb403`](https://www.github.com/sounisi5011/npm-packages/commit/26bb403e00dd6dc36ba6690ed539148431254bae) chore: introduce ultra runner ([#78](https://www.github.com/sounisi5011/npm-packages/issues/78))
 * [`7230e4e`](https://www.github.com/sounisi5011/npm-packages/commit/7230e4e19cea6ab922eb306fc0e58d6a8f1be4ff) chore(deps): update eslint packages ([#69](https://www.github.com/sounisi5011/npm-packages/issues/69))
+
 </details>
 
 
@@ -224,6 +242,7 @@
 ### Commits
 
 <details><summary>show 7 commits</summary>
+
 * [`db354d7`](https://www.github.com/sounisi5011/npm-packages/commit/db354d7321e852d66f16e5942daf40ba168f8feb) feat(monorepo-workspace-submodules-finder-action): add `ignore-private` option ([#63](https://www.github.com/sounisi5011/npm-packages/issues/63))
 * [`8ffe119`](https://www.github.com/sounisi5011/npm-packages/commit/8ffe1195394863d28a8f3e1eb57050681c644bdb) chore(deps): update dependency tsd to v0.15.1 ([#54](https://www.github.com/sounisi5011/npm-packages/issues/54))
 * [`eebe27a`](https://www.github.com/sounisi5011/npm-packages/commit/eebe27a93ede3f2e42eec590d21e869bddcc6483) chore(deps): update eslint packages ([#42](https://www.github.com/sounisi5011/npm-packages/issues/42))
@@ -231,6 +250,7 @@
 * [`16a2f0c`](https://www.github.com/sounisi5011/npm-packages/commit/16a2f0cf72618d11c843ec098b8b3197acc46db8) ci: migrate from pnpm v5 to pnpm v6 ([#26](https://www.github.com/sounisi5011/npm-packages/issues/26))
 * [`266d294`](https://www.github.com/sounisi5011/npm-packages/commit/266d2945c9212e14972ae8756cdabd75215a31b2) chore(deps): update dependency @vercel/ncc to v0.28.5 ([#43](https://www.github.com/sounisi5011/npm-packages/issues/43))
 * [`8d8616a`](https://www.github.com/sounisi5011/npm-packages/commit/8d8616a78da37ead4da0c383a7b57b90f3cf4091) chore: skip silently when running on unsupported versions of Node.js ([#48](https://www.github.com/sounisi5011/npm-packages/issues/48))
+
 </details>
 
 
@@ -243,8 +263,10 @@
 ### Commits
 
 <details><summary>show 2 commits</summary>
+
 * [`d4278f4`](https://www.github.com/sounisi5011/npm-packages/commit/d4278f4d7c6c3bd0f4c2573f4a9f526e1aa15aaa) fix(deps): update dependency workspace-tools to ^0.13.0 ([#36](https://www.github.com/sounisi5011/npm-packages/issues/36))
 * [`3dbe229`](https://www.github.com/sounisi5011/npm-packages/commit/3dbe22931983b4ae677b0ddb0c96c8e27953a306) chore(deps): update dependency @vercel/ncc to v0.28.2 ([#24](https://www.github.com/sounisi5011/npm-packages/issues/24))
+
 </details>
 
 
@@ -253,5 +275,7 @@
 ### Commits
 
 <details><summary>show 1 commits</summary>
+
 * [`b6ffc7c`](https://www.github.com/sounisi5011/npm-packages/commit/b6ffc7c56a7012fc27fe676c52418ecc565723c4) chore(monorepo-workspace-submodules-finder-action): preparing for the release ([#16](https://www.github.com/sounisi5011/npm-packages/issues/16))
+
 </details>

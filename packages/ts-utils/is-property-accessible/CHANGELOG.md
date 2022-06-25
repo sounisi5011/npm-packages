@@ -10,6 +10,7 @@
 ### Commits
 
 <details><summary>show 17 commits</summary>
+
 * [`96b148f`](https://www.github.com/sounisi5011/npm-packages/commit/96b148facb53c82197e45a1fa2ab4862bb472a3a) chore(deps): update dependency rollup to v2.75.0 ([#422](https://www.github.com/sounisi5011/npm-packages/issues/422))
 * [`784f576`](https://www.github.com/sounisi5011/npm-packages/commit/784f576c7aeb53dc64167f82a6efe10a0fea0e82) chore(deps): update eslint packages (major) ([#404](https://www.github.com/sounisi5011/npm-packages/issues/404))
 * [`aa545ea`](https://www.github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011) chore(deps): update test packages to v28 (major) ([#409](https://www.github.com/sounisi5011/npm-packages/issues/409))
@@ -27,6 +28,7 @@
 * [`c6b5cb6`](https://www.github.com/sounisi5011/npm-packages/commit/c6b5cb60d705fb9144b75bf152dcf9a795b904cf) chore(deps): update dependency rollup to v2.61.1 ([#327](https://www.github.com/sounisi5011/npm-packages/issues/327))
 * [`fae5414`](https://www.github.com/sounisi5011/npm-packages/commit/fae541487534c51fa7b8487ba89029355a8e0e06) chore(deps): update test packages ([#326](https://www.github.com/sounisi5011/npm-packages/issues/326))
 * [`a3864e0`](https://www.github.com/sounisi5011/npm-packages/commit/a3864e00b975f1e7a33bc4e3f125b2686bb6f81e) chore(deps): update dependency typescript to v4.5.4 ([#324](https://www.github.com/sounisi5011/npm-packages/issues/324))
+
 </details>
 
 
@@ -39,7 +41,9 @@
 ### Commits
 
 <details><summary>show 1 commits</summary>
+
 * [`95a36db`](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3) fix(publish): fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315))
+
 </details>
 
 
@@ -52,6 +56,7 @@
 ### Commits
 
 <details><summary>show 29 commits</summary>
+
 * [`99fc7fe`](https://www.github.com/sounisi5011/npm-packages/commit/99fc7fe66eb180b7aeeaa10b60951b3767cbae3c) fix(publish): fix `files` field in `package.json` files to ensure appropriate files are published ([#311](https://www.github.com/sounisi5011/npm-packages/issues/311))
 * [`411f6e4`](https://www.github.com/sounisi5011/npm-packages/commit/411f6e44932223715e7d95179f37ee766a058089) chore(deps): update dependency rollup to v2.61.0 ([#310](https://www.github.com/sounisi5011/npm-packages/issues/310))
 * [`b84232b`](https://www.github.com/sounisi5011/npm-packages/commit/b84232b2183bc425ed7815ebd6f556b3f3c4e41d) chore(deps): update dependency ts-jest to v27.1.1 ([#307](https://www.github.com/sounisi5011/npm-packages/issues/307))
@@ -81,6 +86,7 @@
 * [`c88a772`](https://www.github.com/sounisi5011/npm-packages/commit/c88a772b3c8327d7c983aefb1f3cdbd3499b5f11) fix: introduce `@sounisi5011/ts-utils-is-property-accessible` ([#133](https://www.github.com/sounisi5011/npm-packages/issues/133))
 * [`bdd28b7`](https://www.github.com/sounisi5011/npm-packages/commit/bdd28b7a1cdd1530801e2e54d60aec08aefb50b2) chore(deps): update dependency rollup to v2.50.6 ([#123](https://www.github.com/sounisi5011/npm-packages/issues/123))
 * [`ef0b0a2`](https://www.github.com/sounisi5011/npm-packages/commit/ef0b0a24a5170e1e69284581b3edf0cd107e0a97) chore(deps): update dependency tsd to v0.17.0 ([#125](https://www.github.com/sounisi5011/npm-packages/issues/125))
+
 </details>
 
 
@@ -93,5 +99,7 @@
 ### Commits
 
 <details><summary>show 1 commits</summary>
+
 * [`424bd9f`](https://www.github.com/sounisi5011/npm-packages/commit/424bd9f52ed2306c02d9d2318ea869687c7666d5) feat(ts-utils-is-property-accessible): create a new package ([#118](https://www.github.com/sounisi5011/npm-packages/issues/118))
+
 </details>
