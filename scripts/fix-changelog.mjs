@@ -192,7 +192,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
     .replace(COMMITS_SECTION_REGEXP, '')
     .trim();
   const commitsSectionText = (
-    '### Commits\n\n'
+    `### Commits\n\n<details><summary>show ${commitList.length} commits</summary>\n`
     + commitList
       .map(commit => {
         const commitURL = `${REPO_URL_PREFIX}/commit/${commit.longHash}`;
@@ -200,6 +200,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
         return `* [\`${commit.shortHash}\`](${commitURL}) ${commitTitle}`;
       })
       .join('\n')
+    + '\n</details>'
   );
   const newSectionBody = [
     commitsRemovedSectionBody,
