@@ -1,7 +1,7 @@
 # Changelog
 
 
-## <span style="font-size:smaller">[1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)</span>
+## [1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)
 
 ### Bug Fixes
 
@@ -18,7 +18,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.6](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.5...monorepo-workspace-submodules-finder-action-v1.2.6) (2022-06-17)</span>
+## [1.2.6](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.5...monorepo-workspace-submodules-finder-action-v1.2.6) (2022-06-17)
 
 ### Bug Fixes
 
@@ -42,7 +42,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.5](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.4...monorepo-workspace-submodules-finder-action-v1.2.5) (2022-06-05)</span>
+## [1.2.5](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.4...monorepo-workspace-submodules-finder-action-v1.2.5) (2022-06-05)
 
 ### Bug Fixes
 
@@ -62,7 +62,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.4](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.3...monorepo-workspace-submodules-finder-action-v1.2.4) (2022-05-28)</span>
+## [1.2.4](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.3...monorepo-workspace-submodules-finder-action-v1.2.4) (2022-05-28)
 
 ### Bug Fixes
 
@@ -95,7 +95,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.3](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.2...monorepo-workspace-submodules-finder-action-v1.2.3) (2022-01-07)</span>
+## [1.2.3](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.2...monorepo-workspace-submodules-finder-action-v1.2.3) (2022-01-07)
 
 ### Bug Fixes
 
@@ -121,7 +121,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.2](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.1...monorepo-workspace-submodules-finder-action-v1.2.2) (2021-12-05)</span>
+## [1.2.2](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.1...monorepo-workspace-submodules-finder-action-v1.2.2) (2021-12-05)
 
 ### Bug Fixes
 
@@ -143,7 +143,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.2.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.0...monorepo-workspace-submodules-finder-action-v1.2.1) (2021-11-05)</span>
+## [1.2.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.0...monorepo-workspace-submodules-finder-action-v1.2.1) (2021-11-05)
 
 ### Bug Fixes
 
@@ -207,7 +207,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.0...monorepo-workspace-submodules-finder-action-v1.1.1) (2021-05-26)</span>
+## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.0...monorepo-workspace-submodules-finder-action-v1.1.1) (2021-05-26)
 
 ### Bug Fixes
 
@@ -252,7 +252,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.0...monorepo-workspace-submodules-finder-action-v1.0.1) (2021-04-12)</span>
+## [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.0...monorepo-workspace-submodules-finder-action-v1.0.1) (2021-04-12)
 
 ### Bug Fixes
 

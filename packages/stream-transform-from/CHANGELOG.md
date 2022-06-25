@@ -1,7 +1,7 @@
 # Changelog
 
 
-## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/stream-transform-from-v1.1.0...stream-transform-from-v1.1.1) (2022-05-28)</span>
+## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/stream-transform-from-v1.1.0...stream-transform-from-v1.1.1) (2022-05-28)
 
 ### Bug Fixes
 

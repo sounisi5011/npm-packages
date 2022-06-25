@@ -1,7 +1,7 @@
 # Changelog
 
 
-## <span style="font-size:smaller">[1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-is-readonly-array-v1.0.1...ts-type-util-is-readonly-array-v1.0.2) (2021-12-09)</span>
+## [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-is-readonly-array-v1.0.1...ts-type-util-is-readonly-array-v1.0.2) (2021-12-09)
 
 ### Bug Fixes
 
@@ -16,7 +16,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-is-readonly-array-v1.0.0...ts-type-util-is-readonly-array-v1.0.1) (2021-12-09)</span>
+## [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-is-readonly-array-v1.0.0...ts-type-util-is-readonly-array-v1.0.1) (2021-12-09)
 
 ### Bug Fixes
 

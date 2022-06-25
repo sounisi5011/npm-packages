@@ -1,7 +1,7 @@
 # Changelog
 
 
-## <span style="font-size:smaller">[1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.2...ts-utils-is-property-accessible-v1.0.3) (2022-05-28)</span>
+## [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.2...ts-utils-is-property-accessible-v1.0.3) (2022-05-28)
 
 ### Bug Fixes
 
@@ -32,7 +32,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.1...ts-utils-is-property-accessible-v1.0.2) (2021-12-09)</span>
+## [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.1...ts-utils-is-property-accessible-v1.0.2) (2021-12-09)
 
 ### Bug Fixes
 
@@ -47,7 +47,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.0...ts-utils-is-property-accessible-v1.0.1) (2021-12-09)</span>
+## [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/ts-utils-is-property-accessible-v1.0.0...ts-utils-is-property-accessible-v1.0.1) (2021-12-09)
 
 ### Bug Fixes
 

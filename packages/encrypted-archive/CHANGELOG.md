@@ -59,7 +59,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[0.0.4](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.3...encrypted-archive-v0.0.4) (2021-06-05)</span>
+## [0.0.4](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.3...encrypted-archive-v0.0.4) (2021-06-05)
 
 ### Bug Fixes
 
@@ -83,7 +83,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.2...encrypted-archive-v0.0.3) (2021-05-22)</span>
+## [0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.2...encrypted-archive-v0.0.3) (2021-05-22)
 
 ### Bug Fixes
 
@@ -100,7 +100,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)</span>
+## [0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)
 
 ### Bug Fixes
 
@@ -115,7 +115,7 @@
 </details>
 
 
-## <span style="font-size:smaller">0.0.1 (2021-05-18)</span>
+## 0.0.1 (2021-05-18)
 
 ### Features
 
