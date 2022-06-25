@@ -16,6 +16,7 @@
 
 ### Commits
 
+<details><summary>show 15 commits</summary>
 * [`fe3aa4d`](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1) fix(node): support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428))
 * [`7ea12c6`](https://www.github.com/sounisi5011/npm-packages/commit/7ea12c6163527a3ea1da0d7a2c84a9dfa84d1a55) feat(jest-binary-data-matchers): remove unnecessary dependencies: jest-matcher-utils ([#425](https://www.github.com/sounisi5011/npm-packages/issues/425))
 * [`a44157d`](https://www.github.com/sounisi5011/npm-packages/commit/a44157dbf67238e88d83cb7c934b158875d3e6dd) fix(deps): update dependency jest-diff to v28 ([#413](https://www.github.com/sounisi5011/npm-packages/issues/413))
@@ -31,6 +32,7 @@
 * [`052d18e`](https://www.github.com/sounisi5011/npm-packages/commit/052d18e536dd21ee7105d4e3e96edd026591d7c8) chore(deps): update dependency @types/node to v12.20.41 ([#339](https://www.github.com/sounisi5011/npm-packages/issues/339))
 * [`fae5414`](https://www.github.com/sounisi5011/npm-packages/commit/fae541487534c51fa7b8487ba89029355a8e0e06) chore(deps): update test packages ([#326](https://www.github.com/sounisi5011/npm-packages/issues/326))
 * [`a3864e0`](https://www.github.com/sounisi5011/npm-packages/commit/a3864e00b975f1e7a33bc4e3f125b2686bb6f81e) chore(deps): update dependency typescript to v4.5.4 ([#324](https://www.github.com/sounisi5011/npm-packages/issues/324))
+</details>
 
 
 ## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)</span>
@@ -41,7 +43,9 @@
 
 ### Commits
 
+<details><summary>show 1 commits</summary>
 * [`95a36db`](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3) fix(publish): fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315))
+</details>
 
 
 ## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.0.0...jest-binary-data-matchers-v1.1.0) (2021-12-09)
@@ -57,6 +61,7 @@
 
 ### Commits
 
+<details><summary>show 11 commits</summary>
 * [`99fc7fe`](https://www.github.com/sounisi5011/npm-packages/commit/99fc7fe66eb180b7aeeaa10b60951b3767cbae3c) fix(publish): fix `files` field in `package.json` files to ensure appropriate files are published ([#311](https://www.github.com/sounisi5011/npm-packages/issues/311))
 * [`b84232b`](https://www.github.com/sounisi5011/npm-packages/commit/b84232b2183bc425ed7815ebd6f556b3f3c4e41d) chore(deps): update dependency ts-jest to v27.1.1 ([#307](https://www.github.com/sounisi5011/npm-packages/issues/307))
 * [`82d8639`](https://www.github.com/sounisi5011/npm-packages/commit/82d8639c18fbd0c0a1d072ebf80bd802aa729933) chore(deps): update dependency ts-jest to v27.1.0 ([#302](https://www.github.com/sounisi5011/npm-packages/issues/302))
@@ -68,6 +73,7 @@
 * [`ea8d348`](https://www.github.com/sounisi5011/npm-packages/commit/ea8d3481af6860a876f83dc86a90c8c105514365) chore(deps): update dependency @types/node to v12.20.37 ([#258](https://www.github.com/sounisi5011/npm-packages/issues/258))
 * [`47f38d1`](https://www.github.com/sounisi5011/npm-packages/commit/47f38d10c2f3b8b6254413bb9a282aef51b62b2b) chore(tsconfig): introduce `@tsconfig/node12` ([#255](https://www.github.com/sounisi5011/npm-packages/issues/255))
 * [`3c39ed0`](https://www.github.com/sounisi5011/npm-packages/commit/3c39ed071988a52c4fdc8a960d997b96614d0bad) chore(deps): pin dependency @types/node to v12.20.36 ([#254](https://www.github.com/sounisi5011/npm-packages/issues/254))
+</details>
 
 
 ## 1.0.0 (2021-11-05)
@@ -78,6 +84,8 @@
 
 ### Commits
 
+<details><summary>show 3 commits</summary>
 * [`3d30444`](https://www.github.com/sounisi5011/npm-packages/commit/3d30444c7e8ee0b592fd3e52f73bfd2e83410313) chore(deps): update dependency typescript to v4.4.4 ([#234](https://www.github.com/sounisi5011/npm-packages/issues/234))
 * [`1eb7fd1`](https://www.github.com/sounisi5011/npm-packages/commit/1eb7fd187dbcfaff2040233e23d5a5dfccfc65eb) chore(deps): update eslint packages (major) ([#237](https://www.github.com/sounisi5011/npm-packages/issues/237))
 * [`b447d64`](https://www.github.com/sounisi5011/npm-packages/commit/b447d6455ca26b2b49ea9c1548f56153fec43b19) feat(jest-binary-data-matchers): create a new package ([#213](https://www.github.com/sounisi5011/npm-packages/issues/213))
+</details>
