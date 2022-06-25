@@ -188,8 +188,9 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
     }${smallerStyleTag.close}`
     : `## ${headingText}`;
 
-  const commitsRemovedSectionBody = sectionBody
+  const formattedSectionBody = sectionBody
     .replace(COMMITS_SECTION_REGEXP, '')
+    .replace(/\n{3,}#/g, '\n\n#')
     .trim();
   const commitsSectionText = (
     `### Commits\n\n<details><summary>show ${commitList.length} commits</summary>\n\n`
@@ -203,7 +204,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
     + '\n\n</details>'
   );
   const newSectionBody = [
-    commitsRemovedSectionBody,
+    formattedSectionBody,
     commitsSectionText,
   ].filter(str => str !== '').join('\n\n');
 
