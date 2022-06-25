@@ -1,12 +1,6 @@
 module.exports = {
-  ...require('../../jest.config.base.cjs'),
-  preset: 'ts-jest',
+  preset: '../../jest-preset/swc.cjs',
   coverageDirectory: 'coverage',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tests/tsconfig.json',
-    },
-  },
   testEnvironment: 'node',
   testMatch: ['<rootDir>/tests/**/*.ts'],
   testPathIgnorePatterns: [
