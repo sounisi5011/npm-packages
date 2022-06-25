@@ -22,7 +22,6 @@
 
 * **node version:** support Node.js v17 ([#273](https://www.github.com/sounisi5011/npm-packages/issues/273)) ([1654602](https://www.github.com/sounisi5011/npm-packages/commit/1654602f39c434a9a72bb996a3dfd3d454c13e2f))
 
-
 ### Bug Fixes
 
 * **publish:** fix `files` field in `package.json` files to ensure appropriate files are published ([#311](https://www.github.com/sounisi5011/npm-packages/issues/311)) ([99fc7fe](https://www.github.com/sounisi5011/npm-packages/commit/99fc7fe66eb180b7aeeaa10b60951b3767cbae3c))

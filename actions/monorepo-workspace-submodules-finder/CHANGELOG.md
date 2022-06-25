@@ -178,7 +178,6 @@
 * **monorepo-workspace-submodules-finder-action:** only target submodules that have changes ([#182](https://www.github.com/sounisi5011/npm-packages/issues/182)) ([f23be04](https://www.github.com/sounisi5011/npm-packages/commit/f23be04495b834e7bcb10a234b639191fcffe801))
 * **monorepo-workspace-submodules-finder-action:** support package names excluding scope ([#174](https://www.github.com/sounisi5011/npm-packages/issues/174)) ([19fe273](https://www.github.com/sounisi5011/npm-packages/commit/19fe2737c47ae5d7b7c0d4ae8643016e1aba0df8))
 
-
 ### Bug Fixes
 
 * **deps:** pin dependencies ([#146](https://www.github.com/sounisi5011/npm-packages/issues/146)) ([f49547c](https://www.github.com/sounisi5011/npm-packages/commit/f49547cd9ac40b9b2b723dd0940dbf64331c2b4d))
@@ -233,7 +232,6 @@
 ### Features
 
 * **monorepo-workspace-submodules-finder-action:** add `ignore-private` option ([#63](https://www.github.com/sounisi5011/npm-packages/issues/63)) ([db354d7](https://www.github.com/sounisi5011/npm-packages/commit/db354d7321e852d66f16e5942daf40ba168f8feb))
-
 
 ### Bug Fixes
 

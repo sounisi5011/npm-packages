@@ -8,7 +8,6 @@
 * Support Jest 28 ([#409](https://github.com/sounisi5011/npm-packages/pull/409)) ([aa545ea](https://github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011))
 * **jest-binary-data-matchers:** remove unnecessary dependencies: jest-matcher-utils ([#425](https://www.github.com/sounisi5011/npm-packages/issues/425)) ([7ea12c6](https://www.github.com/sounisi5011/npm-packages/commit/7ea12c6163527a3ea1da0d7a2c84a9dfa84d1a55))
 
-
 ### Bug Fixes
 
 * **deps:** update dependency jest-diff to v28 ([#413](https://www.github.com/sounisi5011/npm-packages/issues/413)) ([a44157d](https://www.github.com/sounisi5011/npm-packages/commit/a44157dbf67238e88d83cb7c934b158875d3e6dd))
@@ -57,7 +56,6 @@
 ### Features
 
 * **node version:** support Node.js v17 ([#273](https://www.github.com/sounisi5011/npm-packages/issues/273)) ([1654602](https://www.github.com/sounisi5011/npm-packages/commit/1654602f39c434a9a72bb996a3dfd3d454c13e2f))
-
 
 ### Bug Fixes
 
