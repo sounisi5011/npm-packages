@@ -1,7 +1,7 @@
 # Changelog
 
-## [0.1.0](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.4...encrypted-archive-v0.1.0) (2021-12-09)
 
+## [0.1.0](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.4...encrypted-archive-v0.1.0) (2021-12-09)
 
 ### Features
 
@@ -14,29 +14,29 @@
 * **publish:** fix `files` field in `package.json` files to ensure appropriate files are published ([#311](https://www.github.com/sounisi5011/npm-packages/issues/311)) ([99fc7fe](https://www.github.com/sounisi5011/npm-packages/commit/99fc7fe66eb180b7aeeaa10b60951b3767cbae3c))
 * **publish:** fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315)) ([95a36db](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3))
 
-### [0.0.4](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.3...encrypted-archive-v0.0.4) (2021-06-05)
 
+## <span style="font-size:smaller">[0.0.4](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.3...encrypted-archive-v0.0.4) (2021-06-05)</span>
 
 ### Bug Fixes
 
 * introduce `@sounisi5011/ts-utils-is-property-accessible` ([#133](https://www.github.com/sounisi5011/npm-packages/issues/133)) ([c88a772](https://www.github.com/sounisi5011/npm-packages/commit/c88a772b3c8327d7c983aefb1f3cdbd3499b5f11))
 
-### [0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.2...encrypted-archive-v0.0.3) (2021-05-22)
 
+## <span style="font-size:smaller">[0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.2...encrypted-archive-v0.0.3) (2021-05-22)</span>
 
 ### Bug Fixes
 
 * **encrypted-archive:** replace `generator-transform-stream` package with `@sounisi5011/stream-transform-from` package ([#73](https://www.github.com/sounisi5011/npm-packages/issues/73)) ([dce2edc](https://www.github.com/sounisi5011/npm-packages/commit/dce2edcec971222b67cf51e5563ad202c2de8257))
 
-### [0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)
 
+## <span style="font-size:smaller">[0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.1...encrypted-archive-v0.0.2) (2021-05-18)</span>
 
 ### Bug Fixes
 
 * **encrypted-archive:** fix the settings and custom scripts for publishing ([#66](https://www.github.com/sounisi5011/npm-packages/issues/66)) ([4cf93e0](https://www.github.com/sounisi5011/npm-packages/commit/4cf93e0005d7d6e5db00c9e0ac57ec05c40e6eb7))
 
-### 0.0.1 (2021-05-18)
 
+## <span style="font-size:smaller">0.0.1 (2021-05-18)</span>
 
 ### Features
 

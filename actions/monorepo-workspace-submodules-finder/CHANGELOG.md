@@ -1,6 +1,7 @@
 # Changelog
 
-### [1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)
+
+## <span style="font-size:smaller">[1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)</span>
 
 ### Bug Fixes
 
@@ -12,22 +13,22 @@
 * [`7dc0b7d`](https://www.github.com/sounisi5011/npm-packages/commit/7dc0b7dc6e99ec0b123b193a199d6c7f19a6835c) chore(deps): lock file maintenance (#501)
 * [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 (#497)
 
-### [1.2.6](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.5...monorepo-workspace-submodules-finder-action-v1.2.6) (2022-06-17)
 
+## <span style="font-size:smaller">[1.2.6](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.5...monorepo-workspace-submodules-finder-action-v1.2.6) (2022-06-17)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency @actions/core to v1.9.0 ([#494](https://www.github.com/sounisi5011/npm-packages/issues/494)) ([6306d1b](https://www.github.com/sounisi5011/npm-packages/commit/6306d1b71754f5f49bfb90a939dc2d237d38345a))
 
-### [1.2.5](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.4...monorepo-workspace-submodules-finder-action-v1.2.5) (2022-06-05)
 
+## <span style="font-size:smaller">[1.2.5](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.4...monorepo-workspace-submodules-finder-action-v1.2.5) (2022-06-05)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to v0.19.1 ([#464](https://www.github.com/sounisi5011/npm-packages/issues/464)) ([a9d2e44](https://www.github.com/sounisi5011/npm-packages/commit/a9d2e44500a37cf7389f4da5976d2e3ebdc11a44))
 
-### [1.2.4](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.3...monorepo-workspace-submodules-finder-action-v1.2.4) (2022-05-28)
 
+## <span style="font-size:smaller">[1.2.4](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.3...monorepo-workspace-submodules-finder-action-v1.2.4) (2022-05-28)</span>
 
 ### Bug Fixes
 
@@ -37,30 +38,30 @@
 * **deps:** update dependency validate-npm-package-name to v4 ([#418](https://www.github.com/sounisi5011/npm-packages/issues/418)) ([b30d8a5](https://www.github.com/sounisi5011/npm-packages/commit/b30d8a51414ea0520e97995c2404a2e2980b34b6))
 * **deps:** update dependency workspace-tools to v0.19.0 ([#356](https://www.github.com/sounisi5011/npm-packages/issues/356)) ([452dfc3](https://www.github.com/sounisi5011/npm-packages/commit/452dfc3721000c7aa66e2081fd6b1474382a0601))
 
-### [1.2.3](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.2...monorepo-workspace-submodules-finder-action-v1.2.3) (2022-01-07)
 
+## <span style="font-size:smaller">[1.2.3](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.2...monorepo-workspace-submodules-finder-action-v1.2.3) (2022-01-07)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to v0.18.0 ([#349](https://www.github.com/sounisi5011/npm-packages/issues/349)) ([ed7d960](https://www.github.com/sounisi5011/npm-packages/commit/ed7d9608827506aaa5e3900c76f908a862268345))
 
-### [1.2.2](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.1...monorepo-workspace-submodules-finder-action-v1.2.2) (2021-12-05)
 
+## <span style="font-size:smaller">[1.2.2](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.1...monorepo-workspace-submodules-finder-action-v1.2.2) (2021-12-05)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to v0.17.0 ([#292](https://www.github.com/sounisi5011/npm-packages/issues/292)) ([93f5875](https://www.github.com/sounisi5011/npm-packages/commit/93f58754d59e1f3862994ac5d2af0a85bdd609d0))
 
-### [1.2.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.0...monorepo-workspace-submodules-finder-action-v1.2.1) (2021-11-05)
 
+## <span style="font-size:smaller">[1.2.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.0...monorepo-workspace-submodules-finder-action-v1.2.1) (2021-11-05)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency @actions/core to v1.6.0 ([#220](https://www.github.com/sounisi5011/npm-packages/issues/220)) ([3bd8e2a](https://www.github.com/sounisi5011/npm-packages/commit/3bd8e2a40fa019dd36d180199e8c85a7cb0c617e))
 * **deps:** update node.js to v16 ([#239](https://www.github.com/sounisi5011/npm-packages/issues/239)) ([1d764ef](https://www.github.com/sounisi5011/npm-packages/commit/1d764ef07b497f75241986c113abaad02c169c94))
 
-## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.1...monorepo-workspace-submodules-finder-action-v1.2.0) (2021-07-05)
 
+## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.1...monorepo-workspace-submodules-finder-action-v1.2.0) (2021-07-05)
 
 ### Features
 
@@ -73,15 +74,15 @@
 * **deps:** pin dependencies ([#146](https://www.github.com/sounisi5011/npm-packages/issues/146)) ([f49547c](https://www.github.com/sounisi5011/npm-packages/commit/f49547cd9ac40b9b2b723dd0940dbf64331c2b4d))
 * **monorepo-workspace-submodules-finder-action:** use `getBooleanInput()` function instead `getInput()` function ([#172](https://www.github.com/sounisi5011/npm-packages/issues/172)) ([ca440c6](https://www.github.com/sounisi5011/npm-packages/commit/ca440c6013f5b127a51ba84a3e6d03e765b6e262))
 
-### [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.0...monorepo-workspace-submodules-finder-action-v1.1.1) (2021-05-26)
 
+## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.1.0...monorepo-workspace-submodules-finder-action-v1.1.1) (2021-05-26)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to ^0.16.0 ([#89](https://www.github.com/sounisi5011/npm-packages/issues/89)) ([0d390ad](https://www.github.com/sounisi5011/npm-packages/commit/0d390adae3ebaec0ff71be3b8fd3d6a728cc4892))
 
-## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.1...monorepo-workspace-submodules-finder-action-v1.1.0) (2021-05-18)
 
+## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.1...monorepo-workspace-submodules-finder-action-v1.1.0) (2021-05-18)
 
 ### Features
 
@@ -92,11 +93,12 @@
 
 * **deps:** update dependency workspace-tools to ^0.15.0 ([#41](https://www.github.com/sounisi5011/npm-packages/issues/41)) ([df007a8](https://www.github.com/sounisi5011/npm-packages/commit/df007a8e96b7b664c7538f7d4b58a46b27945700))
 
-### [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.0...monorepo-workspace-submodules-finder-action-v1.0.1) (2021-04-12)
 
+## <span style="font-size:smaller">[1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.0.0...monorepo-workspace-submodules-finder-action-v1.0.1) (2021-04-12)</span>
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to ^0.13.0 ([#36](https://www.github.com/sounisi5011/npm-packages/issues/36)) ([d4278f4](https://www.github.com/sounisi5011/npm-packages/commit/d4278f4d7c6c3bd0f4c2573f4a9f526e1aa15aaa))
+
 
 ## 1.0.0 (2021-03-14)

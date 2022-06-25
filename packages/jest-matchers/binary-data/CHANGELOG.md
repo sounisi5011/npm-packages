@@ -1,7 +1,7 @@
 # Changelog
 
-## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.1...jest-binary-data-matchers-v1.2.0) (2022-05-28)
 
+## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.1...jest-binary-data-matchers-v1.2.0) (2022-05-28)
 
 ### Features
 
@@ -14,15 +14,15 @@
 * **deps:** update dependency jest-diff to v28 ([#413](https://www.github.com/sounisi5011/npm-packages/issues/413)) ([a44157d](https://www.github.com/sounisi5011/npm-packages/commit/a44157dbf67238e88d83cb7c934b158875d3e6dd))
 * **node:** support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428)) ([fe3aa4d](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1))
 
-### [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)
 
+## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)</span>
 
 ### Bug Fixes
 
 * **publish:** fix glob pattern of including `CHANGELOG.md` in the `files` field of `package.json` files ([#315](https://www.github.com/sounisi5011/npm-packages/issues/315)) ([95a36db](https://www.github.com/sounisi5011/npm-packages/commit/95a36db45185784b37cdbf3843746b3e808d67b3))
 
-## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.0.0...jest-binary-data-matchers-v1.1.0) (2021-12-09)
 
+## [1.1.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.0.0...jest-binary-data-matchers-v1.1.0) (2021-12-09)
 
 ### Features
 
@@ -33,8 +33,8 @@
 
 * **publish:** fix `files` field in `package.json` files to ensure appropriate files are published ([#311](https://www.github.com/sounisi5011/npm-packages/issues/311)) ([99fc7fe](https://www.github.com/sounisi5011/npm-packages/commit/99fc7fe66eb180b7aeeaa10b60951b3767cbae3c))
 
-## 1.0.0 (2021-11-05)
 
+## 1.0.0 (2021-11-05)
 
 ### Features
 
