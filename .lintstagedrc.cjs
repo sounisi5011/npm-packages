@@ -143,28 +143,29 @@ module.exports = async filenames => {
     const eslintCommand = (
       `pnpm --workspace-root exec eslint --cache --report-unused-disable-directives --fix ${tsOrJsFiles.join(' ')}`
     );
+    const dprintCommand = (
+      await Promise.all([
+        dprintCommandList(tsFiles, './.dprint.json'),
+        dprintCommandList(jsFiles, './.dprint-js.json'),
+      ])
+    ).flat();
     /**
      * First, format code with ESLint.
      * This includes removing unused ESLint directive comments, but ESLint will not remove lines that had directive comments.
      */
     commands.push(eslintCommand);
-    /**
-     * Next, format code with dprint.
-     * dprint removes the unneeded lines that ESLint did not remove.
-     */
-    commands.push(
-      ...(
-        await Promise.all([
-          dprintCommandList(tsFiles, './.dprint.json'),
-          dprintCommandList(jsFiles, './.dprint-js.json'),
-        ])
-      ).flat(),
-    );
-    /**
-     * Finally, format code again with ESLint.
-     * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
-     */
-    commands.push(eslintCommand);
+    if (dprintCommand.length >= 1) {
+      /**
+       * Next, format code with dprint.
+       * dprint removes the unneeded lines that ESLint did not remove.
+       */
+      commands.push(...dprintCommand);
+      /**
+       * Finally, format code again with ESLint.
+       * The code formatted by dprint does not follow ESLint's rules, so the last step is to use ESLint to correct the code.
+       */
+      commands.push(eslintCommand);
+    }
   }
 
   if (
