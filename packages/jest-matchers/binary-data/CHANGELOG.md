@@ -36,7 +36,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)</span>
+## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.0...jest-binary-data-matchers-v1.1.1) (2021-12-09)
 
 ### Bug Fixes
 

@@ -23,7 +23,7 @@ import { execa } from 'execa';
 const SEMVER_REGEXP = /[0-9]+(?:\.[0-9]+){2}(?:-[.0-9a-zA-Z-]+)?(?:\+[.0-9a-zA-Z-]+)?/;
 const VERSION_HEADING_REGEXP = new RegExp(
   String.raw
-    `\n+^(?<heading_level>###?) *(?<heading_text>(?:<(\w+)[^>]*>)?(?:(?<version1>${SEMVER_REGEXP.source})|\[(?<version2>${SEMVER_REGEXP.source})\]\([^)]+/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\)(?:</\3>)?)$`,
+    `\n+^###? *(?:<(\w+)[^>]*>)?(?<heading_text>(?:${SEMVER_REGEXP.source}|\[${SEMVER_REGEXP.source}\]\([^)]+/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\))(?:</\1>)?$`,
   'gm',
 );
 const COMMITS_SECTION_REGEXP = /^### *Commits$(?:\n(?!#)[^\n]*)*\n*/m;
@@ -95,16 +95,37 @@ function replaceMulti(input, replaceList) {
  */
 async function getCommitList(targetDirpath, defaultBrunch) {
   /**
+   * @param {string} revision
+   * @returns {string[]}
    * @see https://qiita.com/isuke/items/35b192b0899872aa7b03
    */
-  const commandResult = await execa('git', [
+  const args = revision => [
     'log',
     '--pretty=format:hash:%h %H\ntitle:%s\ntags:%D\n',
     '--decorate-refs=tags',
-    defaultBrunch,
+    revision,
     '--',
     targetDirpath,
-  ]);
+  ];
+  const commandResult = await execa('git', args(defaultBrunch))
+    .catch(async error => {
+      /**
+       * @see https://github.com/actions/checkout/issues/118
+       */
+      if (/^fatal: *bad revision '\S+'/.test(error.stderr)) {
+        return await execa('git', args(`origin/${defaultBrunch}`));
+      }
+      throw error;
+    })
+    .catch(async error => {
+      /**
+       * @see https://github.com/actions/checkout/issues/118
+       */
+      if (/^fatal: *bad revision '\S+'/.test(error.stderr)) {
+        return await execa('git', args(`refs/remotes/origin/${defaultBrunch}`));
+      }
+      throw error;
+    });
   return commandResult.stdout.split(/\n{2,}/)
     .flatMap(line => {
       const match = /^hash:(\w+) (\w+)\ntitle:([^\n]+)\ntags:(.*)$/.exec(line);
@@ -169,24 +190,9 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
   const changelogText = headingMatch.input ?? '';
   const headingLine = headingMatch[0];
   const sectionBody = changelogText.substring(sectionRange.start + headingLine.length, sectionRange.end).trim();
-  const releaseVersion = headingMatch.groups?.version2 ?? headingMatch.groups?.version1 ?? '';
   const headingText = headingMatch.groups?.heading_text.trim() ?? '';
 
-  const isPatchUpdate = (
-    /^[0-9]+\.[0-9]+\.[1-9]/.test(releaseVersion)
-    || (headingMatch.groups?.heading_level.length ?? 0) >= 3
-  );
-  const smallerStyleTag = {
-    open: '<span style="font-size:smaller">',
-    close: '</span>',
-  };
-  const newHeadingLine = isPatchUpdate
-    ? `## ${smallerStyleTag.open}${
-      headingText.startsWith(smallerStyleTag.open) && headingText.endsWith(smallerStyleTag.close)
-        ? headingText.substring(smallerStyleTag.open.length, headingText.length - smallerStyleTag.close.length)
-        : headingText
-    }${smallerStyleTag.close}`
-    : `## ${headingText}`;
+  const newHeadingLine = `## ${headingText}`;
 
   const formattedSectionBody = sectionBody
     .replace(COMMITS_SECTION_REGEXP, '')

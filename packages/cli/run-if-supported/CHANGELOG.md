@@ -1,7 +1,7 @@
 # Changelog
 
 
-## <span style="font-size:smaller">[1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.0...run-if-supported-v1.1.1) (2021-12-09)</span>
+## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.0...run-if-supported-v1.1.1) (2021-12-09)
 
 ### Bug Fixes
 
@@ -48,7 +48,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.5](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.4...run-if-supported-v1.0.5) (2021-11-05)</span>
+## [1.0.5](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.4...run-if-supported-v1.0.5) (2021-11-05)
 
 ### Bug Fixes
 
@@ -72,7 +72,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.3...run-if-supported-v1.0.4) (2021-07-05)</span>
+## [1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.3...run-if-supported-v1.0.4) (2021-07-05)
 
 ### Bug Fixes
 
@@ -88,7 +88,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.2...run-if-supported-v1.0.3) (2021-06-24)</span>
+## [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.2...run-if-supported-v1.0.3) (2021-06-24)
 
 ### Bug Fixes
 
@@ -104,7 +104,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.1...run-if-supported-v1.0.2) (2021-06-05)</span>
+## [1.0.2](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.1...run-if-supported-v1.0.2) (2021-06-05)
 
 ### Bug Fixes
 
@@ -123,7 +123,7 @@
 </details>
 
 
-## <span style="font-size:smaller">[1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.0...run-if-supported-v1.0.1) (2021-05-28)</span>
+## [1.0.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.0.0...run-if-supported-v1.0.1) (2021-05-28)
 
 ### Bug Fixes
 
