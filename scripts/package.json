@@ -1,7 +1,8 @@
 {
   "private": true,
   "dependencies": {
-    "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0"
+    "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
+    "execa": "^6.1.0"
   },
   "engines": {
     "node": "^14.13.1 || 15.x || 16.x || 17.x || >=18.x"
