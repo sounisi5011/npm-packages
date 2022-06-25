@@ -231,6 +231,8 @@ importers:
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
+      '@swc/core': 1.2.205
+      '@swc/jest': 0.2.21
       '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
@@ -257,7 +259,6 @@ importers:
       multicodec: 3.2.1
       noop-stream: 0.1.0
       semver: 7.3.7
-      ts-jest: 28.0.5
       typescript: 4.7.4
       ultra-runner: 3.10.5
       varint: ^6.0.0
@@ -276,6 +277,8 @@ importers:
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
+      '@swc/core': 1.2.205
+      '@swc/jest': 0.2.21_@swc+core@1.2.205
       '@types/argon2-browser': 1.18.1
       '@types/bl': 5.0.2
       '@types/capitalize': 2.0.0
@@ -297,7 +300,6 @@ importers:
       multicodec: 3.2.1
       noop-stream: 0.1.0
       semver: 7.3.7
-      ts-jest: 28.0.5_jest@28.1.1+typescript@4.7.4
       typescript: 4.7.4
       ultra-runner: 3.10.5
 
