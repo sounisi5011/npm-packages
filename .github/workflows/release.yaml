@@ -134,7 +134,6 @@ jobs:
 
           echo '::group::' fix changelog
           {
-            pnpm run build:scripts &&
             node scripts/fix-changelog.mjs '${{ matrix.path-git-relative }}' &&
             git add '${{ matrix.path-git-relative }}/CHANGELOG.md' &&
             git commit -m 'docs(${{ matrix.package-name }}): fix changelog' ;
@@ -143,7 +142,6 @@ jobs:
 
           echo '::group::' update package list
           {
-            pnpm run build:scripts &&
             pnpm run build:package-list &&
             git add ./README.md &&
             git commit -m 'docs: update package list' ;
@@ -216,7 +214,6 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish / Update README
         run: |
-          pnpm run build:scripts
           node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish
