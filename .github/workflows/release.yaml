@@ -54,7 +54,7 @@ jobs:
       matrix:
         include: ${{fromJson(needs.submodules-finder.outputs.result)}}
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: GoogleCloudPlatform/release-please-action@v3
         id: release
         with:
           release-type: node
