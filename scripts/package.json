@@ -1,5 +1,8 @@
 {
   "private": true,
+  "scripts": {
+    "postinstall": "pnpm exec ultra --recursive --filter '@sounisi5011/cli-utils-top-level-await' build"
+  },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
     "execa": "^6.1.0"
