@@ -1,12 +1,26 @@
 # Changelog
 
 
-### [1.2.8](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.7...monorepo-workspace-submodules-finder-action-v1.2.8) (2022-06-27)
-
+## [1.2.8](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.7...monorepo-workspace-submodules-finder-action-v1.2.8) (2022-06-27)
 
 ### Bug Fixes
 
 * **deps:** update dependency workspace-tools to v0.20.0 ([#509](https://www.github.com/sounisi5011/npm-packages/issues/509)) ([9621a7e](https://www.github.com/sounisi5011/npm-packages/commit/9621a7e7a4567dbfd23549673dea8db64815f440))
+
+### Commits
+
+<details><summary>show 7 commits</summary>
+
+* [`0d35277`](https://www.github.com/sounisi5011/npm-packages/commit/0d352777da5e06a8f4a927aeed7cf0eef69e5079) chore(deps): lock file maintenance ([#519](https://www.github.com/sounisi5011/npm-packages/issues/519))
+* [`6737058`](https://www.github.com/sounisi5011/npm-packages/commit/67370582b97d3a178dbe9185978ccb09c9d6c45e) test(jest): migrate from `ts-jest` to `@swc/jest` ([#518](https://www.github.com/sounisi5011/npm-packages/issues/518))
+* [`6e1ca6d`](https://www.github.com/sounisi5011/npm-packages/commit/6e1ca6d71973256a35c35ad3b84868e29c6963c2) chore: fix `scripts/fix-changelog.mjs` ([#514](https://www.github.com/sounisi5011/npm-packages/issues/514))
+* [`996e8b8`](https://www.github.com/sounisi5011/npm-packages/commit/996e8b812a5cd95da32f908c94991276e1029017) ci(release): auto-fix `CHANGELOG.md` before release ([#513](https://www.github.com/sounisi5011/npm-packages/issues/513))
+* [`9621a7e`](https://www.github.com/sounisi5011/npm-packages/commit/9621a7e7a4567dbfd23549673dea8db64815f440) fix(deps): update dependency workspace-tools to v0.20.0 ([#509](https://www.github.com/sounisi5011/npm-packages/issues/509))
+* [`b37b4c6`](https://www.github.com/sounisi5011/npm-packages/commit/b37b4c681b9024bf809d4ba3b003bda6e77b007c) chore(deps): update dependency @types/validate-npm-package-name to v4 ([#508](https://www.github.com/sounisi5011/npm-packages/issues/508))
+* [`344220f`](https://www.github.com/sounisi5011/npm-packages/commit/344220f16633470cb29afa13f6c17f4c19140121) chore(deps): update dependency @types/jest to v28.1.3 ([#506](https://www.github.com/sounisi5011/npm-packages/issues/506))
+
+</details>
+
 
 ## [1.2.7](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.6...monorepo-workspace-submodules-finder-action-v1.2.7) (2022-06-20)
 
