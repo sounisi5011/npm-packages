@@ -1,6 +1,30 @@
 # Changelog
 
 
+## [2.0.0](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.1...run-if-supported-v2.0.0) (2022-06-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** update dependency ow to v1 (#488)
+* **run-if-supported:** * feat(run-if-supported)!: update source codes from CommonJS to ESM
+* **deps:** update dependency npm-install-checks to v5 (#416)
+
+### Features
+
+* **run-if-supported:** support for older Node.js 14 and Node.js v15 ([#496](https://www.github.com/sounisi5011/npm-packages/issues/496)) ([05c1aa0](https://www.github.com/sounisi5011/npm-packages/commit/05c1aa0e87138b667ded5f8fedffca2ca069064d))
+* **run-if-supported:** update source codes from CommonJS to ESM ([#471](https://www.github.com/sounisi5011/npm-packages/issues/471)) ([fadca92](https://www.github.com/sounisi5011/npm-packages/commit/fadca92d0489eb033afbf26361783d5ae914acd1))
+
+
+### Bug Fixes
+
+* **@sounisi5011/run-if-supported:** change supported version range to `>=14.13.1` ([#522](https://www.github.com/sounisi5011/npm-packages/issues/522)) ([905dbe3](https://www.github.com/sounisi5011/npm-packages/commit/905dbe369f27f00b7a23903487738b60db73e747))
+* **deps:** update dependency npm-install-checks to v5 ([#416](https://www.github.com/sounisi5011/npm-packages/issues/416)) ([a235342](https://www.github.com/sounisi5011/npm-packages/commit/a235342b49fe797f5236b6aae3fda4832d87c537))
+* **deps:** update dependency ow to v1 ([#488](https://www.github.com/sounisi5011/npm-packages/issues/488)) ([1b73ae5](https://www.github.com/sounisi5011/npm-packages/commit/1b73ae583fb013ea4938927937a70f1bcd2b104d))
+* **deps:** update dependency parse-json to v6 ([#243](https://www.github.com/sounisi5011/npm-packages/issues/243)) ([467a570](https://www.github.com/sounisi5011/npm-packages/commit/467a570c8107f001b28645e6cebc8b7d4d900f48))
+* **deps:** update dependency pkg-up to v4 ([#244](https://www.github.com/sounisi5011/npm-packages/issues/244)) ([c438f79](https://www.github.com/sounisi5011/npm-packages/commit/c438f79ed2bd13da135f56b3126b6fa5ae3be409))
+* **node:** support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428)) ([fe3aa4d](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1))
+
 ## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.0...run-if-supported-v1.1.1) (2021-12-09)
 
 ### Bug Fixes
