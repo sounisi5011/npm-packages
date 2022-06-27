@@ -3,7 +3,6 @@
 
 ## [2.0.0](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.1...run-if-supported-v2.0.0) (2022-06-27)
 
-
 ### ⚠ BREAKING CHANGES
 
 * **deps:** update dependency ow to v1 (#488)
@@ -15,7 +14,6 @@
 * **run-if-supported:** support for older Node.js 14 and Node.js v15 ([#496](https://www.github.com/sounisi5011/npm-packages/issues/496)) ([05c1aa0](https://www.github.com/sounisi5011/npm-packages/commit/05c1aa0e87138b667ded5f8fedffca2ca069064d))
 * **run-if-supported:** update source codes from CommonJS to ESM ([#471](https://www.github.com/sounisi5011/npm-packages/issues/471)) ([fadca92](https://www.github.com/sounisi5011/npm-packages/commit/fadca92d0489eb033afbf26361783d5ae914acd1))
 
-
 ### Bug Fixes
 
 * **@sounisi5011/run-if-supported:** change supported version range to `>=14.13.1` ([#522](https://www.github.com/sounisi5011/npm-packages/issues/522)) ([905dbe3](https://www.github.com/sounisi5011/npm-packages/commit/905dbe369f27f00b7a23903487738b60db73e747))
@@ -24,6 +22,53 @@
 * **deps:** update dependency parse-json to v6 ([#243](https://www.github.com/sounisi5011/npm-packages/issues/243)) ([467a570](https://www.github.com/sounisi5011/npm-packages/commit/467a570c8107f001b28645e6cebc8b7d4d900f48))
 * **deps:** update dependency pkg-up to v4 ([#244](https://www.github.com/sounisi5011/npm-packages/issues/244)) ([c438f79](https://www.github.com/sounisi5011/npm-packages/commit/c438f79ed2bd13da135f56b3126b6fa5ae3be409))
 * **node:** support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428)) ([fe3aa4d](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1))
+
+### Commits
+
+<details><summary>show 39 commits</summary>
+
+* [`905dbe3`](https://www.github.com/sounisi5011/npm-packages/commit/905dbe369f27f00b7a23903487738b60db73e747) fix(@sounisi5011/run-if-supported): change supported version range to `>=14.13.1` ([#522](https://www.github.com/sounisi5011/npm-packages/issues/522))
+* [`6737058`](https://www.github.com/sounisi5011/npm-packages/commit/67370582b97d3a178dbe9185978ccb09c9d6c45e) test(jest): migrate from `ts-jest` to `@swc/jest` ([#518](https://www.github.com/sounisi5011/npm-packages/issues/518))
+* [`d54b9ce`](https://www.github.com/sounisi5011/npm-packages/commit/d54b9ce73d617ec97e37c44a0c678b3e850f5a05) chore(@sounisi5011/run-if-supported): update dev dependency execa to v6 ([#516](https://www.github.com/sounisi5011/npm-packages/issues/516))
+* [`6e1ca6d`](https://www.github.com/sounisi5011/npm-packages/commit/6e1ca6d71973256a35c35ad3b84868e29c6963c2) chore: fix `scripts/fix-changelog.mjs` ([#514](https://www.github.com/sounisi5011/npm-packages/issues/514))
+* [`996e8b8`](https://www.github.com/sounisi5011/npm-packages/commit/996e8b812a5cd95da32f908c94991276e1029017) ci(release): auto-fix `CHANGELOG.md` before release ([#513](https://www.github.com/sounisi5011/npm-packages/issues/513))
+* [`8a47605`](https://www.github.com/sounisi5011/npm-packages/commit/8a47605bfbadd327f5c983527f00352abc53fc23) chore(deps): update dependency type-fest to v2.14.0 ([#511](https://www.github.com/sounisi5011/npm-packages/issues/511))
+* [`2a9d4b4`](https://www.github.com/sounisi5011/npm-packages/commit/2a9d4b42ea2d03ea62e94044a1a79c67a5633efb) chore(deps): update dependency @swc/core to v1.2.205 ([#510](https://www.github.com/sounisi5011/npm-packages/issues/510))
+* [`344220f`](https://www.github.com/sounisi5011/npm-packages/commit/344220f16633470cb29afa13f6c17f4c19140121) chore(deps): update dependency @types/jest to v28.1.3 ([#506](https://www.github.com/sounisi5011/npm-packages/issues/506))
+* [`05c1aa0`](https://www.github.com/sounisi5011/npm-packages/commit/05c1aa0e87138b667ded5f8fedffca2ca069064d) feat(run-if-supported): support for older Node.js 14 and Node.js v15 ([#496](https://www.github.com/sounisi5011/npm-packages/issues/496))
+* [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 ([#497](https://www.github.com/sounisi5011/npm-packages/issues/497))
+* [`c74c3a0`](https://www.github.com/sounisi5011/npm-packages/commit/c74c3a0364fac3bb40a7698666d01e73bed2c22c) chore(deps): update dependency @swc/core to v1.2.204 ([#499](https://www.github.com/sounisi5011/npm-packages/issues/499))
+* [`3518682`](https://www.github.com/sounisi5011/npm-packages/commit/3518682d5b74e1dde62023a1b8d809b602b654a1) chore(deps): update test packages ([#489](https://www.github.com/sounisi5011/npm-packages/issues/489))
+* [`1f70ca8`](https://www.github.com/sounisi5011/npm-packages/commit/1f70ca889109f28f4086dcfb9721b4d6a5167809) chore(deps): update dependency type-fest to v2.13.1 ([#486](https://www.github.com/sounisi5011/npm-packages/issues/486))
+* [`c438f79`](https://www.github.com/sounisi5011/npm-packages/commit/c438f79ed2bd13da135f56b3126b6fa5ae3be409) fix(deps): update dependency pkg-up to v4 ([#244](https://www.github.com/sounisi5011/npm-packages/issues/244))
+* [`467a570`](https://www.github.com/sounisi5011/npm-packages/commit/467a570c8107f001b28645e6cebc8b7d4d900f48) fix(deps): update dependency parse-json to v6 ([#243](https://www.github.com/sounisi5011/npm-packages/issues/243))
+* [`7bc3502`](https://www.github.com/sounisi5011/npm-packages/commit/7bc35020d857a1db00b3f4db5cf9eee56cae2af3) chore(deps): update dependency is-plain-obj to v4 ([#113](https://www.github.com/sounisi5011/npm-packages/issues/113))
+* [`1b73ae5`](https://www.github.com/sounisi5011/npm-packages/commit/1b73ae583fb013ea4938927937a70f1bcd2b104d) fix(deps)!: update dependency ow to v1 ([#488](https://www.github.com/sounisi5011/npm-packages/issues/488))
+* [`497045f`](https://www.github.com/sounisi5011/npm-packages/commit/497045ff37e59697922cda9d13a5ab3862bb693a) chore: not using `@sounisi5011/run-if-supported` in workspace ([#490](https://www.github.com/sounisi5011/npm-packages/issues/490))
+* [`fadca92`](https://www.github.com/sounisi5011/npm-packages/commit/fadca92d0489eb033afbf26361783d5ae914acd1) feat(run-if-supported)!: update source codes from CommonJS to ESM ([#471](https://www.github.com/sounisi5011/npm-packages/issues/471))
+* [`d5e27f4`](https://www.github.com/sounisi5011/npm-packages/commit/d5e27f4621ab9e0cdec6725652c5e44291fd8449) chore(deps): update dependency @types/node to v12.20.55 ([#479](https://www.github.com/sounisi5011/npm-packages/issues/479))
+* [`45a7048`](https://www.github.com/sounisi5011/npm-packages/commit/45a704829c6730597815411315e3cf69a0d55204) chore(deps): update dependency jest to v28.1.1 ([#476](https://www.github.com/sounisi5011/npm-packages/issues/476))
+* [`36050e7`](https://www.github.com/sounisi5011/npm-packages/commit/36050e75f43a1ae07510b1457e3aca662a0f7959) chore(deps): update dependency @types/jest to v28.1.1 ([#470](https://www.github.com/sounisi5011/npm-packages/issues/470))
+* [`8acee49`](https://www.github.com/sounisi5011/npm-packages/commit/8acee49cc87994fc89e70c69a1e3597fa16d32f6) chore(deps): update dependency typescript to v4.7.3 ([#466](https://www.github.com/sounisi5011/npm-packages/issues/466))
+* [`8c787fa`](https://www.github.com/sounisi5011/npm-packages/commit/8c787fad5833ed47d4534b1f457d45308aebc1a8) chore(deps): update dependency ts-jest to v28.0.4 ([#458](https://www.github.com/sounisi5011/npm-packages/issues/458))
+* [`6e0f615`](https://www.github.com/sounisi5011/npm-packages/commit/6e0f61590b7bd7e76af37e27deb2c60a3bab9a8a) chore(deps): update dependency @types/jest to v28 ([#460](https://www.github.com/sounisi5011/npm-packages/issues/460))
+* [`d28396e`](https://www.github.com/sounisi5011/npm-packages/commit/d28396e5ab904f36ff62e34a7a39910e11f3c788) chore(deps): update dependency @types/node to v12.20.54 ([#455](https://www.github.com/sounisi5011/npm-packages/issues/455))
+* [`fe3aa4d`](https://www.github.com/sounisi5011/npm-packages/commit/fe3aa4dc2b3830a3be20f979c79100298f4a8dc1) fix(node): support Node.js v18+ ([#428](https://www.github.com/sounisi5011/npm-packages/issues/428))
+* [`a235342`](https://www.github.com/sounisi5011/npm-packages/commit/a235342b49fe797f5236b6aae3fda4832d87c537) fix(deps)!: update dependency npm-install-checks to v5 ([#416](https://www.github.com/sounisi5011/npm-packages/issues/416))
+* [`aa545ea`](https://www.github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011) chore(deps): update test packages to v28 (major) ([#409](https://www.github.com/sounisi5011/npm-packages/issues/409))
+* [`a3149d9`](https://www.github.com/sounisi5011/npm-packages/commit/a3149d9a8d914a8ce285beb38e2a609ddd446b7c) chore(deps): update dependency type-fest to v2.13.0 ([#393](https://www.github.com/sounisi5011/npm-packages/issues/393))
+* [`810a671`](https://www.github.com/sounisi5011/npm-packages/commit/810a67174b1b4b1a5da2b494a7b5672af8304aaa) chore(repo): support `exports` field in `package.json` ([#405](https://www.github.com/sounisi5011/npm-packages/issues/405))
+* [`36f404d`](https://www.github.com/sounisi5011/npm-packages/commit/36f404d3cbc95a5f185b9bd950d3cd9bec43b4f1) chore(deps): update dependency typescript to v4.7.2 ([#394](https://www.github.com/sounisi5011/npm-packages/issues/394))
+* [`2ac9051`](https://www.github.com/sounisi5011/npm-packages/commit/2ac90519a513eee5aa0512dc23c85d5d1d74c5e2) chore(deps): update dependency @types/node to v12.20.52 ([#376](https://www.github.com/sounisi5011/npm-packages/issues/376))
+* [`70d79ca`](https://www.github.com/sounisi5011/npm-packages/commit/70d79ca740e38b1881099f65c29bdc1bc7e87c14) chore(deps): update test packages ([#375](https://www.github.com/sounisi5011/npm-packages/issues/375))
+* [`bd207d1`](https://www.github.com/sounisi5011/npm-packages/commit/bd207d183229be99cce0d57495d5f66a1f28d10e) chore(deps): update dependency type-fest to v2.9.0 ([#348](https://www.github.com/sounisi5011/npm-packages/issues/348))
+* [`8877bcc`](https://www.github.com/sounisi5011/npm-packages/commit/8877bcc0b8f753e7a9eea770cd40f571a2614efa) chore(deps): update test packages ([#345](https://www.github.com/sounisi5011/npm-packages/issues/345))
+* [`052d18e`](https://www.github.com/sounisi5011/npm-packages/commit/052d18e536dd21ee7105d4e3e96edd026591d7c8) chore(deps): update dependency @types/node to v12.20.41 ([#339](https://www.github.com/sounisi5011/npm-packages/issues/339))
+* [`fae5414`](https://www.github.com/sounisi5011/npm-packages/commit/fae541487534c51fa7b8487ba89029355a8e0e06) chore(deps): update test packages ([#326](https://www.github.com/sounisi5011/npm-packages/issues/326))
+* [`a3864e0`](https://www.github.com/sounisi5011/npm-packages/commit/a3864e00b975f1e7a33bc4e3f125b2686bb6f81e) chore(deps): update dependency typescript to v4.5.4 ([#324](https://www.github.com/sounisi5011/npm-packages/issues/324))
+
+</details>
+
 
 ## [1.1.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.0...run-if-supported-v1.1.1) (2021-12-09)
 
