@@ -5,9 +5,14 @@
 
 ### ⚠ BREAKING CHANGES
 
+Require Node.js `>=14.13.1`. This is the smallest version that supports [ESM (ECMAScript modules)], [`node:` imports] and [`ow@1.0.0`].
+
+[ESM (ECMAScript modules)]: https://nodejs.org/api/esm.html#modules-ecmascript-modules
+[`node:` imports]: https://nodejs.org/api/esm.html#node-imports
+[`ow@1.0.0`]: https://github.com/sindresorhus/ow/releases/tag/v1.0.0
+
 * **deps:** update dependency ow to v1 (#488)
 * **run-if-supported:** * feat(run-if-supported)!: update source codes from CommonJS to ESM
-* **deps:** update dependency npm-install-checks to v5 (#416)
 
 ### Features
 
