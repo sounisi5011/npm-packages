@@ -8,8 +8,6 @@ on:
   pull_request:
     branches:
       - "**"
-    tags-ignore:
-      - "**"
 jobs:
   if-run-ci:
     # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#needs-context
