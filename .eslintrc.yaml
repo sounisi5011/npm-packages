@@ -164,6 +164,7 @@ overrides:
   - files:
       - "**/.lintstagedrc.{js,cjs,mjs}"
       - scripts/*.js
+      - jest.config.base.{js,cjs}
       - "**/jest.config.{js,cjs}"
       - .eslintrc/**/*.{js,cjs}
     rules:

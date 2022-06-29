@@ -27,6 +27,7 @@ importers:
       husky: 8.0.1
       lint-staged: 13.0.3
       npm-run-all: 4.1.5
+      physical-cores: 1.0.2
       prettier: 2.7.1
       prettier-package-json: 2.6.4
       sort-package-json: 1.57.0
@@ -56,6 +57,7 @@ importers:
       husky: 8.0.1
       lint-staged: 13.0.3
       npm-run-all: 4.1.5
+      physical-cores: 1.0.2
       prettier: 2.7.1
       prettier-package-json: 2.6.4
       sort-package-json: 1.57.0
@@ -6553,6 +6555,10 @@ packages:
 
   /pend/1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
+    dev: true
+
+  /physical-cores/1.0.2:
+    resolution: {integrity: sha512-kqp+Jlw9wWn8Ft8vt1ByWeZSkGizu4k5NCs8tLuYh25Y9sHejBmTgCKx2TEY65DOT0Dh7wqEHeA3dHB208vjtw==}
     dev: true
 
   /picocolors/1.0.0:

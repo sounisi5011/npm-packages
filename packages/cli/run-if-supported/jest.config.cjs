@@ -1,4 +1,6 @@
-module.exports = {
+const { gen } = require('../../../jest.config.base.cjs');
+
+module.exports = gen({
   preset: '../../../jest-preset/swc.cjs',
   coverageDirectory: 'coverage',
   extensionsToTreatAsEsm: ['.mts', '.ts'],
@@ -9,4 +11,4 @@ module.exports = {
     '<rootDir>/tests/fixtures/',
     '<rootDir>/tests/helpers/',
   ],
-};
+});
