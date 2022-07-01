@@ -294,61 +294,61 @@ jobs:
           else
             echo '::notice::No uncommitted changes by build'
           fi
-  unit-test:
-    needs: if-run-ci
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version:
-          - 12.17.0 # smallest version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
-          - 12.20.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
-          - 12.x
-          - 14.1.0
-            # When trying install dependencies via pnpm in Node.js 14.0.0, pnpm throws the following error:
-            #   Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close
-            # This problem started occurring around 2022-06-27.
-            # It is probably an issue with the npm registry, as it also started occurring with older pnpm.
-          - 14.13.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
-          - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
-          - 14.x
-          - 15.0.0
-          - 15.x
-          - 16.0.0
-          - 16.x
-          - 17.0.0
-          - 17.x
-          - 18.0.0
-          - 18.x
-    steps:
-      - uses: actions/checkout@v3
-      - name: Git Setting
-        run: |
-          git config --global user.name  CI
-          git config --global user.email dummy@example.com
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
-      - run: pnpm run build-only-packages
-      - run: pnpm run test-only
+  # unit-test:
+  #   needs: if-run-ci
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node-version:
+  #         - 12.17.0 # smallest version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
+  #         - 12.20.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
+  #         - 12.x
+  #         - 14.1.0
+  #           # When trying install dependencies via pnpm in Node.js 14.0.0, pnpm throws the following error:
+  #           #   Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close
+  #           # This problem started occurring around 2022-06-27.
+  #           # It is probably an issue with the npm registry, as it also started occurring with older pnpm.
+  #         - 14.13.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
+  #         - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
+  #         - 14.x
+  #         - 15.0.0
+  #         - 15.x
+  #         - 16.0.0
+  #         - 16.x
+  #         - 17.0.0
+  #         - 17.x
+  #         - 18.0.0
+  #         - 18.x
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Git Setting
+  #       run: |
+  #         git config --global user.name  CI
+  #         git config --global user.email dummy@example.com
+  #     - name: Setup Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - name: Cache .pnpm-store
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: ~/.pnpm-store
+  #         key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-${{ matrix.node-version }}-
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: Setup pnpm
+  #       uses: ./actions/setup-pnpm
+  #     - name: Install Dependencies
+  #       run: pnpm install
+  #     - run: pnpm run build-only-packages
+  #     - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
     name: Complete CI
-    needs: [lint, format, build, unit-test]
+    needs: [lint, format, build]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
