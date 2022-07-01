@@ -44,7 +44,7 @@
     "cross-env": "7.0.3",
     "jest": "28.1.2",
     "jest-mock-process": "2.0.0",
-    "nock": "13.2.7",
+    "nock": "13.2.8",
     "spawk": "1.7.1",
     "typescript": "4.7.4",
     "ultra-runner": "3.10.5"

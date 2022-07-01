@@ -80,7 +80,7 @@ importers:
       find-git-root: 1.0.4
       jest: 28.1.2
       jest-mock-process: 2.0.0
-      nock: 13.2.7
+      nock: 13.2.8
       path-starts-with: 2.0.0
       spawk: 1.7.1
       typescript: 4.7.4
@@ -108,7 +108,7 @@ importers:
       cross-env: 7.0.3
       jest: 28.1.2_@types+node@16.11.42
       jest-mock-process: 2.0.0_jest@28.1.2
-      nock: 13.2.7
+      nock: 13.2.8
       spawk: 1.7.1
       typescript: 4.7.4
       ultra-runner: 3.10.5
@@ -6140,8 +6140,8 @@ packages:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
     dev: true
 
-  /nock/13.2.7:
-    resolution: {integrity: sha512-R6NUw7RIPtKwgK7jskuKoEi4VFMqIHtV2Uu9K/Uegc4TA5cqe+oNMYslZcUmnVNQCTG6wcSqUBaGTDd7sq5srg==}
+  /nock/13.2.8:
+    resolution: {integrity: sha512-JT42FrXfQRpfyL4cnbBEJdf4nmBpVP0yoCcSBr+xkT8Q1y3pgtaCKHGAAOIFcEJ3O3t0QbVAmid0S0f2bj3Wpg==}
     engines: {node: '>= 10.13'}
     dependencies:
       debug: 4.3.4
