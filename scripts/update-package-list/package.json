@@ -9,7 +9,7 @@
     "hosted-git-info": "^5.0.0",
     "strict-uri-encode": "^2.0.0",
     "validate-npm-package-name": "^4.0.0",
-    "workspace-tools": "^0.20.0"
+    "workspace-tools": "^0.21.0"
   },
   "engines": {
     "node": "^12.20 || >=14.13.1"

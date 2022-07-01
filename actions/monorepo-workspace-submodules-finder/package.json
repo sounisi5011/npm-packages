@@ -30,7 +30,7 @@
     "find-git-root": "1.0.4",
     "path-starts-with": "2.0.0",
     "validate-npm-package-name": "4.0.0",
-    "workspace-tools": "0.20.0"
+    "workspace-tools": "0.21.0"
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.1.1",
