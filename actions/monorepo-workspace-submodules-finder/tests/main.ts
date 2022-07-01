@@ -1,11 +1,19 @@
 import { debug, group, info } from '@actions/core';
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
-import { asyncMockedRun, mockProcessStderr, mockProcessStdout } from 'jest-mock-process';
+import { mockProcessStderr, mockProcessStdout } from 'jest-mock-process';
 import nock from 'nock';
 import spawk from 'spawk';
 
 import pkg from '../package.json';
 import { excludeUnchangedSubmodules, getPackageDataList, PackageData } from '../src/main';
+
+function buf2str([value, encoding]: [string | Uint8Array, string?, ...unknown[]]): string {
+    if (value instanceof Uint8Array) {
+        return Buffer.from(value)
+            .toString(encoding as BufferEncoding | undefined);
+    }
+    return value;
+}
 
 describe('getPackageDataList()', () => {
     it('package data should be included', async () => {
@@ -33,22 +41,21 @@ describe('excludeUnchangedSubmodules()', () => {
         { 'path-git-relative': 'dir2/mod4' },
     ];
 
-    const mockRun = (() => {
-        const origMockRun = asyncMockedRun({
-            stdout: mockProcessStdout,
-            stderr: mockProcessStderr,
-        });
-        return async (f: () => Promise<void>) => {
-            const mocks = await origMockRun(f);
-            if (mocks.error) {
-                throw mocks.error;
-            }
-            return Object.assign(mocks, {
-                stdoutWrites: mocks['stdout']?.mock.calls.map(String),
-                stderrWrites: mocks['stderr']?.mock.calls.map(String),
-            });
-        };
-    })();
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const mockRun = async (f: () => Promise<void>) => {
+        const mockStdout = mockProcessStdout();
+        const mockStderr = mockProcessStderr();
+        await f();
+
+        const result = {
+            stdoutWrites: mockStdout.mock.calls.map(buf2str),
+            stderrWrites: mockStderr.mock.calls.map(buf2str),
+        } as const;
+        mockStdout.mockRestore();
+        mockStderr.mockRestore();
+
+        return result;
+    };
 
     beforeEach(() => {
         spawk.clean();
