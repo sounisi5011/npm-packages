@@ -1,6 +1,7 @@
 import type * as stream from 'stream';
 
-import { fixNodePrimordialsErrorStackTrace, printObject } from '../utils';
+import { fixNodePrimordialsErrorStackTrace } from '../../runtimes/node/utils';
+import { printObject } from '../utils';
 import { writeFromIterableToStream } from '../utils/stream';
 import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
 import { createCompress as createBrotliCompress, createDecompress as createBrotliDecompress } from './brotli';
@@ -64,7 +65,7 @@ export function createCompressor(options: CompressOptions | CompressOptions['alg
 }
 
 export async function* decompressIterable(
-    data: Iterable<Buffer> | AsyncIterable<Buffer>,
+    data: Iterable<Uint8Array> | AsyncIterable<Uint8Array>,
     algorithm: CompressOptions['algorithm'],
 ): AsyncIterableReturn<Buffer, void> {
     const entry = compressorTable[algorithm];

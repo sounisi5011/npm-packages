@@ -1,10 +1,8 @@
 import { inspect, types } from 'util';
 
-import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
-
 import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './type';
 
-function isString(value: unknown): value is string {
+export function isString(value: unknown): value is string {
     return typeof value === 'string';
 }
 
@@ -105,14 +103,16 @@ export function bufferFrom(
     return Buffer.from(value);
 }
 
-export async function asyncIterable2Buffer(iterable: AsyncIterable<Buffer>): Promise<Buffer> {
-    const chunkList: Buffer[] = [];
+export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
+    const chunkList: Uint8Array[] = [];
     for await (const chunk of iterable) {
         chunkList.push(chunk);
     }
     // The `Buffer.concat()` function will always copy the Buffer object.
     // However, if the length of the array is 1, there is no need to copy it.
-    return isOneArray(chunkList) ? chunkList[0] : Buffer.concat(chunkList);
+    return isOneArray(chunkList)
+        ? Buffer.from(chunkList[0].buffer, chunkList[0].byteOffset, chunkList[0].byteLength)
+        : Buffer.concat(chunkList);
 }
 
 export async function* convertIterableValue<T, U>(
@@ -164,65 +164,4 @@ export function cond<T, U = never>(value: T): CondResult<T, U> {
         default: convert => convert(value),
     };
     return result;
-}
-
-function isErrorConstructor(value: unknown): value is ErrorConstructor {
-    /**
-     * @see https://stackoverflow.com/a/14486171/4907315
-     */
-    return typeof value === 'function' && value.prototype instanceof Error;
-}
-
-export function fixNodePrimordialsErrorInstance(oldError: unknown): never {
-    if (
-        typeof oldError === 'object' && isPropAccessible(oldError)
-        && !(oldError instanceof Error)
-        && typeof oldError['name'] === 'string'
-        && typeof oldError['message'] === 'string'
-    ) {
-        const name = oldError['name'];
-        const detectConstructor = (globalThis as Record<string, unknown>)[name];
-        const ErrorConstructor = isErrorConstructor(detectConstructor) ? detectConstructor : Error;
-        const newError = new ErrorConstructor();
-        Object.defineProperties(
-            newError,
-            Object.getOwnPropertyDescriptors(oldError),
-        );
-        throw newError;
-    }
-    throw oldError;
-}
-
-/**
- * The Node.js built-in function throws a pseudo Error object that does not extend the Error object.
- * Their stack trace is incomplete and errors are difficult to trace.
- * For example, the results of {@link https://jestjs.io/ Jest} do not show where the error occurred.
- * This function will fix the stack trace of the pseudo Error object to the proper one.
- */
-export function fixNodePrimordialsErrorStackTrace(oldError: unknown): never {
-    /* eslint-disable @typescript-eslint/no-throw-literal */
-    if (!(typeof oldError === 'object' && isPropAccessible(oldError) && !(oldError instanceof Error))) throw oldError;
-    const oldErrorStackTrace = oldError['stack'];
-
-    if (!(isString(oldError['message']) && isString(oldErrorStackTrace))) throw oldError;
-    const newError = new Error();
-    const newErrorStackTrace = newError.stack;
-
-    if (!isString(newErrorStackTrace)) throw oldError;
-    const newErrorStackTraceLastLine = newErrorStackTrace.replace(/^(?:(?!\n[^\n]+$).)+/s, '');
-
-    if (oldErrorStackTrace.includes(newErrorStackTraceLastLine)) throw oldError;
-    Object.defineProperties(
-        newError,
-        Object.getOwnPropertyDescriptors(oldError),
-    );
-    newError.stack = oldErrorStackTrace
-        + newErrorStackTrace.replace(
-            new RegExp(
-                String.raw`^Error: [^\n]*(?:\n *at (?:Object\.)?${fixNodePrimordialsErrorStackTrace.name}\b[^\n]*)?`,
-            ),
-            '',
-        );
-    throw newError;
-    /* eslint-enable */
 }
