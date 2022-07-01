@@ -44,8 +44,8 @@ describe('excludeUnchangedSubmodules()', () => {
                 throw mocks.error;
             }
             return Object.assign(mocks, {
-                stdoutWrites: mocks['stdout']?.mock.calls.map(String),
-                stderrWrites: mocks['stderr']?.mock.calls.map(String),
+                stdoutWrites: mocks.mocks.stdout.mock.calls.map(String),
+                stderrWrites: mocks.mocks.stderr.mock.calls.map(String),
             });
         };
     })();
