@@ -57,10 +57,12 @@ jobs:
       matrix:
         include: ${{fromJson(needs.submodules-finder.outputs.result)}}
     steps:
-      - run:
-          echo try release '${{ matrix.package-name }}' at '${{ matrix.path-git-relative }}'
-          echo matrix length '${{ fromJson(needs.submodules-finder.outputs.result).length }}'
-          echo is run job '${{ 1 <= fromJson(needs.submodules-finder.outputs.result).length }}'
+      - run: |
+          echo try release '"${{ matrix.package-name }}"' at '"${{ matrix.path-git-relative }}"'
+          echo matrix result '"${{ fromJson(needs.submodules-finder.outputs.result) }}"'
+          echo matrix length '"${{ fromJson(needs.submodules-finder.outputs.result).length }}"'
+          # see https://github.community/t/check-outputted-list-is-empty/185027/2
+          echo is run job '"${{ needs.submodules-finder.outputs.result != '[]' }}"'
       # - uses: GoogleCloudPlatform/release-please-action@v2
       #   id: release
       #   with:
