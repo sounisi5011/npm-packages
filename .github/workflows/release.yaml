@@ -5,9 +5,6 @@ on:
       - main
     tags-ignore:
       - "**"
-  pull_request:
-    branches:
-      - "**"
 jobs:
   submodules-finder:
     runs-on: ubuntu-latest
@@ -64,199 +61,193 @@ jobs:
       matrix:
         include: ${{fromJson(needs.submodules-finder.outputs.result)}}
     steps:
-      - run: |
-          echo try release '"${{ matrix.package-name }}"' at '"${{ matrix.path-git-relative }}"'
-          echo matrix result '"${{ fromJson(needs.submodules-finder.outputs.result) }}"'
-          echo matrix length '"${{ fromJson(needs.submodules-finder.outputs.result).length }}"'
-          # see https://github.community/t/check-outputted-list-is-empty/185027/2
-          echo is run job '"${{ needs.submodules-finder.outputs.result != '[]' }}"'
-      # - uses: GoogleCloudPlatform/release-please-action@v2
-      #   id: release
-      #   with:
-      #     release-type: node
-      #     package-name: ${{ matrix.package-name }}
-      #     path: ${{ matrix.path-git-relative }}
-      #     monorepo-tags: true
-      #     token:
-      #       ${{ secrets.GITHUB_TOKEN }}
-      #       # The "token" parameter is optional.
-      #       # However, it may cause an error due to the rate limit of GitHub API.
-      #       # Therefore, it should be specified explicitly.
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          release-type: node
+          package-name: ${{ matrix.package-name }}
+          path: ${{ matrix.path-git-relative }}
+          monorepo-tags: true
+          token:
+            ${{ secrets.GITHUB_TOKEN }}
+            # The "token" parameter is optional.
+            # However, it may cause an error due to the rate limit of GitHub API.
+            # Therefore, it should be specified explicitly.
 
-      #   #
-      #   # Commit to PR
-      #   #
-      # - name: Commit to Release PR / Get PR ref
-      #   id: release-pr
-      #   shell: bash
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
-      #   run: |
-      #     PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
-      #     ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-      #     echo "::set-output name=ref::${ref}"
-      #   if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
-      # - name: Commit to Release PR / Checkout
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: ${{ steps.release-pr.outputs.ref }}
-      #     token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
-      #     # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
-      #     fetch-depth: 0
-      #   if: ${{ steps.release-pr.outputs.ref }}
-      # - name: Commit to Release PR / Setup Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16.x
-      #   if: ${{ steps.release-pr.outputs.ref }}
-      # - name: Commit to Release PR / Cache .pnpm-store
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-16.x-
-      #       ${{ runner.os }}-node-
-      #       ${{ runner.os }}-
-      #   if: ${{ steps.release-pr.outputs.ref }}
-      # - name: Commit to Release PR / Setup pnpm
-      #   uses: ./actions/setup-pnpm
-      #   if: ${{ steps.release-pr.outputs.ref }}
-      # - name: Commit to Release PR / Install Dependencies
-      #   run: pnpm install
-      #   if: ${{ steps.release-pr.outputs.ref }}
-      # - name: Commit to Release PR / Push to PR
-      #   shell: bash
-      #   # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
-      #   # https://fumiyas.github.io/2016/12/15/positional-parameters.sh-advent-calendar.html
-      #   run: |
-      #     readonly CUSTOM_RELEASE_SCRIPT_PATH='.github/workflows/post-release.sh'
-      #     readonly CUSTOM_RELEASE_SCRIPT_FULLPATH="${{ matrix.path-git-relative }}/${CUSTOM_RELEASE_SCRIPT_PATH}"
+        #
+        # Commit to PR
+        #
+      - name: Commit to Release PR / Get PR ref
+        id: release-pr
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
+        run: |
+          PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
+          ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
+          echo "::set-output name=ref::${ref}"
+        if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
+      - name: Commit to Release PR / Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.release-pr.outputs.ref }}
+          token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
+          # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
+          fetch-depth: 0
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Cache .pnpm-store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-16.x-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Setup pnpm
+        uses: ./actions/setup-pnpm
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Install Dependencies
+        run: pnpm install
+        if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Push to PR
+        shell: bash
+        # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
+        # https://fumiyas.github.io/2016/12/15/positional-parameters.sh-advent-calendar.html
+        run: |
+          readonly CUSTOM_RELEASE_SCRIPT_PATH='.github/workflows/post-release.sh'
+          readonly CUSTOM_RELEASE_SCRIPT_FULLPATH="${{ matrix.path-git-relative }}/${CUSTOM_RELEASE_SCRIPT_PATH}"
 
-      #     readonly origGit="$(command -v git)"
-      #     git() {
-      #       if [ "$1" = 'commit' ]; then
-      #         shift
-      #         "${origGit}" commit --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' "$@"
-      #       else
-      #         "${origGit}" "$@"
-      #       fi
-      #     }
-      #     git config user.name  'GitHub'
-      #     git config user.email 'noreply@github.com'
+          readonly origGit="$(command -v git)"
+          git() {
+            if [ "$1" = 'commit' ]; then
+              shift
+              "${origGit}" commit --author='github-actions[bot] <release-workflow+github-actions[bot]@users.noreply.github.com>' "$@"
+            else
+              "${origGit}" "$@"
+            fi
+          }
+          git config user.name  'GitHub'
+          git config user.email 'noreply@github.com'
 
-      #     readonly beforeCommitHash="$(git log --format=%H -n 1)"
+          readonly beforeCommitHash="$(git log --format=%H -n 1)"
 
-      #     echo '::group::' fix changelog
-      #     {
-      #       node scripts/fix-changelog.mjs '${{ matrix.path-git-relative }}' &&
-      #       git add '${{ matrix.path-git-relative }}/CHANGELOG.md' &&
-      #       git commit -m 'docs(${{ matrix.package-name }}): fix changelog' ;
-      #     } || true
-      #     echo '::endgroup::'
+          echo '::group::' fix changelog
+          {
+            node scripts/fix-changelog.mjs '${{ matrix.path-git-relative }}' &&
+            git add '${{ matrix.path-git-relative }}/CHANGELOG.md' &&
+            git commit -m 'docs(${{ matrix.package-name }}): fix changelog' ;
+          } || true
+          echo '::endgroup::'
 
-      #     echo '::group::' update package list
-      #     {
-      #       pnpm run build:package-list &&
-      #       git add ./README.md &&
-      #       git commit -m 'docs: update package list' ;
-      #     } || true
-      #     echo '::endgroup::'
+          echo '::group::' update package list
+          {
+            pnpm run build:package-list &&
+            git add ./README.md &&
+            git commit -m 'docs: update package list' ;
+          } || true
+          echo '::endgroup::'
 
-      #     if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
-      #       (
-      #         echo '::group::' loading "${CUSTOM_RELEASE_SCRIPT_FULLPATH}"
-      #         cd '${{ matrix.path-git-relative }}'
-      #         # shellcheck source=/dev/null
-      #         . "${CUSTOM_RELEASE_SCRIPT_PATH}"
-      #         echo '::endgroup::'
-      #       )
-      #     fi
+          if [ -x "${CUSTOM_RELEASE_SCRIPT_FULLPATH}" ]; then
+            (
+              echo '::group::' loading "${CUSTOM_RELEASE_SCRIPT_FULLPATH}"
+              cd '${{ matrix.path-git-relative }}'
+              # shellcheck source=/dev/null
+              . "${CUSTOM_RELEASE_SCRIPT_PATH}"
+              echo '::endgroup::'
+            )
+          fi
 
-      #     if [ "${beforeCommitHash}" = "$(git log --format=%H -n 1)" ]; then
-      #       echo '::group::$' git commit --allow-empty -m '"chore: trigger tests"'
-      #                         git commit --allow-empty -m  'chore: trigger tests'
-      #       echo '::endgroup::'
-      #     fi
+          if [ "${beforeCommitHash}" = "$(git log --format=%H -n 1)" ]; then
+            echo '::group::$' git commit --allow-empty -m '"chore: trigger tests"'
+                              git commit --allow-empty -m  'chore: trigger tests'
+            echo '::endgroup::'
+          fi
 
-      #     echo '::group::$' git push
-      #                       git push
-      #     echo '::endgroup::'
-      #   if: ${{ steps.release-pr.outputs.ref }}
+          echo '::group::$' git push
+                            git push
+          echo '::endgroup::'
+        if: ${{ steps.release-pr.outputs.ref }}
 
-      #   #
-      #   # Publish
-      #   #
-      # - name: Publish / Checkout
-      #   uses: actions/checkout@v3
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Setup Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16.x
-      #     registry-url: https://registry.npmjs.org
-      #     # Note: The `registry-url` option is required.
-      #     #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Cache .pnpm-store
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-16.x-
-      #       ${{ runner.os }}-node-
-      #       ${{ runner.os }}-
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Setup pnpm
-      #   uses: ./actions/setup-pnpm
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Install Dependencies
-      #   run: pnpm install
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Build
-      #   run: pnpm exec ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
-      #   # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
-      #   # Therefore, build only the submodules included in the required dependencies.
-      #   #
-      #   # Note: If the "build" script does not exist in the npm-scripts, the ultra-runner will attempt to execute the "build" command.
-      #   #       And since the "build" command does not exist, the execution will fail.
-      #   #       For this reason, use the "pnpm run" command and always run "build" in npm-scripts.
-      #   #       If the "--if-present" option is added, no error will occur even if the "build" script does not exist.
-      #   #
-      #   # Note: DO NOT add the "--if-present" option to the end of the command.
-      #   #       Execution by ultra-runner will fail.
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish / Update README
-      #   run: |
-      #     node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
-      #   if: ${{ steps.release.outputs.release_created }}
-      # - name: Publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #   run: |
-      #     readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
+        #
+        # Publish
+        #
+      - name: Publish / Checkout
+        uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: https://registry.npmjs.org
+          # Note: The `registry-url` option is required.
+          #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Cache .pnpm-store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-16.x-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Setup pnpm
+        uses: ./actions/setup-pnpm
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Install Dependencies
+        run: pnpm install
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Build
+        run: pnpm exec ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
+        # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
+        # Therefore, build only the submodules included in the required dependencies.
+        #
+        # Note: If the "build" script does not exist in the npm-scripts, the ultra-runner will attempt to execute the "build" command.
+        #       And since the "build" command does not exist, the execution will fail.
+        #       For this reason, use the "pnpm run" command and always run "build" in npm-scripts.
+        #       If the "--if-present" option is added, no error will occur even if the "build" script does not exist.
+        #
+        # Note: DO NOT add the "--if-present" option to the end of the command.
+        #       Execution by ultra-runner will fail.
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish / Update README
+        run: |
+          node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          readonly CUSTOM_PUBLISH_SCRIPT_PATH=.github/workflows/publish.sh
 
-      #     cd '${{ matrix.path-git-relative }}'
-      #     if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
-      #       export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
-      #       export matrix_package_name_with_scope='${{ matrix.package-name }}'
-      #       export matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
-      #       export outputs_upload_url='${{ steps.release.outputs.upload_url }}'
-      #       export outputs_html_url='${{ steps.release.outputs.html_url }}'
-      #       export outputs_tag_name='${{ steps.release.outputs.tag_name }}'
-      #       export outputs_major='${{ steps.release.outputs.major }}'
-      #       export outputs_minor='${{ steps.release.outputs.minor }}'
-      #       export outputs_patch='${{ steps.release.outputs.patch }}'
-      #       export outputs_sha='${{ steps.release.outputs.sha }}'
-      #       export outputs_pr='${{ steps.release.outputs.pr }}'
-      #       echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
-      #       # shellcheck source=/dev/null
-      #       source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
-      #     else
-      #       # see https://stackoverflow.com/a/62675843/4907315
-      #       pnpm publish --access=public --no-git-checks
-      #     fi
-      #   shell: bash
-      #   if: ${{ steps.release.outputs.release_created }}
+          cd '${{ matrix.path-git-relative }}'
+          if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
+            export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            export matrix_package_name_with_scope='${{ matrix.package-name }}'
+            export matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
+            export outputs_upload_url='${{ steps.release.outputs.upload_url }}'
+            export outputs_html_url='${{ steps.release.outputs.html_url }}'
+            export outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            export outputs_major='${{ steps.release.outputs.major }}'
+            export outputs_minor='${{ steps.release.outputs.minor }}'
+            export outputs_patch='${{ steps.release.outputs.patch }}'
+            export outputs_sha='${{ steps.release.outputs.sha }}'
+            export outputs_pr='${{ steps.release.outputs.pr }}'
+            echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
+            # shellcheck source=/dev/null
+            source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
+          else
+            # see https://stackoverflow.com/a/62675843/4907315
+            pnpm publish --access=public --no-git-checks
+          fi
+        shell: bash
+        if: ${{ steps.release.outputs.release_created }}
