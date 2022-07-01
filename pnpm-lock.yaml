@@ -344,7 +344,7 @@ importers:
       '@types/jest': 28.1.4
       '@types/node': 12.20.55
       jest: 28.1.2
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
     devDependencies:
@@ -354,7 +354,7 @@ importers:
       '@types/jest': 28.1.4
       '@types/node': 12.20.55
       jest: 28.1.2_@types+node@12.20.55
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
 
@@ -366,21 +366,21 @@ importers:
 
   packages/ts-type-utils/has-own-property:
     specifiers:
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
 
   packages/ts-type-utils/is-readonly-array:
     specifiers:
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
     devDependencies:
-      tsd: 0.21.0
+      tsd: 0.22.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
 
@@ -394,7 +394,7 @@ importers:
       glob-exec: 0.1.1
       jest: 28.1.2
       rollup: 2.75.7
-      tsd: 0.21.0
+      tsd: 0.22.0
       tslib: 2.4.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
@@ -407,7 +407,7 @@ importers:
       glob-exec: 0.1.1
       jest: 28.1.2
       rollup: 2.75.7
-      tsd: 0.21.0
+      tsd: 0.22.0
       tslib: 2.4.0
       typescript: 4.7.4
       ultra-runner: 3.10.5
@@ -7666,9 +7666,9 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tsd/0.21.0:
-    resolution: {integrity: sha512-6DugCw1Q4H8HYwDT3itzgALjeDxN4RO3iqu7gRdC/YNVSCRSGXRGQRRasftL1uKDuKxlFffYKHv5j5G7YnKGxQ==}
-    engines: {node: '>=12'}
+  /tsd/0.22.0:
+    resolution: {integrity: sha512-NH+tfEDQ0Ze8gH7TorB6IxYybD+M68EYawe45YNVrbQcydNBfdQHP9IiD0QbnqmwNXrv+l9GAiULT68mo4q/xA==}
+    engines: {node: '>=14.16'}
     hasBin: true
     dependencies:
       '@tsd/typescript': 4.7.4
