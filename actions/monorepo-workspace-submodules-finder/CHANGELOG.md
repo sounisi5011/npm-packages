@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.3.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.8...monorepo-workspace-submodules-finder-action-v1.3.0) (2022-07-01)
+
+
+### Features
+
+* **monorepo-workspace-submodules-finder-action:** add `submodule-exists` output ([#540](https://www.github.com/sounisi5011/npm-packages/issues/540)) ([feb659e](https://www.github.com/sounisi5011/npm-packages/commit/feb659e1057febfd88aa18381ceb77365425feff))
+
+
+### Bug Fixes
+
+* **deps:** update dependency workspace-tools to v0.21.0 ([#537](https://www.github.com/sounisi5011/npm-packages/issues/537)) ([6dbeb7d](https://www.github.com/sounisi5011/npm-packages/commit/6dbeb7df1764d08ab565b02472d12508126885d1))
+
 ## [1.2.8](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.7...monorepo-workspace-submodules-finder-action-v1.2.8) (2022-06-27)
 
 ### Bug Fixes
