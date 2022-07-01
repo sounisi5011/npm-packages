@@ -43,7 +43,7 @@
     "@vercel/ncc": "0.34.0",
     "cross-env": "7.0.3",
     "jest": "28.1.2",
-    "jest-mock-process": "1.5.1",
+    "jest-mock-process": "2.0.0",
     "nock": "13.2.7",
     "spawk": "1.7.1",
     "typescript": "4.7.4",
