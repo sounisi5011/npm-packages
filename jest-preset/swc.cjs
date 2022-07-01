@@ -11,6 +11,13 @@ const swcConfig = {
       syntax: 'typescript',
     },
   },
+  module: {
+    /**
+     * This option is required to import CommonJS files from the Node.js native ESM.
+     * @see https://github.com/swc-project/swc/issues/5084
+     */
+    importInterop: 'node',
+  },
 };
 
 /** @type { import('@jest/types').Config.InitialOptions } */
