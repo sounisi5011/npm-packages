@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 
-import { cryptoAlgorithmMap } from '../../src/cipher';
+import { cryptoAlgorithmMap } from '../../src/core/cipher';
 
 describe.each([...cryptoAlgorithmMap.values()].map(algorithm => [algorithm.name, algorithm] as const))(
     '%s',

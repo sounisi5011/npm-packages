@@ -1,6 +1,6 @@
 import * as stream from 'stream';
 
-import { StreamReader } from '../../../src/utils/stream';
+import { StreamReader } from '../../../src/core/utils/stream';
 
 describe('class StreamReader', () => {
     describe('read() method', () => {

@@ -1,6 +1,6 @@
 import * as zlib from 'zlib';
 
-import { CompressOptions, createCompressor, decompressIterable } from '../../src/compress';
+import { CompressOptions, createCompressor, decompressIterable } from '../../src/core/compress';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 

@@ -1,4 +1,4 @@
-import { Nonce } from '../../src/nonce';
+import { Nonce } from '../../src/core/nonce';
 import { padEndArray, rangeArray } from '../helpers';
 
 const tooSmallFixedField = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];

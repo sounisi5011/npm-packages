@@ -1,8 +1,8 @@
 import * as stream from 'stream';
 import { promisify } from 'util';
 
-import type { StreamReaderInterface } from '../../src/utils/stream';
-import type { AsyncIterableIteratorReturn } from '../../src/utils/type';
+import type { StreamReaderInterface } from '../../src/core/utils/stream';
+import type { AsyncIterableIteratorReturn } from '../../src/core/utils/type';
 
 export const waitStreamFinished = promisify(stream.finished);
 export const pipelineAsync = promisify(stream.pipeline);

@@ -2,14 +2,14 @@ import type * as stream from 'stream';
 
 import { transformFrom } from '@sounisi5011/stream-transform-from';
 
-import type { CryptoAlgorithmName } from './cipher';
-import type { CompressOptions } from './compress';
-import { createDecryptorIterator } from './decrypt';
-import { createEncryptorIterator, EncryptOptions } from './encrypt';
-import type { KeyDerivationOptions } from './key-derivation-function';
-import { validateChunk } from './stream';
-import type { InputDataType, IteratorConverter } from './types';
-import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './utils';
+import type { CryptoAlgorithmName } from './core/cipher';
+import type { CompressOptions } from './core/compress';
+import { createDecryptorIterator } from './core/decrypt';
+import { createEncryptorIterator, EncryptOptions } from './core/encrypt';
+import type { KeyDerivationOptions } from './core/key-derivation-function';
+import { validateChunk } from './core/stream';
+import type { InputDataType, IteratorConverter } from './core/types';
+import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './core/utils';
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
 

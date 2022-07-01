@@ -18,8 +18,8 @@ import {
     SimpleHeaderData,
     SimpleHeaderDataWithCiphertextLength,
     validateCID,
-} from '../../src/header';
-import { cidByteList } from '../../src/header/content-identifier';
+} from '../../src/core/header';
+import { cidByteList } from '../../src/core/header/content-identifier';
 import { iterable2buffer, padStartArray } from '../helpers';
 import { DummyStreamReader } from '../helpers/stream';
 

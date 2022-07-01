@@ -1,4 +1,4 @@
-import type { AsyncIterableReturn } from '../../src/utils/type';
+import type { AsyncIterableReturn } from '../../src/core/utils/type';
 
 export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
 export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]];
