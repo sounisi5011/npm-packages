@@ -100,7 +100,7 @@
     "@sounisi5011/jest-binary-data-matchers": "workspace:^0.0.0 || ^1.0.0",
     "@sounisi5011/run-if-supported": "1.1.1",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
-    "@swc/core": "1.2.205",
+    "@swc/core": "1.2.208",
     "@swc/jest": "0.2.21",
     "@types/argon2-browser": "1.18.1",
     "@types/bl": "5.0.2",
