@@ -86,7 +86,7 @@ importers:
       typescript: 4.7.4
       ultra-runner: 3.10.5
       validate-npm-package-name: 4.0.0
-      workspace-tools: 0.20.0
+      workspace-tools: 0.21.0
     dependencies:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
@@ -95,7 +95,7 @@ importers:
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
       validate-npm-package-name: 4.0.0
-      workspace-tools: 0.20.0
+      workspace-tools: 0.21.0
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../../packages/ts-type-utils/has-own-property
@@ -458,21 +458,21 @@ importers:
       hosted-git-info: ^5.0.0
       strict-uri-encode: ^2.0.0
       validate-npm-package-name: ^4.0.0
-      workspace-tools: ^0.20.0
+      workspace-tools: ^0.21.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       hosted-git-info: 5.0.0
       strict-uri-encode: 2.0.0
       validate-npm-package-name: 4.0.0
-      workspace-tools: 0.20.0
+      workspace-tools: 0.21.0
 
   scripts/update-readme-badge:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
-      workspace-tools: ^0.20.0
+      workspace-tools: ^0.21.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
-      workspace-tools: 0.20.0
+      workspace-tools: 0.21.0
 
 packages:
 
@@ -6800,6 +6800,7 @@ packages:
   /qs/6.10.5:
     resolution: {integrity: sha512-O5RlPh0VFtR78y79rgcgKK4wbAI0C5zGVLztOIdpWX6ep368q5Hv6XRxDvXuZ9q3C6v+e3n8UfZZJw7IIG27eQ==}
     engines: {node: '>=0.6'}
+    deprecated: when using stringify with arrayFormat comma, `[]` is appended on single-item arrays. Upgrade to v6.11.0 or downgrade to v6.10.4 to fix.
     dependencies:
       side-channel: 1.0.4
     dev: false
@@ -7998,8 +7999,8 @@ packages:
       typical: 5.2.0
     dev: true
 
-  /workspace-tools/0.20.0:
-    resolution: {integrity: sha512-hdBlT5BHMvTrTMLK9naXc198KePfZfrJATMym6gUEF0zx0r0wovW+ddbzemjqd13e0rVLw6+xf0kF8O64LqzMg==}
+  /workspace-tools/0.21.0:
+    resolution: {integrity: sha512-ZOGOr42brfDFJcKUz8AonRabORtq0UbuoF6chmcQUwRYmu+Qs85/ZhfflrrMSJLP3yRoqcBe/lvDjGzkWYViww==}
     dependencies:
       '@yarnpkg/lockfile': 1.1.0
       find-up: 4.1.0
