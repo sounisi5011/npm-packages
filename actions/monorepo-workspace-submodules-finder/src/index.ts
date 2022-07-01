@@ -32,6 +32,7 @@ async function main(): Promise<void> {
     });
 
     setOutput('result', onlyChangedSubmodules);
+    setOutput('length', onlyChangedSubmodules.length);
 }
 
 function handleError(error: unknown): void {
