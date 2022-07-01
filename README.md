@@ -56,4 +56,4 @@
 
 | Package | Version | Dependencies |
 |-|-|-|
-| [`monorepo-workspace-submodules-finder-action`](./actions/monorepo-workspace-submodules-finder) | [`v1.2.8`](https://github.com/sounisi5011/npm-packages/tree/monorepo-workspace-submodules-finder-action-v1.2.8/actions/monorepo-workspace-submodules-finder) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=actions%2Fmonorepo-workspace-submodules-finder)](https://david-dm.org/sounisi5011/npm-packages?path=actions%2Fmonorepo-workspace-submodules-finder) |
+| [`monorepo-workspace-submodules-finder-action`](./actions/monorepo-workspace-submodules-finder) | [`v1.2.9`](https://github.com/sounisi5011/npm-packages/tree/monorepo-workspace-submodules-finder-action-v1.2.9/actions/monorepo-workspace-submodules-finder) | [![Dependency Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=actions%2Fmonorepo-workspace-submodules-finder)](https://david-dm.org/sounisi5011/npm-packages?path=actions%2Fmonorepo-workspace-submodules-finder) |
