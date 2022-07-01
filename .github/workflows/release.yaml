@@ -52,10 +52,6 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder
-    if:
-      ${{ 1 <= fromJson(needs.submodules-finder.outputs.result).length }}
-      # If the result of the submodules-finder is an empty array, then an invalid value was specified for the matrix strategy, this job will fail, and the release workflow will also fail.
-      # To avoid this, run this job only if the array is not empty.
     strategy:
       fail-fast: false
       matrix:
