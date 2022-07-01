@@ -84,7 +84,7 @@
   },
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.1.1",
-    "@swc/core": "1.2.207",
+    "@swc/core": "1.2.208",
     "@swc/jest": "0.2.21",
     "@types/jest": "28.1.4",
     "@types/node": "12.20.55",
