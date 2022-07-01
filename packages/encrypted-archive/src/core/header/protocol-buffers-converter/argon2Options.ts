@@ -1,5 +1,5 @@
+import { Argon2Options } from '../../../protocol-buffers/header_pb';
 import type { NormalizedArgon2Options } from '../../key-derivation-function/argon2';
-import { Argon2Options } from '../protocol-buffers/header_pb';
 import { createEnum2value, validateNumberField } from './utils';
 
 const dataName = 'Argon2Options data';

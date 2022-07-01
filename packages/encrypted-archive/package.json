@@ -69,10 +69,10 @@
   "scripts": {
     "build": "run-p build:*",
     "build-protobuf": "run-p build-protobuf:*",
-    "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/core/header/protocol-buffers/ --ts_out=./src/core/header/protocol-buffers/ --proto_path ./src/core/header/protocol-buffers/ ./src/core/header/protocol-buffers/header.proto",
+    "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/protocol-buffers/ --ts_out=./src/protocol-buffers/ --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto",
     "build-protobuf:test": "run-p build-protobuf:test:*",
-    "build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/core/header/protocol-buffers/ ./src/core/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/core/header/protocol-buffers/ ./src/core/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-with-cache": "ultra build",
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "run-p build:docs:*",
