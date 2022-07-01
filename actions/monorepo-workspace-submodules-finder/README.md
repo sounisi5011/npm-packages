@@ -89,6 +89,14 @@ A string indicating the location of the submodule as a path relative to the proj
 The value of [the `private` property](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#private) as defined in [the `package.json` file] for each submodule.
 If undefined, the value is `false`.
 
+### `submodule-exists`
+
+If `result` contains one or more submodules, it is `true`.
+
+The `submodule-exists` output is intended to be used when a list of submodules is set to [the matrix strategy](https://docs.github.com/actions/using-jobs/using-a-matrix-for-your-jobs).
+If no submodules are found (which can happen if the `only-changed-since` input is set to `latest release`), the matrix strategy will fail because it will be set to empty, and the entire workflow containing it will also fail.
+To prevent this, you can skip jobs that use the matrix strategy by using the `submodule-exists` output.
+
 ## Example usage
 
 ```yaml
@@ -97,6 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       result-json: ${{ steps.interrogate.outputs.result }}
+      exists: ${{ steps.interrogate.outputs.submodule-exists }}
     steps:
       - uses: actions/checkout@v2
       - id: interrogate
@@ -104,6 +113,7 @@ jobs:
   job-for-each-submodule:
     runs-on: ubuntu-latest
     needs: submodules-finder
+    if: needs.submodules-finder.outputs.exists
     strategy:
       fail-fast: false
       matrix:

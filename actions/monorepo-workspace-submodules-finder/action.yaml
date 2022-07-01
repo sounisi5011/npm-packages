@@ -20,6 +20,8 @@ inputs:
 outputs:
   result:
     description: JSON string of an array that includes the path and package name pairs of each submodule
+  submodule-exists:
+    description: If `result` contains one or more submodules, it is `true`.
 runs:
   using: node16
   main: dist/index.js

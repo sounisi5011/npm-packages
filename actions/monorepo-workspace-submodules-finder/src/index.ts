@@ -32,6 +32,7 @@ async function main(): Promise<void> {
     });
 
     setOutput('result', onlyChangedSubmodules);
+    setOutput('submodule-exists', onlyChangedSubmodules.length >= 1);
 }
 
 function handleError(error: unknown): void {
