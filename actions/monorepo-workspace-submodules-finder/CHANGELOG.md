@@ -1,6 +1,31 @@
 # Changelog
 
 
+## [1.3.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.8...monorepo-workspace-submodules-finder-action-v1.3.0) (2022-07-01)
+
+### Features
+
+* **monorepo-workspace-submodules-finder-action:** add `submodule-exists` output ([#540](https://www.github.com/sounisi5011/npm-packages/issues/540)) ([feb659e](https://www.github.com/sounisi5011/npm-packages/commit/feb659e1057febfd88aa18381ceb77365425feff))
+
+### Bug Fixes
+
+* **deps:** update dependency workspace-tools to v0.21.0 ([#537](https://www.github.com/sounisi5011/npm-packages/issues/537)) ([6dbeb7d](https://www.github.com/sounisi5011/npm-packages/commit/6dbeb7df1764d08ab565b02472d12508126885d1))
+
+### Commits
+
+<details><summary>show 7 commits</summary>
+
+* [`feb659e`](https://www.github.com/sounisi5011/npm-packages/commit/feb659e1057febfd88aa18381ceb77365425feff) feat(monorepo-workspace-submodules-finder-action): add `submodule-exists` output ([#540](https://www.github.com/sounisi5011/npm-packages/issues/540))
+* [`6dbeb7d`](https://www.github.com/sounisi5011/npm-packages/commit/6dbeb7df1764d08ab565b02472d12508126885d1) fix(deps): update dependency workspace-tools to v0.21.0 ([#537](https://www.github.com/sounisi5011/npm-packages/issues/537))
+* [`4bfbfb9`](https://www.github.com/sounisi5011/npm-packages/commit/4bfbfb996bb1acefe66aa5a652230c4d49de2efe) chore(deps): update dependency @swc/core to v1.2.208 ([#524](https://www.github.com/sounisi5011/npm-packages/issues/524))
+* [`1214f35`](https://www.github.com/sounisi5011/npm-packages/commit/1214f35fc3839d6f07a03629a1e9a6abf7af2604) chore(deps): update dependency nock to v13.2.8 ([#533](https://www.github.com/sounisi5011/npm-packages/issues/533))
+* [`c4e97ac`](https://www.github.com/sounisi5011/npm-packages/commit/c4e97aca2ff16966ea699259a2e72bad53dfb04d) chore(deps): update dependency jest-mock-process to v2 ([#532](https://www.github.com/sounisi5011/npm-packages/issues/532))
+* [`b69ee30`](https://www.github.com/sounisi5011/npm-packages/commit/b69ee306f82cc63408e5cfb42056278469b5eadb) chore(deps): update dependency @types/node to v16.11.42 ([#529](https://www.github.com/sounisi5011/npm-packages/issues/529))
+* [`77ee60f`](https://www.github.com/sounisi5011/npm-packages/commit/77ee60fbba23429fcdf3996a8c1b5f11b4fbd54f) chore(deps): update test packages ([#526](https://www.github.com/sounisi5011/npm-packages/issues/526))
+
+</details>
+
+
 ## [1.2.8](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.7...monorepo-workspace-submodules-finder-action-v1.2.8) (2022-06-27)
 
 ### Bug Fixes
