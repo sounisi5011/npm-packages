@@ -3,7 +3,7 @@
 const { createHash } = require('crypto');
 const { pipeline } = require('stream');
 
-const { decryptStream, encryptStream } = require('../../dist');
+const { decryptStream, encryptStream } = require('../..');
 
 const password = '1234';
 const outputHash = createHash('sha1');

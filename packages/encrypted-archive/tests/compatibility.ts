@@ -14,7 +14,7 @@ import {
     encryptIterator,
     EncryptOptions,
     KeyDerivationOptions,
-} from '../src';
+} from '../src/index.node.js';
 import { asyncIterable2Buffer } from '../src/utils';
 import { buffer2chunkArray, isOneOrMoreArray } from './helpers';
 import { optGen } from './helpers/combinations';
@@ -210,7 +210,7 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
                 const cleartext = await cleartextPromise;
                 const cleartextChunkList = await inputChunkTypeRecord[inputChunkType];
                 const password = await passwordPromise;
-                const oldEncryptedArchive: Omit<typeof import('../src'), `encrypt${string}`> = importFrom(
+                const oldEncryptedArchive: Omit<typeof import('../src/index.node.js'), `encrypt${string}`> = importFrom(
                     oldVersionsStoreDirpath,
                     packageVersion2packageName(packageVersion),
                 ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any

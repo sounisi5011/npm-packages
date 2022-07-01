@@ -10,7 +10,7 @@ import {
     EncryptOptions,
     encryptStream,
     KeyDerivationOptions,
-} from '../src';
+} from '../src/index.node.js';
 import { createStreamFromBuffer } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
