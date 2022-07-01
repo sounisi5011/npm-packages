@@ -49,6 +49,13 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     needs: submodules-finder
+    if:
+      # If the result of the submodules-finder is an empty array, then an invalid value was specified for the matrix strategy, this job will fail, and the release workflow will also fail.
+      # To avoid this, run this job only if the array is not empty.
+      # Note: Array length cannot be used in the GitHub Actions expression.
+      #       Therefore, this conditional expression compares a JSON string to determine if the result is an empty array.
+      #       see https://github.community/t/check-outputted-list-is-empty/185027/2
+      needs.submodules-finder.outputs.result != '[]'
     strategy:
       fail-fast: false
       matrix:
