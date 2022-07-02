@@ -64,7 +64,9 @@ module.exports = async filenames => {
 
   /** @type {string[]} */
   const commands = [];
-  if (parallelScriptsList.length > 0) commands.push(`run-p ${parallelScriptsList.join(' ')}`);
+  if (parallelScriptsList.length > 0) {
+    commands.push(`concurrently ${parallelScriptsList.map(s => `pnpm:${s}`).join(' ')}`);
+  }
   if (updatePathspecList.length > 0) commands.push(`git add ${updatePathspecList.join(' ')}`);
   return [...commands, ...(await baseConfig(filenames))];
 };
