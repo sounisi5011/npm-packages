@@ -67,23 +67,24 @@
     "!**/*.tsbuildinfo"
   ],
   "scripts": {
-    "build": "pnpm build:copy-js-and-dts && pnpm build:docs && pnpm build:tsc",
-    "build-protobuf": "pnpm build-protobuf:src && pnpm build-protobuf:test",
+    "build": "concurrently 'pnpm:build:*'",
+    "build-protobuf": "concurrently 'pnpm:build-protobuf:*'",
     "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
-    "build-protobuf:test": "concurrently 'pnpm:build-protobuf:test:*'",
-    "build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf:test": "concurrently 'pnpm:build-protobuf~test:*'",
+    "build-protobuf~test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf~test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-with-cache": "ultra build",
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
-    "build:docs": "concurrently 'pnpm:build:docs:*'",
-    "build:docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
+    "build:docs": "concurrently 'pnpm:build~docs:*'",
     "build:tsc": "tsc -p ./src/",
-    "lint:tsc": "pnpm lint:tsc:src && pnpm lint:tsc:test",
+    "build~docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
+    "lint:tsc": "concurrently 'pnpm:lint:tsc:*'",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose concurrently --max-processes 1 'pnpm:test:*'",
-    "test:examples": "pnpm build-with-cache && glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
-    "test:jest": "jest"
+    "test:examples": "pnpm build-with-cache && concurrently 'pnpm:test~examples:*'",
+    "test:jest": "jest",
+    "test~examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
   },
   "config": {
     "protocVersion": "3.19.4"
