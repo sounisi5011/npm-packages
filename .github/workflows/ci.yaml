@@ -192,7 +192,9 @@ jobs:
           }
           echo '::endgroup::'
       - run: pnpm run build-only-packages
-      - run: pnpm run fmt
+      - # In rare cases, the "fmt" script may fail.
+        # In that case, it will try formatting again after 5 seconds.
+        run: pnpm run fmt || sleep 5 && pnpm run fmt
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
