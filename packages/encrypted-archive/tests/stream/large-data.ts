@@ -9,7 +9,7 @@ const PACKAGE_ROOT = path.resolve(__dirname, '../..');
 
 describe('encryptStream()', () => {
     beforeAll(async () => {
-        await execa('pnpm', ['run', 'build-with-cache'], { cwd: PACKAGE_ROOT });
+        await execa('pnpm', ['run', 'build:src'], { cwd: PACKAGE_ROOT });
     }, 60 * 1000);
 
     it('transform large data', async () => {

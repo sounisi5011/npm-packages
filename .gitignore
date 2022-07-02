@@ -111,3 +111,7 @@ dist
 
 # rollup.js cache
 .rollup.cache
+
+# Wireit cache
+# https://github.com/google/wireit
+.wireit
