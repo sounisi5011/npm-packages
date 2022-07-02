@@ -192,7 +192,14 @@ jobs:
           }
           echo '::endgroup::'
       - run: pnpm run build-only-packages
-      - run: pnpm run fmt
+      - # In rare cases, the "fmt" script may fail.
+        # In that case, it will try formatting again after 5 seconds.
+        shell: bash
+        run: |
+          pnpm run fmt || {
+            sleep 5
+            pnpm run fmt
+          }
       - name: Check changes
         if: ${{ always() }}
         run: git diff --name-only --exit-code
@@ -227,13 +234,6 @@ jobs:
         run: |
           sudo snap install flatbuffers
           flatc --version
-      - name: Setup Protocol Buffers compiler
-        uses: arduino/setup-protoc@v1
-        with:
-          version: 3.19.4
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Show Protocol Buffers compiler version
-        run: protoc --version
       - run: pnpm exec npm-run-all build-all --parallel 'build-!(all|only-packages)'
       - name: Check changes
         if: ${{ always() }}
