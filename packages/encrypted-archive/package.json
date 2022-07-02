@@ -78,7 +78,7 @@
     "build:docs": "concurrently 'pnpm:build~docs:*'",
     "build:tsc": "tsc -p ./src/",
     "build~docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
-    "lint:tsc": "concurrently 'pnpm:lint:tsc:*'",
+    "lint:tsc": "pnpm run lint:tsc:src && pnpm run lint:tsc:test",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
     "test": "run-if-supported --verbose concurrently --max-processes 1 'pnpm:test:*'",
