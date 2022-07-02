@@ -67,26 +67,23 @@
     "!**/*.tsbuildinfo"
   ],
   "scripts": {
-    "build": "pnpm ~build",
-    "build-protobuf": "pnpm ~build-protobuf",
-    "lint:tsc": "pnpm ~lint:tsc",
-    "test": "run-if-supported --verbose pnpm ~test:examples && run-if-supported --verbose pnpm ~test:jest",
-    "~build": "wireit",
-    "~build-protobuf": "wireit",
-    "~build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
-    "~build-protobuf:test": "wireit",
-    "~build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "~build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "~build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
-    "~build:docs": "wireit",
-    "~build:docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
-    "~build:src": "wireit",
-    "~build:tsc": "tsc -p ./src/",
-    "~lint:tsc": "wireit",
-    "~lint:tsc:src": "tsc -p ./src/ --noEmit",
-    "~lint:tsc:test": "tsc -p ./tests/ --noEmit",
-    "~test:examples": "wireit",
-    "~test:jest": "jest"
+    "build": "pnpm build:copy-js-and-dts && pnpm build:docs && pnpm build:tsc",
+    "build-protobuf": "pnpm build-protobuf:src && pnpm build-protobuf:test",
+    "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
+    "build-protobuf:test": "concurrently 'pnpm:build-protobuf:test:*'",
+    "build-protobuf:test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf:test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-with-cache": "ultra build",
+    "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
+    "build:docs": "concurrently 'pnpm:build:docs:*'",
+    "build:docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
+    "build:tsc": "tsc -p ./src/",
+    "lint:tsc": "pnpm lint:tsc:src && pnpm lint:tsc:test",
+    "lint:tsc:src": "tsc -p ./src/ --noEmit",
+    "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "test": "run-if-supported --verbose concurrently --max-processes 1 'pnpm:test:*'",
+    "test:examples": "pnpm build-with-cache && glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
+    "test:jest": "jest"
   },
   "config": {
     "protocVersion": "3.19.4"
@@ -118,6 +115,7 @@
     "@types/varint": "6.0.0",
     "bytefield-svg": "1.6.1",
     "combinate": "1.1.11",
+    "concurrently": "7.2.2",
     "cpy-cli": "3.1.1",
     "escape-string-regexp": "4.0.0",
     "execa": "5.1.1",
@@ -130,8 +128,7 @@
     "noop-stream": "0.1.0",
     "semver": "7.3.7",
     "typescript": "4.7.4",
-    "ultra-runner": "3.10.5",
-    "wireit": "0.7.1"
+    "ultra-runner": "3.10.5"
   },
   "optionalDependencies": {
     "argon2": "0.27.2"
@@ -139,56 +136,5 @@
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x || >=18.x"
   },
-  "runkitExampleFilename": "./runkit-example.js",
-  "wireit": {
-    "~build": {
-      "dependencies": [
-        "~build:docs",
-        "~build:src"
-      ]
-    },
-    "~build:src": {
-      "command": "pnpm ~build:copy-js-and-dts && pnpm ~build:tsc",
-      "files": [
-        "src",
-        "tsconfig.json",
-        "../../tsconfig.base.json"
-      ],
-      "output": [
-        "dist"
-      ],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "~build:docs": {
-      "dependencies": [
-        "~build:docs:bytefield"
-      ]
-    },
-    "~build-protobuf": {
-      "dependencies": [
-        "~build-protobuf:src",
-        "~build-protobuf:test"
-      ]
-    },
-    "~build-protobuf:test": {
-      "dependencies": [
-        "~build-protobuf:test:header",
-        "~build-protobuf:test:simple-header"
-      ]
-    },
-    "~lint:tsc": {
-      "dependencies": [
-        "~lint:tsc:src",
-        "~lint:tsc:test"
-      ]
-    },
-    "~test:examples": {
-      "command": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'",
-      "dependencies": [
-        "~build:src"
-      ]
-    }
-  }
+  "runkitExampleFilename": "./runkit-example.js"
 }

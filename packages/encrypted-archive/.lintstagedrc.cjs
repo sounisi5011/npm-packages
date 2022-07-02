@@ -36,11 +36,8 @@ function endsWithFilter(...searchStringList) {
  * @type {import('../../.lintstagedrc.cjs').LintStagedConfig}
  */
 module.exports = async filenames => {
-  /** @type {{ src: boolean, test: boolean }} */
-  const protobufBuild = {
-    src: false,
-    test: false,
-  };
+  /** @type {string[]} */
+  const parallelScriptsList = [];
   /** @type {string[]} */
   const updatePathspecList = [];
 
@@ -49,7 +46,7 @@ module.exports = async filenames => {
       .filter(dirnameFilter([__dirname, 'src'], true))
       .some(endsWithFilter('.proto', '_pb.js', '_pb.d.ts'))
   ) {
-    protobufBuild.src = true;
+    parallelScriptsList.push('build-protobuf:src');
     updatePathspecList.push(
       ...['src/**/*.proto', 'src/**/*_pb.js', 'src/**/*_pb.d.ts'].map(p),
     );
@@ -59,7 +56,7 @@ module.exports = async filenames => {
       .filter(dirnameFilter([__dirname, 'tests/unit/fixtures']))
       .some(endsWithFilter('.prototxt', '.bin'))
   ) {
-    protobufBuild.test = true;
+    parallelScriptsList.push('build-protobuf:test');
     updatePathspecList.push(
       ...['tests/unit/fixtures/*.prototxt', 'tests/unit/fixtures/*.bin'].map(p),
     );
@@ -67,13 +64,7 @@ module.exports = async filenames => {
 
   /** @type {string[]} */
   const commands = [];
-  if (protobufBuild.src && protobufBuild.test) {
-    commands.push('pnpm run ~build-protobuf');
-  } else if (protobufBuild.src) {
-    commands.push('pnpm run ~build-protobuf:src');
-  } else if (protobufBuild.test) {
-    commands.push('pnpm run ~build-protobuf:test');
-  }
+  if (parallelScriptsList.length > 0) commands.push(`run-p ${parallelScriptsList.join(' ')}`);
   if (updatePathspecList.length > 0) commands.push(`git add ${updatePathspecList.join(' ')}`);
   return [...commands, ...(await baseConfig(filenames))];
 };
