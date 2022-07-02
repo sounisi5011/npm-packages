@@ -1,6 +1,7 @@
 import * as zlib from 'zlib';
 
-import { CompressOptions, createCompressor, decompressIterable } from '../../src/core/compress';
+import type { CompressOptions } from '../../src/core/types/compress';
+import { createCompressor, decompressIterable } from '../../src/runtimes/node/compress';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
 
@@ -178,7 +179,7 @@ describe('decompressIterable()', () => {
             const sourceAsyncIterable = buffer2asyncIterable(data);
             const compressedIterable = createCompressor(algorithm)
                 .compressIterable(sourceAsyncIterable);
-            const decompressedIterable = decompressIterable(compressedIterable, algorithm);
+            const decompressedIterable = decompressIterable(algorithm, compressedIterable);
             const decompressedData = await iterable2buffer(decompressedIterable);
             expect(decompressedData.equals(data)).toBeTrue();
         });
@@ -189,7 +190,7 @@ describe('decompressIterable()', () => {
         const emptyIterable = buffer2asyncIterable(Buffer.from(''));
 
         // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli"'.
-        await expect(iterable2buffer(decompressIterable(emptyIterable, algorithm))).rejects.toThrowWithMessage(
+        await expect(iterable2buffer(decompressIterable(algorithm, emptyIterable))).rejects.toThrowWithMessage(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
         );
@@ -208,7 +209,7 @@ describe('decompressIterable()', () => {
                 const sourceAsyncIterable = buffer2asyncIterable(data);
                 const compressedIterable = createCompressor({ ...options, algorithm: 'gzip' })
                     .compressIterable(sourceAsyncIterable);
-                const decompressedIterable = decompressIterable(compressedIterable, 'gzip');
+                const decompressedIterable = decompressIterable('gzip', compressedIterable);
                 const decompressedData = await iterable2buffer(decompressedIterable);
                 expect(decompressedData.equals(data)).toBeTrue();
             });
