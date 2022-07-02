@@ -230,7 +230,7 @@ jobs:
       - name: Setup Protocol Buffers compiler
         uses: arduino/setup-protoc@v1
         with:
-          version: 3.15.8
+          version: 3.19.4
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Show Protocol Buffers compiler version
         run: protoc --version
