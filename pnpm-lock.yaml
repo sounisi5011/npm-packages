@@ -226,6 +226,7 @@ importers:
   packages/encrypted-archive:
     specifiers:
       '@jorgeferrero/stream-to-buffer': 2.0.6
+      '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': workspace:^0.0.0 || ^1.0.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
@@ -274,6 +275,7 @@ importers:
       argon2: 0.27.2
     devDependencies:
       '@jorgeferrero/stream-to-buffer': 2.0.6
+      '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
@@ -1381,6 +1383,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
     optional: true
+
+  /@protobuf-ts/protoc/2.7.0:
+    resolution: {integrity: sha512-YW61nbX9d3mWF44193S+bmWth5eFHxvrePQMUfdY8eEa3PTmhAUwgVCUBeCXEVUWgz1H/E0CnwdjlJgW4vQtOg==}
+    hasBin: true
+    dev: true
 
   /@rollup/plugin-typescript/8.3.3_3720a0066cc05d62339c7fe72fa5a183:
     resolution: {integrity: sha512-55L9SyiYu3r/JtqdjhwcwaECXP7JeJ9h1Sg1VWRJKIutla2MdZQodTgcCNybXLMCnqpNLEhS2vGENww98L1npg==}
