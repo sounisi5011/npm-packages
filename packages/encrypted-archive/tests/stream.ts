@@ -37,7 +37,7 @@ describe('encryptStream()', () => {
         }
     });
     describe('non Buffer chunk', () => {
-        it.each<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>([
+        it.each<[string, string | ArrayBufferLike | ArrayBufferView]>([
             ['string', 'foo'],
             // TypedArray
             ['Uint8Array', new Uint8Array(3)],
@@ -157,7 +157,7 @@ describe('decryptStream()', () => {
         });
     });
     describe('non Buffer chunk', () => {
-        it.each<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>([
+        it.each<[string, string | ArrayBufferLike | ArrayBufferView]>([
             ['string', 'foo'],
             // TypedArray
             ['Uint8Array', new Uint8Array(3)],

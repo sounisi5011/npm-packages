@@ -185,7 +185,7 @@ function validateBetweenLength<TValue extends number>(
 
 function validateBetweenByteLength(
     optionName: string,
-    value: string | NodeJS.ArrayBufferView,
+    value: string | ArrayBufferView,
     options: ValidateBetweenLengthOptions<number>,
 ): asserts value {
     validateBetweenLength(
