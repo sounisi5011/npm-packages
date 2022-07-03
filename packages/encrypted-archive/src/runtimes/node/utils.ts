@@ -5,7 +5,7 @@ import { inspect as nodeInspect } from 'util';
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
 import type { InspectFn } from '../../core/types/inspect';
-import { isString } from '../../core/utils/index';
+import { isOneArray, isString } from '../../core/utils/index';
 
 export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
 
@@ -15,12 +15,6 @@ export function arrayBufferView2Buffer(view: ArrayBufferView): Buffer {
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L108
      */
     return Buffer.from(view.buffer, view.byteOffset, view.byteLength);
-}
-
-function isOneArray<T>(value: T[]): value is [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T] {
-    return value.length === 1;
 }
 
 export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {

@@ -28,6 +28,12 @@ export function isOrType<T1, T2, T3 = never, T4 = never>(
         typeGuard1(value) || typeGuard2(value) || typeGuard3(value) || typeGuard4(value);
 }
 
+export function isOneArray<T>(value: T[]): value is [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T];
+export function isOneArray<T>(value: readonly T[]): value is readonly [T] {
+    return value.length === 1;
+}
+
 export function ifFuncThenExec<TArgs extends unknown[], TResult, TOther>(
     value: ((...args: TArgs) => TResult) | TOther,
     ...args: TArgs
@@ -83,6 +89,22 @@ export function normalizeOptions<T extends object>(
                 }, normalizedOptions),
         normalizedOptions,
     );
+}
+
+/**
+ * @see https://stackoverflow.com/a/69998555/4907315
+ */
+export function uint8arrayConcat(...arrayList: ReadonlyArray<ArrayLike<number>>): Uint8Array {
+    const totalLength = arrayList.map(array => array.length).reduce((a, b) => a + b, 0);
+    const result = new Uint8Array(totalLength);
+
+    let offset = 0;
+    for (const array of arrayList) {
+        result.set(array, offset);
+        offset += array.length;
+    }
+
+    return result;
 }
 
 export function bufferFrom(value: ArrayBufferView | ArrayBufferLike): Uint8Array;

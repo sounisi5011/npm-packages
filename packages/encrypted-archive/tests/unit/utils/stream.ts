@@ -167,7 +167,7 @@ describe('class StreamReader', () => {
                 }
                 expect(entryList).toStrictEqual([
                     {
-                        data: Buffer.from([4, 5, 6, 7, 8, 9]),
+                        data: new Uint8Array([4, 5, 6, 7, 8, 9]),
                         requestedSize: 999,
                         offset: 1,
                         readedSize: 6,
@@ -246,7 +246,7 @@ describe('class StreamReader', () => {
                 expect(entryList).toStrictEqual([
                     {
                         // chunks read by the `read()` method will be concatenated.
-                        data: Buffer.from([4, 5, 6]),
+                        data: new Uint8Array([4, 5, 6]),
                         requestedSize: 999,
                         offset: 1,
                         readedSize: 3,
