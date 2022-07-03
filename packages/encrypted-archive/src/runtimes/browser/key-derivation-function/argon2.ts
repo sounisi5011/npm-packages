@@ -1,13 +1,13 @@
 import { ArgonType, hash } from 'argon2-browser';
 
-import type { Argon2HashFn } from '../argon2';
+import type { Argon2HashFn } from '../../../core/types/key-derivation-function/argon2';
 
 const typeRecord = {
     argon2d: ArgonType.Argon2d,
     argon2id: ArgonType.Argon2id,
 } as const;
 
-const argon2Hash: Argon2HashFn = async options => {
+export const argon2Hash: Argon2HashFn = async options => {
     const result = await hash({
         pass: options.password,
         salt: options.salt,
@@ -19,5 +19,3 @@ const argon2Hash: Argon2HashFn = async options => {
     });
     return result.hash;
 };
-
-export { argon2Hash };

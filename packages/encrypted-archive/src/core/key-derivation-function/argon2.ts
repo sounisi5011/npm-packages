@@ -1,22 +1,16 @@
-import { version as nodeVersion } from 'process';
-
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import capitalize from 'capitalize';
 
-import type { BaseKeyDerivationOptions, GetKDFResult } from '.';
+import {
+    Argon2Algorithm,
+    Argon2HashFn,
+    Argon2Options,
+    argon2TypeNameList,
+    GetArgon2KDFResult,
+    NormalizedArgon2Options,
+} from '../types/key-derivation-function/argon2';
 import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, printObject } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
-
-const argon2TypeNameList = ['argon2d', 'argon2id'] as const;
-
-export type Argon2Algorithm = (typeof argon2TypeNameList)[number];
-export interface Argon2Options extends BaseKeyDerivationOptions {
-    algorithm: Argon2Algorithm;
-    iterations?: number | undefined;
-    memory?: number | undefined;
-    parallelism?: number | undefined;
-}
-export type NormalizedArgon2Options = RequiredExcludeUndefined<Argon2Options>;
 
 export const defaultOptions: NormalizedArgon2Options = {
     algorithm: 'argon2d',
@@ -234,8 +228,6 @@ function validateArgon2Options(options: Omit<NormalizedArgon2Options, 'algorithm
     );
 }
 
-type GetArgon2KDFResult = GetKDFResult<NormalizedArgon2Options>;
-
 function normalizeInternalError(error: unknown): never {
     if (error instanceof Error) {
         error.message = `Internal error from Argon2: ${error.message}`;
@@ -253,31 +245,10 @@ function normalizeInternalError(error: unknown): never {
     throw new Error(`Internal error from Argon2: ${printObject(error)}`);
 }
 
-interface Argon2HashOptions extends NormalizedArgon2Options {
-    password: string | Buffer;
-    salt: Uint8Array;
-    hashLength: number;
-}
-export type Argon2HashFn = (options: Argon2HashOptions) => Promise<Uint8Array>;
-
-/**
- * For Node.js 18.1.0 and later, use node-argon2 instead of argon2-browser.
- * Because argon2-browser fails in Node.js 18.1.0 or later.
- * @see https://github.com/antelle/argon2-browser/issues/81
- */
-let argon2Hash: Argon2HashFn = async options => {
-    const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
-    ({ argon2Hash } = await (
-        (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
-            ? // In Node.js >=18.1.0, use node-argon2
-                import('./argon2/node.js') // eslint-disable-line node/no-unsupported-features/es-syntax
-            : // For Node.js <18.1.0, use argon2-browser
-                import('./argon2/wasm.js') // eslint-disable-line node/no-unsupported-features/es-syntax
-    ));
-    return await argon2Hash(options);
-};
-
-const createDeriveKeyFunc = (options: NormalizedArgon2Options): GetArgon2KDFResult['deriveKey'] =>
+const createDeriveKeyFunc = (
+    argon2Hash: Argon2HashFn,
+    options: NormalizedArgon2Options,
+): GetArgon2KDFResult['deriveKey'] =>
     async (password, salt, keyLengthBytes) => {
         validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
         validateBetweenLength(
@@ -302,18 +273,20 @@ const createDeriveKeyFunc = (options: NormalizedArgon2Options): GetArgon2KDFResu
             .catch(normalizeInternalError);
     };
 
-export function getArgon2KDF(options: Readonly<Argon2Options>): GetArgon2KDFResult {
-    const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
-    if (!isArgon2Algorithm(algorithm)) {
-        throw new TypeError(
-            `Invalid Argon2 type received: ${printObject(algorithm, { passThroughString: true })}`,
-        );
-    }
-    validateArgon2Options(argon2Options);
+export function getArgon2KDF(argon2Hash: Argon2HashFn) {
+    return (options: Readonly<Argon2Options>): GetArgon2KDFResult => {
+        const { algorithm, ...argon2Options } = normalizeOptions(defaultOptions, options);
+        if (!isArgon2Algorithm(algorithm)) {
+            throw new TypeError(
+                `Invalid Argon2 type received: ${printObject(algorithm, { passThroughString: true })}`,
+            );
+        }
+        validateArgon2Options(argon2Options);
 
-    return {
-        deriveKey: createDeriveKeyFunc({ algorithm, ...argon2Options }),
-        saltLength: SALT_LEN,
-        normalizedOptions: { algorithm, ...argon2Options },
+        return {
+            deriveKey: createDeriveKeyFunc(argon2Hash, { algorithm, ...argon2Options }),
+            saltLength: SALT_LEN,
+            normalizedOptions: { algorithm, ...argon2Options },
+        };
     };
 }

@@ -5,18 +5,20 @@ import { transformFrom } from '@sounisi5011/stream-transform-from';
 
 import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './core/decrypt';
 import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './core/encrypt';
-import type { KeyDerivationOptions } from './core/key-derivation-function';
 import { validateChunk } from './core/stream';
 import type { InputDataType, IteratorConverter } from './core/types';
 import type { CompressOptions } from './core/types/compress';
 import type { CryptoAlgorithmName } from './core/types/crypto';
+import type { KeyDerivationOptions } from './core/types/key-derivation-function';
 import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './core/utils';
 import { getCryptoAlgorithm } from './runtimes/node/cipher';
 import { createCompressor, decompressIterable } from './runtimes/node/compress';
+import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     getRandomBytes: async size => randomBytes(size),
     getCryptoAlgorithm,
+    kdfBuiltin,
     createCompressor,
     decompressIterable,
 };

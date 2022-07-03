@@ -3,8 +3,9 @@ import * as util from 'util';
 
 import escapeStringRegexp from 'escape-string-regexp';
 
-import { getKDF, KeyDerivationOptions } from '../../src/core/key-derivation-function';
-import type { Argon2Options } from '../../src/core/key-derivation-function/argon2';
+import { getKDF } from '../../src/core/key-derivation-function';
+import type { Argon2Options } from '../../src/core/types/key-derivation-function/argon2';
+import { kdfBuiltinRecord as kdfBuiltin } from '../../src/runtimes/node/key-derivation-function';
 import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
 
 /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L57 */
@@ -14,7 +15,7 @@ const password = 'Hoge Fuga';
 
 describe('getKDF()', () => {
     describe('generate key', () => {
-        const { deriveKey, saltLength } = getKDF(undefined);
+        const { deriveKey, saltLength } = getKDF(kdfBuiltin, undefined);
         const salt = randomBytes(saltLength);
 
         it.each(rangeArray(ARGON2_MIN_OUTLEN, 20))('keyLengthBytes: %i', async keyLengthBytes => {
@@ -32,7 +33,7 @@ describe('getKDF()', () => {
         // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"argon2d" | "argon2id"'.
         const options: KeyDerivationOptions = { algorithm };
 
-        expect(() => getKDF(options)).toThrowWithMessage(
+        expect(() => getKDF(kdfBuiltin, options)).toThrowWithMessage(
             TypeError,
             `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
         );
@@ -56,8 +57,9 @@ describe('getKDF()', () => {
             [],
             {},
         ])('%p', value => {
-            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Readonly<Argon2Options> | undefined'.
-            expect(() => getKDF(value)).toThrowWithMessage(
+            // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'Readonly<Argon2Options> | undefined'.
+            const options: Parameters<typeof getKDF>[1] = value;
+            expect(() => getKDF(kdfBuiltin, options)).toThrowWithMessage(
                 TypeError,
                 /^Unknown deriveKey options was received: /,
             );
@@ -107,7 +109,7 @@ describe('algorithm: Argon2', () => {
             'argon2d',
             'argon2id',
         ])('%s', algorithm => {
-            const { deriveKey, saltLength } = getKDF({ algorithm });
+            const { deriveKey, saltLength } = getKDF(kdfBuiltin, { algorithm });
             const salt = randomBytes(saltLength);
 
             it.each(
@@ -131,7 +133,7 @@ describe('algorithm: Argon2', () => {
             ]),
         ])('%p', opts => {
             const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-            const { normalizedOptions } = getKDF(options);
+            const { normalizedOptions } = getKDF(kdfBuiltin, options);
             expect(normalizedOptions.iterations).toBeNumber();
             expect(normalizedOptions.memory).toBeNumber();
             expect(normalizedOptions.parallelism).toBeNumber();
@@ -179,7 +181,7 @@ describe('algorithm: Argon2', () => {
                     optionName,
                 ]))('%p', (opts, optionName) => {
                     const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                    expect(() => getKDF(options)).toThrowWithMessage(
+                    expect(() => getKDF(kdfBuiltin, options)).toThrowWithMessage(
                         TypeError,
                         new RegExp(`^${
                             escapeStringRegexp([
@@ -204,7 +206,7 @@ describe('algorithm: Argon2', () => {
                     optionName,
                 ]))('%p', (opts, optionName) => {
                     const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                    expect(() => getKDF(options)).toThrowWithMessage(
+                    expect(() => getKDF(kdfBuiltin, options)).toThrowWithMessage(
                         RangeError,
                         new RegExp(`^${
                             escapeStringRegexp([
@@ -262,7 +264,7 @@ describe('algorithm: Argon2', () => {
             ).filter(([, { value }]) => value >= 1);
             it.each(table)('%s', (_, { opts, optionName, value, min, max }) => {
                 const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                expect(() => getKDF(options)).toThrowWithMessage(
+                expect(() => getKDF(kdfBuiltin, options)).toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${value}" is too ${mode} for Argon2's option "${optionName}"`,
@@ -281,7 +283,7 @@ describe('algorithm: Argon2', () => {
         });
         describe('too short', () => {
             it('salt length', async () => {
-                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey } = getKDF(kdfBuiltin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
                 const salt = Buffer.alloc(saltLength);
                 await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
@@ -298,7 +300,7 @@ describe('algorithm: Argon2', () => {
                 );
             });
             it('key length', async () => {
-                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey, saltLength } = getKDF(kdfBuiltin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
                 await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
@@ -312,7 +314,7 @@ describe('algorithm: Argon2', () => {
         });
         describe('too long', () => {
             it('salt length', async () => {
-                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey } = getKDF(kdfBuiltin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
                 const salt = createDummySizeBuffer(saltLength);
                 await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
@@ -329,7 +331,7 @@ describe('algorithm: Argon2', () => {
                 );
             });
             it('key length', async () => {
-                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey, saltLength } = getKDF(kdfBuiltin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
                 await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
@@ -350,7 +352,7 @@ describe('algorithm: Argon2', () => {
          * At least it works properly on Ubuntu 20.04 on GitHub Actions.
          */
         it('internal error', async () => {
-            const { deriveKey, saltLength } = getKDF({
+            const { deriveKey, saltLength } = getKDF(kdfBuiltin, {
                 algorithm: 'argon2d',
                 iterations: ARGON2_MIN_TIME,
                 parallelism: ARGON2_MIN_THREADS,

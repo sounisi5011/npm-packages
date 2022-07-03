@@ -1,5 +1,5 @@
 import { createHeader, createSimpleHeader } from './header';
-import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
+import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
@@ -11,6 +11,11 @@ import {
     GetCryptoAlgorithm,
     GetRandomBytesFn,
 } from './types/crypto';
+import type {
+    KDFBuiltinAPIRecord,
+    KeyDerivationOptions,
+    NormalizedKeyDerivationOptions,
+} from './types/key-derivation-function';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
@@ -23,6 +28,7 @@ export interface EncryptOptions {
 export interface EncryptBuiltinAPIRecord {
     getRandomBytes: GetRandomBytesFn;
     getCryptoAlgorithm: GetCryptoAlgorithm;
+    kdfBuiltin: KDFBuiltinAPIRecord;
     createCompressor: CreateCompressor;
 }
 
@@ -37,19 +43,19 @@ interface KeyResult {
 }
 
 async function generateKey(
-    { password, keyLength, keyDerivationOptions, getRandomBytes }: {
+    builtin: { getRandomBytes: GetRandomBytesFn; kdfBuiltin: KDFBuiltinAPIRecord },
+    { password, keyLength, keyDerivationOptions }: {
         password: InputDataType;
         keyLength: number;
         keyDerivationOptions: KeyDerivationOptions | undefined;
-        getRandomBytes: GetRandomBytesFn;
     },
 ): Promise<KeyResult> {
     const {
         deriveKey,
         saltLength,
         normalizedOptions: normalizedKeyDerivationOptions,
-    } = getKDF(keyDerivationOptions);
-    const salt = await getRandomBytes(saltLength);
+    } = getKDF(builtin.kdfBuiltin, keyDerivationOptions);
+    const salt = await builtin.getRandomBytes(saltLength);
     const key = await deriveKey(password, salt, keyLength);
 
     return {
@@ -167,11 +173,10 @@ export function createEncryptorIterator(
         /**
          * Generate key
          */
-        const keyResult = await generateKey({
+        const keyResult = await generateKey(builtin, {
             password,
             keyLength: algorithm.keyLength,
             keyDerivationOptions: options.keyDerivation,
-            getRandomBytes: builtin.getRandomBytes,
         });
 
         const bufferSourceIterable = convertIterableValue(
