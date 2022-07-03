@@ -1,4 +1,3 @@
-import type { InputDataType } from '../types';
 import type { RequiredExcludeUndefined } from '../utils/type';
 import type { Argon2HashFn, Argon2Options } from './key-derivation-function/argon2';
 
@@ -11,7 +10,7 @@ export type NormalizedKeyDerivationOptions = RequiredExcludeUndefined<KeyDerivat
 
 export interface GetKDFResult<T extends NormalizedKeyDerivationOptions> {
     deriveKey: (
-        password: InputDataType,
+        password: Uint8Array,
         salt: Uint8Array,
         keyLengthBytes: number,
     ) => Promise<Uint8Array>;

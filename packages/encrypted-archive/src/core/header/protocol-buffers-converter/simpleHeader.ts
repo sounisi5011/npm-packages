@@ -1,5 +1,5 @@
 import { SimpleHeader } from '../../../protocol-buffers/header_pb';
-import type { BuiltinInspectRecord } from '../../types/inspect';
+import type { BuiltinInspectRecord } from '../../types/builtin';
 import type { SimpleHeaderData } from '../create';
 import { validateBytesField, validateNumberFieldInRange, validateNumberOptionInRange } from './utils';
 

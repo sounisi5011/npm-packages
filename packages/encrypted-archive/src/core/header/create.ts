@@ -1,9 +1,10 @@
 import { encode as varintEncode } from 'varint';
 
+import type { BuiltinInspectRecord } from '../types/builtin';
 import type { CompressOptions } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
-import type { BuiltinInspectRecord } from '../types/inspect';
 import type { NormalizedKeyDerivationOptions } from '../types/key-derivation-function';
+import { uint8arrayConcat } from '../utils';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
@@ -48,14 +49,12 @@ export function createHeader(builtin: BuiltinInspectRecord, data: HeaderDataWith
     const headerDataBinary = createProtobufHeader(builtin, headerData)
         .serializeBinary();
 
-    return Buffer.concat([
-        Buffer.from([
-            ...cidByteList,
-            ...varintEncode(headerDataBinary.byteLength),
-        ]),
+    return uint8arrayConcat(
+        cidByteList,
+        varintEncode(headerDataBinary.byteLength),
         headerDataBinary,
-        Buffer.from(varintEncode(ciphertextLength)),
-    ]);
+        varintEncode(ciphertextLength),
+    );
 }
 
 export function createSimpleHeader(
@@ -67,9 +66,9 @@ export function createSimpleHeader(
     const simpleHeaderDataBinary = createProtobufSimpleHeader(builtin, headerData)
         .serializeBinary();
 
-    return Buffer.concat([
-        Buffer.from(varintEncode(simpleHeaderDataBinary.byteLength)),
+    return uint8arrayConcat(
+        varintEncode(simpleHeaderDataBinary.byteLength),
         simpleHeaderDataBinary,
-        Buffer.from(varintEncode(ciphertextLength)),
-    ]);
+        varintEncode(ciphertextLength),
+    );
 }

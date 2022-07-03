@@ -1,5 +1,5 @@
 import { isOneArray, uint8arrayConcat } from '.';
-import type { BuiltinInspectRecord } from '../types/inspect';
+import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from '../types/builtin';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
 export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
@@ -18,11 +18,11 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
     private currentByteLength = 0;
 
     constructor(
-        builtin: BuiltinInspectRecord,
+        builtin: BuiltinInspectRecord & BuiltinEncodeStringRecord,
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
         private readonly convertChunk = (chunk: unknown): Uint8Array => {
             if (chunk instanceof Uint8Array) return chunk;
-            if (typeof chunk === 'string') return Buffer.from(chunk);
+            if (typeof chunk === 'string') return builtin.encodeString(chunk);
             throw new TypeError(
                 `Invalid type chunk received.`
                     + ` Each chunk must be of type string or an instance of Uint8Array.`

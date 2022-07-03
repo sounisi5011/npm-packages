@@ -1,3 +1,4 @@
+import type { EncodeStringFn } from '../types/builtin';
 import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './type';
 
 export function isString(value: unknown): value is string {
@@ -107,26 +108,19 @@ export function uint8arrayConcat(...arrayList: ReadonlyArray<ArrayLike<number>>)
     return result;
 }
 
-export function bufferFrom(value: ArrayBufferView | ArrayBufferLike): Uint8Array;
-export function bufferFrom(value: string | ArrayBufferView | ArrayBufferLike): Uint8Array | string;
-export function bufferFrom(value: string | ArrayBufferView | ArrayBufferLike, encoding: BufferEncoding): Uint8Array;
-export function bufferFrom(
+export function uint8arrayFrom(
+    encodeString: EncodeStringFn,
     value: string | ArrayBufferView | ArrayBufferLike,
-    encoding?: BufferEncoding,
-): Uint8Array | string {
-    if (typeof value === 'string') {
-        return encoding !== undefined
-            ? Buffer.from(value, encoding)
-            : value;
-    }
+): Uint8Array {
+    if (typeof value === 'string') return encodeString(value);
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
      */
-    if (ArrayBuffer.isView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
      */
-    return Buffer.from(value);
+    return new Uint8Array(value);
 }
 
 export async function* convertIterableValue<T, U>(

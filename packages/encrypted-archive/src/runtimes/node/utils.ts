@@ -4,17 +4,25 @@ import { inspect as nodeInspect } from 'util';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
-import type { InspectFn } from '../../core/types/inspect';
+import type { InspectFn } from '../../core/types/builtin';
 import { isOneArray, isString } from '../../core/utils/index';
 
 export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
 
-export function arrayBufferView2Buffer(view: ArrayBufferView): Buffer {
-    if (Buffer.isBuffer(view)) return view;
+export function bufferFrom(
+    value: string | ArrayBufferView | ArrayBufferLike,
+    encoding?: BufferEncoding | undefined,
+): Buffer {
+    if (Buffer.isBuffer(value)) return value;
+    if (typeof value === 'string') return Buffer.from(value, encoding);
     /**
-     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L108
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
      */
-    return Buffer.from(view.buffer, view.byteOffset, view.byteLength);
+    if (ArrayBuffer.isView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
+     */
+    return Buffer.from(value);
 }
 
 export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
@@ -25,7 +33,7 @@ export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>):
     // The `Buffer.concat()` function will always copy the Buffer object.
     // However, if the length of the array is 1, there is no need to copy it.
     return isOneArray(chunkList)
-        ? arrayBufferView2Buffer(chunkList[0])
+        ? bufferFrom(chunkList[0])
         : Buffer.concat(chunkList);
 }
 

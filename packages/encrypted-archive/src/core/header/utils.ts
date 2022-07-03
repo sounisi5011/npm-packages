@@ -1,6 +1,6 @@
 import { decode as varintDecode } from 'varint';
 
-import type { BuiltinInspectRecord } from '../types/inspect';
+import type { BuiltinInspectRecord } from '../types/builtin';
 import type { StreamReaderInterface } from '../utils/stream';
 
 export async function readVarint(

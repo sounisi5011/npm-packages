@@ -146,7 +146,7 @@ export class Nonce {
             );
         }
 
-        const newNonce = Buffer.alloc(nonceByteLength);
+        const newNonce = new Uint8Array(nonceByteLength);
         for (let index = 0; index < FIXED_FIELD_BYTE_LENGTH; index++) {
             newNonce[index] = Number(
                 newFixedFieldData >> BigInt(index * 8) & BigInt(0xFF),

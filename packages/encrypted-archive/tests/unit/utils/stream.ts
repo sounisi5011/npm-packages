@@ -3,7 +3,10 @@ import * as stream from 'stream';
 import { StreamReader } from '../../../src/core/utils/stream';
 import { inspect } from '../../../src/runtimes/node/utils';
 
-const builtin = { inspect };
+const builtin: ConstructorParameters<typeof StreamReader>[0] = {
+    inspect,
+    encodeString: str => Buffer.from(str, 'utf8'),
+};
 
 describe('class StreamReader', () => {
     describe('read() method', () => {

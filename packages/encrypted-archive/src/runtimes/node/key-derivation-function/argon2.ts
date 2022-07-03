@@ -1,7 +1,7 @@
 import { version as nodeVersion } from 'process';
 
 import type { Argon2HashFn } from '../../../core/types/key-derivation-function/argon2.js';
-import { arrayBufferView2Buffer } from '../utils.js';
+import { bufferFrom } from '../utils.js';
 
 const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
 
@@ -23,7 +23,7 @@ export const argon2Hash: Argon2HashFn = (
                     } as const;
                     const password = typeof options.password === 'string'
                         ? options.password
-                        : arrayBufferView2Buffer(options.password);
+                        : bufferFrom(options.password);
                     return await argon2.hash(password, {
                         salt: Buffer.from(options.salt),
                         timeCost: options.iterations,

@@ -1,7 +1,7 @@
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import capitalize from 'capitalize';
 
-import type { BuiltinInspectRecord } from '../types/inspect';
+import type { BuiltinInspectRecord } from '../types/builtin';
 import {
     Argon2Algorithm,
     Argon2HashFn,
@@ -10,7 +10,7 @@ import {
     GetArgon2KDFResult,
     NormalizedArgon2Options,
 } from '../types/key-derivation-function/argon2';
-import { bufferFrom, ifFuncThenExec, isNotUndefined, normalizeOptions, passThroughString } from '../utils';
+import { ifFuncThenExec, isNotUndefined, normalizeOptions, passThroughString } from '../utils';
 import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../utils/type';
 
 export const defaultOptions: NormalizedArgon2Options = {
@@ -185,12 +185,12 @@ function validateBetweenLength<TValue extends number>(
 
 function validateBetweenByteLength(
     optionName: string,
-    value: string | ArrayBufferView,
+    value: ArrayBufferView,
     options: ValidateBetweenLengthOptions<number>,
 ): asserts value {
     validateBetweenLength(
         optionName,
-        typeof value === 'string' ? Buffer.byteLength(value) : value.byteLength,
+        value.byteLength,
         {
             startPrefix: options =>
                 (Object.fromEntries as objectFromEntries)((['min', 'max'] as const).map(mode => [
@@ -263,16 +263,15 @@ const createDeriveKeyFunc = (
             { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
         );
 
-        const passwordBufferOrString = bufferFrom(password);
         validateBetweenByteLength(
             'password',
-            passwordBufferOrString,
+            password,
             { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
         return await builtin.argon2Hash({
             ...options,
-            password: passwordBufferOrString,
+            password,
             salt,
             hashLength: keyLengthBytes,
         })

@@ -3,6 +3,7 @@ import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
+import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { CompressOptions, CreateCompressor } from './types/compress';
 import {
     CryptoAlgorithmData,
@@ -11,13 +12,12 @@ import {
     GetCryptoAlgorithm,
     GetRandomBytesFn,
 } from './types/crypto';
-import type { BuiltinInspectRecord } from './types/inspect';
 import type {
     KDFBuiltinAPIRecord,
     KeyDerivationOptions,
     NormalizedKeyDerivationOptions,
 } from './types/key-derivation-function';
-import { bufferFrom, convertIterableValue } from './utils';
+import { convertIterableValue, uint8arrayConcat, uint8arrayFrom } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
 export interface EncryptOptions {
@@ -26,7 +26,7 @@ export interface EncryptOptions {
     compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
 }
 
-export interface EncryptBuiltinAPIRecord extends BuiltinInspectRecord {
+export interface EncryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
     getRandomBytes: GetRandomBytesFn;
     getCryptoAlgorithm: GetCryptoAlgorithm;
     kdfBuiltin: KDFBuiltinAPIRecord;
@@ -46,7 +46,7 @@ interface KeyResult {
 async function generateKey(
     builtin: { getRandomBytes: GetRandomBytesFn; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     { password, keyLength, keyDerivationOptions }: {
-        password: InputDataType;
+        password: Uint8Array;
         keyLength: number;
         keyDerivationOptions: KeyDerivationOptions | undefined;
     },
@@ -149,10 +149,7 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
     /**
      * Merge header and ciphertext
      */
-    const encryptedData = Buffer.concat([
-        headerData,
-        ciphertext,
-    ]);
+    const encryptedData = uint8arrayConcat(headerData, ciphertext);
     yield encryptedData;
 
     const newState: EncryptorState = {
@@ -176,14 +173,14 @@ export function createEncryptorIterator(
          * Generate key
          */
         const keyResult = await generateKey(builtin, {
-            password,
+            password: uint8arrayFrom(builtin.encodeString, password),
             keyLength: algorithm.keyLength,
             keyDerivationOptions: options.keyDerivation,
         });
 
         const bufferSourceIterable = convertIterableValue(
             source,
-            chunk => bufferFrom(validateChunk(builtin, chunk), 'utf8'),
+            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
         );
 
         /**

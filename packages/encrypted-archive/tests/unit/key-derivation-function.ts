@@ -13,7 +13,7 @@ import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers
 const ARGON2_MIN_OUTLEN = 4;
 
 const builtin = { kdfBuiltin, inspect };
-const password = 'Hoge Fuga';
+const password = Buffer.from('Hoge Fuga');
 
 describe('getKDF()', () => {
     describe('generate key', () => {
@@ -288,7 +288,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF(builtin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
                 const salt = Buffer.alloc(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too short salt was received for Argon2's option "salt"`,
@@ -305,7 +305,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey, saltLength } = getKDF(builtin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too short for Argon2's option "keyLengthBytes"`,
@@ -319,7 +319,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey } = getKDF(builtin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
                 const salt = createDummySizeBuffer(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too long salt was received for Argon2's option "salt"`,
@@ -336,7 +336,7 @@ describe('algorithm: Argon2', () => {
                 const { deriveKey, saltLength } = getKDF(builtin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too long for Argon2's option "keyLengthBytes"`,
@@ -366,7 +366,7 @@ describe('algorithm: Argon2', () => {
                 memory: 2 ** 40 / 2 ** 10,
             });
             const salt = Buffer.alloc(saltLength);
-            await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+            await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                 Error,
                 /^Internal error from Argon2: /,
             );

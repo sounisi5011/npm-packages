@@ -1,4 +1,4 @@
-import type { BuiltinInspectRecord } from '../../types/inspect';
+import type { BuiltinInspectRecord } from '../../types/builtin';
 import { getPropFromValue } from '../../utils';
 import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../utils/type';
 

@@ -1,6 +1,6 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import type { BuiltinInspectRecord } from '../types/inspect';
+import type { BuiltinInspectRecord } from '../types/builtin';
 import type {
     GetKDFResult,
     KDFBuiltinAPIRecord,

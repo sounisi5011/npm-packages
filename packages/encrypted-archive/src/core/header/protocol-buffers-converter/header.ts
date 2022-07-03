@@ -1,6 +1,6 @@
 import { Header } from '../../../protocol-buffers/header_pb';
 import { isArgon2Options } from '../../key-derivation-function/argon2';
-import type { BuiltinInspectRecord } from '../../types/inspect';
+import type { BuiltinInspectRecord } from '../../types/builtin';
 import { cond, getPropFromValue } from '../../utils';
 import { assertType } from '../../utils/type';
 import type { HeaderData } from '../create';

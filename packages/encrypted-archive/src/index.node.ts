@@ -13,14 +13,15 @@ import type {
 import type { CompressOptions } from './core/types/compress';
 import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
-import { bufferFrom, convertIterableValue } from './core/utils';
+import { convertIterableValue } from './core/utils';
 import type { Expand } from './core/utils/type';
 import { getCryptoAlgorithm } from './runtimes/node/cipher';
 import { createCompressor, decompressIterable } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
-import { arrayBufferView2Buffer, asyncIterable2Buffer, inspect } from './runtimes/node/utils';
+import { asyncIterable2Buffer, bufferFrom, inspect } from './runtimes/node/utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
+    encodeString: str => Buffer.from(str, 'utf8'),
     inspect,
     getRandomBytes: async size => randomBytes(size),
     getCryptoAlgorithm,
@@ -50,29 +51,29 @@ export async function decrypt(encryptedData: InputDataType, password: InputDataT
     return await asyncIterable2Buffer(decryptedDataIterable);
 }
 
-function transformSource2buffer<T, U extends BufferEncoding>(
-    source: AsyncIterable<{ chunk: T; encoding: U }>,
-): AsyncIterable<Buffer> {
-    return convertIterableValue(
-        source,
-        ({ chunk, encoding }) => arrayBufferView2Buffer(bufferFrom(validateChunk({ inspect }, chunk), encoding)),
+const createTransformStream = (
+    transformFn: (source: AsyncIterable<InputDataType>) => AsyncIterable<Uint8Array>,
+): stream.Transform =>
+    transformFrom(
+        (source): AsyncIterable<Buffer> => {
+            const inputIterable = convertIterableValue(
+                source,
+                ({ chunk, encoding }) => bufferFrom(validateChunk({ inspect }, chunk), encoding),
+            );
+            const transformedIterable = transformFn(inputIterable);
+            return convertIterableValue(transformedIterable, bufferFrom);
+        },
+        { readableObjectMode: true, writableObjectMode: true },
     );
-}
 
 export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Transform {
     const encryptor = createEncryptorIterator(builtin, password, options);
-    return transformFrom(
-        source => encryptor(transformSource2buffer(source)),
-        { readableObjectMode: true, writableObjectMode: true },
-    );
+    return createTransformStream(encryptor);
 }
 
 export function decryptStream(password: InputDataType): stream.Transform {
     const decryptor = createDecryptorIterator(builtin, password);
-    return transformFrom(
-        source => decryptor(transformSource2buffer(source)),
-        { readableObjectMode: true, writableObjectMode: true },
-    );
+    return createTransformStream(decryptor);
 }
 
 function transformAsyncIterableResult2buffer<T extends unknown[]>(
@@ -80,7 +81,7 @@ function transformAsyncIterableResult2buffer<T extends unknown[]>(
 ) {
     return async function*(...args: T) {
         for await (const result of fn(...args)) {
-            yield arrayBufferView2Buffer(result);
+            yield bufferFrom(result);
         }
     };
 }

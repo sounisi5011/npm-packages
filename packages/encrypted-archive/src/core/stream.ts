@@ -1,5 +1,5 @@
 import { InputDataType, isInputDataType } from './types';
-import type { BuiltinInspectRecord } from './types/inspect';
+import type { BuiltinInspectRecord } from './types/builtin';
 
 export function validateChunk(builtin: BuiltinInspectRecord, chunk: unknown): InputDataType {
     if (!isInputDataType(chunk)) {
