@@ -1,5 +1,6 @@
 import { decode as varintDecode } from 'varint';
 
+import type { BuiltinInspectRecord } from '../types/inspect';
 import type { StreamReaderInterface } from '../utils/stream';
 
 export async function readVarint(
@@ -79,14 +80,15 @@ export function createHeaderDataParser<T>(
     { name, longname, genHeaderData, autoSeek: defaultAutoSeek }: {
         name: string;
         longname: string;
-        genHeaderData: (headerDataBytes: Uint8Array) => T;
+        genHeaderData: (headerDataBytes: Uint8Array, builtin: BuiltinInspectRecord) => T;
         autoSeek?: true | undefined;
     },
 ): (
+    builtin: BuiltinInspectRecord,
     reader: StreamReaderInterface,
     opts: { headerByteLength: number; offset?: number | undefined; autoSeek?: boolean | undefined },
 ) => Promise<{ headerData: T; endOffset: number }> {
-    return async (reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
+    return async (builtin, reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {
         const headerDataBytes = await reader.read(headerByteLength, offset);
         validateDataLength({
             requiredLength: headerByteLength,
@@ -98,7 +100,7 @@ export function createHeaderDataParser<T>(
         const endOffset = offset + headerDataBytes.byteLength;
         if (autoSeek) await reader.seek(endOffset);
 
-        const headerData = genHeaderData(headerDataBytes);
+        const headerData = genHeaderData(headerDataBytes, builtin);
 
         return { headerData, endOffset };
     };

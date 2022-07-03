@@ -1,9 +1,13 @@
 import { once } from 'events';
 import type * as stream from 'stream';
+import { inspect as nodeInspect } from 'util';
 
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
+import type { InspectFn } from '../../core/types/inspect';
 import { isString } from '../../core/utils/index';
+
+export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
 
 function isErrorConstructor(value: unknown): value is ErrorConstructor {
     /**

@@ -11,6 +11,7 @@ import {
     GetCryptoAlgorithm,
     GetRandomBytesFn,
 } from './types/crypto';
+import type { BuiltinInspectRecord } from './types/inspect';
 import type {
     KDFBuiltinAPIRecord,
     KeyDerivationOptions,
@@ -25,7 +26,7 @@ export interface EncryptOptions {
     compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
 }
 
-export interface EncryptBuiltinAPIRecord {
+export interface EncryptBuiltinAPIRecord extends BuiltinInspectRecord {
     getRandomBytes: GetRandomBytesFn;
     getCryptoAlgorithm: GetCryptoAlgorithm;
     kdfBuiltin: KDFBuiltinAPIRecord;
@@ -43,7 +44,7 @@ interface KeyResult {
 }
 
 async function generateKey(
-    builtin: { getRandomBytes: GetRandomBytesFn; kdfBuiltin: KDFBuiltinAPIRecord },
+    builtin: { getRandomBytes: GetRandomBytesFn; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     { password, keyLength, keyDerivationOptions }: {
         password: InputDataType;
         keyLength: number;
@@ -54,7 +55,7 @@ async function generateKey(
         deriveKey,
         saltLength,
         normalizedOptions: normalizedKeyDerivationOptions,
-    } = getKDF(builtin.kdfBuiltin, keyDerivationOptions);
+    } = getKDF(builtin, keyDerivationOptions);
     const salt = await builtin.getRandomBytes(saltLength);
     const key = await deriveKey(password, salt, keyLength);
 
@@ -66,6 +67,7 @@ async function generateKey(
 }
 
 function createHeaderData(
+    builtin: BuiltinInspectRecord,
     { algorithmName, keyResult, nonce, authTag, compressAlgorithmName, ciphertextLength, prevState }: {
         algorithmName: CryptoAlgorithmName;
         keyResult: KeyResult;
@@ -77,7 +79,7 @@ function createHeaderData(
     },
 ): Uint8Array {
     if (!prevState) {
-        return createHeader({
+        return createHeader(builtin, {
             crypto: {
                 algorithmName,
                 nonce,
@@ -94,7 +96,7 @@ function createHeaderData(
     }
 
     const nonceDiff = nonceState.getDiff(prevState.nonce, nonce);
-    return createSimpleHeader({
+    return createSimpleHeader(builtin, {
         crypto: {
             nonceDiff: 'fixedField' in nonceDiff
                 ? { addFixed: nonceDiff.fixedField, resetCounter: nonceDiff.resetInvocationCount }
@@ -105,7 +107,7 @@ function createHeaderData(
     });
 }
 
-async function* encryptChunk(compressedCleartext: Uint8Array, {
+async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext: Uint8Array, {
     algorithm,
     keyResult,
     compressAlgorithmName,
@@ -134,7 +136,7 @@ async function* encryptChunk(compressedCleartext: Uint8Array, {
      * Generate header data
      * The data contained in the header will be used for decryption.
      */
-    const headerData = createHeaderData({
+    const headerData = createHeaderData(builtin, {
         algorithmName: algorithm.algorithmName,
         keyResult,
         nonce,
@@ -181,7 +183,7 @@ export function createEncryptorIterator(
 
         const bufferSourceIterable = convertIterableValue(
             source,
-            chunk => bufferFrom(validateChunk(chunk), 'utf8'),
+            chunk => bufferFrom(validateChunk(builtin, chunk), 'utf8'),
         );
 
         /**
@@ -191,7 +193,7 @@ export function createEncryptorIterator(
 
         let prevState: EncryptorState | undefined;
         for await (const compressedCleartext of compressedSourceIterable) {
-            prevState = yield* encryptChunk(compressedCleartext, {
+            prevState = yield* encryptChunk(builtin, compressedCleartext, {
                 algorithm,
                 keyResult,
                 compressAlgorithmName,

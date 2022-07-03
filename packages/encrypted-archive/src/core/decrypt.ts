@@ -15,12 +15,13 @@ import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { CompressOptions, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
+import type { BuiltinInspectRecord } from './types/inspect';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import { bufferFrom } from './utils';
 import { StreamReader } from './utils/stream';
 import type { AsyncIterableReturn } from './utils/type';
 
-export interface DecryptBuiltinAPIRecord {
+export interface DecryptBuiltinAPIRecord extends BuiltinInspectRecord {
     getCryptoAlgorithm: GetCryptoAlgorithm;
     kdfBuiltin: KDFBuiltinAPIRecord;
     decompressIterable: DecompressIterable;
@@ -34,7 +35,7 @@ interface DecryptorMetadata {
 }
 
 async function getAlgorithmAndKey(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord },
+    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: InputDataType,
     headerData: HeaderData,
 ): Promise<{ algorithm: CryptoAlgorithmData; key: Uint8Array }> {
@@ -46,7 +47,7 @@ async function getAlgorithmAndKey(
     /**
      * Generate key
      */
-    const key = await getKDF(builtin.kdfBuiltin, headerData.key.keyDerivationFunctionOptions)
+    const key = await getKDF(builtin, headerData.key.keyDerivationFunctionOptions)
         .deriveKey(
             password,
             headerData.key.salt,
@@ -75,7 +76,7 @@ function createNonceFromDiff(
 }
 
 async function parseHeader(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord },
+    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: InputDataType,
     reader: StreamReader,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
@@ -90,7 +91,7 @@ async function parseHeader(
          * Parse header
          */
         const { dataByteLength: headerByteLength } = await parseHeaderLength(reader);
-        const { headerData } = await parseHeaderData(reader, { headerByteLength });
+        const { headerData } = await parseHeaderData(builtin, reader, { headerByteLength });
 
         /**
          * Read algorithm and generate key
@@ -111,7 +112,7 @@ async function parseHeader(
          * Parse simple header
          */
         const { dataByteLength: headerByteLength } = await parseSimpleHeaderLength(reader);
-        const { headerData } = await parseSimpleHeaderData(reader, { headerByteLength });
+        const { headerData } = await parseSimpleHeaderData(builtin, reader, { headerByteLength });
         const nonce = createNonceFromDiff(headerData.crypto.nonceDiff, prevDecryptorMetadata.nonce);
         return {
             headerData,
@@ -121,7 +122,7 @@ async function parseHeader(
 }
 
 async function decryptChunk(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord },
+    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: InputDataType,
     reader: StreamReader,
     prevDecryptorMetadata?: DecryptorMetadata,
@@ -163,7 +164,7 @@ async function decryptChunk(
 
 export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, password: InputDataType): IteratorConverter {
     return async function* decryptor(source) {
-        const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
+        const reader = new StreamReader(builtin, source, chunk => bufferFrom(validateChunk(builtin, chunk), 'utf8'));
 
         const {
             compressedCleartextIterable: firstChunkCompressedCleartextIterable,

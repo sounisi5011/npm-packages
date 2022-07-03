@@ -1,4 +1,5 @@
 import { Argon2Options } from '../../../protocol-buffers/header_pb';
+import type { BuiltinInspectRecord } from '../../types/inspect';
 import type { NormalizedArgon2Options } from '../../types/key-derivation-function/argon2';
 import { createEnum2value, validateNumberField } from './utils';
 
@@ -12,17 +13,24 @@ const {
     [Argon2Options.Argon2Type.ARGON2ID, 'argon2id'],
 ]);
 
-export function createProtobufArgon2Options(options: NormalizedArgon2Options): Argon2Options {
+export function createProtobufArgon2Options(
+    builtin: BuiltinInspectRecord,
+    options: NormalizedArgon2Options,
+): Argon2Options {
     return new Argon2Options()
-        .setType(algorithm2Argon2Type(options.algorithm))
+        .setType(algorithm2Argon2Type(builtin, options.algorithm))
         .setTimeIterations(options.iterations)
         .setMemoryKib(options.memory)
         .setParallelism(options.parallelism);
 }
 
-export function parseProtobufArgon2Options(argon2Options: Argon2Options): NormalizedArgon2Options {
+export function parseProtobufArgon2Options(
+    builtin: BuiltinInspectRecord,
+    argon2Options: Argon2Options,
+): NormalizedArgon2Options {
     return {
         algorithm: argon2Type2algorithm(
+            builtin,
             argon2Options.getType(),
             true,
             { fieldName: 'type', dataName },

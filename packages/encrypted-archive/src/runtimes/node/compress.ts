@@ -1,10 +1,10 @@
 import type * as stream from 'stream';
 
 import type { CreateCompressor, DecompressIterable } from '../../core/types/compress';
-import { printObject } from '../../core/utils';
+import { passThroughString } from '../../core/utils';
 import * as brotli from './compress/brotli';
 import * as gzip from './compress/gzip';
-import { fixNodePrimordialsErrorStackTrace, writeFromIterableToStream } from './utils';
+import { fixNodePrimordialsErrorStackTrace, inspect, writeFromIterableToStream } from './utils';
 
 interface CompressorTableEntry {
     createCompress: (options: never) => () => stream.Transform;
@@ -24,7 +24,7 @@ export const createCompressor: CreateCompressor = options => {
     const entry = compressorTable[algorithm];
     if (!entry) {
         throw new TypeError(
-            `Unknown compress algorithm was received: ${printObject(algorithm, { passThroughString: true })}`,
+            `Unknown compress algorithm was received: ${passThroughString(inspect, algorithm)}`,
         );
     }
 
@@ -47,7 +47,7 @@ export const decompressIterable: DecompressIterable = async function*(algorithmN
     const entry = compressorTable[algorithmName];
     if (!entry) {
         throw new TypeError(
-            `Unknown compress algorithm was received: ${printObject(algorithmName, { passThroughString: true })}`,
+            `Unknown compress algorithm was received: ${passThroughString(inspect, algorithmName)}`,
         );
     }
 

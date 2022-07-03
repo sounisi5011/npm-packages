@@ -1,12 +1,15 @@
 import * as stream from 'stream';
 
 import { StreamReader } from '../../../src/core/utils/stream';
+import { inspect } from '../../../src/runtimes/node/utils';
+
+const builtin = { inspect };
 
 describe('class StreamReader', () => {
     describe('read() method', () => {
         it('empty stream', async () => {
             const targetStream = stream.Readable.from([]);
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
             await expect(reader.read(1)).resolves
                 .toBytesEqual(Buffer.from([]));
         });
@@ -26,7 +29,7 @@ describe('class StreamReader', () => {
                 [{ size: 4, offset: 999 }, []],
             ])('%p', async (input, expected) => {
                 const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                const reader = new StreamReader(targetStream);
+                const reader = new StreamReader(builtin, targetStream);
 
                 const expectedBuffer = Buffer.from(expected);
                 if (input.offset === undefined) {
@@ -50,7 +53,7 @@ describe('class StreamReader', () => {
                 .on('data', () => {
                     readCount++;
                 });
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
 
             expect(readCount).toBe(0);
 
@@ -102,7 +105,7 @@ describe('class StreamReader', () => {
                 3,
             ])('offset=%p', async offset => {
                 const targetStream = stream.Readable.from([]);
-                const reader = new StreamReader(targetStream);
+                const reader = new StreamReader(builtin, targetStream);
 
                 const entryList: ReadEntry[] = [];
                 // eslint-disable-next-line jest/no-if
@@ -130,7 +133,7 @@ describe('class StreamReader', () => {
             const targetStream = stream.Readable.from((function*() {
                 yield Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
             })());
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -203,7 +206,7 @@ describe('class StreamReader', () => {
                 yield Buffer.alloc(0);
                 yield Buffer.from([9]);
             })());
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -305,7 +308,7 @@ describe('class StreamReader', () => {
                     ['over seek', 999, []],
                 ])('%s', async (_, offset, expected) => {
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new StreamReader(targetStream);
+                    const reader = new StreamReader(builtin, targetStream);
 
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
@@ -320,7 +323,7 @@ describe('class StreamReader', () => {
                     ['over seek', 999, []],
                 ])('%s', async (_, offset, expected) => {
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new StreamReader(targetStream);
+                    const reader = new StreamReader(builtin, targetStream);
 
                     await expect(reader.read(3, 0)).resolves
                         .toBytesEqual(Buffer.from([9, 8, 7]));
@@ -334,13 +337,13 @@ describe('class StreamReader', () => {
     describe('isEnd() method', () => {
         it('empty stream', async () => {
             const targetStream = stream.Readable.from([]);
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
 
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
         it('non empty stream', async () => {
             const targetStream = stream.Readable.from([Buffer.alloc(1)]);
-            const reader = new StreamReader(targetStream);
+            const reader = new StreamReader(builtin, targetStream);
 
             await expect(reader.isEnd()).resolves.toBeFalse();
 

@@ -29,7 +29,8 @@ export const parseSimpleHeaderLength = parseDataLength({ name: 'simple header', 
 export const parseHeaderData = createHeaderDataParser({
     name: 'header',
     longname: 'header data',
-    genHeaderData: headerDataBytes => parseProtobufHeader(Header.deserializeBinary(headerDataBytes)),
+    genHeaderData: (headerDataBytes, builtin) =>
+        parseProtobufHeader(builtin, Header.deserializeBinary(headerDataBytes)),
     autoSeek: true,
 });
 

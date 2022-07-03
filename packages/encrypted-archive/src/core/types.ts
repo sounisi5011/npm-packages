@@ -1,16 +1,15 @@
-import { types } from 'util';
-
+import { isInstance, isOrType, isString } from './utils';
 import type { AsyncIterableIteratorReturn } from './utils/type';
 
-export type InputDataType = string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike;
+export type InputDataType = string | Buffer | ArrayBufferView | ArrayBufferLike;
 
 export type IteratorConverter = (
     source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
 ) => AsyncIterableIteratorReturn<Uint8Array, void>;
 
-export function isInputDataType(value: unknown): value is InputDataType {
-    return typeof value === 'string'
-        || Buffer.isBuffer(value)
-        || types.isArrayBufferView(value)
-        || types.isAnyArrayBuffer(value);
-}
+export const isInputDataType = isOrType(
+    isString,
+    ArrayBuffer.isView,
+    isInstance(ArrayBuffer),
+    isInstance(SharedArrayBuffer),
+);

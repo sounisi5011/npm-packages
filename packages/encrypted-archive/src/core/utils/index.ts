@@ -1,5 +1,3 @@
-import { inspect, types } from 'util';
-
 import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './type';
 
 export function isString(value: unknown): value is string {
@@ -12,6 +10,22 @@ function isFunction(value: unknown): value is () => void {
 
 export function isNotUndefined<T>(value: T): value is Exclude<T, undefined> {
     return value !== undefined;
+}
+
+export function isInstance<T extends abstract new (...args: never) => unknown>(instance: T) {
+    return (value: unknown): value is InstanceType<T> => value instanceof instance;
+}
+
+const isNever = (_: unknown): _ is never => false;
+
+export function isOrType<T1, T2, T3 = never, T4 = never>(
+    typeGuard1: (value: unknown) => value is T1,
+    typeGuard2: (value: unknown) => value is T2,
+    typeGuard3: (value: unknown) => value is T3 = isNever,
+    typeGuard4: (value: unknown) => value is T4 = isNever,
+) {
+    return (value: unknown): value is T1 | T2 | T3 | T4 =>
+        typeGuard1(value) || typeGuard2(value) || typeGuard3(value) || typeGuard4(value);
 }
 
 function isOneArray<T>(value: T[]): value is [T];
@@ -77,14 +91,14 @@ export function normalizeOptions<T extends object>(
     );
 }
 
-export function bufferFrom(value: Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer;
-export function bufferFrom(value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike): Buffer | string;
+export function bufferFrom(value: Buffer | ArrayBufferView | ArrayBufferLike): Buffer;
+export function bufferFrom(value: string | Buffer | ArrayBufferView | ArrayBufferLike): Buffer | string;
 export function bufferFrom(
-    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
+    value: string | Buffer | ArrayBufferView | ArrayBufferLike,
     encoding: BufferEncoding,
 ): Buffer;
 export function bufferFrom(
-    value: string | Buffer | NodeJS.ArrayBufferView | ArrayBufferLike,
+    value: string | Buffer | ArrayBufferView | ArrayBufferLike,
     encoding?: BufferEncoding,
 ): Buffer | string {
     if (Buffer.isBuffer(value)) return value;
@@ -96,7 +110,7 @@ export function bufferFrom(
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L106-L109
      */
-    if (types.isArrayBufferView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    if (ArrayBuffer.isView(value)) return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
     /**
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
      */
@@ -137,8 +151,8 @@ export function number2hex(template: TemplateStringsArray, ...substitutions: num
         .join('');
 }
 
-export function printObject(value: unknown, opts?: { passThroughString?: boolean | undefined }): string {
-    return (opts?.passThroughString && typeof value === 'string') ? value : inspect(value, { breakLength: Infinity });
+export function passThroughString<T, U>(fn: (value: T) => U, value: T): string | U {
+    return typeof value === 'string' ? value : fn(value);
 }
 
 interface CondResult<TArg, TPrevResult> {

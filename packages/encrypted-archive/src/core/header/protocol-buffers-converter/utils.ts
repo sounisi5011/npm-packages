@@ -1,4 +1,5 @@
-import { getPropFromValue, printObject } from '../../utils';
+import type { BuiltinInspectRecord } from '../../types/inspect';
+import { getPropFromValue } from '../../utils';
 import type { Cond2, Nullable, OneOrMoreReadonlyArray } from '../../utils/type';
 
 function reportNonDefinedField(opts: { fieldName: string; dataName: string }): never {
@@ -42,13 +43,14 @@ export function validateNumberFieldInRange<T extends number | bigint>(
 }
 
 export function validateNumberOptionInRange<T extends number | bigint>(
+    builtin: BuiltinInspectRecord,
     value: T,
     { min, max }: Record<'min' | 'max', number | bigint>,
     opts: { paramName: string },
 ): T {
     const errorMessage = `The value of "${opts.paramName}" is out of range.`
         + ` It must be >= ${min} and <= ${max}.`
-        + ` Received ${printObject(value)}`;
+        + ` Received ${builtin.inspect(value)}`;
     if (value < min || max < value) throw new RangeError(errorMessage);
     return value;
 }
@@ -78,11 +80,12 @@ export function createEnum2value<TValue>(): (
                 }>,
         ) => {
             enum2value: (
+                builtin: BuiltinInspectRecord,
                 enumItem: Nullable<TEnum2>,
                 exists: boolean,
                 opts: { fieldName: string; dataName: string },
             ) => TValue2;
-            value2enum: (value: TValue2) => TEnum2;
+            value2enum: (builtin: BuiltinInspectRecord, value: TValue2) => TEnum2;
         }
     )
 ) {
@@ -95,7 +98,7 @@ export function createEnum2value<TValue>(): (
             const isEnumType = enum2valueMap.has.bind(enum2valueMap) as (value: unknown) => value is TEnum2;
 
             return {
-                enum2value: (enumItem, exists, { fieldName, dataName }) => {
+                enum2value: (builtin, enumItem, exists, { fieldName, dataName }) => {
                     if (!exists || (!isEnumType(enumItem) && (enumItem === undefined || enumItem === null))) {
                         reportNonDefinedField({ fieldName, dataName });
                     }
@@ -103,13 +106,13 @@ export function createEnum2value<TValue>(): (
                     if (value) return value.data;
                     throw new Error(
                         `The value in the ${fieldName} field in the ${dataName} is unknown.`
-                            + ` Received: ${getPropFromValue(enumRecord, enumItem) ?? printObject(enumItem)}`,
+                            + ` Received: ${getPropFromValue(enumRecord, enumItem) ?? builtin.inspect(enumItem)}`,
                     );
                 },
-                value2enum: value => {
+                value2enum: (builtin, value) => {
                     const enumItem = value2enumMap.get(value);
                     if (enumItem) return enumItem.data;
-                    throw new Error(`Unknown Argon2 algorithm received: ${printObject(value)}`);
+                    throw new Error(`Unknown Argon2 algorithm received: ${builtin.inspect(value)}`);
                 },
             };
         };

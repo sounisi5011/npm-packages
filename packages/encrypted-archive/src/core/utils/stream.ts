@@ -1,6 +1,6 @@
 import BufferListStream from 'bl';
 
-import { printObject } from '.';
+import type { BuiltinInspectRecord } from '../types/inspect';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
 export interface StreamReaderInterface<T extends Buffer | Uint8Array = Buffer | Uint8Array> {
@@ -18,6 +18,7 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
     private readonly bufferList = new BufferListStream();
 
     constructor(
+        builtin: BuiltinInspectRecord,
         private readonly source: Iterable<unknown> | AsyncIterable<unknown>,
         private readonly convertChunk = (chunk: unknown): Buffer => {
             if (Buffer.isBuffer(chunk)) return chunk;
@@ -25,7 +26,7 @@ export class StreamReader implements StreamReaderInterface<Buffer> {
             throw new TypeError(
                 `Invalid type chunk received.`
                     + ` Each chunk must be of type string or an instance of Buffer or Uint8Array.`
-                    + ` Received: ${printObject(chunk)}`,
+                    + ` Received: ${builtin.inspect(chunk)}`,
             );
         },
     ) {

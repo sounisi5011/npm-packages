@@ -1,6 +1,7 @@
 import { Header } from '../../../protocol-buffers/header_pb';
 import { isArgon2Options } from '../../key-derivation-function/argon2';
-import { cond, getPropFromValue, printObject } from '../../utils';
+import type { BuiltinInspectRecord } from '../../types/inspect';
+import { cond, getPropFromValue } from '../../utils';
 import { assertType } from '../../utils/type';
 import type { HeaderData } from '../create';
 import { createProtobufArgon2Options, parseProtobufArgon2Options } from './argon2Options';
@@ -17,6 +18,7 @@ const {
 ]);
 
 function getKeyDerivationOptions(
+    builtin: BuiltinInspectRecord,
     header: Header,
     opts: { oneofFieldName: string; dataName: string },
 ): HeaderData['key']['keyDerivationFunctionOptions'] {
@@ -26,7 +28,7 @@ function getKeyDerivationOptions(
         if (!keyOptions) {
             throw new Error(`Could not read Argon2Options data from argon2_key_options field in ${opts.dataName}`);
         }
-        return parseProtobufArgon2Options(keyOptions);
+        return parseProtobufArgon2Options(builtin, keyOptions);
     }
     if (type === Header.KeyOptionsCase.KEY_OPTIONS_NOT_SET) {
         throw new Error(`There is no entry in the ${opts.oneofFieldName} oneof field in ${opts.dataName}`);
@@ -35,15 +37,19 @@ function getKeyDerivationOptions(
     assertType<never>(type);
     throw new Error(
         `Unknown type received from ${opts.oneofFieldName} oneof field in ${opts.dataName}.`
-            + ` Received: ${getPropFromValue(Header.KeyOptionsCase, type) ?? printObject(type)}`,
+            + ` Received: ${getPropFromValue(Header.KeyOptionsCase, type) ?? builtin.inspect(type)}`,
     );
 }
 
-const setKeyDerivationOptions = (header: Header, options: HeaderData['key']['keyDerivationFunctionOptions']): Header =>
+const setKeyDerivationOptions = (
+    builtin: BuiltinInspectRecord,
+    header: Header,
+    options: HeaderData['key']['keyDerivationFunctionOptions'],
+): Header =>
     cond(options)
-        .case(isArgon2Options, options => header.setArgon2KeyOptions(createProtobufArgon2Options(options)))
+        .case(isArgon2Options, options => header.setArgon2KeyOptions(createProtobufArgon2Options(builtin, options)))
         .default((options: never) => {
-            throw new Error(`Unknown keyDerivationOptions received: ${printObject(options)}`);
+            throw new Error(`Unknown keyDerivationOptions received: ${builtin.inspect(options)}`);
         });
 
 const {
@@ -55,15 +61,16 @@ const {
     [Header.CompressAlgorithm.BROTLI, 'brotli'],
 ]);
 
-export function createProtobufHeader(data: HeaderData): Header {
+export function createProtobufHeader(builtin: BuiltinInspectRecord, data: HeaderData): Header {
     return setKeyDerivationOptions(
+        builtin,
         new Header()
-            .setCryptoAlgorithm(algorithmName2cryptoAlgorithm(data.crypto.algorithmName))
+            .setCryptoAlgorithm(algorithmName2cryptoAlgorithm(builtin, data.crypto.algorithmName))
             .setCryptoNonce(data.crypto.nonce)
             .setCryptoAuthTag(data.crypto.authTag)
             .setKeyLength(data.key.length)
             .setKeySalt(data.key.salt)
-            .setCompressAlgorithm(compressAlgorithmName2CompressAlgorithm(data.compressAlgorithmName)),
+            .setCompressAlgorithm(compressAlgorithmName2CompressAlgorithm(builtin, data.compressAlgorithmName)),
         data.key.keyDerivationFunctionOptions,
     );
 }
@@ -71,10 +78,11 @@ export function createProtobufHeader(data: HeaderData): Header {
 const validateBytesFromProtobuf = (fieldName: string, value: Uint8Array): Uint8Array =>
     validateBytesField(value, true, { fieldName, dataName });
 
-export function parseProtobufHeader(header: Header): HeaderData {
+export function parseProtobufHeader(builtin: BuiltinInspectRecord, header: Header): HeaderData {
     return {
         crypto: {
             algorithmName: cryptoAlgorithm2algorithmName(
+                builtin,
                 header.getCryptoAlgorithm(),
                 true,
                 { fieldName: 'crypto_algorithm', dataName },
@@ -85,9 +93,13 @@ export function parseProtobufHeader(header: Header): HeaderData {
         key: {
             length: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
             salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
-            keyDerivationFunctionOptions: getKeyDerivationOptions(header, { oneofFieldName: 'key_options', dataName }),
+            keyDerivationFunctionOptions: getKeyDerivationOptions(builtin, header, {
+                oneofFieldName: 'key_options',
+                dataName,
+            }),
         },
         compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
+            builtin,
             header.getCompressAlgorithm(),
             true,
             { fieldName: 'compress_algorithm', dataName },

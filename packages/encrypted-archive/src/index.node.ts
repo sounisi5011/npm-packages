@@ -14,8 +14,10 @@ import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './core/u
 import { getCryptoAlgorithm } from './runtimes/node/cipher';
 import { createCompressor, decompressIterable } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
+import { inspect } from './runtimes/node/utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
+    inspect,
     getRandomBytes: async size => randomBytes(size),
     getCryptoAlgorithm,
     kdfBuiltin,
@@ -46,7 +48,7 @@ function transformSource2buffer<T, U extends BufferEncoding>(
 ): AsyncIterable<Buffer> {
     return convertIterableValue(
         source,
-        ({ chunk, encoding }) => bufferFrom(validateChunk(chunk), encoding),
+        ({ chunk, encoding }) => bufferFrom(validateChunk({ inspect }, chunk), encoding),
     );
 }
 
