@@ -34,7 +34,7 @@ export interface EncryptBuiltinAPIRecord extends BuiltinInspectRecord {
 }
 
 interface EncryptorState {
-    nonce: Uint8Array | Buffer;
+    nonce: Uint8Array;
 }
 
 interface KeyResult {
@@ -117,7 +117,7 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
     keyResult: KeyResult;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
     prevState: EncryptorState | undefined;
-}): AsyncIterableReturn<Buffer, EncryptorState> {
+}): AsyncIterableReturn<Uint8Array, EncryptorState> {
     /**
      * Generate nonce (also known as an IV / Initialization Vector)
      */

@@ -5,7 +5,7 @@ export function validateChunk(builtin: BuiltinInspectRecord, chunk: unknown): In
     if (!isInputDataType(chunk)) {
         throw new TypeError(
             `Invalid type chunk received.`
-                + ` Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer.`
+                + ` Each chunk must be of type string or an instance of TypedArray, DataView, or ArrayBuffer.`
                 + ` Received ${builtin.inspect(chunk)}`,
         );
     }

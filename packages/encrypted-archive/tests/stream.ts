@@ -6,7 +6,7 @@ import { decryptStream, encrypt, encryptStream } from '../src/index.node.js';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
-    /^Invalid type chunk received\. Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer\. Received\b/;
+    /^Invalid type chunk received\. Each chunk must be of type string or an instance of TypedArray, DataView, or ArrayBuffer\. Received\b/;
 
 describe('encryptStream()', () => {
     it.each<[string, number]>([

@@ -9,6 +9,32 @@ import { isString } from '../../core/utils/index';
 
 export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
 
+export function arrayBufferView2Buffer(view: ArrayBufferView): Buffer {
+    if (Buffer.isBuffer(view)) return view;
+    /**
+     * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L108
+     */
+    return Buffer.from(view.buffer, view.byteOffset, view.byteLength);
+}
+
+function isOneArray<T>(value: T[]): value is [T];
+function isOneArray<T>(value: readonly T[]): value is readonly [T];
+function isOneArray<T>(value: readonly T[]): value is readonly [T] {
+    return value.length === 1;
+}
+
+export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
+    const chunkList: Uint8Array[] = [];
+    for await (const chunk of iterable) {
+        chunkList.push(chunk);
+    }
+    // The `Buffer.concat()` function will always copy the Buffer object.
+    // However, if the length of the array is 1, there is no need to copy it.
+    return isOneArray(chunkList)
+        ? arrayBufferView2Buffer(chunkList[0])
+        : Buffer.concat(chunkList);
+}
+
 function isErrorConstructor(value: unknown): value is ErrorConstructor {
     /**
      * @see https://stackoverflow.com/a/14486171/4907315

@@ -10,6 +10,8 @@ export type RequiredExcludeUndefined<T> = {
     [P in keyof T]-?: Exclude<T[P], undefined>;
 };
 
+export type Expand<T> = T extends infer U ? U : never;
+
 /**
  * The built-in `AsyncIterable` type does not have the `TReturn` and `TNext` arguments.
  * This type fixes that problem and makes it easier to use with function return types.

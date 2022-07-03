@@ -13,7 +13,7 @@ export interface Argon2Options extends BaseKeyDerivationOptions {
 export type NormalizedArgon2Options = RequiredExcludeUndefined<Argon2Options>;
 
 interface Argon2HashOptions extends NormalizedArgon2Options {
-    password: string | Buffer;
+    password: string | Uint8Array;
     salt: Uint8Array;
     hashLength: number;
 }

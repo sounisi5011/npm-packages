@@ -30,7 +30,7 @@ export interface DecryptBuiltinAPIRecord extends BuiltinInspectRecord {
 interface DecryptorMetadata {
     algorithm: CryptoAlgorithmData;
     key: Uint8Array;
-    nonce: Uint8Array | Buffer;
+    nonce: Uint8Array;
     compressAlgorithmName: CompressOptions['algorithm'] | undefined;
 }
 
@@ -59,8 +59,8 @@ async function getAlgorithmAndKey(
 
 function createNonceFromDiff(
     nonceDiff: SimpleHeaderData['crypto']['nonceDiff'],
-    prevNonce: Buffer | Uint8Array,
-): Buffer | Uint8Array {
+    prevNonce: Uint8Array,
+): Uint8Array {
     if ('addFixed' in nonceDiff) {
         return nonceState.createFromFixedFieldDiff(
             prevNonce,

@@ -314,7 +314,7 @@ describe('parseHeaderData()', () => {
         const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
 
         type Opts = Omit<Parameters<typeof parseHeaderData>[2], 'headerByteLength'>;
-        it.each<[string, Opts, Buffer]>([
+        it.each<[string, Opts, Uint8Array]>([
             [
                 'offset=undefined',
                 {},
@@ -645,7 +645,7 @@ describe('parseSimpleHeaderData()', () => {
             const headerDataStartOffset = varint.decode.bytes;
 
             type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[2], 'headerByteLength'>;
-            it.each<[string, Opts, Buffer]>([
+            it.each<[string, Opts, Uint8Array]>([
                 [
                     'offset=undefined',
                     {},

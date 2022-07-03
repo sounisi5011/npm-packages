@@ -28,12 +28,6 @@ export function isOrType<T1, T2, T3 = never, T4 = never>(
         typeGuard1(value) || typeGuard2(value) || typeGuard3(value) || typeGuard4(value);
 }
 
-function isOneArray<T>(value: T[]): value is [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T];
-function isOneArray<T>(value: readonly T[]): value is readonly [T] {
-    return value.length === 1;
-}
-
 export function ifFuncThenExec<TArgs extends unknown[], TResult, TOther>(
     value: ((...args: TArgs) => TResult) | TOther,
     ...args: TArgs
@@ -91,17 +85,13 @@ export function normalizeOptions<T extends object>(
     );
 }
 
-export function bufferFrom(value: Buffer | ArrayBufferView | ArrayBufferLike): Buffer;
-export function bufferFrom(value: string | Buffer | ArrayBufferView | ArrayBufferLike): Buffer | string;
+export function bufferFrom(value: ArrayBufferView | ArrayBufferLike): Uint8Array;
+export function bufferFrom(value: string | ArrayBufferView | ArrayBufferLike): Uint8Array | string;
+export function bufferFrom(value: string | ArrayBufferView | ArrayBufferLike, encoding: BufferEncoding): Uint8Array;
 export function bufferFrom(
-    value: string | Buffer | ArrayBufferView | ArrayBufferLike,
-    encoding: BufferEncoding,
-): Buffer;
-export function bufferFrom(
-    value: string | Buffer | ArrayBufferView | ArrayBufferLike,
+    value: string | ArrayBufferView | ArrayBufferLike,
     encoding?: BufferEncoding,
-): Buffer | string {
-    if (Buffer.isBuffer(value)) return value;
+): Uint8Array | string {
     if (typeof value === 'string') {
         return encoding !== undefined
             ? Buffer.from(value, encoding)
@@ -115,18 +105,6 @@ export function bufferFrom(
      * @see https://github.com/nodejs/node/blob/v12.22.1/lib/zlib.js#L109-L111
      */
     return Buffer.from(value);
-}
-
-export async function asyncIterable2Buffer(iterable: AsyncIterable<Uint8Array>): Promise<Buffer> {
-    const chunkList: Uint8Array[] = [];
-    for await (const chunk of iterable) {
-        chunkList.push(chunk);
-    }
-    // The `Buffer.concat()` function will always copy the Buffer object.
-    // However, if the length of the array is 1, there is no need to copy it.
-    return isOneArray(chunkList)
-        ? Buffer.from(chunkList[0].buffer, chunkList[0].byteOffset, chunkList[0].byteLength)
-        : Buffer.concat(chunkList);
 }
 
 export async function* convertIterableValue<T, U>(

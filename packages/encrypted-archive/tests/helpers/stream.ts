@@ -61,10 +61,10 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): s
     })());
 }
 
-export class DummyStreamReader implements StreamReaderInterface<Buffer> {
-    constructor(private data: Buffer) {}
+export class DummyStreamReader implements StreamReaderInterface<Uint8Array> {
+    constructor(private data: Uint8Array) {}
 
-    async read(size: number, offset = 0): Promise<Buffer> {
+    async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
         return this.data.subarray(offset, needByteLength);
     }
@@ -73,7 +73,7 @@ export class DummyStreamReader implements StreamReaderInterface<Buffer> {
         size: number,
         offset = 0,
     ): AsyncIterableIteratorReturn<
-        { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
+        { data?: Uint8Array; requestedSize: number; offset: number; readedSize: number },
         void
     > {
         const data = await this.read(size, offset);

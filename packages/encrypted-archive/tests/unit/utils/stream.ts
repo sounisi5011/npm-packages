@@ -92,7 +92,7 @@ describe('class StreamReader', () => {
     });
     describe('readIterator() method', () => {
         interface ReadEntry {
-            data?: Buffer | undefined;
+            data?: Uint8Array | undefined;
             requestedSize: number;
             offset: number;
             readedSize: number;

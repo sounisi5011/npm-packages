@@ -43,7 +43,7 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
-export async function* parseCiphertextIterable<T extends Buffer | Uint8Array>(
+export async function* parseCiphertextIterable<T extends Uint8Array>(
     reader: StreamReaderInterface<T>,
     { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number | undefined },
 ): AsyncIterableReturn<T, void> {

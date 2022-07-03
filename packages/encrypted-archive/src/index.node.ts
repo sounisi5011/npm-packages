@@ -6,15 +6,19 @@ import { transformFrom } from '@sounisi5011/stream-transform-from';
 import { createDecryptorIterator, DecryptBuiltinAPIRecord } from './core/decrypt';
 import { createEncryptorIterator, EncryptBuiltinAPIRecord, EncryptOptions } from './core/encrypt';
 import { validateChunk } from './core/stream';
-import type { InputDataType, IteratorConverter } from './core/types';
+import type {
+    InputDataType as InternalInputDataType,
+    IteratorConverter as InternalIteratorConverter,
+} from './core/types';
 import type { CompressOptions } from './core/types/compress';
 import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
-import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './core/utils';
+import { bufferFrom, convertIterableValue } from './core/utils';
+import type { Expand } from './core/utils/type';
 import { getCryptoAlgorithm } from './runtimes/node/cipher';
 import { createCompressor, decompressIterable } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
-import { inspect } from './runtimes/node/utils';
+import { arrayBufferView2Buffer, asyncIterable2Buffer, inspect } from './runtimes/node/utils';
 
 const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     inspect,
@@ -24,6 +28,9 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     createCompressor,
     decompressIterable,
 };
+
+type InputDataType = Expand<Buffer | InternalInputDataType>;
+type IteratorConverter = InternalIteratorConverter<InputDataType, Buffer>;
 
 export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
 
@@ -48,7 +55,7 @@ function transformSource2buffer<T, U extends BufferEncoding>(
 ): AsyncIterable<Buffer> {
     return convertIterableValue(
         source,
-        ({ chunk, encoding }) => bufferFrom(validateChunk({ inspect }, chunk), encoding),
+        ({ chunk, encoding }) => arrayBufferView2Buffer(bufferFrom(validateChunk({ inspect }, chunk), encoding)),
     );
 }
 
@@ -68,10 +75,20 @@ export function decryptStream(password: InputDataType): stream.Transform {
     );
 }
 
+function transformAsyncIterableResult2buffer<T extends unknown[]>(
+    fn: (...args: T) => AsyncIterableIterator<ArrayBufferView>,
+) {
+    return async function*(...args: T) {
+        for await (const result of fn(...args)) {
+            yield arrayBufferView2Buffer(result);
+        }
+    };
+}
+
 export function encryptIterator(password: InputDataType, options: EncryptOptions = {}): IteratorConverter {
-    return createEncryptorIterator(builtin, password, options);
+    return transformAsyncIterableResult2buffer(createEncryptorIterator(builtin, password, options));
 }
 
 export function decryptIterator(password: InputDataType): IteratorConverter {
-    return createDecryptorIterator(builtin, password);
+    return transformAsyncIterableResult2buffer(createDecryptorIterator(builtin, password));
 }

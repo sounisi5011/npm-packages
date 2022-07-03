@@ -23,7 +23,7 @@ export class Nonce {
         this.invocationCount = BigInt(0);
     }
 
-    create(byteLength: number): Buffer {
+    create(byteLength: number): Uint8Array {
         this.validateLength({ byteLength }, MIN_CREATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         return this.createNonceBytes({
             nonceByteLength: byteLength,
@@ -32,7 +32,7 @@ export class Nonce {
         });
     }
 
-    createFromInvocationCountDiff(prevNonce: Buffer | Uint8Array, addInvocationCount: bigint): Buffer {
+    createFromInvocationCountDiff(prevNonce: Uint8Array, addInvocationCount: bigint): Uint8Array {
         this.validateLength({ prevNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         this.validateMore({ addInvocationCount }, 1);
 
@@ -45,10 +45,10 @@ export class Nonce {
     }
 
     createFromFixedFieldDiff(
-        prevNonce: Buffer | Uint8Array,
+        prevNonce: Uint8Array,
         addFixedField: bigint,
         resetInvocationCount: bigint,
-    ): Buffer {
+    ): Uint8Array {
         this.validateLength({ prevNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
         this.validateMore({ addFixedField }, 1);
         this.validateMore({ resetInvocationCount }, 0);
@@ -62,8 +62,8 @@ export class Nonce {
     }
 
     getDiff(
-        prevNonce: Buffer | Uint8Array,
-        currentNonce: Buffer | Uint8Array,
+        prevNonce: Uint8Array,
+        currentNonce: Uint8Array,
     ): { invocationCount: bigint } | { fixedField: bigint; resetInvocationCount: bigint } {
         this.validateLength({ prevNonce, currentNonce }, MIN_UPDATE_BYTE_LENGTH, MAX_BYTE_LENGTH);
 
@@ -97,7 +97,7 @@ export class Nonce {
     }
 
     private validateLength(
-        valueRecord: Record<string, number | Uint8Array | Buffer>,
+        valueRecord: Record<string, number | Uint8Array>,
         minLength: number,
         maxLength: number,
     ): void {
@@ -108,7 +108,7 @@ export class Nonce {
 
     private validateOneArgLength(
         argName: string,
-        value: number | Uint8Array | Buffer,
+        value: number | Uint8Array,
         minLength: number,
         maxLength: number,
     ): void {
@@ -132,7 +132,7 @@ export class Nonce {
             fixedFieldData: bigint;
             invocationCount: bigint;
         },
-    ): Buffer {
+    ): Uint8Array {
         const invocationFieldByteLength = nonceByteLength - FIXED_FIELD_BYTE_LENGTH;
         const newInvocationCount = invocationCount & (BigInt(2) ** BigInt(invocationFieldByteLength * 8) - BigInt(1));
         const newFixedFieldData = fixedFieldData + (invocationCount >> BigInt(invocationFieldByteLength * 8));
@@ -162,7 +162,7 @@ export class Nonce {
         return newNonce;
     }
 
-    private parseNonceBytes(nonceBytes: Uint8Array | Buffer): { fixedFieldData: bigint; invocationCount: bigint } {
+    private parseNonceBytes(nonceBytes: Uint8Array): { fixedFieldData: bigint; invocationCount: bigint } {
         let fixedFieldData = BigInt(0);
         let invocationCount = BigInt(0);
 

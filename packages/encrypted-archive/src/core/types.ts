@@ -1,11 +1,11 @@
 import { isInstance, isOrType, isString } from './utils';
 import type { AsyncIterableIteratorReturn } from './utils/type';
 
-export type InputDataType = string | Buffer | ArrayBufferView | ArrayBufferLike;
+export type InputDataType = string | ArrayBufferView | ArrayBufferLike;
 
-export type IteratorConverter = (
-    source: Iterable<InputDataType> | AsyncIterable<InputDataType>,
-) => AsyncIterableIteratorReturn<Uint8Array, void>;
+export type IteratorConverter<TInput extends InputDataType = InputDataType, TOutput extends Uint8Array = Uint8Array> = (
+    source: Iterable<TInput> | AsyncIterable<TInput>,
+) => AsyncIterableIteratorReturn<TOutput, void>;
 
 export const isInputDataType = isOrType(
     isString,

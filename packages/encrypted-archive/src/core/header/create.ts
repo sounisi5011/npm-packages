@@ -42,7 +42,7 @@ export interface SimpleHeaderDataWithCiphertextLength extends SimpleHeaderData {
     ciphertextLength: number;
 }
 
-export function createHeader(builtin: BuiltinInspectRecord, data: HeaderDataWithCiphertextLength): Buffer {
+export function createHeader(builtin: BuiltinInspectRecord, data: HeaderDataWithCiphertextLength): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
     const headerDataBinary = createProtobufHeader(builtin, headerData)
@@ -58,7 +58,10 @@ export function createHeader(builtin: BuiltinInspectRecord, data: HeaderDataWith
     ]);
 }
 
-export function createSimpleHeader(builtin: BuiltinInspectRecord, data: SimpleHeaderDataWithCiphertextLength): Buffer {
+export function createSimpleHeader(
+    builtin: BuiltinInspectRecord,
+    data: SimpleHeaderDataWithCiphertextLength,
+): Uint8Array {
     const { ciphertextLength, ...headerData } = data;
 
     const simpleHeaderDataBinary = createProtobufSimpleHeader(builtin, headerData)

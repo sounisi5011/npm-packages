@@ -7,7 +7,6 @@ import importFrom from 'import-from';
 import semverSatisfies from 'semver/functions/satisfies';
 
 import { version as latestPackageVersion } from '../package.json';
-import { asyncIterable2Buffer } from '../src/core/utils';
 import {
     CompressOptions,
     CryptoAlgorithmName,
@@ -16,6 +15,7 @@ import {
     EncryptOptions,
     KeyDerivationOptions,
 } from '../src/index.node.js';
+import { asyncIterable2Buffer } from '../src/runtimes/node/utils';
 import { buffer2chunkArray, isOneOrMoreArray } from './helpers';
 import { optGen } from './helpers/combinations';
 
