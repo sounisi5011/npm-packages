@@ -78,31 +78,29 @@ export function createProtobufHeader(builtin: BuiltinInspectRecord, data: Header
 const validateBytesFromProtobuf = (fieldName: string, value: Uint8Array): Uint8Array =>
     validateBytesField(value, true, { fieldName, dataName });
 
-export function parseProtobufHeader(builtin: BuiltinInspectRecord, header: Header): HeaderData {
-    return {
-        crypto: {
-            algorithmName: cryptoAlgorithm2algorithmName(
-                builtin,
-                header.getCryptoAlgorithm(),
-                true,
-                { fieldName: 'crypto_algorithm', dataName },
-            ),
-            nonce: validateBytesFromProtobuf('crypto_nonce', header.getCryptoNonce_asU8()),
-            authTag: validateBytesFromProtobuf('crypto_auth_tag', header.getCryptoAuthTag_asU8()),
-        },
-        key: {
-            length: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
-            salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
-            keyDerivationFunctionOptions: getKeyDerivationOptions(builtin, header, {
-                oneofFieldName: 'key_options',
-                dataName,
-            }),
-        },
-        compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
+export const parseProtobufHeader = (builtin: BuiltinInspectRecord, header: Header): HeaderData => ({
+    crypto: {
+        algorithmName: cryptoAlgorithm2algorithmName(
             builtin,
-            header.getCompressAlgorithm(),
+            header.getCryptoAlgorithm(),
             true,
-            { fieldName: 'compress_algorithm', dataName },
+            { fieldName: 'crypto_algorithm', dataName },
         ),
-    };
-}
+        nonce: validateBytesFromProtobuf('crypto_nonce', header.getCryptoNonce_asU8()),
+        authTag: validateBytesFromProtobuf('crypto_auth_tag', header.getCryptoAuthTag_asU8()),
+    },
+    key: {
+        length: validateNumberField(header.getKeyLength(), true, { fieldName: 'key_length', dataName }),
+        salt: validateBytesFromProtobuf('key_salt', header.getKeySalt_asU8()),
+        keyDerivationFunctionOptions: getKeyDerivationOptions(builtin, header, {
+            oneofFieldName: 'key_options',
+            dataName,
+        }),
+    },
+    compressAlgorithmName: compressAlgorithm2CompressAlgorithmName(
+        builtin,
+        header.getCompressAlgorithm(),
+        true,
+        { fieldName: 'compress_algorithm', dataName },
+    ),
+});
