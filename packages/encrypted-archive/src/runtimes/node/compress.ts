@@ -1,6 +1,6 @@
 import type * as stream from 'stream';
 
-import type { CreateCompressor, DecompressIterable } from '../../core/types/compress';
+import type { CompressAlgorithmName, CreateCompressor, DecompressIterable } from '../../core/types/compress';
 import { passThroughString } from '../../core/utils';
 import * as brotli from './compress/brotli';
 import * as gzip from './compress/gzip';
@@ -10,13 +10,19 @@ interface CompressorTableEntry {
     createCompress: (options: never) => () => stream.Transform;
     createDecompress: () => stream.Transform;
 }
+type GenCompressOptions<T extends Record<CompressAlgorithmName, CompressorTableEntry>> = {
+    [P in keyof T]: T[P] extends CompressorTableEntry
+        ? { algorithm: P } & Exclude<Parameters<T[P]['createCompress']>[0], undefined>
+        : never;
+}[keyof T];
 
-const compressorTable = (<T extends Record<string, CompressorTableEntry>>(record: T) => record)({
+const compressorTable = {
     gzip,
     brotli,
-});
+} as const;
+export type CompressOptions = GenCompressOptions<typeof compressorTable>;
 
-export const createCompressor: CreateCompressor = options => {
+export const createCompressor: CreateCompressor<CompressOptions> = options => {
     if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
 
     const { algorithm, ...compressOptions } = typeof options === 'string' ? { algorithm: options } : options;

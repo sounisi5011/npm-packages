@@ -4,7 +4,7 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
-import type { CompressOptions, CreateCompressor } from './types/compress';
+import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
 import {
     CryptoAlgorithmData,
     CryptoAlgorithmName,
@@ -20,17 +20,19 @@ import type {
 import { convertIterableValue, uint8arrayConcat, uint8arrayFrom } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
 
-export interface EncryptOptions {
+export interface EncryptOptions<TCompressOptions extends BaseCompressOptions> {
     algorithm?: CryptoAlgorithmName | undefined;
     keyDerivation?: KeyDerivationOptions | undefined;
-    compress?: CompressOptions | CompressOptions['algorithm'] | undefined;
+    compress?: TCompressOptions | TCompressOptions['algorithm'] | undefined;
 }
 
-export interface EncryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
+export interface EncryptBuiltinAPIRecord<TCompressOptions extends BaseCompressOptions>
+    extends BuiltinEncodeStringRecord, BuiltinInspectRecord
+{
     getRandomBytes: GetRandomBytesFn;
     getCryptoAlgorithm: GetCryptoAlgorithm;
     kdfBuiltin: KDFBuiltinAPIRecord;
-    createCompressor: CreateCompressor;
+    createCompressor: CreateCompressor<TCompressOptions>;
 }
 
 interface EncryptorState {
@@ -73,7 +75,7 @@ function createHeaderData(
         keyResult: KeyResult;
         nonce: Uint8Array;
         authTag: Uint8Array;
-        compressAlgorithmName: CompressOptions['algorithm'] | undefined;
+        compressAlgorithmName: CompressAlgorithmName | undefined;
         ciphertextLength: number;
         prevState: EncryptorState | undefined;
     },
@@ -115,7 +117,7 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
 }: {
     algorithm: CryptoAlgorithmData;
     keyResult: KeyResult;
-    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
+    compressAlgorithmName: CompressAlgorithmName | undefined;
     prevState: EncryptorState | undefined;
 }): AsyncIterableReturn<Uint8Array, EncryptorState> {
     /**
@@ -158,10 +160,10 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
     return newState;
 }
 
-export function createEncryptorIterator(
-    builtin: EncryptBuiltinAPIRecord,
+export function createEncryptorIterator<TCompressOptions extends BaseCompressOptions>(
+    builtin: EncryptBuiltinAPIRecord<TCompressOptions>,
     password: InputDataType,
-    options: EncryptOptions,
+    options: EncryptOptions<TCompressOptions>,
 ): IteratorConverter {
     const algorithm = builtin.getCryptoAlgorithm(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);

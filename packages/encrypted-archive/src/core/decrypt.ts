@@ -14,7 +14,7 @@ import { nonceState } from './nonce';
 import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
-import type { CompressOptions, DecompressIterable } from './types/compress';
+import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import { uint8arrayFrom } from './utils';
@@ -31,7 +31,7 @@ interface DecryptorMetadata {
     algorithm: CryptoAlgorithmData;
     key: Uint8Array;
     nonce: Uint8Array;
-    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
+    compressAlgorithmName: CompressAlgorithmName | undefined;
 }
 
 async function getAlgorithmAndKey(

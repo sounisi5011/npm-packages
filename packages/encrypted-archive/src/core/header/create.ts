@@ -1,7 +1,7 @@
 import { encode as varintEncode } from 'varint';
 
 import type { BuiltinInspectRecord } from '../types/builtin';
-import type { CompressOptions } from '../types/compress';
+import type { CompressAlgorithmName } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
 import type { NormalizedKeyDerivationOptions } from '../types/key-derivation-function';
 import { uint8arrayConcat } from '../utils';
@@ -32,7 +32,7 @@ export interface HeaderData {
         salt: Uint8Array;
         keyDerivationFunctionOptions: NormalizedKeyDerivationOptions;
     };
-    compressAlgorithmName: CompressOptions['algorithm'] | undefined;
+    compressAlgorithmName: CompressAlgorithmName | undefined;
 }
 
 export interface HeaderDataWithCiphertextLength extends HeaderData {

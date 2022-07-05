@@ -1,7 +1,11 @@
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
-import { BrotliDisallowedOptions, brotliDisallowOptionNameList } from '../../../core/types/compress';
 import { validateDisallowedOptions } from './utils';
+
+const brotliDisallowOptionNameList = ['flush', 'finishFlush', 'maxOutputLength'] as const;
+type BrotliDisallowOptionName = (typeof brotliDisallowOptionNameList)[number];
+type BrotliOptions = Exclude<Parameters<typeof createBrotliCompress>[0], undefined>;
+type BrotliDisallowedOptions = Omit<BrotliOptions, BrotliDisallowOptionName>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createCompress(options: BrotliDisallowedOptions) {
