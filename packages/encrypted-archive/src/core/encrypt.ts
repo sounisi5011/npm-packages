@@ -1,7 +1,7 @@
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { validateChunk } from './stream';
+import { convertChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
@@ -180,10 +180,7 @@ export function createEncryptorIterator<TCompressOptions extends BaseCompressOpt
             keyDerivationOptions: options.keyDerivation,
         });
 
-        const bufferSourceIterable = convertIterableValue(
-            source,
-            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
-        );
+        const bufferSourceIterable = convertIterableValue(source, convertChunk(builtin));
 
         /**
          * Compress cleartext

@@ -11,7 +11,7 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { validateChunk } from './stream';
+import { convertChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
@@ -165,11 +165,7 @@ async function decryptChunk(
 export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, password: InputDataType): IteratorConverter {
     return async function* decryptor(source) {
         const passwordBuffer = uint8arrayFrom(builtin.encodeString, password);
-        const reader = new StreamReader(
-            builtin,
-            source,
-            chunk => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk)),
-        );
+        const reader = new StreamReader(builtin, source, convertChunk(builtin));
 
         const {
             compressedCleartextIterable: firstChunkCompressedCleartextIterable,

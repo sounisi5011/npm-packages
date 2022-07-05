@@ -1,5 +1,6 @@
 import { InputDataType, isInputDataType } from './types';
-import type { BuiltinInspectRecord } from './types/builtin';
+import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
+import { uint8arrayFrom } from './utils';
 
 export function validateChunk(builtin: BuiltinInspectRecord, chunk: unknown): InputDataType {
     if (!isInputDataType(chunk)) {
@@ -10,4 +11,8 @@ export function validateChunk(builtin: BuiltinInspectRecord, chunk: unknown): In
         );
     }
     return chunk;
+}
+
+export function convertChunk(builtin: BuiltinEncodeStringRecord & BuiltinInspectRecord) {
+    return (chunk: unknown): Uint8Array => uint8arrayFrom(builtin.encodeString, validateChunk(builtin, chunk));
 }
