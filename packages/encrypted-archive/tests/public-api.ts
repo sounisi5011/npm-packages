@@ -6,6 +6,7 @@ import {
     encrypt,
     encryptIterator,
     EncryptOptions,
+    InputDataType,
     KeyDerivationOptions,
 } from '../src';
 import { bufferChunk, iterable2buffer } from './helpers';
@@ -70,6 +71,22 @@ const encryptCases: Array<readonly [string, (options?: EncryptOptions) => Promis
                 await iterable2buffer(encryptIterator(password, options)(cleartextChunkList)),
         ] as const
     ),
+];
+
+const decryptCases: Array<
+    readonly [
+        string,
+        (encryptedData: InputDataType | Promise<InputDataType>, password: InputDataType) => Promise<Buffer>,
+    ]
+> = [
+    [
+        'decrypt()',
+        async (encryptedData, password) => await decrypt(await encryptedData, password),
+    ],
+    [
+        'decryptIterator()',
+        async (encryptedData, password) => await iterable2buffer(decryptIterator(password)([await encryptedData])),
+    ],
 ];
 
 describe('input and output must not be the same', () => {
@@ -173,8 +190,8 @@ describe('should be decryptable', () => {
                 'chacha20-poly1305',
             ])('%s', algorithm => {
                 const encryptedDataAsync = encryptFn({ algorithm });
-                it('decrypt()', async () => {
-                    const decryptedData = await decrypt(await encryptedDataAsync, password);
+                it.each(decryptCases)('%s', async (_, decryptFn) => {
+                    const decryptedData = await decryptFn(encryptedDataAsync, password);
                     expect(decryptedData.equals(cleartext)).toBeTrue();
                 });
             });
@@ -185,8 +202,8 @@ describe('should be decryptable', () => {
                 'argon2id',
             ])('%s', keyDerivationAlgorithm => {
                 const encryptedDataAsync = encryptFn({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
-                it('decrypt()', async () => {
-                    const decryptedData = await decrypt(await encryptedDataAsync, password);
+                it.each(decryptCases)('%s', async (_, decryptFn) => {
+                    const decryptedData = await decryptFn(encryptedDataAsync, password);
                     expect(decryptedData.equals(cleartext)).toBeTrue();
                 });
             });
@@ -197,8 +214,8 @@ describe('should be decryptable', () => {
                 'brotli',
             ])('%s', compressAlgorithm => {
                 const encryptedDataAsync = encryptFn({ compress: compressAlgorithm });
-                it('decrypt()', async () => {
-                    const decryptedData = await decrypt(await encryptedDataAsync, password);
+                it.each(decryptCases)('%s', async (_, decryptFn) => {
+                    const decryptedData = await decryptFn(encryptedDataAsync, password);
                     expect(decryptedData.equals(cleartext)).toBeTrue();
                 });
             });
@@ -213,8 +230,8 @@ describe('wrong password should fail', () => {
         'chacha20-poly1305',
     ])('%s', algorithm => {
         const encryptedDataAsync = encrypt(cleartext, password, { algorithm });
-        it('decrypt()', async () => {
-            await expect(decrypt(await encryptedDataAsync, password2)).rejects.toThrowWithMessage(
+        it.each(decryptCases)('%s', async (_, decryptFn) => {
+            await expect(decryptFn(encryptedDataAsync, password2)).rejects.toThrowWithMessage(
                 Error,
                 `Unsupported state or unable to authenticate data`,
             );
