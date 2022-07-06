@@ -25,7 +25,7 @@ const encryptedDataChunkIterCases: Array<
     ['multi chunk', opts => encryptIterator(password, opts)(cleartextMultiChunkList)],
 ];
 
-describe('output value must be a Promise giving a Buffer object', () => {
+describe('output value must be a `Promise<Buffer>`', () => {
     type Output = Promise<Buffer>;
     it.each<[string, () => [Output] | Promise<[Output]>]>([
         ['encrypt()', () => [encrypt(cleartext, password)]],
@@ -40,7 +40,7 @@ describe('output value must be a Promise giving a Buffer object', () => {
     });
 });
 
-describe('output value must be an AsyncIterableIterator giving a a Buffer object', () => {
+describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
     type Output = AsyncIterableIterator<Buffer>;
     it.each<readonly [string, () => Output | Promise<Output>]>([
         ...cleartextChunkCases.map((
@@ -66,7 +66,7 @@ const encryptCases: Array<readonly [string, (options?: EncryptOptions) => Promis
     ['encrypt()', async options => await encrypt(cleartext, password, options)],
     ...cleartextChunkCases.map(([label, cleartextChunkList]) =>
         [
-            `encryptIterator() [${label}]`,
+            `encryptIterator() [input: ${label}]`,
             async (options?: EncryptOptions) =>
                 await iterable2buffer(encryptIterator(password, options)(cleartextChunkList)),
         ] as const
@@ -142,7 +142,7 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
     });
 };
 
-describe('should support one or more encryption algorithms', () => {
+describe('should support encryption algorithms', () => {
     describe.each<CryptoAlgorithmName>([
         'aes-256-gcm',
         'chacha20-poly1305',
@@ -152,7 +152,7 @@ describe('should support one or more encryption algorithms', () => {
         });
         shouldBeDecryptableTest({ algorithm });
     });
-    describe('unknown', () => {
+    describe('unknown algorithm', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
             await expect(encryptFn({
                 // @ts-expect-error TS2322
@@ -165,7 +165,7 @@ describe('should support one or more encryption algorithms', () => {
     });
 });
 
-describe('should be able to specify the key derivation function', () => {
+describe('should support key derivation functions', () => {
     describe.each<KeyDerivationOptions['algorithm']>([
         'argon2d',
         'argon2id',
@@ -176,7 +176,7 @@ describe('should be able to specify the key derivation function', () => {
         });
         shouldBeDecryptableTest({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
     });
-    describe('unknown', () => {
+    describe('unknown algorithm', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
             await expect(encryptFn({
                 keyDerivation: {
@@ -191,7 +191,7 @@ describe('should be able to specify the key derivation function', () => {
     });
 });
 
-describe('compression should be supported', () => {
+describe('should support compression algorithms', () => {
     const uncompressedEncryptedDataAsync = encrypt(cleartext, password);
 
     describe.each<CompressOptions | CompressOptions['algorithm']>([
@@ -204,7 +204,7 @@ describe('compression should be supported', () => {
         });
         shouldBeDecryptableTest({ compress: compressAlgorithm });
     });
-    describe('unknown', () => {
+    describe('unknown algorithm', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
             await expect(encryptFn({
                 // @ts-expect-error TS2322
