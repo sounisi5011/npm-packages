@@ -41,44 +41,49 @@ describe('output value must be a Promise giving a Buffer object', () => {
 
 describe('output value must be an AsyncIterableIterator giving a a Buffer object', () => {
     type Output = AsyncIterableIterator<Buffer>;
-    describe.each<[string, Array<[string, () => Output | Promise<Output>]>]>([
-        [
-            'encryptIterator()',
-            cleartextChunkCases.map((
-                [label, cleartextChunkList],
-            ) => [label, () => encryptIterator(password)(cleartextChunkList)]),
-        ],
-        [
-            'decryptIterator()',
-            encryptedDataChunkIterCases.map(([label, genEncryptedDataChunkIter]) => [label, async () => {
+    it.each<readonly [string, () => Output | Promise<Output>]>([
+        ...cleartextChunkCases.map((
+            [label, cleartextChunkList],
+        ) => [`encryptIterator() [${label}]`, () => encryptIterator(password)(cleartextChunkList)] as const),
+        ...encryptedDataChunkIterCases.map(([label, genEncryptedDataChunkIter]) =>
+            [`decryptIterator() [${label}]`, async () => {
                 const encryptedDataChunkIter = await genEncryptedDataChunkIter();
                 return decryptIterator(password)(encryptedDataChunkIter);
-            }]),
-        ],
-    ])('%s', (_, outputCases) => {
-        it.each(outputCases)('%s', async (_, genOutput) => {
-            expect.hasAssertions();
+            }] as const
+        ),
+    ])('%s', async (_, genOutput) => {
+        expect.hasAssertions();
 
-            const output = await genOutput();
-            for await (const chunk of output) {
-                expect(chunk).toBeInstanceOf(Buffer);
-            }
-        });
+        const output = await genOutput();
+        for await (const chunk of output) {
+            expect(chunk).toBeInstanceOf(Buffer);
+        }
     });
 });
 
+const encryptCases: Array<readonly [string, (options?: EncryptOptions) => Promise<Buffer>]> = [
+    ['encrypt()', async options => await encrypt(cleartext, password, options)],
+    ...cleartextChunkCases.map(([label, cleartextChunkList]) =>
+        [
+            `encryptIterator() [${label}]`,
+            async (options?: EncryptOptions) =>
+                await iterable2buffer(encryptIterator(password, options)(cleartextChunkList)),
+        ] as const
+    ),
+];
+
 describe('input and output must not be the same', () => {
-    it('encrypt()', async () => {
-        const encryptedData = await encrypt(cleartext, password);
+    it.each(encryptCases)('%s', async (_, encryptFn) => {
+        const encryptedData = await encryptFn();
         expect(cleartext.equals(encryptedData)).toBeFalse();
     });
 });
 
 describe('never generate same data', () => {
-    it('encrypt()', async () => {
-        const encryptedData1 = await encrypt(cleartext, password);
-        const encryptedData2 = await encrypt(cleartext, password);
-        const encryptedData3 = await encrypt(cleartext, password);
+    it.each(encryptCases)('%s', async (_, encryptFn) => {
+        const encryptedData1 = await encryptFn();
+        const encryptedData2 = await encryptFn();
+        const encryptedData3 = await encryptFn();
         expect(encryptedData1.equals(encryptedData2)).toBeFalse();
         expect(encryptedData1.equals(encryptedData3)).toBeFalse();
         expect(encryptedData2.equals(encryptedData3)).toBeFalse();
@@ -90,13 +95,13 @@ describe('should support one or more encryption algorithms', () => {
         'aes-256-gcm',
         'chacha20-poly1305',
     ])('%s', algorithm => {
-        it('encrypt()', async () => {
-            await expect(encrypt(cleartext, password, { algorithm })).toResolve();
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            await expect(encryptFn({ algorithm })).toResolve();
         });
     });
     describe('unknown', () => {
-        it('encrypt()', async () => {
-            await expect(encrypt(cleartext, password, {
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            await expect(encryptFn({
                 // @ts-expect-error TS2322
                 algorithm: 'foo',
             })).rejects.toThrowWithMessage(
@@ -112,14 +117,14 @@ describe('should be able to specify the key derivation function', () => {
         'argon2d',
         'argon2id',
     ])('%s', keyDerivationAlgorithm => {
-        it('encrypt()', async () => {
-            await expect(encrypt(cleartext, password, { keyDerivation: { algorithm: keyDerivationAlgorithm } }))
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            await expect(encryptFn({ keyDerivation: { algorithm: keyDerivationAlgorithm } }))
                 .toResolve();
         });
     });
     describe('unknown', () => {
-        it('encrypt()', async () => {
-            await expect(encrypt(cleartext, password, {
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            await expect(encryptFn({
                 keyDerivation: {
                     // @ts-expect-error TS2322
                     algorithm: 'bar',
@@ -139,14 +144,14 @@ describe('compression should be supported', () => {
         'gzip',
         'brotli',
     ])('%s', compressAlgorithm => {
-        it('encrypt()', async () => {
-            const compressedEncryptedData = await encrypt(cleartext, password, { compress: compressAlgorithm });
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            const compressedEncryptedData = await encryptFn({ compress: compressAlgorithm });
             expect(compressedEncryptedData).toBeLessThanByteSize(await uncompressedEncryptedDataAsync);
         });
     });
     describe('unknown', () => {
-        it('encrypt()', async () => {
-            await expect(encrypt(cleartext, password, {
+        it.each(encryptCases)('%s', async (_, encryptFn) => {
+            await expect(encryptFn({
                 // @ts-expect-error TS2322
                 compress: 'hoge',
             })).rejects.toThrowWithMessage(
