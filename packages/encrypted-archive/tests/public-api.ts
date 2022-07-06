@@ -107,6 +107,41 @@ describe('never generate same data', () => {
     });
 });
 
+const shouldBeDecryptableTest = (options: EncryptOptions): void => {
+    describe('should be decryptable', () => {
+        it.each<[string, () => Promise<Buffer>]>([
+            ['encrypt() |> decrypt()', async () => {
+                const encryptedData = await encrypt(cleartext, password, options);
+                return await decrypt(encryptedData, password);
+            }],
+            ['encrypt() |> decryptIterator()', async () => {
+                const encryptedDataChunkIter = [await encrypt(cleartext, password, options)];
+                return await iterable2buffer(decryptIterator(password)(encryptedDataChunkIter));
+            }],
+            ...cleartextChunkCases.flatMap<[string, () => Promise<Buffer>]>(([label, cleartextChunkList]) => [
+                [
+                    `encryptIterator() [input: ${label}] |> decrypt()`,
+                    async () => {
+                        const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
+                        const encryptedData = await iterable2buffer(encryptedDataChunkIter);
+                        return await decrypt(encryptedData, password);
+                    },
+                ],
+                [
+                    `encryptIterator() [input: ${label}] |> decryptIterator()`,
+                    async () => {
+                        const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
+                        return await iterable2buffer(decryptIterator(password)(encryptedDataChunkIter));
+                    },
+                ],
+            ]),
+        ])('%s', async (_, decryptFn) => {
+            const decryptedData = await decryptFn();
+            expect(decryptedData.equals(cleartext)).toBeTrue();
+        });
+    });
+};
+
 describe('should support one or more encryption algorithms', () => {
     describe.each<CryptoAlgorithmName>([
         'aes-256-gcm',
@@ -115,6 +150,7 @@ describe('should support one or more encryption algorithms', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
             await expect(encryptFn({ algorithm })).toResolve();
         });
+        shouldBeDecryptableTest({ algorithm });
     });
     describe('unknown', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
@@ -138,6 +174,7 @@ describe('should be able to specify the key derivation function', () => {
             await expect(encryptFn({ keyDerivation: { algorithm: keyDerivationAlgorithm } }))
                 .toResolve();
         });
+        shouldBeDecryptableTest({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
     });
     describe('unknown', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
@@ -165,6 +202,7 @@ describe('compression should be supported', () => {
             const compressedEncryptedData = await encryptFn({ compress: compressAlgorithm });
             expect(compressedEncryptedData).toBeLessThanByteSize(await uncompressedEncryptedDataAsync);
         });
+        shouldBeDecryptableTest({ compress: compressAlgorithm });
     });
     describe('unknown', () => {
         it.each(encryptCases)('%s', async (_, encryptFn) => {
@@ -175,50 +213,6 @@ describe('compression should be supported', () => {
                 TypeError,
                 `Unknown compress algorithm was received: hoge`,
             );
-        });
-    });
-});
-
-describe('should be decryptable', () => {
-    describe.each(encryptedDataChunkIterCases)('%s', (_, genEncryptedDataChunkIter) => {
-        const encryptFn = async (options: EncryptOptions): Promise<Buffer> =>
-            await iterable2buffer(await genEncryptedDataChunkIter(options));
-
-        describe('encryption algorithms', () => {
-            describe.each<CryptoAlgorithmName>([
-                'aes-256-gcm',
-                'chacha20-poly1305',
-            ])('%s', algorithm => {
-                const encryptedDataAsync = encryptFn({ algorithm });
-                it.each(decryptCases)('%s', async (_, decryptFn) => {
-                    const decryptedData = await decryptFn(encryptedDataAsync, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
-                });
-            });
-        });
-        describe('key derivation function', () => {
-            describe.each<KeyDerivationOptions['algorithm']>([
-                'argon2d',
-                'argon2id',
-            ])('%s', keyDerivationAlgorithm => {
-                const encryptedDataAsync = encryptFn({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
-                it.each(decryptCases)('%s', async (_, decryptFn) => {
-                    const decryptedData = await decryptFn(encryptedDataAsync, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
-                });
-            });
-        });
-        describe('compression', () => {
-            describe.each<CompressOptions | CompressOptions['algorithm']>([
-                'gzip',
-                'brotli',
-            ])('%s', compressAlgorithm => {
-                const encryptedDataAsync = encryptFn({ compress: compressAlgorithm });
-                it.each(decryptCases)('%s', async (_, decryptFn) => {
-                    const decryptedData = await decryptFn(encryptedDataAsync, password);
-                    expect(decryptedData.equals(cleartext)).toBeTrue();
-                });
-            });
         });
     });
 });
