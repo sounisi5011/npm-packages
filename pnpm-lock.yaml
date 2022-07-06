@@ -225,7 +225,6 @@ importers:
 
   packages/encrypted-archive:
     specifiers:
-      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': workspace:^0.0.0 || ^1.0.0
       '@sounisi5011/run-if-supported': 1.1.1
@@ -275,7 +274,6 @@ importers:
     optionalDependencies:
       argon2: 0.27.2
     devDependencies:
-      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': 1.1.1
@@ -1190,10 +1188,6 @@ packages:
       '@types/node': 18.0.0
       '@types/yargs': 17.0.10
       chalk: 4.1.2
-    dev: true
-
-  /@jorgeferrero/stream-to-buffer/2.0.6:
-    resolution: {integrity: sha512-G7jiBkMwDdYADntdV/qzl9H4Lkch0RyektqXl5+KhktduP4/rE1RaTz0wKZFdC2dKo3S0JaxoUUC3uDeXmI7EQ==}
     dev: true
 
   /@jridgewell/gen-mapping/0.1.1:

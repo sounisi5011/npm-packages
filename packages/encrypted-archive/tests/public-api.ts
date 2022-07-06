@@ -1,7 +1,3 @@
-import * as stream from 'stream';
-
-import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
-
 import {
     CompressOptions,
     CryptoAlgorithmName,
@@ -10,11 +6,9 @@ import {
     encrypt,
     encryptIterator,
     EncryptOptions,
-    encryptStream,
     KeyDerivationOptions,
 } from '../src';
-import { bufferChunk } from './helpers';
-import { createStreamFromBuffer } from './helpers/stream';
+import { bufferChunk, iterable2buffer } from './helpers';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
 const password = 'dragon';
@@ -134,16 +128,7 @@ describe('decrypt()', () => {
             ],
             [
                 'multi chunk',
-                async options =>
-                    await streamToBuffer(
-                        stream.pipeline(
-                            createStreamFromBuffer(cleartext, 2),
-                            encryptStream(password, options),
-                            () => {
-                                //
-                            },
-                        ),
-                    ),
+                async options => await iterable2buffer(encryptIterator(password, options)(bufferChunk(cleartext, 7))),
             ],
         ])('%s', (_, encrypt) => {
             describe('encryption algorithms', () => {
