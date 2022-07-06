@@ -218,7 +218,7 @@ describe('should support compression algorithms', () => {
 });
 
 describe('wrong password should fail', () => {
-    const password2 = `${password} `;
+    const password2 = 'flying lizard';
     describe.each<CryptoAlgorithmName>([
         'aes-256-gcm',
         'chacha20-poly1305',
