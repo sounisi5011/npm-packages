@@ -6,17 +6,26 @@ import {
     CompressOptions,
     CryptoAlgorithmName,
     decrypt,
+    decryptIterator,
     encrypt,
+    encryptIterator,
     EncryptOptions,
     encryptStream,
     KeyDerivationOptions,
 } from '../src';
+import { bufferChunk } from './helpers';
 import { createStreamFromBuffer } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
 const password = 'dragon';
 
 describe('encrypt()', () => {
+    it('output value must be a Promise giving a Buffer object', async () => {
+        const encryptedData: Promise<Buffer> = encrypt(cleartext, password);
+        expect(encryptedData).toBeInstanceOf(Promise);
+        await expect(encryptedData).resolves.toBeInstanceOf(Buffer);
+    });
+
     it('input and output must not be the same', async () => {
         const encryptedData = await encrypt(cleartext, password);
         expect(cleartext.equals(encryptedData)).toBeFalse();
@@ -92,7 +101,31 @@ describe('encrypt()', () => {
     });
 });
 
+describe('encryptIterator()', () => {
+    describe.each<[string, readonly Buffer[]]>([
+        ['single chunk', [cleartext]],
+        ['multi chunk', bufferChunk(cleartext, 7)],
+    ])('%s', (_, cleartextChunkList) => {
+        it('output value must be an AsyncIterableIterator giving a a Buffer object', async () => {
+            expect.hasAssertions();
+
+            const encryptedDataIterator: AsyncIterableIterator<Buffer> = encryptIterator(password)(cleartextChunkList);
+            for await (const encryptedDataChunk of encryptedDataIterator) {
+                expect(encryptedDataChunk).toBeInstanceOf(Buffer);
+            }
+        });
+    });
+});
+
 describe('decrypt()', () => {
+    it('output value must be a Promise giving a Buffer object', async () => {
+        const encryptedData = await encrypt(cleartext, password);
+
+        const decryptedData: Promise<Buffer> = decrypt(encryptedData, password);
+        expect(decryptedData).toBeInstanceOf(Promise);
+        await expect(decryptedData).resolves.toBeInstanceOf(Buffer);
+    });
+
     describe('should be decryptable', () => {
         describe.each<[string, (options: EncryptOptions) => Promise<Buffer>]>([
             [
@@ -156,6 +189,25 @@ describe('decrypt()', () => {
                 Error,
                 `Unsupported state or unable to authenticate data`,
             );
+        });
+    });
+});
+
+describe('decryptIterator()', () => {
+    describe.each<[string, () => Promise<Iterable<Buffer>> | AsyncIterable<Buffer>]>([
+        ['single chunk', async () => [await encrypt(cleartext, password)]],
+        ['multi chunk', () => encryptIterator(password)(bufferChunk(cleartext, 7))],
+    ])('%s', (_, genEncryptedDataChunkIter) => {
+        it('output value must be an AsyncIterableIterator giving a a Buffer object', async () => {
+            expect.hasAssertions();
+            const encryptedDataChunkIter = await genEncryptedDataChunkIter();
+
+            const decryptedDataIterator: AsyncIterableIterator<Buffer> = decryptIterator(password)(
+                encryptedDataChunkIter,
+            );
+            for await (const decryptedDataChunk of decryptedDataIterator) {
+                expect(decryptedDataChunk).toBeInstanceOf(Buffer);
+            }
         });
     });
 });

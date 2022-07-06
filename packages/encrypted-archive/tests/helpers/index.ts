@@ -32,6 +32,17 @@ export function addNegativeNumber(values: ReadonlyArray<number | bigint>): Array
     });
 }
 
+export function bufferChunk(buf: Buffer, chunkLength: number): Buffer[] {
+    if (!(chunkLength >= 1 && Number.isSafeInteger(chunkLength))) {
+        throw new RangeError(`chunkLength argument must be an integer greater than or equal to 1`);
+    }
+    const chunkList: Buffer[] = [];
+    for (let beginIndex = 0; beginIndex < buf.length; beginIndex += chunkLength) {
+        chunkList.push(buf.subarray(beginIndex, beginIndex + chunkLength));
+    }
+    return chunkList;
+}
+
 export function createDummySizeBuffer(size: number): Buffer {
     return Object.defineProperties(Buffer.alloc(0), {
         byteLength: {
