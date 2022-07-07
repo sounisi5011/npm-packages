@@ -28,18 +28,63 @@ const encryptedDataChunkIterCases: Array<
 describe('input should allow the following types', () => {
     type Input = string | Buffer | NodeJS.TypedArray | DataView | ArrayBuffer | SharedArrayBuffer;
     const inputStr = '12345678';
-    describe.each<[string, Input]>(genInputTypeCases(inputStr))('%s', (_, inputValue) => {
+    const inputTypeCases = genInputTypeCases(inputStr);
+    const iterableInputTypeCases = inputTypeCases.flatMap(([label, inputValue]) => {
+        const genNextFn = (): () => IteratorResult<typeof inputValue> => {
+            const valueList = [inputValue];
+            return () => {
+                const value = valueList.shift();
+                if (value === undefined) {
+                    // According to the specification, the `value` property can be omitted if the `done` property is `true`.
+                    // However, the `value` property of the `IteratorReturnResult` type cannot be omitted.
+                    // For this reason, we will force overriding the return value type to the `IteratorReturnResult` type and avoid this problem.
+                    // see https://tc39.es/ecma262/#sec-iteratorresult-interface
+                    // @ts-expect-error TS2741: Property 'value' is missing in type '{ done: true; }' but required in type 'IteratorReturnResult<undefined>'.
+                    const ret: IteratorReturnResult<undefined> = { done: true };
+                    return ret;
+                }
+                return { value };
+            };
+        };
+        const iter: Iterable<typeof inputValue> = {
+            [Symbol.iterator]() {
+                return { next: genNextFn() };
+            },
+        };
+        const asyncIter: AsyncIterable<typeof inputValue> = {
+            [Symbol.asyncIterator]() {
+                const getResult = genNextFn();
+                // eslint-disable-next-line @typescript-eslint/promise-function-async
+                return { next: () => Promise.resolve(getResult()) };
+            },
+        };
+        const ret: Array<[string, Iterable<typeof inputValue> | AsyncIterable<typeof inputValue>]> = [
+            [`Iterable<${label}>`, iter],
+            [`AsyncIterable<${label}>`, asyncIter],
+        ];
+        return ret;
+    });
+    describe.each<[string, Input]>(inputTypeCases)('%s', (_, inputValue) => {
         describe('cleartext', () => {
-            it.each<[string, (cleartext: InputDataType) => Promise<Buffer>]>([
-                ['encrypt()', async cleartext => await encrypt(cleartext, password)],
-                ['encryptIterator()', async cleartext => await iterable2buffer(encryptIterator(password)([cleartext]))],
-            ])('%s', async (_, encryptFn) => {
-                const encryptedDataAsync = encryptFn(inputValue);
+            it('encrypt()', async () => {
+                const encryptedDataAsync = encrypt(inputValue, password);
                 await expect(encryptedDataAsync).resolves.not.toThrow();
                 const decryptedData = await decrypt(await encryptedDataAsync, password);
                 expect(decryptedData.equals(Buffer.from(inputStr))).toBeTrue();
             });
         });
+    });
+    describe.each<[string, Iterable<Input> | AsyncIterable<Input>]>(iterableInputTypeCases)('%s', (_, inputValue) => {
+        describe('cleartext', () => {
+            it('encryptIterator()', async () => {
+                const encryptedDataAsync = iterable2buffer(encryptIterator(password)(inputValue));
+                await expect(encryptedDataAsync).resolves.not.toThrow();
+                const decryptedData = await decrypt(await encryptedDataAsync, password);
+                expect(decryptedData.equals(Buffer.from(inputStr))).toBeTrue();
+            });
+        });
+    });
+    describe.each<[string, Input]>(inputTypeCases)('%s', (_, inputValue) => {
         describe('password', () => {
             it.each<[string, (password: InputDataType) => Promise<Buffer>]>([
                 ['encrypt()', async password => await encrypt(cleartext, password)],
