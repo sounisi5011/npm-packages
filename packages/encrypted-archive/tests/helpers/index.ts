@@ -83,6 +83,10 @@ export function buffer2chunkArray(buffer: Buffer, chunkSize = 5): Buffer[] {
 
 export function genInputTypeCases(
     originalValue: string,
+): Array<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>;
+export function genInputTypeCases(originalValue: Uint8Array): Array<[string, ArrayBufferLike | NodeJS.ArrayBufferView]>;
+export function genInputTypeCases(
+    originalValue: string | Uint8Array,
 ): Array<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]> {
     const withLabel = <T extends object>(obj: T): [string, T] => {
         if (ArrayBuffer.isView(obj)) {
@@ -101,7 +105,7 @@ export function genInputTypeCases(
         }
         return [`${obj.constructor.name}`, obj];
     };
-    const originalBytes = new TextEncoder().encode(originalValue);
+    const originalBytes = typeof originalValue === 'string' ? new TextEncoder().encode(originalValue) : originalValue;
     const genView = <T extends ArrayBufferView>(
         ViewConstructor: {
             new(buffer: ArrayBufferLike, byteOffset: number, length: number): T;
@@ -133,7 +137,13 @@ export function genInputTypeCases(
 
     return [
         // string
-        ['string', originalValue],
+        ...(
+            typeof originalValue === 'string'
+                ? [
+                    ['string', originalValue] as [string, string],
+                ]
+                : []
+        ),
         ...[
             // Node.js Buffer & TypedArray & DataView
             ...[
@@ -161,4 +171,43 @@ export function genInputTypeCases(
             genBuf(SharedArrayBuffer, originalBytes),
         ].map(withLabel),
     ];
+}
+
+export function genIterableTypeCases<T>(
+    valueCases: ReadonlyArray<readonly [string, T]>,
+): Array<[string, Iterable<T> | AsyncIterable<T>]> {
+    return valueCases.flatMap(([valueLabel, value]) => {
+        const genNextFn = (): () => IteratorResult<T> => {
+            const valueList = [value];
+            return () => {
+                const value = valueList.shift();
+                if (value === undefined) {
+                    // According to the specification, the `value` property can be omitted if the `done` property is `true`.
+                    // However, the `value` property of the `IteratorReturnResult` type cannot be omitted.
+                    // For this reason, we will force overriding the return value type to the `IteratorReturnResult` type and avoid this problem.
+                    // see https://tc39.es/ecma262/#sec-iteratorresult-interface
+                    // @ts-expect-error TS2741: Property 'value' is missing in type '{ done: true; }' but required in type 'IteratorReturnResult<undefined>'.
+                    const ret: IteratorReturnResult<undefined> = { done: true };
+                    return ret;
+                }
+                return { value };
+            };
+        };
+        const iter: Iterable<T> = {
+            [Symbol.iterator]() {
+                return { next: genNextFn() };
+            },
+        };
+        const asyncIter: AsyncIterable<T> = {
+            [Symbol.asyncIterator]() {
+                const getResult = genNextFn();
+                // eslint-disable-next-line @typescript-eslint/promise-function-async
+                return { next: () => Promise.resolve(getResult()) };
+            },
+        };
+        return [
+            [`Iterable<${valueLabel}>`, iter],
+            [`AsyncIterable<${valueLabel}>`, asyncIter],
+        ];
+    });
 }
