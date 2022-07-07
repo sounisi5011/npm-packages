@@ -81,7 +81,7 @@ describe('output value must be a `Promise<Buffer>`', () => {
 
 describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
     type Output = AsyncIterableIterator<Buffer>;
-    it.each<readonly [string, () => Output | Promise<Output>]>([
+    describe.each<readonly [string, () => Output | Promise<Output>]>([
         ...cleartextChunkCases.map((
             [label, cleartextChunkList],
         ) => [`encryptIterator() [${label}]`, () => encryptIterator(password)(cleartextChunkList)] as const),
@@ -91,13 +91,27 @@ describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
                 return decryptIterator(password)(encryptedDataChunkIter);
             }] as const
         ),
-    ])('%s', async (_, genOutput) => {
-        expect.hasAssertions();
+    ])('%s', (_, genOutput) => {
+        it('implements `AsyncIterator<Buffer>`', async () => {
+            expect.hasAssertions();
 
-        const output = await genOutput();
-        for await (const chunk of output) {
-            expect(chunk).toBeInstanceOf(Buffer);
-        }
+            const output: AsyncIterator<Buffer> = await genOutput();
+            do {
+                const resultAsync = output.next();
+                if (await resultAsync.then(result => result.done, () => false)) break;
+                await expect(resultAsync).resolves.toMatchObject({
+                    value: expect.any(Buffer),
+                });
+            } while (true);
+        });
+        it('implements `AsyncIterable<Buffer>`', async () => {
+            expect.hasAssertions();
+
+            const output: AsyncIterable<Buffer> = await genOutput();
+            for await (const chunk of output) {
+                expect(chunk).toBeInstanceOf(Buffer);
+            }
+        });
     });
 });
 
