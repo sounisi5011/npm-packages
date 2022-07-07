@@ -1,3 +1,5 @@
+import { TextEncoder } from 'util';
+
 import type { AsyncIterableReturn } from '../../src/utils/type';
 
 export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
@@ -77,4 +79,86 @@ export async function* buffer2asyncIterable(buffer: Buffer, chunkSize = 5): Asyn
 
 export function buffer2chunkArray(buffer: Buffer, chunkSize = 5): Buffer[] {
     return [...buffer2iterable(buffer, chunkSize)];
+}
+
+export function genInputTypeCases(
+    originalValue: string,
+): Array<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]> {
+    const withLabel = <T extends object>(obj: T): [string, T] => {
+        if (ArrayBuffer.isView(obj)) {
+            const bufferlabel = `${obj.buffer.constructor.name}(${obj.buffer.byteLength})`;
+            const beginByteOffset = obj.byteOffset;
+            const endByteOffset = obj.byteOffset + obj.byteLength;
+
+            const subarrayParams: string[] = [];
+            if (beginByteOffset !== 0) subarrayParams.push(`begin=${beginByteOffset}`);
+            if (endByteOffset !== obj.buffer.byteLength) subarrayParams.push(`end=${endByteOffset}`);
+            if (subarrayParams.length > 0) {
+                return [`${obj.constructor.name}( ${bufferlabel} |> subarray( ${subarrayParams.join(' ')} ) )`, obj];
+            }
+
+            return [`${obj.constructor.name}( ${bufferlabel} )`, obj];
+        }
+        return [`${obj.constructor.name}`, obj];
+    };
+    const originalBytes = new TextEncoder().encode(originalValue);
+    const genView = <T extends ArrayBufferView>(
+        ViewConstructor: {
+            new(buffer: ArrayBufferLike, byteOffset: number, length: number): T;
+            readonly BYTES_PER_ELEMENT?: number;
+        },
+        data: ArrayBufferView & ArrayLike<number>,
+        beginByteOffset = 0,
+        overrunByteLength = 0,
+    ): T => {
+        const { BYTES_PER_ELEMENT = 1 } = ViewConstructor;
+        if (beginByteOffset % BYTES_PER_ELEMENT !== 0) {
+            beginByteOffset = Math.ceil(beginByteOffset / BYTES_PER_ELEMENT) * BYTES_PER_ELEMENT;
+        }
+        if (data.byteLength % BYTES_PER_ELEMENT !== 0) {
+            throw new Error(`byte length of originalValue argument must be a multiple of ${BYTES_PER_ELEMENT}`);
+        }
+        const buffer = new ArrayBuffer(beginByteOffset + data.byteLength + overrunByteLength);
+        new Uint8Array(buffer).set(data, beginByteOffset);
+        return new ViewConstructor(buffer, beginByteOffset, data.byteLength / BYTES_PER_ELEMENT);
+    };
+    const genBuf = <T extends ArrayBufferLike>(
+        BufferConstructor: new (byteLength: number) => T,
+        data: ArrayBufferView & ArrayLike<number>,
+    ): T => {
+        const buffer = new BufferConstructor(data.byteLength);
+        new Uint8Array(buffer).set(data);
+        return buffer;
+    };
+
+    return [
+        // string
+        ['string', originalValue],
+        ...[
+            // Node.js Buffer & TypedArray & DataView
+            ...[
+                Buffer,
+                Uint8Array,
+                Uint8ClampedArray,
+                Uint16Array,
+                Uint32Array,
+                Int8Array,
+                Int16Array,
+                Int32Array,
+                BigUint64Array,
+                BigInt64Array,
+                Float32Array,
+                Float64Array,
+                DataView,
+            ].flatMap(c => [
+                genView<InstanceType<typeof c>>(c, originalBytes),
+                genView<InstanceType<typeof c>>(c, originalBytes, 1),
+                genView<InstanceType<typeof c>>(c, originalBytes, 0, 2),
+                genView<InstanceType<typeof c>>(c, originalBytes, 3, 4),
+            ]),
+            // ArrayBufferLike
+            genBuf(ArrayBuffer, originalBytes),
+            genBuf(SharedArrayBuffer, originalBytes),
+        ].map(withLabel),
+    ];
 }
