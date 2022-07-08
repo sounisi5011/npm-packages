@@ -30,8 +30,8 @@ describe('input should allow the types described in documentation', () => {
 
     describe('cleartext', () => {
         const cleartextInput = '12345678';
-        const cleartextCases = genInputTypeCases(cleartextInput);
         const expectedCleartext = Buffer.from(cleartextInput);
+        const cleartextCases = genInputTypeCases(cleartextInput);
 
         describe('encrypt()', () => {
             it.each<[string, Input]>(cleartextCases)('%s', async (_, cleartext) => {
@@ -81,31 +81,30 @@ describe('input should allow the types described in documentation', () => {
         const passwordCases = genInputTypeCases(passwordInput);
         const encryptedDataAsync = encrypt(cleartext, passwordInput);
 
-        describe.each<[string, (arg: { password: InputDataType }) => Promise<Buffer>]>([
-            ['encrypt()', async ({ password }) => await encrypt(cleartext, password)],
-            [
-                'encryptIterator()',
-                async ({ password }) => await iterable2buffer(encryptIterator(password)([cleartext])),
-            ],
-        ])('%s', (_, encryptFn) => {
+        describe('encrypt()', () => {
             it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
-                const encryptedDataAsync = encryptFn({ password });
+                const encryptedDataAsync = encrypt(cleartext, password);
                 await expect(encryptedDataAsync).resolves.not.toThrow();
                 await expect(decrypt(await encryptedDataAsync, passwordInput)).resolves.not.toThrow();
             });
         });
-        describe.each<[string, (arg: { password: InputDataType }) => Promise<Buffer>]>([
-            [
-                'decrypt()',
-                async ({ password }) => await decrypt(await encryptedDataAsync, password),
-            ],
-            [
-                'decryptIterator()',
-                async ({ password }) => await iterable2buffer(decryptIterator(password)([await encryptedDataAsync])),
-            ],
-        ])('%s', (_, decryptFn) => {
+        describe('encryptIterator()', () => {
             it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
-                await expect(decryptFn({ password })).resolves.not.toThrow();
+                const encryptedDataAsync = iterable2buffer(encryptIterator(password)([cleartext]));
+                await expect(encryptedDataAsync).resolves.not.toThrow();
+                await expect(decrypt(await encryptedDataAsync, passwordInput)).resolves.not.toThrow();
+            });
+        });
+        describe('decrypt()', () => {
+            it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
+                const decryptedDataAsync = decrypt(await encryptedDataAsync, password);
+                await expect(decryptedDataAsync).resolves.not.toThrow();
+            });
+        });
+        describe('decryptIterator()', () => {
+            it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
+                const decryptedDataAsync = iterable2buffer(decryptIterator(password)([await encryptedDataAsync]));
+                await expect(decryptedDataAsync).resolves.not.toThrow();
             });
         });
     });
@@ -113,14 +112,14 @@ describe('input should allow the types described in documentation', () => {
 
 describe('output value must be a `Promise<Buffer>`', () => {
     type Output = Promise<Buffer>;
-    it.each<[string, () => [Output] | Promise<[Output]>]>([
-        ['encrypt()', () => [encrypt(cleartext, password)]],
-        ['decrypt()', async () => {
-            const encryptedData = await encrypt(cleartext, password);
-            return [decrypt(encryptedData, password)];
-        }],
-    ])('%s', async (_, genOutput) => {
-        const [output] = await genOutput();
+    it('encrypt()', async () => {
+        const output: Output = encrypt(cleartext, password);
+        expect(output).toBeInstanceOf(Promise);
+        await expect(output).resolves.toBeInstanceOf(Buffer);
+    });
+    it('decrypt()', async () => {
+        const encryptedData = await encrypt(cleartext, password);
+        const output: Output = decrypt(encryptedData, password);
         expect(output).toBeInstanceOf(Promise);
         await expect(output).resolves.toBeInstanceOf(Buffer);
     });
