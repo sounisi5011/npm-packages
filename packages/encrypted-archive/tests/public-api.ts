@@ -1,15 +1,9 @@
-import {
-    CompressOptions,
-    CryptoAlgorithmName,
-    decrypt,
-    decryptIterator,
-    encrypt,
-    encryptIterator,
-    EncryptOptions,
-    InputDataType,
-    KeyDerivationOptions,
-} from '../src';
+import * as stream from 'stream';
+
+import type { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, KeyDerivationOptions } from '../src';
+import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../src';
 import { bufferChunk, genInputTypeCases, genIterableTypeCases, iterable2buffer } from './helpers';
+import { pipelineAsync } from './helpers/stream';
 
 const cleartext = Buffer.from('123456789'.repeat(20));
 const password = 'dragon';
@@ -52,6 +46,22 @@ describe('input should allow the types described in documentation', () => {
                 },
             );
         });
+        describe('encryptStream()', () => {
+            it.each<[string, Input]>(cleartextCases)('%s', async (_, cleartext) => {
+                const encryptorStream = encryptStream(password);
+                const waitFinish = pipelineAsync(
+                    stream.Readable.from([cleartext]),
+                    encryptorStream,
+                );
+                const encryptedDataAsync = iterable2buffer(encryptorStream);
+                await Promise.all([
+                    expect(encryptedDataAsync).resolves.not.toThrow(),
+                    expect(waitFinish).resolves.not.toThrow(),
+                ]);
+                const decryptedData = await decrypt(await encryptedDataAsync, password);
+                expect(decryptedData.equals(expectedCleartext)).toBeTrue();
+            });
+        });
     });
     describe('encryptedData', () => {
         const encryptedDataInput = Buffer.from(
@@ -75,6 +85,15 @@ describe('input should allow the types described in documentation', () => {
                 },
             );
         });
+        describe('decryptStream()', () => {
+            it.each<[string, Input]>(encryptedDataCases)('%s', async (_, encryptedData) => {
+                const waitFinish = pipelineAsync(
+                    stream.Readable.from([encryptedData]),
+                    decryptStream(password),
+                );
+                await expect(waitFinish).resolves.not.toThrow();
+            });
+        });
     });
     describe('password', () => {
         const passwordInput = '12345678';
@@ -95,6 +114,21 @@ describe('input should allow the types described in documentation', () => {
                 await expect(decrypt(await encryptedDataAsync, passwordInput)).resolves.not.toThrow();
             });
         });
+        describe('encryptStream()', () => {
+            it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
+                const encryptorStream = encryptStream(password);
+                const waitFinish = pipelineAsync(
+                    stream.Readable.from([cleartext]),
+                    encryptorStream,
+                );
+                const encryptedDataAsync = iterable2buffer(encryptorStream);
+                await Promise.all([
+                    expect(encryptedDataAsync).resolves.not.toThrow(),
+                    expect(waitFinish).resolves.not.toThrow(),
+                ]);
+                await expect(decrypt(await encryptedDataAsync, passwordInput)).resolves.not.toThrow();
+            });
+        });
         describe('decrypt()', () => {
             it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
                 const decryptedDataAsync = decrypt(await encryptedDataAsync, password);
@@ -105,6 +139,15 @@ describe('input should allow the types described in documentation', () => {
             it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
                 const decryptedDataAsync = iterable2buffer(decryptIterator(password)([await encryptedDataAsync]));
                 await expect(decryptedDataAsync).resolves.not.toThrow();
+            });
+        });
+        describe('decryptStream()', () => {
+            it.each<[string, Input]>(passwordCases)('%s', async (_, password) => {
+                const waitFinish = pipelineAsync(
+                    stream.Readable.from([await encryptedDataAsync]),
+                    decryptStream(password),
+                );
+                await expect(waitFinish).resolves.not.toThrow();
             });
         });
     });
@@ -161,13 +204,62 @@ describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
     });
 });
 
+describe('output Stream must return `Buffer` when read', () => {
+    describe('encryptStream()', () => {
+        it.each(cleartextChunkCases)('%s', async (_, cleartextChunkList) => {
+            expect.hasAssertions();
+
+            const outputStream = encryptStream(password);
+            const waitFinish = pipelineAsync(
+                stream.Readable.from(cleartextChunkList),
+                outputStream,
+            );
+            for await (const chunk of outputStream) {
+                expect(chunk).toBeInstanceOf(Buffer);
+            }
+            await waitFinish;
+        });
+    });
+    describe('decryptStream()', () => {
+        it.each(encryptedDataChunkIterCases)('%s', async (_, genEncryptedDataChunkIter) => {
+            expect.hasAssertions();
+
+            const outputStream = decryptStream(password);
+            const waitFinish = pipelineAsync(
+                stream.Readable.from(await genEncryptedDataChunkIter()),
+                outputStream,
+            );
+            for await (const chunk of outputStream) {
+                expect(chunk).toBeInstanceOf(Buffer);
+            }
+            await waitFinish;
+        });
+    });
+});
+
 const encryptCases: Array<readonly [string, (options?: EncryptOptions) => Promise<Buffer>]> = [
     ['encrypt()', async options => await encrypt(cleartext, password, options)],
-    ...cleartextChunkCases.map(([label, cleartextChunkList]) =>
+    ...cleartextChunkCases.flatMap(([label, cleartextChunkList]) =>
         [
-            `encryptIterator() [input: ${label}]`,
-            async (options?: EncryptOptions) =>
-                await iterable2buffer(encryptIterator(password, options)(cleartextChunkList)),
+            [
+                `encryptIterator() [input: ${label}]`,
+                async (options?: EncryptOptions) =>
+                    await iterable2buffer(encryptIterator(password, options)(cleartextChunkList)),
+            ],
+            [
+                `encryptStream() [input: ${label}]`,
+                async (options?: EncryptOptions) => {
+                    const encryptorStream = encryptStream(password, options);
+                    const [encryptedData] = await Promise.all([
+                        iterable2buffer(encryptorStream),
+                        pipelineAsync(
+                            stream.Readable.from([cleartext]),
+                            encryptorStream,
+                        ),
+                    ]);
+                    return encryptedData;
+                },
+            ],
         ] as const
     ),
 ];
@@ -185,6 +277,20 @@ const decryptCases: Array<
     [
         'decryptIterator()',
         async (encryptedData, password) => await iterable2buffer(decryptIterator(password)([await encryptedData])),
+    ],
+    [
+        'decryptStream()',
+        async (encryptedData, password) => {
+            const decryptorStream = decryptStream(password);
+            const [decryptedData] = await Promise.all([
+                iterable2buffer(decryptorStream),
+                pipelineAsync(
+                    stream.Readable.from([await encryptedData]),
+                    decryptorStream,
+                ),
+            ]);
+            return decryptedData;
+        },
     ],
 ];
 
@@ -217,6 +323,18 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
                 const encryptedDataChunkIter = [await encrypt(cleartext, password, options)];
                 return await iterable2buffer(decryptIterator(password)(encryptedDataChunkIter));
             }],
+            ['encrypt() |> decryptStream()', async () => {
+                const encryptedDataChunkIter = [await encrypt(cleartext, password, options)];
+                const decryptorStream = decryptStream(password);
+                const [decryptedData] = await Promise.all([
+                    iterable2buffer(decryptorStream),
+                    pipelineAsync(
+                        stream.Readable.from(encryptedDataChunkIter),
+                        decryptorStream,
+                    ),
+                ]);
+                return decryptedData;
+            }],
             ...cleartextChunkCases.flatMap<[string, () => Promise<Buffer>]>(([label, cleartextChunkList]) => [
                 [
                     `encryptIterator() [input: ${label}] |> decrypt()`,
@@ -231,6 +349,65 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
                     async () => {
                         const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
                         return await iterable2buffer(decryptIterator(password)(encryptedDataChunkIter));
+                    },
+                ],
+                [
+                    `encryptIterator() [input: ${label}] |> decryptStream()`,
+                    async () => {
+                        const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
+                        const decryptorStream = decryptStream(password);
+                        const [decryptedData] = await Promise.all([
+                            iterable2buffer(decryptorStream),
+                            pipelineAsync(
+                                stream.Readable.from(encryptedDataChunkIter),
+                                decryptorStream,
+                            ),
+                        ]);
+                        return decryptedData;
+                    },
+                ],
+                [
+                    `encryptStream() [input: ${label}] |> decrypt()`,
+                    async () => {
+                        const encryptorStream = encryptStream(password, options);
+                        const [encryptedData] = await Promise.all([
+                            iterable2buffer(encryptorStream),
+                            pipelineAsync(
+                                stream.Readable.from(cleartextChunkList),
+                                encryptorStream,
+                            ),
+                        ]);
+                        return await decrypt(encryptedData, password);
+                    },
+                ],
+                [
+                    `encryptStream() [input: ${label}] |> decryptIterator()`,
+                    async () => {
+                        const encryptorStream = encryptStream(password, options);
+                        const [decryptedData] = await Promise.all([
+                            iterable2buffer(decryptIterator(password)(encryptorStream)),
+                            pipelineAsync(
+                                stream.Readable.from(cleartextChunkList),
+                                encryptorStream,
+                            ),
+                        ]);
+                        return decryptedData;
+                    },
+                ],
+                [
+                    `encryptStream() [input: ${label}] |> decryptStream()`,
+                    async () => {
+                        const encryptorStream = encryptStream(password, options);
+                        const decryptorStream = decryptStream(password);
+                        const [decryptedData] = await Promise.all([
+                            iterable2buffer(decryptorStream),
+                            pipelineAsync(
+                                stream.Readable.from(cleartextChunkList),
+                                encryptorStream,
+                                decryptorStream,
+                            ),
+                        ]);
+                        return decryptedData;
                     },
                 ],
             ]),
