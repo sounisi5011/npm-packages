@@ -60,6 +60,20 @@ export function createDummySizeBuffer(size: number): Buffer {
     });
 }
 
+function isAsyncIterable(value: object): value is AsyncIterable<unknown> {
+    return Symbol.asyncIterator in value;
+}
+
+export async function iterable2list<T>(iterable: Iterable<T> | Iterable<Promise<T>> | AsyncIterable<T>): Promise<T[]> {
+    const list: T[] = [];
+    if (isAsyncIterable(iterable)) {
+        for await (const item of iterable) list.push(item);
+    } else {
+        for (const item of iterable) list.push(await item);
+    }
+    return list;
+}
+
 export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable<Buffer>): Promise<Buffer> {
     const bufferList: Buffer[] = [];
     for await (const buffer of iterable) bufferList.push(buffer);
