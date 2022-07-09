@@ -9,7 +9,7 @@ import {
     EncryptBuiltinAPIRecord,
     EncryptOptions as InternalEncryptOptions,
 } from './core/encrypt';
-import { validateChunk } from './core/stream';
+import { validateChunk } from './core/errors';
 import type {
     InputDataType as InternalInputDataType,
     IteratorConverter as InternalIteratorConverter,

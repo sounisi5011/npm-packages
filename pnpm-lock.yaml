@@ -73,7 +73,7 @@ importers:
       '@swc/core': 1.2.208
       '@swc/jest': 0.2.21
       '@types/jest': 28.1.4
-      '@types/node': 16.11.42
+      '@types/node': 16.11.43
       '@types/validate-npm-package-name': 4.0.0
       '@vercel/ncc': 0.34.0
       cross-env: 7.0.3
@@ -102,11 +102,11 @@ importers:
       '@swc/core': 1.2.208
       '@swc/jest': 0.2.21_@swc+core@1.2.208
       '@types/jest': 28.1.4
-      '@types/node': 16.11.42
+      '@types/node': 16.11.43
       '@types/validate-npm-package-name': 4.0.0
       '@vercel/ncc': 0.34.0
       cross-env: 7.0.3
-      jest: 28.1.2_@types+node@16.11.42
+      jest: 28.1.2_@types+node@16.11.43
       jest-mock-process: 2.0.0_jest@28.1.2
       nock: 13.2.8
       spawk: 1.7.1
@@ -225,7 +225,6 @@ importers:
 
   packages/encrypted-archive:
     specifiers:
-      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': workspace:^0.0.0 || ^1.0.0
       '@sounisi5011/run-if-supported': 1.1.1
@@ -259,11 +258,11 @@ importers:
       jest: 28.1.2
       jest-extended: 2.0.0
       multicodec: 3.2.1
-      noop-stream: 0.1.0
       semver: 7.3.7
       typescript: 4.7.4
       ultra-runner: 3.10.5
       varint: ^6.0.0
+      word-join: 0.0.1
     dependencies:
       '@sounisi5011/stream-transform-from': link:../stream-transform-from
       '@sounisi5011/ts-utils-is-property-accessible': link:../ts-utils/is-property-accessible
@@ -275,7 +274,6 @@ importers:
     optionalDependencies:
       argon2: 0.27.2
     devDependencies:
-      '@jorgeferrero/stream-to-buffer': 2.0.6
       '@protobuf-ts/protoc': 2.7.0
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': 1.1.1
@@ -302,10 +300,10 @@ importers:
       jest: 28.1.2_@types+node@12.20.55
       jest-extended: 2.0.0_jest@28.1.2
       multicodec: 3.2.1
-      noop-stream: 0.1.0
       semver: 7.3.7
       typescript: 4.7.4
       ultra-runner: 3.10.5
+      word-join: 0.0.1
 
   packages/encrypted-archive/examples:
     specifiers:
@@ -1192,10 +1190,6 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@jorgeferrero/stream-to-buffer/2.0.6:
-    resolution: {integrity: sha512-G7jiBkMwDdYADntdV/qzl9H4Lkch0RyektqXl5+KhktduP4/rE1RaTz0wKZFdC2dKo3S0JaxoUUC3uDeXmI7EQ==}
-    dev: true
-
   /@jridgewell/gen-mapping/0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
     engines: {node: '>=6.0.0'}
@@ -1769,8 +1763,8 @@ packages:
     resolution: {integrity: sha512-x5W9s+8P4XteaxT/jKF0PSb7XEvo5VmqEWgsMlyeY4ZlLK8I6aH6g5TPPyDlLAep+GYf4kefb7HFyc7PAO3m+Q==}
     dev: true
 
-  /@types/node/16.11.42:
-    resolution: {integrity: sha512-iwLrPOopPy6V3E+1yHTpJea3bdsNso0b0utLOJJwaa/PLzqBt3GZl3stMcakc/gr89SfcNk2ki3z7Gvue9hYGQ==}
+  /@types/node/16.11.43:
+    resolution: {integrity: sha512-GqWykok+3uocgfAJM8imbozrqLnPyTrpFlrryURQlw1EesPUCx5XxTiucWDSFF9/NUEXDuD4bnvHm8xfVGWTpQ==}
     dev: true
 
   /@types/node/18.0.0:
@@ -5005,7 +4999,7 @@ packages:
       - ts-node
     dev: true
 
-  /jest-cli/28.1.2_@types+node@16.11.42:
+  /jest-cli/28.1.2_@types+node@16.11.43:
     resolution: {integrity: sha512-l6eoi5Do/IJUXAFL9qRmDiFpBeEJAnjJb1dcd9i/VWfVWbp3mJhuH50dNtX67Ali4Ecvt4eBkWb4hXhPHkAZTw==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     hasBin: true
@@ -5022,7 +5016,7 @@ packages:
       exit: 0.1.2
       graceful-fs: 4.2.10
       import-local: 3.1.0
-      jest-config: 28.1.2_@types+node@16.11.42
+      jest-config: 28.1.2_@types+node@16.11.43
       jest-util: 28.1.1
       jest-validate: 28.1.1
       prompts: 2.4.2
@@ -5149,7 +5143,7 @@ packages:
       - supports-color
     dev: true
 
-  /jest-config/28.1.2_@types+node@16.11.42:
+  /jest-config/28.1.2_@types+node@16.11.43:
     resolution: {integrity: sha512-g6EfeRqddVbjPVBVY4JWpUY4IvQoFRIZcv4V36QkqzE0IGhEC/VkugFeBMAeUE7PRgC8KJF0yvJNDeQRbamEVA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     peerDependencies:
@@ -5164,7 +5158,7 @@ packages:
       '@babel/core': 7.18.5
       '@jest/test-sequencer': 28.1.1
       '@jest/types': 28.1.1
-      '@types/node': 16.11.42
+      '@types/node': 16.11.43
       babel-jest: 28.1.2_@babel+core@7.18.5
       chalk: 4.1.2
       ci-info: 3.3.2
@@ -5353,7 +5347,7 @@ packages:
     peerDependencies:
       jest: '>=23.4'
     dependencies:
-      jest: 28.1.2_@types+node@16.11.42
+      jest: 28.1.2_@types+node@16.11.43
     dev: true
 
   /jest-mock/28.1.1:
@@ -5603,7 +5597,7 @@ packages:
       - ts-node
     dev: true
 
-  /jest/28.1.2_@types+node@16.11.42:
+  /jest/28.1.2_@types+node@16.11.43:
     resolution: {integrity: sha512-Tuf05DwLeCh2cfWCQbcz9UxldoDyiR1E9Igaei5khjonKncYdc6LDfynKCEWozK0oLE3GD+xKAo2u8x/0s6GOg==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     hasBin: true
@@ -5616,7 +5610,7 @@ packages:
       '@jest/core': 28.1.2
       '@jest/types': 28.1.1
       import-local: 3.1.0
-      jest-cli: 28.1.2_@types+node@16.11.42
+      jest-cli: 28.1.2_@types+node@16.11.43
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -6219,13 +6213,6 @@ packages:
 
   /node-releases/2.0.5:
     resolution: {integrity: sha512-U9h1NLROZTq9uE1SNffn6WuPDg8icmi3ns4rEl/oTfIle4iLjTliCzgTsbaIFMq/Xn078/lfY/BL0GWZ+psK4Q==}
-    dev: true
-
-  /noop-stream/0.1.0:
-    resolution: {integrity: sha512-GyQPM8zEoN9LADidd/DHLbIE8lOyNz+LrNyT9YQjGGu7KGPEvx9PvgRlWhXhvqcBAVKf/SI6k+RzNSy/QUmvZQ==}
-    engines: {node: '>=8'}
-    dependencies:
-      type-fest: 0.5.2
     dev: true
 
   /nopt/5.0.0:
@@ -7778,11 +7765,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/0.5.2:
-    resolution: {integrity: sha512-DWkS49EQKVX//Tbupb9TFa19c7+MK1XmzkrZUR8TAktmE/DizXoaoJV6TZ/tSIPXipqNiRI6CyAe7x69Jb6RSw==}
-    engines: {node: '>=6'}
-    dev: true
-
   /type-fest/0.6.0:
     resolution: {integrity: sha512-q+MB8nYR1KDLrgr4G5yemftpMC7/QLqVndBmEEdqzmNj5dcFOO4Oo8qlwZE3ULT3+Zim1F8Kq4cBnikNhlCMlg==}
     engines: {node: '>=8'}
@@ -8020,6 +8002,10 @@ packages:
       string-width: 4.2.3
     dev: false
     optional: true
+
+  /word-join/0.0.1:
+    resolution: {integrity: sha512-+/gyeFAidlL6Z6rITeuz3tb2cOYUSbZAlt5qDnqjaB59pe+N0kGOwhL8e88bT2DSTvona0nUotT8LsiUQhPoAg==}
+    dev: true
 
   /word-wrap/1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}

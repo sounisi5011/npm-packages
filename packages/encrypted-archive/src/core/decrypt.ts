@@ -1,3 +1,4 @@
+import { validatePassword } from './errors';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -163,6 +164,7 @@ async function decryptChunk(
 }
 
 export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, password: InputDataType): IteratorConverter {
+    validatePassword(builtin, password);
     return async function* decryptor(source) {
         const passwordBuffer = uint8arrayFrom(builtin.encodeString, password);
         const reader = new StreamReader(builtin, source, convertChunk(builtin));

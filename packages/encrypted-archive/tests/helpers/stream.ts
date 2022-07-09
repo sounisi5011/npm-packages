@@ -1,11 +1,27 @@
 import * as stream from 'stream';
 import { promisify } from 'util';
 
+import { iterable2list } from '.';
 import type { StreamReaderInterface } from '../../src/core/utils/stream';
 import type { AsyncIterableIteratorReturn } from '../../src/core/utils/type';
 
 export const waitStreamFinished = promisify(stream.finished);
 export const pipelineAsync = promisify(stream.pipeline);
+
+export async function runDuplex(
+    inputIter: Iterable<unknown> | AsyncIterable<unknown>,
+    ...streams: [NodeJS.ReadWriteStream, ...NodeJS.ReadWriteStream[]]
+): Promise<any[]> { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const lastStream = streams[streams.length - 1] ?? streams[0];
+    const [list] = await Promise.all([
+        iterable2list(lastStream),
+        pipelineAsync(
+            stream.Readable.from(inputIter),
+            ...streams,
+        ),
+    ]);
+    return list;
+}
 
 export function createFillBytesReadableStream(
     { size: fullLength, value = 0x00 }: { size: number; value?: string | number | Buffer },

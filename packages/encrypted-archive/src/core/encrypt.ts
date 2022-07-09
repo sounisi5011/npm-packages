@@ -1,3 +1,4 @@
+import { validatePassword } from './errors';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
@@ -165,6 +166,7 @@ export function createEncryptorIterator<TCompressOptions extends BaseCompressOpt
     password: InputDataType,
     options: EncryptOptions<TCompressOptions>,
 ): IteratorConverter {
+    validatePassword(builtin, password);
     const algorithm = builtin.getCryptoAlgorithm(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 

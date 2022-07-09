@@ -38,7 +38,7 @@
     "@swc/core": "1.2.208",
     "@swc/jest": "0.2.21",
     "@types/jest": "28.1.4",
-    "@types/node": "16.11.42",
+    "@types/node": "16.11.43",
     "@types/validate-npm-package-name": "4.0.0",
     "@vercel/ncc": "0.34.0",
     "cross-env": "7.0.3",
