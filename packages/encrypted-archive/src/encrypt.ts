@@ -2,10 +2,10 @@ import { randomBytes } from 'crypto';
 
 import { CryptoAlgorithm, cryptoAlgorithmMap, CryptoAlgorithmName, defaultCryptoAlgorithmName } from './cipher';
 import { CompressOptions, createCompressor } from './compress';
+import { validateChunk, validatePassword } from './errors';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF, KeyDerivationOptions, NormalizedKeyDerivationOptions } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, convertIterableValue } from './utils';
 import type { AsyncIterableReturn } from './utils/type';
@@ -147,6 +147,7 @@ async function* encryptChunk(compressedCleartext: Buffer, {
 }
 
 export function createEncryptorIterator(password: InputDataType, options: EncryptOptions): IteratorConverter {
+    validatePassword(password);
     const algorithm = cryptoAlgorithmMap.get(options.algorithm ?? defaultCryptoAlgorithmName);
     if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
 
