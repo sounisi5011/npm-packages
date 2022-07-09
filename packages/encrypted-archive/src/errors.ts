@@ -11,3 +11,13 @@ export function validateChunk(chunk: unknown): InputDataType {
     }
     return chunk;
 }
+
+export function validatePassword(password: unknown): asserts password is InputDataType {
+    if (!isInputDataType(password)) {
+        throw new TypeError(
+            `Invalid type password received.`
+                + ` The password argument must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer.`
+                + ` Received ${printObject(password)}`,
+        );
+    }
+}
