@@ -1,5 +1,8 @@
 import * as stream from 'stream';
 
+import escapeStringRegexp from 'escape-string-regexp';
+import wordJoin from 'word-join';
+
 import type { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, KeyDerivationOptions } from '../src';
 import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../src';
 import { bufferChunk, genInputTypeCases, genIterableTypeCases, iterable2buffer } from './helpers';
@@ -18,6 +21,29 @@ const encryptedDataChunkIterCases: Array<
     ['single chunk', async opts => [await encrypt(cleartext, password, opts)]],
     ['multi chunk', opts => encryptIterator(password, opts)(cleartextMultiChunkList)],
 ];
+const expectedInputTypeMsg = wordJoin([
+    'string',
+    `an instance of ${
+        wordJoin([
+            'Buffer',
+            'TypedArray',
+            'DataView',
+            'ArrayBuffer',
+        ], { conjunction: 'or', oxford: true })
+    }`,
+], { conjunction: 'or', oxford: true });
+const chunkTypeErrorMessageRegExp = new RegExp(
+    String.raw`^${
+        escapeStringRegexp(`Invalid type chunk received. Each chunk must be of type ${expectedInputTypeMsg}. Received`)
+    }\b`,
+);
+const passwordTypeErrorMessageRegExp = new RegExp(
+    String.raw`^${
+        escapeStringRegexp(
+            `Invalid type password received. The password argument must be of type ${expectedInputTypeMsg}. Received`,
+        )
+    }\b`,
+);
 
 describe('input should allow the types described in documentation', () => {
     type Input = string | Buffer | NodeJS.TypedArray | DataView | ArrayBuffer | SharedArrayBuffer;
@@ -148,6 +174,92 @@ describe('input should allow the types described in documentation', () => {
                     decryptStream(password),
                 );
                 await expect(waitFinish).resolves.not.toThrow();
+            });
+        });
+    });
+});
+
+describe('should throw an error if a value of an invalid type is specified as input', () => {
+    const invalidInputCases: unknown[] = [
+        null,
+        undefined,
+        true,
+        false,
+        42,
+        { hoge: 'fuga' },
+    ];
+    const genInvalidInputCases = (fnName: string): typeof invalidInputCases =>
+        invalidInputCases
+            .filter(value => !(value === null && fnName.endsWith('Stream()')));
+    const cleartext = '';
+    const encryptedData = '';
+    const password = '';
+
+    const encryptCases: Array<
+        [string, (arg: { cleartext: InputDataType; password: InputDataType }) => Promise<unknown>]
+    > = [
+        ['encrypt()', async ({ cleartext, password }) => await encrypt(cleartext, password)],
+        [
+            'encryptIterator()',
+            async ({ cleartext, password }) => await iterable2buffer(encryptIterator(password)([cleartext])),
+        ],
+        [
+            'encryptStream()',
+            async ({ cleartext, password }) =>
+                await pipelineAsync(stream.Readable.from([cleartext]), encryptStream(password)),
+        ],
+    ];
+    const decryptCases: Array<
+        [string, (arg: { encryptedData: InputDataType; password: InputDataType }) => Promise<unknown>]
+    > = [
+        ['decrypt()', async ({ encryptedData, password }) => await decrypt(encryptedData, password)],
+        [
+            'decryptIterator()',
+            async ({ encryptedData, password }) => await iterable2buffer(decryptIterator(password)([encryptedData])),
+        ],
+        [
+            'decryptStream()',
+            async ({ encryptedData, password }) =>
+                await pipelineAsync(stream.Readable.from([encryptedData]), decryptStream(password)),
+        ],
+    ];
+
+    describe('cleartext', () => {
+        describe.each(encryptCases)('%s', (encryptFnName, encryptFn) => {
+            it.each(genInvalidInputCases(encryptFnName))('%o', async invalidInput => {
+                // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'InputDataType'.
+                const cleartext: InputDataType = invalidInput;
+                const waitEncryption = encryptFn({ cleartext, password });
+                await expect(waitEncryption).rejects.toThrowWithMessage(
+                    TypeError,
+                    chunkTypeErrorMessageRegExp,
+                );
+            });
+        });
+    });
+    describe('encryptedData', () => {
+        describe.each(decryptCases)('%s', (decryptFnName, decryptFn) => {
+            it.each(genInvalidInputCases(decryptFnName))('%o', async invalidInput => {
+                // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'InputDataType'.
+                const encryptedData: InputDataType = invalidInput;
+                const waitDecryption = decryptFn({ encryptedData, password });
+                await expect(waitDecryption).rejects.toThrowWithMessage(
+                    TypeError,
+                    chunkTypeErrorMessageRegExp,
+                );
+            });
+        });
+    });
+    describe('password', () => {
+        describe.each([...encryptCases, ...decryptCases])('%s', (fnName, encryptOrDecryptFn) => {
+            it.each(genInvalidInputCases(fnName))('%o', async invalidInput => {
+                // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'InputDataType'.
+                const password: InputDataType = invalidInput;
+                const waitEncryption = encryptOrDecryptFn({ cleartext, encryptedData, password });
+                await expect(waitEncryption).rejects.toThrowWithMessage(
+                    TypeError,
+                    passwordTypeErrorMessageRegExp,
+                );
             });
         });
     });

@@ -263,6 +263,7 @@ importers:
       typescript: 4.7.4
       ultra-runner: 3.10.5
       varint: ^6.0.0
+      word-join: 0.0.1
     dependencies:
       '@sounisi5011/stream-transform-from': link:../stream-transform-from
       '@sounisi5011/ts-utils-is-property-accessible': link:../ts-utils/is-property-accessible
@@ -304,6 +305,7 @@ importers:
       semver: 7.3.7
       typescript: 4.7.4
       ultra-runner: 3.10.5
+      word-join: 0.0.1
 
   packages/encrypted-archive/examples:
     specifiers:
@@ -8014,6 +8016,10 @@ packages:
       string-width: 4.2.3
     dev: false
     optional: true
+
+  /word-join/0.0.1:
+    resolution: {integrity: sha512-+/gyeFAidlL6Z6rITeuz3tb2cOYUSbZAlt5qDnqjaB59pe+N0kGOwhL8e88bT2DSTvona0nUotT8LsiUQhPoAg==}
+    dev: true
 
   /word-wrap/1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}
