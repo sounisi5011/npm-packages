@@ -1,9 +1,6 @@
 import * as stream from 'stream';
 
-import { writableNoopStream } from 'noop-stream';
-
 import { decryptStream, encrypt, encryptStream } from '../src';
-import { genInputTypeCases } from './helpers';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 const chunkTypeErrorMessageRegExp =
@@ -36,30 +33,6 @@ describe('encryptStream()', () => {
                 firstChunkLen = chunk.byteLength;
             }
         }
-    });
-    describe('non Buffer chunk', () => {
-        const cases = genInputTypeCases('foo bar.').filter(([, chunk]) => !Buffer.isBuffer(chunk));
-        it.each(cases)('%s', async (_, chunk) => {
-            await expect(pipelineAsync(
-                stream.Readable.from([chunk]),
-                encryptStream(''),
-                writableNoopStream(),
-            )).toResolve();
-        });
-        it.each<[string, unknown]>([
-            ['number', 42],
-            ['object', { hoge: 'fuga' }],
-        ])('%s', async (_, chunk) => {
-            const resultPromise = pipelineAsync(
-                stream.Readable.from([chunk]),
-                encryptStream(''),
-                writableNoopStream(),
-            );
-            await expect(resultPromise).rejects.toThrowWithMessage(
-                TypeError,
-                chunkTypeErrorMessageRegExp,
-            );
-        });
     });
     it('encryptor should throw an error even if not piped to WritableStream', async () => {
         /**
@@ -137,49 +110,6 @@ describe('decryptStream()', () => {
 
             const decryptedData = Buffer.concat(chunkList);
             expect(decryptedData).toBytesEqual(cleartext);
-        });
-    });
-    describe('non Buffer chunk', () => {
-        it.each<[string, string | ArrayBufferLike | NodeJS.ArrayBufferView]>([
-            ['string', 'foo'],
-            // TypedArray
-            ['Uint8Array', new Uint8Array(3)],
-            ['Uint8ClampedArray', new Uint8ClampedArray(2)],
-            ['Uint16Array', new Uint16Array(1)],
-            ['Uint32Array', new Uint32Array(6)],
-            ['Int8Array', new Int8Array(4)],
-            ['Int16Array', new Int16Array(9)],
-            ['Int32Array', new Int32Array(7)],
-            ['BigUint64Array', new BigUint64Array(5)],
-            ['BigInt64Array', new BigInt64Array(8)],
-            ['Float32Array', new Float32Array(1)],
-            ['Float64Array', new Float64Array(1)],
-            // DataView
-            ['DataView', new DataView(new ArrayBuffer(3))],
-            // ArrayBufferLike
-            ['ArrayBuffer', new ArrayBuffer(5)],
-            ['SharedArrayBuffer', new SharedArrayBuffer(5)],
-        ])('%s', async (_, chunk) => {
-            const resultPromise = pipelineAsync(
-                stream.Readable.from([chunk]),
-                decryptStream(''),
-                writableNoopStream(),
-            );
-            await expect(resultPromise).rejects.toThrowWithMessage(Error, /^Invalid identifier detected\./);
-        });
-        it.each<[string, unknown]>([
-            ['number', 42],
-            ['object', { hoge: 'fuga' }],
-        ])('%s', async (_, chunk) => {
-            const resultPromise = pipelineAsync(
-                stream.Readable.from([chunk]),
-                decryptStream(''),
-                writableNoopStream(),
-            );
-            await expect(resultPromise).rejects.toThrowWithMessage(
-                TypeError,
-                chunkTypeErrorMessageRegExp,
-            );
         });
     });
     it('decryptor should throw an error even if not piped to WritableStream', async () => {
