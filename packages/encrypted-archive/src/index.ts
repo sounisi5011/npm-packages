@@ -6,8 +6,8 @@ import type { CryptoAlgorithmName } from './cipher';
 import type { CompressOptions } from './compress';
 import { createDecryptorIterator } from './decrypt';
 import { createEncryptorIterator, EncryptOptions } from './encrypt';
+import { validateChunk } from './errors';
 import type { KeyDerivationOptions } from './key-derivation-function';
-import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { asyncIterable2Buffer, bufferFrom, convertIterableValue } from './utils';
 

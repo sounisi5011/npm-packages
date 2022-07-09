@@ -1,5 +1,6 @@
 import { CryptoAlgorithm, cryptoAlgorithmMap } from './cipher';
 import { CompressOptions, decompressIterable } from './compress';
+import { validateChunk, validatePassword } from './errors';
 import {
     HeaderData,
     parseCiphertextIterable,
@@ -13,7 +14,6 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { validateChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import { bufferFrom, fixNodePrimordialsErrorInstance } from './utils';
 import { StreamReader } from './utils/stream';
@@ -169,6 +169,7 @@ async function decryptChunk(
 }
 
 export function createDecryptorIterator(password: InputDataType): IteratorConverter {
+    validatePassword(password);
     return async function* decryptor(source) {
         const reader = new StreamReader(source, chunk => bufferFrom(validateChunk(chunk), 'utf8'));
 
