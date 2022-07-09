@@ -3,9 +3,6 @@ import * as stream from 'stream';
 import { decryptStream, encrypt, encryptStream } from '../src';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
-const chunkTypeErrorMessageRegExp =
-    /^Invalid type chunk received\. Each chunk must be of type string or an instance of Buffer, TypedArray, DataView, or ArrayBuffer\. Received\b/;
-
 describe('encryptStream()', () => {
     it.each<[string, number]>([
         ['single chunk', 1],
@@ -50,7 +47,7 @@ describe('encryptStream()', () => {
         await expect(pipelineAsync(
             stream.Readable.from([42]),
             encryptStream(''),
-        )).rejects.toThrowWithMessage(Error, chunkTypeErrorMessageRegExp);
+        )).rejects.toThrowWithMessage(Error, /^Invalid type chunk received\./);
     });
 });
 
