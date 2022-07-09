@@ -99,7 +99,6 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
-    "@jorgeferrero/stream-to-buffer": "2.0.6",
     "@protobuf-ts/protoc": "2.7.0",
     "@sounisi5011/jest-binary-data-matchers": "workspace:^0.0.0 || ^1.0.0",
     "@sounisi5011/run-if-supported": "1.1.1",
@@ -126,10 +125,10 @@
     "jest": "28.1.2",
     "jest-extended": "2.0.0",
     "multicodec": "3.2.1",
-    "noop-stream": "0.1.0",
     "semver": "7.3.7",
     "typescript": "4.7.4",
-    "ultra-runner": "3.10.5"
+    "ultra-runner": "3.10.5",
+    "word-join": "0.0.1"
   },
   "optionalDependencies": {
     "argon2": "0.27.2"
