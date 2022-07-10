@@ -32,7 +32,7 @@
     "fmt:ts:dprint": "dprint fmt -c ./.dprint.json",
     "fmt:ts:eslint": "eslint --cache --report-unused-disable-directives --fix --ext .ts,.cts,.mts ./",
     "fmt:xs": "npm-run-all fmt:xs:eslint --parallel fmt:{ts,js}:dprint fmt:xs:eslint",
-    "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
+    "fmt:xs:eslint": "run-s 'lint:eslint --fix'",
     "preinstall": "npx only-allow pnpm",
     "lint": "run-p lint:*",
     "lint:actions": "actionlint",
