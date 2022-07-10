@@ -67,7 +67,7 @@ importers:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
-      '@octokit/endpoint': 6.0.12
+      '@octokit/endpoint': 7.0.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
       '@swc/core': 1.2.211
@@ -91,7 +91,7 @@ importers:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
-      '@octokit/endpoint': 6.0.12
+      '@octokit/endpoint': 7.0.0
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
       validate-npm-package-name: 4.0.0
@@ -1308,6 +1308,15 @@ packages:
 
   /@octokit/endpoint/6.0.12:
     resolution: {integrity: sha512-lF3puPwkQWGfkMClXb4k/eUT/nZKQfxinRWJrdZaJO85Dqwo/G0yOC434Jr2ojwafWJMYqFGFa5ms4jJUgujdA==}
+    dependencies:
+      '@octokit/types': 6.37.1
+      is-plain-object: 5.0.0
+      universal-user-agent: 6.0.0
+    dev: false
+
+  /@octokit/endpoint/7.0.0:
+    resolution: {integrity: sha512-Kz/mIkOTjs9rV50hf/JK9pIDl4aGwAtT8pry6Rpy+hVXkAPhXanNQRxMoq6AeRgDCZR6t/A1zKniY2V1YhrzlQ==}
+    engines: {node: '>= 14'}
     dependencies:
       '@octokit/types': 6.37.1
       is-plain-object: 5.0.0
