@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [1.3.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.3.0...monorepo-workspace-submodules-finder-action-v1.3.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/endpoint to v7 ([#555](https://www.github.com/sounisi5011/npm-packages/issues/555)) ([436150f](https://www.github.com/sounisi5011/npm-packages/commit/436150f18fe773e47a5504fcf4c4ae60790d6d71))
+
 ## [1.3.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.8...monorepo-workspace-submodules-finder-action-v1.3.0) (2022-07-01)
 
 ### Features
