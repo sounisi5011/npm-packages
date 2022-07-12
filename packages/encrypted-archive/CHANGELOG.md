@@ -1,8 +1,7 @@
 # Changelog
 
 
-### [0.1.1](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.1.0...encrypted-archive-v0.1.1) (2022-07-12)
-
+## [0.1.1](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.1.0...encrypted-archive-v0.1.1) (2022-07-12)
 
 ### Bug Fixes
 
@@ -10,6 +9,66 @@
 * **@sounisi5011/encrypted-archive:** validate password type ([#557](https://www.github.com/sounisi5011/npm-packages/issues/557)) ([e3f4a0c](https://www.github.com/sounisi5011/npm-packages/commit/e3f4a0c38ddcc1713c5f41b4bc76edba60a4f2e3))
 * **encrypted-archive:** support Node.js v18+ ([#433](https://www.github.com/sounisi5011/npm-packages/issues/433)) ([61952dd](https://www.github.com/sounisi5011/npm-packages/commit/61952dd4acacf24d3eb8990b033c220786727624))
 * **protocol buffers:** update protoc to v3.19.4 ([#544](https://www.github.com/sounisi5011/npm-packages/issues/544)) ([48cd775](https://www.github.com/sounisi5011/npm-packages/commit/48cd7759f880f073534a5a3799073f5830e35eb5))
+
+### Commits
+
+<details><summary>show 52 commits</summary>
+
+* [`8d39bdd`](https://www.github.com/sounisi5011/npm-packages/commit/8d39bdd7c8df1d4acf2c9652f7a95c0052246b7b) chore(deps): update dependency @swc/core to v1.2.212 ([#562](https://www.github.com/sounisi5011/npm-packages/issues/562))
+* [`96f4929`](https://www.github.com/sounisi5011/npm-packages/commit/96f49292a671171f80298e14ae9e78d43516a1dd) chore(deps): update dependency jest-extended to v3 ([#558](https://www.github.com/sounisi5011/npm-packages/issues/558))
+* [`9e9b917`](https://www.github.com/sounisi5011/npm-packages/commit/9e9b9170b512a83bbcf9c4de57359319ba72f4c6) chore(deps): update dependency @swc/core to v1.2.211 ([#551](https://www.github.com/sounisi5011/npm-packages/issues/551))
+* [`91d1451`](https://www.github.com/sounisi5011/npm-packages/commit/91d1451e6468c5d1650979ca0da6ee7b0a92bb17) test(@sounisi5011/encrypted-archive): add missing tests ([#554](https://www.github.com/sounisi5011/npm-packages/issues/554))
+* [`e3f4a0c`](https://www.github.com/sounisi5011/npm-packages/commit/e3f4a0c38ddcc1713c5f41b4bc76edba60a4f2e3) fix(@sounisi5011/encrypted-archive): validate password type ([#557](https://www.github.com/sounisi5011/npm-packages/issues/557))
+* [`95f3346`](https://www.github.com/sounisi5011/npm-packages/commit/95f334650dfb51ea214b74943177b67f0e91ad5b) fix(@sounisi5011/encrypted-archive): use protoc commands published in npm ([#545](https://www.github.com/sounisi5011/npm-packages/issues/545))
+* [`48cd775`](https://www.github.com/sounisi5011/npm-packages/commit/48cd7759f880f073534a5a3799073f5830e35eb5) fix(protocol buffers): update protoc to v3.19.4 ([#544](https://www.github.com/sounisi5011/npm-packages/issues/544))
+* [`4bfbfb9`](https://www.github.com/sounisi5011/npm-packages/commit/4bfbfb996bb1acefe66aa5a652230c4d49de2efe) chore(deps): update dependency @swc/core to v1.2.208 ([#524](https://www.github.com/sounisi5011/npm-packages/issues/524))
+* [`77ee60f`](https://www.github.com/sounisi5011/npm-packages/commit/77ee60fbba23429fcdf3996a8c1b5f11b4fbd54f) chore(deps): update test packages ([#526](https://www.github.com/sounisi5011/npm-packages/issues/526))
+* [`6737058`](https://www.github.com/sounisi5011/npm-packages/commit/67370582b97d3a178dbe9185978ccb09c9d6c45e) test(jest): migrate from `ts-jest` to `@swc/jest` ([#518](https://www.github.com/sounisi5011/npm-packages/issues/518))
+* [`6e1ca6d`](https://www.github.com/sounisi5011/npm-packages/commit/6e1ca6d71973256a35c35ad3b84868e29c6963c2) chore: fix `scripts/fix-changelog.mjs` ([#514](https://www.github.com/sounisi5011/npm-packages/issues/514))
+* [`996e8b8`](https://www.github.com/sounisi5011/npm-packages/commit/996e8b812a5cd95da32f908c94991276e1029017) ci(release): auto-fix `CHANGELOG.md` before release ([#513](https://www.github.com/sounisi5011/npm-packages/issues/513))
+* [`344220f`](https://www.github.com/sounisi5011/npm-packages/commit/344220f16633470cb29afa13f6c17f4c19140121) chore(deps): update dependency @types/jest to v28.1.3 ([#506](https://www.github.com/sounisi5011/npm-packages/issues/506))
+* [`846d5db`](https://www.github.com/sounisi5011/npm-packages/commit/846d5dba15369bd6a1788cb021de04efdb820689) ci(unit test): run tests with the smallest version of Node.js with new features ([#500](https://www.github.com/sounisi5011/npm-packages/issues/500))
+* [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 ([#497](https://www.github.com/sounisi5011/npm-packages/issues/497))
+* [`c0ffaec`](https://www.github.com/sounisi5011/npm-packages/commit/c0ffaeca5d8a3de643cc93df156224d1f5132891) chore(deps): update dependency @types/semver to v7.3.10 ([#492](https://www.github.com/sounisi5011/npm-packages/issues/492))
+* [`3518682`](https://www.github.com/sounisi5011/npm-packages/commit/3518682d5b74e1dde62023a1b8d809b602b654a1) chore(deps): update test packages ([#489](https://www.github.com/sounisi5011/npm-packages/issues/489))
+* [`497045f`](https://www.github.com/sounisi5011/npm-packages/commit/497045ff37e59697922cda9d13a5ab3862bb693a) chore: not using `@sounisi5011/run-if-supported` in workspace ([#490](https://www.github.com/sounisi5011/npm-packages/issues/490))
+* [`d5e27f4`](https://www.github.com/sounisi5011/npm-packages/commit/d5e27f4621ab9e0cdec6725652c5e44291fd8449) chore(deps): update dependency @types/node to v12.20.55 ([#479](https://www.github.com/sounisi5011/npm-packages/issues/479))
+* [`45a7048`](https://www.github.com/sounisi5011/npm-packages/commit/45a704829c6730597815411315e3cf69a0d55204) chore(deps): update dependency jest to v28.1.1 ([#476](https://www.github.com/sounisi5011/npm-packages/issues/476))
+* [`36050e7`](https://www.github.com/sounisi5011/npm-packages/commit/36050e75f43a1ae07510b1457e3aca662a0f7959) chore(deps): update dependency @types/jest to v28.1.1 ([#470](https://www.github.com/sounisi5011/npm-packages/issues/470))
+* [`8acee49`](https://www.github.com/sounisi5011/npm-packages/commit/8acee49cc87994fc89e70c69a1e3597fa16d32f6) chore(deps): update dependency typescript to v4.7.3 ([#466](https://www.github.com/sounisi5011/npm-packages/issues/466))
+* [`689cacf`](https://www.github.com/sounisi5011/npm-packages/commit/689cacfff514de80a0b85e489530a476879f56e3) test(encrypted-archive): fix forward compatibility test ([#469](https://www.github.com/sounisi5011/npm-packages/issues/469))
+* [`58c286a`](https://www.github.com/sounisi5011/npm-packages/commit/58c286a4c695bf11617c8a09de008f0983b4ac8b) test(encrypted-archive): fix forward compatibility test ([#463](https://www.github.com/sounisi5011/npm-packages/issues/463))
+* [`28ae94a`](https://www.github.com/sounisi5011/npm-packages/commit/28ae94aded7de757c74d434a0a06dd03bd8ea943) test(encrypted-archive): avoid forward compatibility test failures at release time ([#462](https://www.github.com/sounisi5011/npm-packages/issues/462))
+* [`8c787fa`](https://www.github.com/sounisi5011/npm-packages/commit/8c787fad5833ed47d4534b1f457d45308aebc1a8) chore(deps): update dependency ts-jest to v28.0.4 ([#458](https://www.github.com/sounisi5011/npm-packages/issues/458))
+* [`6e0f615`](https://www.github.com/sounisi5011/npm-packages/commit/6e0f61590b7bd7e76af37e27deb2c60a3bab9a8a) chore(deps): update dependency @types/jest to v28 ([#460](https://www.github.com/sounisi5011/npm-packages/issues/460))
+* [`f5d9d6f`](https://www.github.com/sounisi5011/npm-packages/commit/f5d9d6f9ce186494baa9d33aa8ff4c49c9342d58) test(encrypted-archive): add tests to check forward compatibility ([#453](https://www.github.com/sounisi5011/npm-packages/issues/453))
+* [`d28396e`](https://www.github.com/sounisi5011/npm-packages/commit/d28396e5ab904f36ff62e34a7a39910e11f3c788) chore(deps): update dependency @types/node to v12.20.54 ([#455](https://www.github.com/sounisi5011/npm-packages/issues/455))
+* [`7f4242a`](https://www.github.com/sounisi5011/npm-packages/commit/7f4242a4892c59f8d3ac0d483eb0b11910fa781e) test(eslint): disallow unused ESLint directive comments ([#448](https://www.github.com/sounisi5011/npm-packages/issues/448))
+* [`8eaeaf4`](https://www.github.com/sounisi5011/npm-packages/commit/8eaeaf4e3bb63cf6e91990ac43afe37affb788ab) ci(encrypted-archive): fix auto commit encrypted archives script ([#444](https://www.github.com/sounisi5011/npm-packages/issues/444))
+* [`00cb235`](https://www.github.com/sounisi5011/npm-packages/commit/00cb235da3fa20eabe5d00f13ee26d43e073e202) ci(encrypted-archive): fix auto commit encrypted archives script ([#442](https://www.github.com/sounisi5011/npm-packages/issues/442))
+* [`d6d5e07`](https://www.github.com/sounisi5011/npm-packages/commit/d6d5e07692a826dd97fbffb1d5bfff8656786bb2) test(encrypted-archive): add tests to check backward compatibility ([#439](https://www.github.com/sounisi5011/npm-packages/issues/439))
+* [`61952dd`](https://www.github.com/sounisi5011/npm-packages/commit/61952dd4acacf24d3eb8990b033c220786727624) fix(encrypted-archive): support Node.js v18+ ([#433](https://www.github.com/sounisi5011/npm-packages/issues/433))
+* [`784f576`](https://www.github.com/sounisi5011/npm-packages/commit/784f576c7aeb53dc64167f82a6efe10a0fea0e82) chore(deps): update eslint packages (major) ([#404](https://www.github.com/sounisi5011/npm-packages/issues/404))
+* [`aa545ea`](https://www.github.com/sounisi5011/npm-packages/commit/aa545ea26f333c5fd2cbb0ad87a0bd4843754011) chore(deps): update test packages to v28 (major) ([#409](https://www.github.com/sounisi5011/npm-packages/issues/409))
+* [`9c068ce`](https://www.github.com/sounisi5011/npm-packages/commit/9c068ce2b081552b2a58c1219952a7f8dac3e97d) chore(deps): update dependency jest-extended to v2 ([#402](https://www.github.com/sounisi5011/npm-packages/issues/402))
+* [`08226e2`](https://www.github.com/sounisi5011/npm-packages/commit/08226e2983f54992d24e20aaffee694224c84166) build(lint-staged): fix lint-staged configuration files ([#417](https://www.github.com/sounisi5011/npm-packages/issues/417))
+* [`be3fbe8`](https://www.github.com/sounisi5011/npm-packages/commit/be3fbe8fa5cf5392440c2eadf9222773c7fa723e) chore(deps): update dependency cpy-cli to v4 ([#400](https://www.github.com/sounisi5011/npm-packages/issues/400))
+* [`810a671`](https://www.github.com/sounisi5011/npm-packages/commit/810a67174b1b4b1a5da2b494a7b5672af8304aaa) chore(repo): support `exports` field in `package.json` ([#405](https://www.github.com/sounisi5011/npm-packages/issues/405))
+* [`36f404d`](https://www.github.com/sounisi5011/npm-packages/commit/36f404d3cbc95a5f185b9bd950d3cd9bec43b4f1) chore(deps): update dependency typescript to v4.7.2 ([#394](https://www.github.com/sounisi5011/npm-packages/issues/394))
+* [`f23fe4d`](https://www.github.com/sounisi5011/npm-packages/commit/f23fe4d79afa14f55ef06cbf62295bc59348473c) chore(deps): update dependency jest-extended to v1.2.1 ([#385](https://www.github.com/sounisi5011/npm-packages/issues/385))
+* [`557e6e8`](https://www.github.com/sounisi5011/npm-packages/commit/557e6e82a2eab8fae86c263baea74188d806fc1b) chore(deps): update dependency combinate to v1.1.11 ([#384](https://www.github.com/sounisi5011/npm-packages/issues/384))
+* [`926f4b8`](https://www.github.com/sounisi5011/npm-packages/commit/926f4b86e66c2e121ca76f742f73c7c3e8eb7f9b) chore(deps): update dependency bytefield-svg to v1.6.1 ([#383](https://www.github.com/sounisi5011/npm-packages/issues/383))
+* [`1c321fd`](https://www.github.com/sounisi5011/npm-packages/commit/1c321fdeb14b94606cf23a3ec7553a5a5d7aaa87) chore(deps): update dependency @types/google-protobuf to v3.15.6 ([#381](https://www.github.com/sounisi5011/npm-packages/issues/381))
+* [`2ac9051`](https://www.github.com/sounisi5011/npm-packages/commit/2ac90519a513eee5aa0512dc23c85d5d1d74c5e2) chore(deps): update dependency @types/node to v12.20.52 ([#376](https://www.github.com/sounisi5011/npm-packages/issues/376))
+* [`70d79ca`](https://www.github.com/sounisi5011/npm-packages/commit/70d79ca740e38b1881099f65c29bdc1bc7e87c14) chore(deps): update test packages ([#375](https://www.github.com/sounisi5011/npm-packages/issues/375))
+* [`8877bcc`](https://www.github.com/sounisi5011/npm-packages/commit/8877bcc0b8f753e7a9eea770cd40f571a2614efa) chore(deps): update test packages ([#345](https://www.github.com/sounisi5011/npm-packages/issues/345))
+* [`052d18e`](https://www.github.com/sounisi5011/npm-packages/commit/052d18e536dd21ee7105d4e3e96edd026591d7c8) chore(deps): update dependency @types/node to v12.20.41 ([#339](https://www.github.com/sounisi5011/npm-packages/issues/339))
+* [`d8213f3`](https://www.github.com/sounisi5011/npm-packages/commit/d8213f3b3b2c2b2009672ce82ed4a314cb97a386) chore(deps): update eslint packages ([#338](https://www.github.com/sounisi5011/npm-packages/issues/338))
+* [`fae5414`](https://www.github.com/sounisi5011/npm-packages/commit/fae541487534c51fa7b8487ba89029355a8e0e06) chore(deps): update test packages ([#326](https://www.github.com/sounisi5011/npm-packages/issues/326))
+* [`a3864e0`](https://www.github.com/sounisi5011/npm-packages/commit/a3864e00b975f1e7a33bc4e3f125b2686bb6f81e) chore(deps): update dependency typescript to v4.5.4 ([#324](https://www.github.com/sounisi5011/npm-packages/issues/324))
+
+</details>
+
 
 ## [0.1.0](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.4...encrypted-archive-v0.1.0) (2021-12-09)
 
