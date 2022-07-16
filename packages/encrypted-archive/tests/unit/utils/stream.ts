@@ -577,6 +577,43 @@ describe('class StreamReader', () => {
             await reader.seek(1);
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
+        describe('zero-length chunk', () => {
+            it.each<[string, number[]]>([
+                ['single zero-length chunk', [3, 0, 1]],
+                ['multi zero-length chunks', [3, 0, 0, 0, 0, 1]],
+            ])('%s', async (_, chunkSizeList) => {
+                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+
+                await expect(reader.isEnd()).resolves.toBeFalse();
+
+                await reader.seek(3);
+                // The next chunk is zero-length.
+                // isEnd() should not stop until it reads a non-zero-length chunk or reads all chunks.
+                await expect(reader.isEnd()).resolves.toBeFalse();
+
+                await reader.seek(1);
+                await expect(reader.isEnd()).resolves.toBeTrue();
+            });
+            it.each<[string, number[]]>([
+                ['single zero-length chunk at the end', [7, 0]],
+                ['multi zero-length chunks at the end', [7, 0, 0, 0, 0, 0, 0, 0, 0]],
+            ])('%s', async (_, chunkSizeList) => {
+                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+
+                await expect(reader.isEnd()).resolves.toBeFalse();
+
+                await reader.seek(7);
+                await expect(reader.isEnd()).resolves.toBeTrue();
+            });
+            it.each<[string, number[]]>([
+                ['single zero-length chunk only', [0]],
+                ['multi zero-length chunks only', [0, 0, 0, 0]],
+            ])('%s', async (_, chunkSizeList) => {
+                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+
+                await expect(reader.isEnd()).resolves.toBeTrue();
+            });
+        });
         it('should not copy chunks', async () => {
             const chunkSpy = spyObj(Buffer.from([4, 2, 3, 7, 1, 9]), ['.then']);
             const reader = new StreamReader(builtin, [chunkSpy.value]);
