@@ -163,6 +163,24 @@ describe('class StreamReader', () => {
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
         });
+        it('multi read (end -> middle -> all)', async () => {
+            const chunkList = [
+                [0],
+                [1],
+                [2],
+                [3],
+                [4],
+                [5],
+            ];
+            const reader = new StreamReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+
+            await expect(reader.read(1, 5)).resolves
+                .toBytesEqual(Buffer.from([5]));
+            await expect(reader.read(3, 1)).resolves
+                .toBytesEqual(Buffer.from([1, 2, 3]));
+            await expect(reader.read(Infinity)).resolves
+                .toBytesEqual(Buffer.from([0, 1, 2, 3, 4, 5]));
+        });
     });
     describe('readIterator() method', () => {
         interface ReadEntry {
