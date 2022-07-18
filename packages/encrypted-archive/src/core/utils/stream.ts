@@ -49,15 +49,17 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
         let readedSize = 0;
         this.consume(offset);
 
-        for await (const [data, remainder] of this.readAndConsumeStoredChunks(requestedSize - readedSize)) {
-            readedSize += data.byteLength;
-            yield { data, requestedSize, offset, readedSize };
-            if (remainder) this.appendChunk(remainder);
-        }
-        for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
-            readedSize += data.byteLength;
-            yield { data, requestedSize, offset, readedSize };
-            if (remainder) this.appendChunk(remainder);
+        for (
+            const readChunks of [
+                this.readAndConsumeStoredChunks.bind(this),
+                this.readNewChunks.bind(this),
+            ]
+        ) {
+            for await (const [data, remainder] of readChunks(requestedSize - readedSize)) {
+                readedSize += data.byteLength;
+                yield { data, requestedSize, offset, readedSize };
+                if (remainder) this.appendChunk(remainder);
+            }
         }
 
         yield { requestedSize, offset, readedSize };
