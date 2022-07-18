@@ -19,7 +19,7 @@ import type { CompressAlgorithmName, DecompressIterable } from './types/compress
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import { uint8arrayFrom } from './utils';
-import { StreamReader } from './utils/stream';
+import { BufferReader } from './utils/stream';
 import type { AsyncIterableReturn } from './utils/type';
 
 export interface DecryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
@@ -79,7 +79,7 @@ function createNonceFromDiff(
 async function parseHeader(
     builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: Uint8Array,
-    reader: StreamReader,
+    reader: BufferReader,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
 ): Promise<{ headerData: HeaderData | SimpleHeaderData; decryptorMetadata: DecryptorMetadata }> {
     if (!prevDecryptorMetadata) {
@@ -125,7 +125,7 @@ async function parseHeader(
 async function decryptChunk(
     builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: Uint8Array,
-    reader: StreamReader,
+    reader: BufferReader,
     prevDecryptorMetadata?: DecryptorMetadata,
 ): Promise<{
     compressedCleartextIterable: AsyncIterableReturn<Uint8Array, void>;
@@ -166,7 +166,7 @@ async function decryptChunk(
 async function decryptAllChunks(
     builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
     password: Uint8Array,
-    reader: StreamReader,
+    reader: BufferReader,
 ): Promise<{
     compressedCleartextIterable: AsyncIterable<Uint8Array>;
     compressAlgorithmName: DecryptorMetadata['compressAlgorithmName'];
@@ -199,7 +199,7 @@ export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, passwo
     validatePassword(builtin, password);
     return async function* decryptor(source) {
         const passwordBuffer = uint8arrayFrom(builtin.encodeString, password);
-        const reader = new StreamReader(builtin, source, convertChunk(builtin));
+        const reader = new BufferReader(builtin, source, convertChunk(builtin));
 
         const {
             compressedCleartextIterable,

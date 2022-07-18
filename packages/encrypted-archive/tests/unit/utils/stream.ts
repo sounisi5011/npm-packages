@@ -1,21 +1,21 @@
 import * as stream from 'stream';
 
-import { StreamReader } from '../../../src/core/utils/stream';
+import { BufferReader } from '../../../src/core/utils/stream';
 import { inspect } from '../../../src/runtimes/node/utils';
 import { spyObj, SpyObjCallItem } from '../../helpers/spy';
 
 /* eslint @typescript-eslint/no-unused-vars: ["error", { varsIgnorePattern: "^_+$" }] */
 
-const builtin: ConstructorParameters<typeof StreamReader>[0] = {
+const builtin: ConstructorParameters<typeof BufferReader>[0] = {
     inspect,
     encodeString: str => Buffer.from(str, 'utf8'),
 };
 
-describe('class StreamReader', () => {
+describe('class BufferReader', () => {
     describe('read() method', () => {
         it('empty stream', async () => {
             const targetStream = stream.Readable.from([]);
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
             await expect(reader.read(1)).resolves
                 .toBytesEqual(Buffer.from([]));
         });
@@ -35,7 +35,7 @@ describe('class StreamReader', () => {
                 [{ size: 4, offset: 999 }, []],
             ])('%p', async (input, expected) => {
                 const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                const reader = new StreamReader(builtin, targetStream);
+                const reader = new BufferReader(builtin, targetStream);
 
                 const expectedBuffer = Buffer.from(expected);
                 if (input.offset === undefined) {
@@ -59,10 +59,10 @@ describe('class StreamReader', () => {
                 .on('data', () => {
                     readCount++;
                 });
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
 
             expect(readCount).toBe(0);
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -70,7 +70,7 @@ describe('class StreamReader', () => {
             await expect(reader.read(0)).resolves
                 .toBytesEqual(Buffer.from([]));
             expect(readCount).toBe(0);
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -80,7 +80,7 @@ describe('class StreamReader', () => {
             expect(readCount).toBe(1);
             {
                 const newCalls0 = chunkSpyList[0].newCalls;
-                // StreamReader should not copy chunks
+                // BufferReader should not copy chunks
                 expect(newCalls0).not.toIncludeAnyMembers<SpyObjCallItem>([
                     { type: 'get', path: '[0]' },
                     { type: 'get', path: '[1]' },
@@ -91,7 +91,7 @@ describe('class StreamReader', () => {
                 expect(newCalls0).toIncludeAllMembers<SpyObjCallItem>([
                     { type: 'apply', path: '.subarray(0, 1)' },
                 ]);
-                // StreamReader should not touch other chunks
+                // BufferReader should not touch other chunks
                 expect(chunkSpyList[1].newCalls).toStrictEqual([]);
                 expect(chunkSpyList[2].newCalls).toStrictEqual([]);
             }
@@ -102,14 +102,14 @@ describe('class StreamReader', () => {
             expect(chunkSpyList[0].newCalls).toIncludeAllMembers<SpyObjCallItem>([
                 { type: 'apply', path: '.subarray(0, 4)' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
 
             await expect(reader.read(5)).resolves
                 .toBytesEqual(Buffer.from([0, 1, 2, 3, 4]));
             expect(readCount).toBe(2);
-            // StreamReader should copy chunks
+            // BufferReader should copy chunks
             expect(chunkSpyList[0].newCalls).toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -121,13 +121,13 @@ describe('class StreamReader', () => {
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '.buffer' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
 
             await expect(reader.read(4)).resolves
                 .toBytesEqual(Buffer.from([0, 1, 2, 3]));
             expect(readCount).toBe(2);
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -135,7 +135,7 @@ describe('class StreamReader', () => {
             await expect(reader.read(2, 3)).resolves
                 .toBytesEqual(Buffer.from([3, 4]));
             expect(readCount).toBe(2);
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -143,10 +143,10 @@ describe('class StreamReader', () => {
             await expect(reader.read(2, 4)).resolves
                 .toBytesEqual(Buffer.from([4, 5]));
             expect(readCount).toBe(3);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
-            // StreamReader should copy chunks
+            // BufferReader should copy chunks
             expect(chunkSpyList[2].newCalls).toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -158,7 +158,7 @@ describe('class StreamReader', () => {
             await expect(reader.read(10, 4)).resolves
                 .toBytesEqual(Buffer.from([4, 5, 6, 7, 8]));
             expect(readCount).toBe(3);
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -172,7 +172,7 @@ describe('class StreamReader', () => {
                 [4],
                 [5],
             ];
-            const reader = new StreamReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+            const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
 
             await expect(reader.read(1, 5)).resolves
                 .toBytesEqual(Buffer.from([5]));
@@ -197,7 +197,7 @@ describe('class StreamReader', () => {
                 3,
             ])('offset=%p', async offset => {
                 const targetStream = stream.Readable.from([]);
-                const reader = new StreamReader(builtin, targetStream);
+                const reader = new BufferReader(builtin, targetStream);
 
                 const entryList: ReadEntry[] = [];
                 // eslint-disable-next-line jest/no-if
@@ -225,7 +225,7 @@ describe('class StreamReader', () => {
             const targetStream = stream.Readable.from((function*() {
                 yield Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
             })());
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -298,7 +298,7 @@ describe('class StreamReader', () => {
                 yield Buffer.alloc(0);
                 yield Buffer.from([9]);
             })());
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -394,9 +394,9 @@ describe('class StreamReader', () => {
                 spyObj(Buffer.from([3, 2, 1]), ['.then']),
                 spyObj(Buffer.from([0]), ['.then']),
             ] as const;
-            const reader = new StreamReader(builtin, chunkSpyList.map(({ value }) => value));
+            const reader = new BufferReader(builtin, chunkSpyList.map(({ value }) => value));
 
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -404,21 +404,21 @@ describe('class StreamReader', () => {
             expect(chunkSpyList[4].newCalls).toStrictEqual([]);
 
             for await (const _ of reader.readIterator(3));
-            // StreamReader should not copy chunks
+            // BufferReader should not copy chunks
             expect(chunkSpyList[0].newCalls).not.toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
                 { type: 'get', path: '[2]' },
                 { type: 'get', path: '.buffer' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
             expect(chunkSpyList[3].newCalls).toStrictEqual([]);
             expect(chunkSpyList[4].newCalls).toStrictEqual([]);
 
             for await (const _ of reader.readIterator(3));
-            // StreamReader should not copy chunks
+            // BufferReader should not copy chunks
             expect(chunkSpyList[1].newCalls).not.toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -428,7 +428,7 @@ describe('class StreamReader', () => {
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '.buffer' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[3].newCalls).toStrictEqual([]);
             expect(chunkSpyList[4].newCalls).toStrictEqual([]);
@@ -437,7 +437,7 @@ describe('class StreamReader', () => {
             chunkSpyList.forEach(({ newCalls }) => newCalls);
 
             for await (const _ of reader.readIterator(99));
-            // StreamReader should not copy chunks
+            // BufferReader should not copy chunks
             expect(chunkSpyList[3].newCalls).not.toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -448,7 +448,7 @@ describe('class StreamReader', () => {
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '.buffer' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -468,7 +468,7 @@ describe('class StreamReader', () => {
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new StreamReader(builtin, targetStream);
+                    const reader = new BufferReader(builtin, targetStream);
 
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
@@ -484,7 +484,7 @@ describe('class StreamReader', () => {
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
                     const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new StreamReader(builtin, targetStream);
+                    const reader = new BufferReader(builtin, targetStream);
 
                     await expect(reader.read(3, 0)).resolves
                         .toBytesEqual(Buffer.from([9, 8, 7]));
@@ -500,9 +500,9 @@ describe('class StreamReader', () => {
                 spyObj(Buffer.from([4, 3]), ['.then']),
                 spyObj(Buffer.from([2, 1, 0]), ['.then']),
             ] as const;
-            const reader = new StreamReader(builtin, chunkSpyList.map(({ value }) => value));
+            const reader = new BufferReader(builtin, chunkSpyList.map(({ value }) => value));
 
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
             expect(chunkSpyList[2].newCalls).toStrictEqual([]);
@@ -510,7 +510,7 @@ describe('class StreamReader', () => {
             await reader.seek(3);
             {
                 const newCalls0 = chunkSpyList[0].newCalls;
-                // StreamReader should not copy chunks
+                // BufferReader should not copy chunks
                 expect(newCalls0).not.toIncludeAnyMembers<SpyObjCallItem>([
                     { type: 'get', path: '[0]' },
                     { type: 'get', path: '[1]' },
@@ -522,7 +522,7 @@ describe('class StreamReader', () => {
                 expect(newCalls0).toIncludeAllMembers<SpyObjCallItem>([
                     { type: 'apply', path: '.subarray(3)' },
                 ]);
-                // StreamReader should not touch other chunks
+                // BufferReader should not touch other chunks
                 expect(chunkSpyList[1].newCalls).toStrictEqual([]);
                 expect(chunkSpyList[2].newCalls).toStrictEqual([]);
             }
@@ -530,7 +530,7 @@ describe('class StreamReader', () => {
             await reader.seek(3);
             {
                 const newCalls1 = chunkSpyList[1].newCalls;
-                // StreamReader should not copy chunks
+                // BufferReader should not copy chunks
                 expect(newCalls1).not.toIncludeAnyMembers<SpyObjCallItem>([
                     { type: 'get', path: '[0]' },
                     { type: 'get', path: '[1]' },
@@ -539,13 +539,13 @@ describe('class StreamReader', () => {
                 expect(newCalls1).toIncludeAllMembers<SpyObjCallItem>([
                     { type: 'apply', path: '.subarray(1)' },
                 ]);
-                // StreamReader should not touch other chunks
+                // BufferReader should not touch other chunks
                 expect(chunkSpyList[0].newCalls).toStrictEqual([]);
                 expect(chunkSpyList[2].newCalls).toStrictEqual([]);
             }
 
             await reader.seek(999);
-            // StreamReader should not copy chunks
+            // BufferReader should not copy chunks
             expect(chunkSpyList[2].newCalls).not.toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -553,7 +553,7 @@ describe('class StreamReader', () => {
                 { type: 'get', path: '.buffer' },
                 { type: 'get', path: '.subarray' },
             ]);
-            // StreamReader should not touch other chunks
+            // BufferReader should not touch other chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
             expect(chunkSpyList[1].newCalls).toStrictEqual([]);
         });
@@ -561,13 +561,13 @@ describe('class StreamReader', () => {
     describe('isEnd() method', () => {
         it('empty stream', async () => {
             const targetStream = stream.Readable.from([]);
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
 
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
         it('non empty stream', async () => {
             const targetStream = stream.Readable.from([Buffer.alloc(1)]);
-            const reader = new StreamReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, targetStream);
 
             await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -582,7 +582,7 @@ describe('class StreamReader', () => {
                 ['single zero-length chunk', [3, 0, 1]],
                 ['multi zero-length chunks', [3, 0, 0, 0, 0, 1]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -598,7 +598,7 @@ describe('class StreamReader', () => {
                 ['single zero-length chunk at the end', [7, 0]],
                 ['multi zero-length chunks at the end', [7, 0, 0, 0, 0, 0, 0, 0, 0]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -609,20 +609,20 @@ describe('class StreamReader', () => {
                 ['single zero-length chunk only', [0]],
                 ['multi zero-length chunks only', [0, 0, 0, 0]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new StreamReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeTrue();
             });
         });
         it('should not copy chunks', async () => {
             const chunkSpy = spyObj(Buffer.from([4, 2, 3, 7, 1, 9]), ['.then']);
-            const reader = new StreamReader(builtin, [chunkSpy.value]);
+            const reader = new BufferReader(builtin, [chunkSpy.value]);
 
-            // StreamReader should not touch any chunks
+            // BufferReader should not touch any chunks
             expect(chunkSpy.newCalls).toStrictEqual([]);
 
             await expect(reader.isEnd()).resolves.toBeFalse();
-            // StreamReader should not copy chunks
+            // BufferReader should not copy chunks
             expect(chunkSpy.newCalls).not.toIncludeAnyMembers<SpyObjCallItem>([
                 { type: 'get', path: '[0]' },
                 { type: 'get', path: '[1]' },
@@ -638,8 +638,8 @@ describe('class StreamReader', () => {
             new Uint8Array([3, 4, 5]),
         ];
         const expectedList: {
-            begin: Array<ReturnType<StreamReader['getIndexContainsRange']>['begin']>;
-            end: Array<ReturnType<StreamReader['getIndexContainsRange']>['end']>;
+            begin: Array<ReturnType<BufferReader['getIndexContainsRange']>['begin']>;
+            end: Array<ReturnType<BufferReader['getIndexContainsRange']>['end']>;
         } = {
             begin: Object.assign([
                 { chunkIndex: 0, byteOffset: 0 },
@@ -672,7 +672,7 @@ describe('class StreamReader', () => {
             )
         );
         it.each(cases)('%p', async (range, expected) => {
-            const reader = new StreamReader(builtin, list);
+            const reader = new BufferReader(builtin, list);
             await reader.read(0, 999);
 
             // eslint-disable-next-line @typescript-eslint/dot-notation

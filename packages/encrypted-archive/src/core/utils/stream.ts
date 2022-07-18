@@ -2,7 +2,7 @@ import { isOneArray, uint8arrayConcat } from '.';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from '../types/builtin';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from './type';
 
-export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
+export interface BufferReaderInterface<T extends Uint8Array = Uint8Array> {
     read: (size: number, offset?: number) => Promise<T>;
     readIterator: (
         size: number,
@@ -12,7 +12,7 @@ export interface StreamReaderInterface<T extends Uint8Array = Uint8Array> {
     isEnd: () => Promise<boolean>;
 }
 
-export class StreamReader implements StreamReaderInterface<Uint8Array> {
+export class BufferReader implements BufferReaderInterface<Uint8Array> {
     private iterator: AsyncIterator<unknown> | undefined;
     private readonly chunkList: Uint8Array[] = [];
     private currentByteLength = 0;

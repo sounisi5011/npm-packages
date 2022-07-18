@@ -1,10 +1,10 @@
 import { decode as varintDecode } from 'varint';
 
 import type { BuiltinInspectRecord } from '../types/builtin';
-import type { StreamReaderInterface } from '../utils/stream';
+import type { BufferReaderInterface } from '../utils/stream';
 
 export async function readVarint(
-    reader: StreamReaderInterface,
+    reader: BufferReaderInterface,
     error: Error | ((error: unknown) => Error),
     options?: { offset?: number | undefined; autoSeek?: true | undefined },
 ): Promise<{ value: number; byteLength: number; endOffset: number }> {
@@ -40,7 +40,7 @@ export interface ParseDataLengthFn {
 export function parseDataLength(
     { name, autoSeek: defaultAutoSeek }: { name: string; autoSeek?: true | undefined },
 ): (
-    reader: StreamReaderInterface,
+    reader: BufferReaderInterface,
     opts?: { offset?: number | undefined; autoSeek?: boolean | undefined },
 ) => Promise<{ dataByteLength: number; endOffset: number }> {
     return async (reader, { offset = 0, autoSeek = defaultAutoSeek } = {}) => {
@@ -85,7 +85,7 @@ export function createHeaderDataParser<T>(
     },
 ): (
     builtin: BuiltinInspectRecord,
-    reader: StreamReaderInterface,
+    reader: BufferReaderInterface,
     opts: { headerByteLength: number; offset?: number | undefined; autoSeek?: boolean | undefined },
 ) => Promise<{ headerData: T; endOffset: number }> {
     return async (builtin, reader, { headerByteLength, offset = 0, autoSeek = defaultAutoSeek }) => {

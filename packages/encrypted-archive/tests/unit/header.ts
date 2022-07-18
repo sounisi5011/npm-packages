@@ -22,7 +22,7 @@ import {
 import { cidByteList } from '../../src/core/header/content-identifier';
 import { inspect } from '../../src/runtimes/node/utils';
 import { iterable2buffer, padStartArray } from '../helpers';
-import { DummyStreamReader } from '../helpers/stream';
+import { DummyBufferReader } from '../helpers/stream';
 
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
@@ -236,7 +236,7 @@ describe('validateCID()', () => {
         ['invalid varint', Buffer.from([0xFF])],
         ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
     ])('%s', async (_, data) => {
-        const reader = new DummyStreamReader(data);
+        const reader = new DummyBufferReader(data);
         await expect(validateCID(reader)).rejects.toThrowWithMessage(
             Error,
             `Could not decode identifier. Multicodec compliant identifiers are required.`,
@@ -252,7 +252,7 @@ describe('validateCID()', () => {
         ['100000', 0x100000],
     ])('no match / 0x%s', async (codeStr, codeInt) => {
         const data = Buffer.from(varint.encode(codeInt));
-        const reader = new DummyStreamReader(data);
+        const reader = new DummyBufferReader(data);
         await expect(validateCID(reader)).rejects.toThrowWithMessage(
             Error,
             new RegExp(
@@ -271,7 +271,7 @@ describe('parseHeaderLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, headerLengthBytes) => {
-            const reader = new DummyStreamReader(headerLengthBytes);
+            const reader = new DummyBufferReader(headerLengthBytes);
             await expect(parseHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode header size. The byte length of the header encoded as unsigned varint is required.`,
@@ -279,7 +279,7 @@ describe('parseHeaderLength()', () => {
         });
         it('zero length data', async () => {
             const data = Buffer.from([0x00]);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid header byte length received: 0`,
@@ -331,7 +331,7 @@ describe('parseHeaderData()', () => {
                 headerDataBuffer,
             ],
         ])('%s', async (_, opts, data) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const result = await parseHeaderData(builtin, reader, {
                 ...opts,
                 headerByteLength,
@@ -354,7 +354,7 @@ describe('parseHeaderData()', () => {
                 ],
             ])('%s', async (_, opts) => {
                 await expect(
-                    parseHeaderData(builtin, new DummyStreamReader(headerDataBuffer), {
+                    parseHeaderData(builtin, new DummyBufferReader(headerDataBuffer), {
                         headerByteLength,
                         ...opts,
                     }),
@@ -493,7 +493,7 @@ describe('parseHeaderData()', () => {
         ])('%s', async (filename, expected) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const result = await parseHeaderData(builtin, reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
@@ -543,7 +543,7 @@ describe('parseHeaderData()', () => {
         ])('%s', async (filename, errorConst, errorMsg) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseHeaderData(builtin, reader, { headerByteLength: data.byteLength })).rejects
                 .toThrowWithMessage(errorConst, errorMsg);
         });
@@ -557,7 +557,7 @@ describe('parseHeaderData()', () => {
             [300, 259],
         ])('need %i bytes / actual %i bytes', async (needLen, actualLen) => {
             const data = Buffer.alloc(actualLen);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseHeaderData(builtin, reader, { headerByteLength: needLen })).rejects.toThrowWithMessage(
                 Error,
                 `Could not read header data. ${needLen} byte length header is required. Received data: ${actualLen} bytes`,
@@ -573,7 +573,7 @@ describe('parseSimpleHeaderLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, data) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode simple header size. The byte length of the simple header encoded as unsigned varint is required.`,
@@ -581,7 +581,7 @@ describe('parseSimpleHeaderLength()', () => {
         });
         it('zero length data', async () => {
             const data = Buffer.from([0x00]);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid simple header byte length received: 0`,
@@ -662,7 +662,7 @@ describe('parseSimpleHeaderData()', () => {
                     headerDataBuffer,
                 ],
             ])('%s', async (_, opts, data) => {
-                const reader = new DummyStreamReader(data);
+                const reader = new DummyBufferReader(data);
                 const result = await parseSimpleHeaderData(builtin, reader, {
                     ...opts,
                     headerByteLength,
@@ -685,7 +685,7 @@ describe('parseSimpleHeaderData()', () => {
                     ],
                 ])('%s', async (_, opts) => {
                     await expect(
-                        parseSimpleHeaderData(builtin, new DummyStreamReader(headerDataBuffer), {
+                        parseSimpleHeaderData(builtin, new DummyBufferReader(headerDataBuffer), {
                             headerByteLength,
                             ...opts,
                         }),
@@ -768,7 +768,7 @@ describe('parseSimpleHeaderData()', () => {
         ])('%s', async (filename, expected) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const result = await parseSimpleHeaderData(builtin, reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
@@ -820,7 +820,7 @@ describe('parseSimpleHeaderData()', () => {
         ])('%s', async (filename, errorConst, errorMsg) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderData(builtin, reader, { headerByteLength: data.byteLength })).rejects
                 .toThrowWithMessage(errorConst, errorMsg);
         });
@@ -834,7 +834,7 @@ describe('parseSimpleHeaderData()', () => {
             [300, 259],
         ])('need %i bytes / actual %i bytes', async (needLen, actualLen) => {
             const data = Buffer.alloc(actualLen);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderData(builtin, reader, { headerByteLength: needLen })).rejects
                 .toThrowWithMessage(
                     Error,
@@ -851,14 +851,14 @@ describe('parseCiphertextLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, data) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseCiphertextLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode ciphertext size. The byte length of the ciphertext encoded as unsigned varint is required.`,
             );
         });
         it('zero length data', async () => {
-            const reader = new DummyStreamReader(Buffer.from([0x00]));
+            const reader = new DummyBufferReader(Buffer.from([0x00]));
             await expect(parseCiphertextLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid ciphertext byte length received: 0`,
@@ -889,7 +889,7 @@ describe('parseCiphertextIterable()', () => {
                 data.subarray(2, ciphertextByteLength + 2),
             ],
         ])('%s', async (_, opts, expected) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, { ciphertextByteLength: 6, ...opts });
             await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
@@ -913,7 +913,7 @@ describe('parseCiphertextIterable()', () => {
                 data.subarray(2, data.byteLength),
             ],
         ])('%s', async (_, opts, expected) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
@@ -943,7 +943,7 @@ describe('parseCiphertextIterable()', () => {
                 `Could not read ciphertext. 2 byte length ciphertext is required. Received data: 0 bytes`,
             ],
         ])('%s', async (_, opts, expectedErrorMessage) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).rejects.toThrowWithMessage(
                 Error,

@@ -1,13 +1,13 @@
 import { Header, SimpleHeader } from '../../protocol-buffers/header_pb';
 import { number2hex } from '../utils';
-import type { StreamReaderInterface } from '../utils/stream';
+import type { BufferReaderInterface } from '../utils/stream';
 import type { AsyncIterableReturn } from '../utils/type';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
 import { createHeaderDataParser, parseDataLength, readVarint, validateDataLength } from './utils';
 
-export async function validateCID(reader: StreamReaderInterface): Promise<void> {
+export async function validateCID(reader: BufferReaderInterface): Promise<void> {
     const result = await readVarint(
         reader,
         new Error(`Could not decode identifier. Multicodec compliant identifiers are required.`),
@@ -44,7 +44,7 @@ export const parseSimpleHeaderData = createHeaderDataParser({
 export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoSeek: true });
 
 export async function* parseCiphertextIterable<T extends Uint8Array>(
-    reader: StreamReaderInterface<T>,
+    reader: BufferReaderInterface<T>,
     { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number | undefined },
 ): AsyncIterableReturn<T, void> {
     for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {

@@ -2,7 +2,7 @@ import * as stream from 'stream';
 import { promisify } from 'util';
 
 import { iterable2list } from '.';
-import type { StreamReaderInterface } from '../../src/core/utils/stream';
+import type { BufferReaderInterface } from '../../src/core/utils/stream';
 import type { AsyncIterableIteratorReturn } from '../../src/core/utils/type';
 
 export const waitStreamFinished = promisify(stream.finished);
@@ -77,7 +77,7 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): s
     })());
 }
 
-export class DummyStreamReader implements StreamReaderInterface<Uint8Array> {
+export class DummyBufferReader implements BufferReaderInterface<Uint8Array> {
     constructor(private data: Uint8Array) {}
 
     async read(size: number, offset = 0): Promise<Uint8Array> {
