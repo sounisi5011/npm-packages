@@ -56,7 +56,7 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
             if (remainder) this.appendChunk(remainder);
             return { data, requestedSize, offset, readedSize };
         };
-        for await (const bufferPair of this.readAndConsumeStoredChunks(requestedSize - readedSize)) {
+        for (const bufferPair of this.readAndConsumeStoredChunks(requestedSize - readedSize)) {
             yield genResult(bufferPair);
         }
         for await (const bufferPair of this.readNewChunks(requestedSize - readedSize)) {
