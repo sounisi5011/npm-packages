@@ -1,4 +1,4 @@
-import { BufferReader } from '../../../src/core/utils/stream';
+import { BufferReader } from '../../../src/core/utils/reader';
 import { inspect } from '../../../src/runtimes/node/utils';
 import { spyObj, SpyObjCallItem } from '../../helpers/spy';
 

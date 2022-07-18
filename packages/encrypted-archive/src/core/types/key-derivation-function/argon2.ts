@@ -1,5 +1,5 @@
-import type { RequiredExcludeUndefined } from '../../utils/type';
 import type { BaseKeyDerivationOptions, GetKDFResult } from '../key-derivation-function';
+import type { RequiredExcludeUndefined } from '../utils';
 
 export const argon2TypeNameList = ['argon2d', 'argon2id'] as const;
 

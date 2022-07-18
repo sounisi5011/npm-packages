@@ -1,5 +1,5 @@
-import type { RequiredExcludeUndefined } from '../utils/type';
 import type { Argon2HashFn, Argon2Options } from './key-derivation-function/argon2';
+import type { RequiredExcludeUndefined } from './utils';
 
 export interface BaseKeyDerivationOptions {
     algorithm: string;

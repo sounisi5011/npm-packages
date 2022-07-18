@@ -2,7 +2,6 @@ import { validatePassword } from './errors';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { convertChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
@@ -18,8 +17,9 @@ import type {
     KeyDerivationOptions,
     NormalizedKeyDerivationOptions,
 } from './types/key-derivation-function';
+import type { AsyncIterableReturn } from './types/utils';
 import { convertIterableValue, uint8arrayConcat, uint8arrayFrom } from './utils';
-import type { AsyncIterableReturn } from './utils/type';
+import { convertChunk } from './utils/convert';
 
 export interface EncryptOptions<TCompressOptions extends BaseCompressOptions> {
     algorithm?: CryptoAlgorithmName | undefined;

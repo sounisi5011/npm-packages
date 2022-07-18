@@ -1,5 +1,5 @@
+import type { AsyncIterableIteratorReturn } from './types/utils';
 import { isInstance, isOrType, isString } from './utils';
-import type { AsyncIterableIteratorReturn } from './utils/type';
 
 export type InputDataType = string | ArrayBufferView | ArrayBufferLike;
 

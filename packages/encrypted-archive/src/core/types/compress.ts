@@ -1,4 +1,4 @@
-import type { AsyncIterableReturn } from '../utils/type';
+import type { AsyncIterableReturn } from './utils';
 
 export type CompressAlgorithmName = 'gzip' | 'brotli';
 export interface BaseCompressOptions {

@@ -12,15 +12,15 @@ import {
 } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
-import { convertChunk } from './stream';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
+import type { AsyncIterableReturn } from './types/utils';
 import { uint8arrayFrom } from './utils';
-import { BufferReader } from './utils/stream';
-import type { AsyncIterableReturn } from './utils/type';
+import { convertChunk } from './utils/convert';
+import { BufferReader } from './utils/reader';
 
 export interface DecryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
     getCryptoAlgorithm: GetCryptoAlgorithm;
