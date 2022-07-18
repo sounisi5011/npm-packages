@@ -34,12 +34,7 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
 
     async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
-        while (this.currentByteLength < needByteLength) {
-            const chunk = await this.tryReadChunk();
-            if (!chunk) break;
-
-            this.appendChunk(chunk);
-        }
+        await this.readAndAppendChunks(needByteLength);
         return this.subarray(offset, needByteLength);
     }
 
@@ -52,15 +47,13 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
     > {
         const requestedSize = size;
         let readedSize = 0;
+        this.consume(offset);
 
-        if (readedSize < requestedSize && this.currentByteLength > 0) {
-            const endOffset = offset + requestedSize;
-            const data = this.subarray(offset, endOffset);
+        for await (const [data, remainder] of this.readAndConsumeStoredChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
-            this.consume(endOffset);
+            if (remainder) this.appendChunk(remainder);
         }
-
         for await (const [data, remainder] of this.readNewChunks(requestedSize - readedSize)) {
             readedSize += data.byteLength;
             yield { data, requestedSize, offset, readedSize };
@@ -71,13 +64,21 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
     }
 
     async seek(offset: number): Promise<void> {
-        if (this.currentByteLength < offset) await this.read(offset);
+        await this.readAndAppendChunks(offset);
         this.consume(offset);
     }
 
     async isEnd(): Promise<boolean> {
-        if (this.currentByteLength < 1) await this.read(1);
+        await this.readAndAppendChunks(1);
         return this.currentByteLength < 1;
+    }
+
+    private async readAndAppendChunks(needByteLength: number): Promise<void> {
+        while (this.currentByteLength < needByteLength) {
+            const chunk = await this.tryReadChunk();
+            if (!chunk) break;
+            this.appendChunk(chunk);
+        }
     }
 
     private appendChunk(chunk: Uint8Array): void {
@@ -92,15 +93,58 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
             return firstChunk.subarray(beginOffset, endOffset);
         }
 
-        const newChunk = uint8arrayConcat(...this.chunkList);
-        this.chunkList.splice(0, Infinity, newChunk);
-        return newChunk.subarray(beginOffset, endOffset);
+        const range = this.getIndexContainsRange({ beginBytes: beginOffset, endBytes: endOffset });
+
+        const mergeChunkList = this.chunkList.slice(range.begin.chunkIndex, range.end.chunkIndex + 1);
+        const newChunk = isOneArray(mergeChunkList) ? mergeChunkList[0] : uint8arrayConcat(...mergeChunkList);
+
+        const deleteCount = range.end.chunkIndex - range.begin.chunkIndex + 1;
+        if (deleteCount > 1 && newChunk.byteLength !== 0) {
+            this.chunkList.splice(range.begin.chunkIndex, deleteCount, newChunk);
+        }
+
+        return newChunk.subarray(
+            range.begin.byteOffset,
+            range.begin.byteOffset + (endOffset - beginOffset),
+        );
     }
 
     private consume(bytes: number): void {
-        const newChunk = uint8arrayConcat(...this.chunkList).subarray(bytes);
-        this.currentByteLength = newChunk.byteLength;
-        this.chunkList.splice(0, Infinity, newChunk);
+        const {
+            begin: {
+                chunkIndex: firstChunkIndex,
+                byteOffset: beginOffsetInFirstChunk,
+            },
+        } = this.getIndexContainsRange({ beginBytes: bytes, endBytes: bytes });
+
+        let deleteCount = firstChunkIndex;
+        const firstChunk = this.chunkList[firstChunkIndex];
+        if (firstChunk && beginOffsetInFirstChunk !== 0) {
+            if (firstChunk.byteLength <= beginOffsetInFirstChunk) {
+                deleteCount += 1;
+            } else {
+                this.chunkList[firstChunkIndex] = firstChunk.subarray(beginOffsetInFirstChunk);
+            }
+        }
+
+        this.chunkList.splice(0, deleteCount);
+        this.currentByteLength = this.chunkList
+            .reduce((len, chunk) => len + chunk.byteLength, 0);
+    }
+
+    private *readAndConsumeStoredChunks(requestedSize: number): Iterable<[data: Uint8Array, remainder?: Uint8Array]> {
+        let readedSize = 0;
+        while (readedSize < requestedSize) {
+            const firstChunk = this.chunkList[0];
+            if (!firstChunk) break;
+            this.chunkList.pop();
+            this.currentByteLength -= firstChunk.byteLength;
+
+            const bufferPair = this.splitBuffer(firstChunk, requestedSize - readedSize);
+            const [data] = bufferPair;
+            yield bufferPair;
+            readedSize += data.byteLength;
+        }
     }
 
     private async tryReadChunk(): Promise<Uint8Array | undefined> {
@@ -122,6 +166,37 @@ export class StreamReader implements StreamReaderInterface<Uint8Array> {
             yield bufferPair;
             readedSize += data.byteLength;
         }
+    }
+
+    private getIndexContainsRange(range: {
+        readonly beginBytes: number;
+        readonly endBytes: number;
+    }): {
+        begin: { chunkIndex: number; byteOffset: number };
+        end: { chunkIndex: number; byteOffset: number };
+    } {
+        const beginBytes = Math.min(range.beginBytes, range.endBytes);
+        const endBytes = Math.max(range.beginBytes, range.endBytes);
+        const begin = { chunkIndex: 0, byteOffset: 0 };
+        const end = { chunkIndex: 0, byteOffset: 0 };
+
+        let readedSize = 0;
+        for (const [index, chunk] of this.chunkList.entries()) {
+            const { byteLength: chunkSize } = chunk;
+            if (readedSize <= beginBytes) {
+                begin.chunkIndex = index;
+                begin.byteOffset = Math.min(beginBytes - readedSize, chunkSize);
+            }
+            if (readedSize < endBytes) {
+                end.chunkIndex = index;
+                end.byteOffset = Math.min(endBytes - readedSize, chunkSize);
+            } else {
+                break;
+            }
+            readedSize += chunkSize;
+        }
+
+        return { begin, end };
     }
 
     private splitBuffer(buffer: Uint8Array, size: number, offset = 0): [Uint8Array, Uint8Array?] {

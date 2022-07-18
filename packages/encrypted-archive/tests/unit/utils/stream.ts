@@ -632,4 +632,51 @@ describe('class StreamReader', () => {
             ]);
         });
     });
+    describe('getIndexContainsRange() method (private)', () => {
+        const list = [
+            new Uint8Array([1, 2]),
+            new Uint8Array([3, 4, 5]),
+        ];
+        const expectedList: {
+            begin: Array<ReturnType<StreamReader['getIndexContainsRange']>['begin']>;
+            end: Array<ReturnType<StreamReader['getIndexContainsRange']>['end']>;
+        } = {
+            begin: Object.assign([
+                { chunkIndex: 0, byteOffset: 0 },
+                { chunkIndex: 0, byteOffset: 1 },
+                { chunkIndex: 1, byteOffset: 0 },
+                { chunkIndex: 1, byteOffset: 1 },
+                { chunkIndex: 1, byteOffset: 2 },
+                { chunkIndex: 1, byteOffset: 3 },
+                { chunkIndex: 1, byteOffset: 3 },
+            ], { '999': { chunkIndex: 1, byteOffset: 3 } }),
+            end: Object.assign([
+                { chunkIndex: 0, byteOffset: 0 },
+                { chunkIndex: 0, byteOffset: 1 },
+                { chunkIndex: 0, byteOffset: 2 },
+                { chunkIndex: 1, byteOffset: 1 },
+                { chunkIndex: 1, byteOffset: 2 },
+                { chunkIndex: 1, byteOffset: 3 },
+                { chunkIndex: 1, byteOffset: 3 },
+            ], { '999': { chunkIndex: 1, byteOffset: 3 } }),
+        };
+
+        const cases = expectedList.begin.flatMap((begin, beginBytes) =>
+            expectedList.end.map((end, endBytes) =>
+                [
+                    { beginBytes, endBytes },
+                    beginBytes <= endBytes
+                        ? { begin, end }
+                        : { begin: expectedList.begin[endBytes], end: expectedList.end[beginBytes] },
+                ] as const
+            )
+        );
+        it.each(cases)('%p', async (range, expected) => {
+            const reader = new StreamReader(builtin, list);
+            await reader.read(0, 999);
+
+            // eslint-disable-next-line @typescript-eslint/dot-notation
+            expect(reader['getIndexContainsRange'](range)).toStrictEqual(expected);
+        });
+    });
 });
