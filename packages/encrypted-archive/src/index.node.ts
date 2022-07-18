@@ -17,7 +17,7 @@ import type {
 import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
 import type { Expand, ExpandObject } from './core/types/utils';
-import { convertIterableValue } from './core/utils';
+import { convertIterableValue } from './core/utils/convert';
 import { getCryptoAlgorithm } from './runtimes/node/cipher';
 import { CompressOptions, createCompressor, decompressIterable } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';

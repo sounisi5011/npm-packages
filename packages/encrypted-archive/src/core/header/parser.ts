@@ -1,7 +1,7 @@
 import { Header, SimpleHeader } from '../../protocol-buffers/header_pb';
 import type { AsyncIterableReturn } from '../types/utils';
-import { number2hex } from '../utils';
 import type { BufferReaderInterface } from '../utils/reader';
+import { number2hex } from '../utils/template-tag';
 import { cidNumber } from './content-identifier';
 import { parseProtobufHeader } from './protocol-buffers-converter/header';
 import { parseProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';

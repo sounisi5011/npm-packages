@@ -18,7 +18,7 @@ import type { CompressAlgorithmName, DecompressIterable } from './types/compress
 import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
-import { uint8arrayFrom } from './utils';
+import { uint8arrayFrom } from './utils/array-buffer';
 import { convertChunk } from './utils/convert';
 import { BufferReader } from './utils/reader';
 

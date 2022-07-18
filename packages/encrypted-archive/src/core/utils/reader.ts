@@ -1,6 +1,7 @@
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from '../types/builtin';
 import type { AsyncIterableIteratorReturn, AsyncIterableReturn } from '../types/utils';
-import { isOneArray, uint8arrayConcat } from '../utils';
+import { uint8arrayConcat } from './array-buffer';
+import { isOneArray } from './type-check';
 
 export interface BufferReaderInterface<T extends Uint8Array = Uint8Array> {
     read: (size: number, offset?: number) => Promise<T>;

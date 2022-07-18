@@ -5,7 +5,7 @@ import { inspect as nodeInspect } from 'util';
 import { isPropAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 
 import type { InspectFn } from '../../core/types/builtin';
-import { isOneArray, isString } from '../../core/utils';
+import { isOneArray, isString } from '../../core/utils/type-check';
 
 export const inspect: InspectFn = value => nodeInspect(value, { breakLength: Infinity });
 

@@ -11,7 +11,8 @@ import {
     NormalizedArgon2Options,
 } from '../types/key-derivation-function/argon2';
 import { assertType, isInteger, objectEntries, objectFromEntries, RequiredExcludeUndefined } from '../types/utils';
-import { ifFuncThenExec, isNotUndefined, normalizeOptions, passThroughString } from '../utils';
+import { ifFuncThenExec, normalizeOptions, passThroughString } from '../utils';
+import { isNotUndefined } from '../utils/type-check';
 
 export const defaultOptions: NormalizedArgon2Options = {
     algorithm: 'argon2d',

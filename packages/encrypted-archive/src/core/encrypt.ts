@@ -18,8 +18,8 @@ import type {
     NormalizedKeyDerivationOptions,
 } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
-import { convertIterableValue, uint8arrayConcat, uint8arrayFrom } from './utils';
-import { convertChunk } from './utils/convert';
+import { uint8arrayConcat, uint8arrayFrom } from './utils/array-buffer';
+import { convertChunk, convertIterableValue } from './utils/convert';
 
 export interface EncryptOptions<TCompressOptions extends BaseCompressOptions> {
     algorithm?: CryptoAlgorithmName | undefined;

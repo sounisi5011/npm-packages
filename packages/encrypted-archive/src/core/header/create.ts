@@ -4,7 +4,7 @@ import type { BuiltinInspectRecord } from '../types/builtin';
 import type { CompressAlgorithmName } from '../types/compress';
 import type { CryptoAlgorithmName } from '../types/crypto';
 import type { NormalizedKeyDerivationOptions } from '../types/key-derivation-function';
-import { uint8arrayConcat } from '../utils';
+import { uint8arrayConcat } from '../utils/array-buffer';
 import { cidByteList } from './content-identifier';
 import { createProtobufHeader } from './protocol-buffers-converter/header';
 import { createProtobufSimpleHeader } from './protocol-buffers-converter/simpleHeader';
