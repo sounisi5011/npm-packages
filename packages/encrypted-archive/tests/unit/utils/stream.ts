@@ -1,5 +1,3 @@
-import * as stream from 'stream';
-
 import { BufferReader } from '../../../src/core/utils/stream';
 import { inspect } from '../../../src/runtimes/node/utils';
 import { spyObj, SpyObjCallItem } from '../../helpers/spy';
@@ -14,8 +12,7 @@ const builtin: ConstructorParameters<typeof BufferReader>[0] = {
 describe('class BufferReader', () => {
     describe('read() method', () => {
         it('empty stream', async () => {
-            const targetStream = stream.Readable.from([]);
-            const reader = new BufferReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, []);
             await expect(reader.read(1)).resolves
                 .toBytesEqual(Buffer.from([]));
         });
@@ -34,8 +31,7 @@ describe('class BufferReader', () => {
                 [{ size: 4, offset: 4 }, [4, 5]],
                 [{ size: 4, offset: 999 }, []],
             ])('%p', async (input, expected) => {
-                const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                const reader = new BufferReader(builtin, targetStream);
+                const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
 
                 const expectedBuffer = Buffer.from(expected);
                 if (input.offset === undefined) {
@@ -55,11 +51,13 @@ describe('class BufferReader', () => {
             ] as const;
 
             let readCount = 0;
-            const targetStream = stream.Readable.from(chunkSpyList.map(({ value }) => value))
-                .on('data', () => {
+            const bufferSource = (function*() {
+                for (const { value } of chunkSpyList) {
                     readCount++;
-                });
-            const reader = new BufferReader(builtin, targetStream);
+                    yield value;
+                }
+            })();
+            const reader = new BufferReader(builtin, bufferSource);
 
             expect(readCount).toBe(0);
             // BufferReader should not touch any chunks
@@ -196,11 +194,10 @@ describe('class BufferReader', () => {
                 0,
                 3,
             ])('offset=%p', async offset => {
-                const targetStream = stream.Readable.from([]);
-                const reader = new BufferReader(builtin, targetStream);
+                const reader = new BufferReader(builtin, []);
 
                 const entryList: ReadEntry[] = [];
-                // eslint-disable-next-line jest/no-if
+
                 if (offset === undefined) {
                     for await (const entry of reader.readIterator(1)) {
                         entryList.push(entry);
@@ -222,10 +219,9 @@ describe('class BufferReader', () => {
             });
         });
         it('single chunk stream', async () => {
-            const targetStream = stream.Readable.from((function*() {
-                yield Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-            })());
-            const reader = new BufferReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, [
+                Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+            ]);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -290,15 +286,15 @@ describe('class BufferReader', () => {
             }
         });
         it('multi chunk stream', async () => {
-            const targetStream = stream.Readable.from((function*() {
-                yield Buffer.from([0, 1]);
-                yield Buffer.from([2, 3, 4]);
-                yield Buffer.from([5, 6]);
-                yield Buffer.from([7, 8]);
-                yield Buffer.alloc(0);
-                yield Buffer.from([9]);
-            })());
-            const reader = new BufferReader(builtin, targetStream);
+            const bufferSource = [
+                [0, 1],
+                [2, 3, 4],
+                [5, 6],
+                [7, 8],
+                [],
+                [9],
+            ].map(data => Buffer.from(data));
+            const reader = new BufferReader(builtin, bufferSource);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -467,8 +463,7 @@ describe('class BufferReader', () => {
                     ['over seek', 999, []],
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
-                    const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new BufferReader(builtin, targetStream);
+                    const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
 
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
@@ -483,8 +478,7 @@ describe('class BufferReader', () => {
                     ['over seek', 999, []],
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
-                    const targetStream = stream.Readable.from(chunkList.map(chunkData => Buffer.from(chunkData)));
-                    const reader = new BufferReader(builtin, targetStream);
+                    const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
 
                     await expect(reader.read(3, 0)).resolves
                         .toBytesEqual(Buffer.from([9, 8, 7]));
@@ -560,14 +554,12 @@ describe('class BufferReader', () => {
     });
     describe('isEnd() method', () => {
         it('empty stream', async () => {
-            const targetStream = stream.Readable.from([]);
-            const reader = new BufferReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, []);
 
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
         it('non empty stream', async () => {
-            const targetStream = stream.Readable.from([Buffer.alloc(1)]);
-            const reader = new BufferReader(builtin, targetStream);
+            const reader = new BufferReader(builtin, [Buffer.alloc(1)]);
 
             await expect(reader.isEnd()).resolves.toBeFalse();
 
