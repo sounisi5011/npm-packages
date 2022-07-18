@@ -1,14 +1,18 @@
 import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
 
-import type { BuiltinInspectRecord } from '../types/builtin';
+import {
+    defaultOptions as defaultArgon2Options,
+    getArgon2KDF,
+    isArgon2Options,
+} from './key-derivation-function/argon2';
+import type { BuiltinInspectRecord } from './types/builtin';
 import type {
     GetKDFResult,
     KDFBuiltinAPIRecord,
     KeyDerivationOptions,
     NormalizedKeyDerivationOptions,
-} from '../types/key-derivation-function';
-import { cond, passThroughString } from '../utils';
-import { defaultOptions as defaultArgon2Options, getArgon2KDF, isArgon2Options } from './argon2';
+} from './types/key-derivation-function';
+import { cond, passThroughString } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const defaultGetKDF = (builtin: { kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord) =>

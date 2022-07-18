@@ -1,5 +1,5 @@
-import type { EncodeStringFn } from '../types/builtin';
-import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from '../types/utils';
+import type { EncodeStringFn } from './types/builtin';
+import type { AsyncIterableReturn, objectEntries, PartialWithUndefined } from './types/utils';
 
 export function isString(value: unknown): value is string {
     return typeof value === 'string';
