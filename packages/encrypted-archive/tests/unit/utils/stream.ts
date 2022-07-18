@@ -259,7 +259,7 @@ describe('class StreamReader', () => {
                 }
                 expect(entryList).toStrictEqual([
                     {
-                        data: new Uint8Array([4, 5, 6, 7, 8, 9]),
+                        data: Buffer.from([4, 5, 6, 7, 8, 9]),
                         requestedSize: 999,
                         offset: 1,
                         readedSize: 6,
