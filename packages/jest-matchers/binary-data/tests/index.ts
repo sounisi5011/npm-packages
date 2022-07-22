@@ -1,11 +1,10 @@
 import '../src';
 
-// import ConvertAnsiPlugin from 'pretty-format/ConvertAnsi';
-import { plugins as prettyFormatPlugins } from 'pretty-format';
+import ansiEscapesSerializer from 'jest-serializer-ansi-escapes';
 
 import { getBytesDataList, toIntAndBigintCases, unshiftInspect } from './helpers';
 
-expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
+expect.addSnapshotSerializer(ansiEscapesSerializer);
 
 {
     const byteSizeList: number[] = [0, 1, 2 ** 10, 2 ** 20, 2 ** 30, 2 ** 40, 2 ** 50];

@@ -322,7 +322,7 @@ importers:
       cross-env: 7.0.3
       jest: 28.1.2
       jest-diff: ^28.0.0
-      pretty-format: 28.1.1
+      jest-serializer-ansi-escapes: 2.0.1
       typescript: 4.7.4
     dependencies:
       '@sounisi5011/ts-type-util-is-readonly-array': link:../../ts-type-utils/is-readonly-array
@@ -335,7 +335,7 @@ importers:
       '@types/node': 12.20.55
       cross-env: 7.0.3
       jest: 28.1.2_@types+node@12.20.55
-      pretty-format: 28.1.1
+      jest-serializer-ansi-escapes: 2.0.1
       typescript: 4.7.4
 
   packages/stream-transform-from:
@@ -5331,6 +5331,11 @@ packages:
       strip-bom: 4.0.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /jest-serializer-ansi-escapes/2.0.1:
+    resolution: {integrity: sha512-+BuVKZQutcejSuODTleG/CV+8OVONZSOSrtrQRG8isTLu367JVKK+/yaG2jGs5O6MPBZ88WNy5jg8hqhd/p6pw==}
+    engines: {node: '>=14'}
     dev: true
 
   /jest-snapshot/28.1.2:
