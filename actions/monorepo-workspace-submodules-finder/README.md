@@ -2,11 +2,12 @@
 
 ## Supported monorepo
 
-All monorepos that are supported by [`workspace-tools@0.17.0`](https://github.com/microsoft/workspace-tools).
+All monorepos that are supported by [`workspace-tools@0.29.1`](https://github.com/microsoft/workspace-tools/tree/workspace-tools_v0.29.1/packages/workspace-tools).
 
 * [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces)
 * [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)
 * [pnpm workspaces](https://pnpm.js.org/workspaces/)
+* [lerna](https://lerna.js.org/)
 * [rush](https://rushjs.io/)
 
 ## Inputs
