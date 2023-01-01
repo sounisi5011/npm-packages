@@ -9,8 +9,9 @@
 
 ### Commits
 
-<details><summary>show 21 commits</summary>
+<details><summary>show 22 commits</summary>
 
+* [`1d26592`](https://www.github.com/sounisi5011/npm-packages/commit/1d265929217127f0dd21f09d5a2a3eb7967c1b13) chore(deps): update test packages ([#564](https://www.github.com/sounisi5011/npm-packages/issues/564))
 * [`070d84a`](https://www.github.com/sounisi5011/npm-packages/commit/070d84a126445103855441cacfc5ea1d0b9a40e9) fix(jest-binary-data-matchers): `this.expand` may be an `undefined` value ([#585](https://www.github.com/sounisi5011/npm-packages/issues/585))
 * [`72ad589`](https://www.github.com/sounisi5011/npm-packages/commit/72ad589af7b6b03d7b0dd78a389fe2dfb9da1eef) test(@sounisi5011/jest-binary-data-matchers): migrate from `pretty-format` to `jest-serializer-ansi-escapes` ([#573](https://www.github.com/sounisi5011/npm-packages/issues/573))
 * [`8d39bdd`](https://www.github.com/sounisi5011/npm-packages/commit/8d39bdd7c8df1d4acf2c9652f7a95c0052246b7b) chore(deps): update dependency @swc/core to v1.2.212 ([#562](https://www.github.com/sounisi5011/npm-packages/issues/562))
