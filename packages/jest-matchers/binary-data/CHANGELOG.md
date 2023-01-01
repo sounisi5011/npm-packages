@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [1.2.1](https://github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.2.0...jest-binary-data-matchers-v1.2.1) (2023-01-01)
+
+
+### Bug Fixes
+
+* **jest-binary-data-matchers:** `this.expand` may be an `undefined` value ([#585](https://github.com/sounisi5011/npm-packages/issues/585)) ([070d84a](https://github.com/sounisi5011/npm-packages/commit/070d84a126445103855441cacfc5ea1d0b9a40e9))
+
 ## [1.2.0](https://www.github.com/sounisi5011/npm-packages/compare/jest-binary-data-matchers-v1.1.1...jest-binary-data-matchers-v1.2.0) (2022-05-28)
 
 ### Features
