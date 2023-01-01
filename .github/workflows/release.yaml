@@ -73,6 +73,7 @@ jobs:
             # The "token" parameter is optional.
             # However, it may cause an error due to the rate limit of GitHub API.
             # Therefore, it should be specified explicitly.
+          pull-request-title-pattern: "chore: release${component} ${version}"
 
         #
         # Commit to PR
