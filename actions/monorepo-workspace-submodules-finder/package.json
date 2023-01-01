@@ -23,7 +23,7 @@
     "test": "run-if-supported --verbose jest"
   },
   "dependencies": {
-    "@actions/core": "1.9.0",
+    "@actions/core": "1.10.0",
     "@actions/exec": "1.1.1",
     "@actions/github": "5.0.3",
     "@octokit/endpoint": "7.0.0",

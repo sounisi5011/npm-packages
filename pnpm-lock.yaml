@@ -64,7 +64,7 @@ importers:
 
   actions/monorepo-workspace-submodules-finder:
     specifiers:
-      '@actions/core': 1.9.0
+      '@actions/core': 1.10.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
       '@octokit/endpoint': 7.0.0
@@ -88,7 +88,7 @@ importers:
       validate-npm-package-name: 4.0.0
       workspace-tools: 0.21.0
     dependencies:
-      '@actions/core': 1.9.0
+      '@actions/core': 1.10.0
       '@actions/exec': 1.1.1
       '@actions/github': 5.0.3
       '@octokit/endpoint': 7.0.0
@@ -478,10 +478,11 @@ importers:
 
 packages:
 
-  /@actions/core/1.9.0:
-    resolution: {integrity: sha512-5pbM693Ih59ZdUhgk+fts+bUWTnIdHV3kwOSr+QIoFHMLg7Gzhwm0cifDY/AG68ekEJAkHnQVpcy4f6GjmzBCA==}
+  /@actions/core/1.10.0:
+    resolution: {integrity: sha512-2aZDDa3zrrZbP5ZYg159sNoLRb61nQ7awl5pSvIq5Qpj81vwDzdMRKzkWJGJuwVvWpvZKx7vspJALyvaaIQyug==}
     dependencies:
       '@actions/http-client': 2.0.1
+      uuid: 8.3.2
     dev: false
 
   /@actions/exec/1.1.1:
@@ -7773,6 +7774,11 @@ packages:
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: false
+
+  /uuid/8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
     dev: false
 
   /v8-compile-cache-lib/3.0.1:
