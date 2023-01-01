@@ -153,7 +153,8 @@ jobs:
               echo '::endgroup::'
 
               echo '::group::' Detect dprint version
-              readonly dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
+              dprintVersion="$(< ./package.json jq -r '.devDependencies.dprint')"
+              readonly dprintVersion
               echo dprint version':' "${dprintVersion}"
               echo '::endgroup::'
 
@@ -272,20 +273,24 @@ jobs:
             echo '::endgroup::'
           fi
 
-          readonly changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
+          changesText="$(git diff --name-only -- "${pathspecArray[@]}")"
+          readonly changesText
           print_diff 'changed files' "${changesText}"
           if [ "${#pathspecArray[@]}" -ne 0 ]; then
-            readonly changesTextIgnoreExclude="$(git diff --name-only)"
+            changesTextIgnoreExclude="$(git diff --name-only)"
+            readonly changesTextIgnoreExclude
             print_diff 'changed files (ignore exclude list)' "${changesTextIgnoreExclude}"
           fi
 
           # Let "git diff" command recognize the new file.
           # see https://stackoverflow.com/a/857696/4907315
           git add -N .
-          readonly newFilesText="$(echo "${changesText}"$'\n\n'"$(git diff --name-only -- "${pathspecArray[@]}")" | sort | uniq -u)"
+          newFilesText="$(echo "${changesText}"$'\n\n'"$(git diff --name-only -- "${pathspecArray[@]}")" | sort | uniq -u)"
+          readonly newFilesText
           print_diff 'new files' "${newFilesText}"
           if [ "${#pathspecArray[@]}" -ne 0 ]; then
-            readonly newFilesTextIgnoreExclude="$(echo "${changesTextIgnoreExclude}"$'\n\n'"$(git diff --name-only)" | sort | uniq -u)"
+            newFilesTextIgnoreExclude="$(echo "${changesTextIgnoreExclude}"$'\n\n'"$(git diff --name-only)" | sort | uniq -u)"
+            readonly newFilesTextIgnoreExclude
             print_diff 'new files (ignore exclude list)' "${newFilesTextIgnoreExclude}"
           fi
 
