@@ -61,7 +61,7 @@ jobs:
       matrix:
         include: ${{fromJson(needs.submodules-finder.outputs.result)}}
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: google-github-actions/release-please-action@v3
         id: release
         with:
           release-type: node
@@ -77,30 +77,19 @@ jobs:
         #
         # Commit to PR
         #
-      - name: Commit to Release PR / Get PR ref
-        id: release-pr
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # https://shogo82148.github.io/blog/2020/10/23/github-bot-using-actions/
-        run: |
-          PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
-          ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "ref=${ref}" >> "${GITHUB_OUTPUT}"
-        if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.release-pr.outputs.ref }}
+          ref: ${{ fromJson(steps.release.outputs.pr).headBranchName }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
           # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
           fetch-depth: 0
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -110,13 +99,13 @@ jobs:
             ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Setup pnpm
         uses: ./actions/setup-pnpm
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Push to PR
         shell: bash
         # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
@@ -176,14 +165,14 @@ jobs:
           echo '::group::$' git push
                             git push
           echo '::endgroup::'
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ ! steps.release.outputs.releases_created && steps.release.outputs.pr }}
 
         #
         # Publish
         #
       - name: Publish / Checkout
         uses: actions/checkout@v3
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -191,7 +180,7 @@ jobs:
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -201,13 +190,13 @@ jobs:
             ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Setup pnpm
         uses: ./actions/setup-pnpm
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Install Dependencies
         run: pnpm install
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Build
         run: pnpm exec ultra --recursive --filter '+${{ matrix.path-git-relative }}' --build pnpm run --if-present build
         # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
@@ -220,11 +209,11 @@ jobs:
         #
         # Note: DO NOT add the "--if-present" option to the end of the command.
         #       Execution by ultra-runner will fail.
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Update README
         run: |
           node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -243,7 +232,8 @@ jobs:
             export outputs_minor='${{ steps.release.outputs.minor }}'
             export outputs_patch='${{ steps.release.outputs.patch }}'
             export outputs_sha='${{ steps.release.outputs.sha }}'
-            export outputs_pr='${{ steps.release.outputs.pr }}'
+            export outputs_pr='${{ fromJson(steps.release.outputs.pr).number }}'
+            export outputs_pr_json='${{ steps.release.outputs.pr }}'
             echo loading "${CUSTOM_PUBLISH_SCRIPT_PATH}"
             # shellcheck source=/dev/null
             source "${CUSTOM_PUBLISH_SCRIPT_PATH}"
@@ -252,4 +242,4 @@ jobs:
             pnpm publish --access=public --no-git-checks
           fi
         shell: bash
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
