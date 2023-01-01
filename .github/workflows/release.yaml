@@ -24,10 +24,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUBMODULES_JSON: ${{ steps.interrogate.outputs.result }}
         run: |
-          readonly RATE_LIMIT_JSON="$(gh api 'rate_limit')"
-          readonly RATE_LIMIT_JSON_ARRAY="$(echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]')"
-          readonly RATE_LIMIT_REMAINING="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.remaining) | min')"
-          readonly submodules_count="$(echo "${SUBMODULES_JSON}" | jq -r '. | length')"
+          RATE_LIMIT_JSON="$(gh api 'rate_limit')"
+          RATE_LIMIT_JSON_ARRAY="$(echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]')"
+          RATE_LIMIT_REMAINING="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.remaining) | min')"
+          submodules_count="$(echo "${SUBMODULES_JSON}" | jq -r '. | length')"
+          readonly RATE_LIMIT_JSON RATE_LIMIT_JSON_ARRAY RATE_LIMIT_REMAINING submodules_count
           readonly needs_remaining="$((submodules_count * 4))"
 
           echo '::group::RATE_LIMIT_JSON'
@@ -43,7 +44,8 @@ jobs:
           echo '::endgroup::'
 
           if [ "${RATE_LIMIT_REMAINING}" -lt "${needs_remaining}" ]; then
-            readonly RATE_LIMIT_RESET="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.reset) | max')"
+            RATE_LIMIT_RESET="$(echo "${RATE_LIMIT_JSON_ARRAY}" | jq -r 'map_values(.reset) | max')"
+            readonly RATE_LIMIT_RESET
             echo "::error::Rate limit is approaching. Requires ${needs_remaining}, but remainder is ${RATE_LIMIT_REMAINING}. Please wait until $(date -ud "@${RATE_LIMIT_RESET}" '+%Y/%m/%d %T %Z')"
             exit 1
           fi
@@ -84,7 +86,7 @@ jobs:
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "::set-output name=ref::${ref}"
+          echo "ref=${ref}" >> "${GITHUB_OUTPUT}"
         if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
@@ -123,7 +125,8 @@ jobs:
           readonly CUSTOM_RELEASE_SCRIPT_PATH='.github/workflows/post-release.sh'
           readonly CUSTOM_RELEASE_SCRIPT_FULLPATH="${{ matrix.path-git-relative }}/${CUSTOM_RELEASE_SCRIPT_PATH}"
 
-          readonly origGit="$(command -v git)"
+          origGit="$(command -v git)"
+          readonly origGit
           git() {
             if [ "$1" = 'commit' ]; then
               shift
@@ -135,7 +138,8 @@ jobs:
           git config user.name  'GitHub'
           git config user.email 'noreply@github.com'
 
-          readonly beforeCommitHash="$(git log --format=%H -n 1)"
+          beforeCommitHash="$(git log --format=%H -n 1)"
+          readonly beforeCommitHash
 
           echo '::group::' fix changelog
           {
