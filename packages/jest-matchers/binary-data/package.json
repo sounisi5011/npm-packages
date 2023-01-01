@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/jest-binary-data-matchers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Custom jest matchers to test binary data",
   "keywords": [
     "array",
