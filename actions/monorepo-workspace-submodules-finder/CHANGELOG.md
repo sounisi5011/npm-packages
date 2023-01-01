@@ -1,6 +1,25 @@
 # Changelog
 
 
+## [1.3.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.3.0...monorepo-workspace-submodules-finder-action-v1.3.1) (2022-07-11)
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/endpoint to v7 ([#555](https://www.github.com/sounisi5011/npm-packages/issues/555)) ([436150f](https://www.github.com/sounisi5011/npm-packages/commit/436150f18fe773e47a5504fcf4c4ae60790d6d71))
+
+### Commits
+
+<details><summary>show 5 commits</summary>
+
+* [`8d39bdd`](https://www.github.com/sounisi5011/npm-packages/commit/8d39bdd7c8df1d4acf2c9652f7a95c0052246b7b) chore(deps): update dependency @swc/core to v1.2.212 ([#562](https://www.github.com/sounisi5011/npm-packages/issues/562))
+* [`1bcdb72`](https://www.github.com/sounisi5011/npm-packages/commit/1bcdb72723c9e7cc29f1576e66455df0c6e210c0) chore(deps): lock file maintenance ([#550](https://www.github.com/sounisi5011/npm-packages/issues/550))
+* [`436150f`](https://www.github.com/sounisi5011/npm-packages/commit/436150f18fe773e47a5504fcf4c4ae60790d6d71) fix(deps): update dependency @octokit/endpoint to v7 ([#555](https://www.github.com/sounisi5011/npm-packages/issues/555))
+* [`9e9b917`](https://www.github.com/sounisi5011/npm-packages/commit/9e9b9170b512a83bbcf9c4de57359319ba72f4c6) chore(deps): update dependency @swc/core to v1.2.211 ([#551](https://www.github.com/sounisi5011/npm-packages/issues/551))
+* [`78e3fea`](https://www.github.com/sounisi5011/npm-packages/commit/78e3fea7e42eb79a87795442d1cc3c0dc3f31efb) chore(deps): update dependency @types/node to v16.11.43 ([#547](https://www.github.com/sounisi5011/npm-packages/issues/547))
+
+</details>
+
+
 ## [1.3.0](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.2.8...monorepo-workspace-submodules-finder-action-v1.3.0) (2022-07-01)
 
 ### Features

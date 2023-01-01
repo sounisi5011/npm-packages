@@ -1,11 +1,10 @@
 import '../src';
 
-// import ConvertAnsiPlugin from 'pretty-format/ConvertAnsi';
-import { plugins as prettyFormatPlugins } from 'pretty-format';
+import ansiEscapesSerializer from 'jest-serializer-ansi-escapes';
 
 import * as matcherList from '../src/matchers';
 
-expect.addSnapshotSerializer(prettyFormatPlugins.ConvertAnsi);
+expect.addSnapshotSerializer(ansiEscapesSerializer);
 
 const invalidValueList = [
     undefined,
