@@ -11,13 +11,9 @@ jobs:
     if: ${{ ! contains(github.event.pull_request.labels.*.name, 'skip ci') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: aslafy-z/conventional-pr-title-action@v2.2.5
+      - uses: aslafy-z/conventional-pr-title-action@v3
         with:
           success-state: Title follows the Conventional Commits.
           failure-state: Title does not follow the Conventional Commits.
-          # The default preset reports titles with a "!" (e.g., `feat!: foo bar baz`) as incorrect.
-          # So, specify another preset.
-          # see https://github.com/aslafy-z/conventional-pr-title-action/issues/183#issuecomment-1074138098
-          preset: conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
