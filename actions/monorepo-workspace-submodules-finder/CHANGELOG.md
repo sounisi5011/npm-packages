@@ -3,10 +3,18 @@
 
 ## [1.3.2](https://github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.3.1...monorepo-workspace-submodules-finder-action-v1.3.2) (2023-01-01)
 
-
 ### Bug Fixes
 
 * **deps:** update dependencies: @actions/core, @actions/github, @octokit/endpoint, validate-npm-package-name, workspace-tools ([#580](https://github.com/sounisi5011/npm-packages/issues/580)) ([3c638e0](https://github.com/sounisi5011/npm-packages/commit/3c638e0f32fe212971dcb7f1ab0a20b533a9a097))
+
+### Commits
+
+<details><summary>show 1 commits</summary>
+
+* [`3c638e0`](https://www.github.com/sounisi5011/npm-packages/commit/3c638e0f32fe212971dcb7f1ab0a20b533a9a097) fix(deps): update dependencies: @actions/core, @actions/github, @octokit/endpoint, validate-npm-package-name, workspace-tools ([#580](https://www.github.com/sounisi5011/npm-packages/issues/580))
+
+</details>
+
 
 ## [1.3.1](https://www.github.com/sounisi5011/npm-packages/compare/monorepo-workspace-submodules-finder-action-v1.3.0...monorepo-workspace-submodules-finder-action-v1.3.1) (2022-07-11)
 
