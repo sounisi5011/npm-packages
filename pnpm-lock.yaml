@@ -66,7 +66,7 @@ importers:
     specifiers:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
-      '@actions/github': 5.0.3
+      '@actions/github': 5.1.1
       '@octokit/endpoint': 7.0.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': workspace:^1.0.0
@@ -90,7 +90,7 @@ importers:
     dependencies:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
-      '@actions/github': 5.0.3
+      '@actions/github': 5.1.1
       '@octokit/endpoint': 7.0.0
       find-git-root: 1.0.4
       path-starts-with: 2.0.0
@@ -490,8 +490,8 @@ packages:
       '@actions/io': 1.1.2
     dev: false
 
-  /@actions/github/5.0.3:
-    resolution: {integrity: sha512-myjA/pdLQfhUGLtRZC/J4L1RXOG4o6aYdiEq+zr5wVVKljzbFld+xv10k1FX6IkIJtNxbAq44BdwSNpQ015P0A==}
+  /@actions/github/5.1.1:
+    resolution: {integrity: sha512-Nk59rMDoJaV+mHCOJPXuvB1zIbomlKS0dmSIqPGxd0enAXBnOfn4VWF+CGtRCwXZG9Epa54tZA7VIRlJDS8A6g==}
     dependencies:
       '@actions/http-client': 2.0.1
       '@octokit/core': 3.6.0
