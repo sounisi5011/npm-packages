@@ -212,8 +212,23 @@ jobs:
         #       Execution by ultra-runner will fail.
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Update README
+        shell: bash
+        env:
+          # see https://obel.hatenablog.jp/entry/20220115/1642186800
+          DEBUG_STEPS_RELEASE_OUTPUTS: ${{ toJson(steps.release.outputs) }}
         run: |
-          node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
+          # TODO: Remove below code after fixing issue with "outputs.tag_name" being an empty string.
+          tag_name='${{ steps.release.outputs.tag_name }}'
+          if [ -z "${tag_name}" ]; then
+            echo '::error::outputs.tag_name is empty string'
+            echo '::group::JSON value of "steps.release.outputs"'
+            echo "${DEBUG_STEPS_RELEASE_OUTPUTS}"
+            echo '::endgroup::'
+            tag_name="$(git tag --points-at HEAD | tail -n 1)"
+          fi
+          node ./scripts/publish-convert-readme.mjs "${tag_name}" '${{ matrix.path-git-relative }}/README.md'
+
+          #node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish
         env:
@@ -223,12 +238,19 @@ jobs:
 
           cd '${{ matrix.path-git-relative }}'
           if [ -x "${CUSTOM_PUBLISH_SCRIPT_PATH}" ]; then
+            # TODO: Remove below code after fixing issue with "outputs.tag_name" being an empty string.
+            outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            if [ -z "${outputs_tag_name}" ]; then
+              outputs_tag_name="$(git tag --points-at HEAD | tail -n 1)"
+            fi
+
             export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             export matrix_package_name_with_scope='${{ matrix.package-name }}'
             export matrix_package_name_without_scope='${{ matrix.no-scope-package-name }}'
             export outputs_upload_url='${{ steps.release.outputs.upload_url }}'
             export outputs_html_url='${{ steps.release.outputs.html_url }}'
-            export outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            #export outputs_tag_name='${{ steps.release.outputs.tag_name }}'
+            export outputs_tag_name
             export outputs_major='${{ steps.release.outputs.major }}'
             export outputs_minor='${{ steps.release.outputs.minor }}'
             export outputs_patch='${{ steps.release.outputs.patch }}'
