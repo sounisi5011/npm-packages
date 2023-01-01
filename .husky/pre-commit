@@ -4,4 +4,9 @@
 # Note: This file should be POSIX compliant.
 #       If you edit this file, use "checkbashisms" to check it does not contain bash, zsh, or other features.
 
-./node_modules/.bin/lint-staged
+if [ -n "$CI" ]; then
+  # On CI, disable ANSI escapes and output plain text logs that are easy to read
+  ./node_modules/.bin/lint-staged | cat
+else
+  ./node_modules/.bin/lint-staged
+fi
