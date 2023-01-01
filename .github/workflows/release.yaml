@@ -84,7 +84,7 @@ jobs:
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "::set-output name=ref::${ref}"
+          echo "ref=${ref}" >> $GITHUB_OUTPUT
         if: ${{ ! steps.release.outputs.release_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
