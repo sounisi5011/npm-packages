@@ -257,17 +257,16 @@ const createDeriveKeyFunc = (
     options: NormalizedArgon2Options,
 ): GetArgon2KDFResult['deriveKey'] =>
     async (password, salt, keyLengthBytes) => {
+        validateBetweenByteLength(
+            'password',
+            password,
+            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
+        );
         validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
         validateBetweenLength(
             'keyLengthBytes',
             keyLengthBytes,
             { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
-        );
-
-        validateBetweenByteLength(
-            'password',
-            password,
-            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
         );
 
         return await builtin.argon2Hash({
