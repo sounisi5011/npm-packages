@@ -33,7 +33,7 @@ describe('getKDF()', () => {
     it('unknown algorithm', () => {
         const algorithm = 'foooooooooooooo';
         // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"argon2d" | "argon2id"'.
-        const options: KeyDerivationOptions = { algorithm };
+        const options: Parameters<typeof getKDF>[1] = { algorithm };
 
         expect(() => getKDF(builtin, options)).toThrowWithMessage(
             TypeError,
