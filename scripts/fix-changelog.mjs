@@ -190,7 +190,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
   const changelogText = headingMatch.input ?? '';
   const headingLine = headingMatch[0];
   const sectionBody = changelogText.substring(sectionRange.start + headingLine.length, sectionRange.end).trim();
-  const headingText = headingMatch.groups?.heading_text.trim() ?? '';
+  const headingText = headingMatch.groups?.heading_text?.trim() ?? '';
   const repoUrlPrefix = headingMatch.groups?.repo_url_prefix?.trim() ?? REPO_URL_PREFIX;
 
   const newHeadingLine = `## ${headingText}`;
