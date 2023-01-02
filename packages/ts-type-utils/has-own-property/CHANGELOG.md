@@ -69,8 +69,8 @@
 
 <details><summary>show 3 commits</summary>
 
-* [`2baa4ae`](https://www.github.com/sounisi5011/npm-packages/commit/2baa4aed33a0e674cf33e6360aa1dfd6c80e2982) Revert "chore: release @sounisi5011/ts-type-util-has-own-property 1.0.0 ([#5](https://www.github.com/sounisi5011/npm-packages/issues/5))" ([#10](https://www.github.com/sounisi5011/npm-packages/issues/10))
-* [`d628c26`](https://www.github.com/sounisi5011/npm-packages/commit/d628c2676e1db001fa458c9c02c8b948ff1ce2e5) chore: release @sounisi5011/ts-type-util-has-own-property 1.0.0 ([#5](https://www.github.com/sounisi5011/npm-packages/issues/5))
-* [`a28890e`](https://www.github.com/sounisi5011/npm-packages/commit/a28890e039863f750f36750ecad0abfaffbcac4f) feat(ts-type-util-has-own-property): create a new package ([#4](https://www.github.com/sounisi5011/npm-packages/issues/4))
+* [`2baa4ae`](https://github.com/sounisi5011/npm-packages/commit/2baa4aed33a0e674cf33e6360aa1dfd6c80e2982) Revert "chore: release @sounisi5011/ts-type-util-has-own-property 1.0.0 ([#5](https://github.com/sounisi5011/npm-packages/issues/5))" ([#10](https://github.com/sounisi5011/npm-packages/issues/10))
+* [`d628c26`](https://github.com/sounisi5011/npm-packages/commit/d628c2676e1db001fa458c9c02c8b948ff1ce2e5) chore: release @sounisi5011/ts-type-util-has-own-property 1.0.0 ([#5](https://github.com/sounisi5011/npm-packages/issues/5))
+* [`a28890e`](https://github.com/sounisi5011/npm-packages/commit/a28890e039863f750f36750ecad0abfaffbcac4f) feat(ts-type-util-has-own-property): create a new package ([#4](https://github.com/sounisi5011/npm-packages/issues/4))
 
 </details>

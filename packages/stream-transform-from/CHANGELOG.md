@@ -81,8 +81,8 @@
 
 <details><summary>show 3 commits</summary>
 
-* [`7230e4e`](https://www.github.com/sounisi5011/npm-packages/commit/7230e4e19cea6ab922eb306fc0e58d6a8f1be4ff) chore(deps): update eslint packages ([#69](https://www.github.com/sounisi5011/npm-packages/issues/69))
-* [`d73b305`](https://www.github.com/sounisi5011/npm-packages/commit/d73b3059afe08a1b2d63cb89eef312e58e53b3f7) chore(deps): pin dependency @types/node to 15.6.0 ([#71](https://www.github.com/sounisi5011/npm-packages/issues/71))
-* [`2d7d879`](https://www.github.com/sounisi5011/npm-packages/commit/2d7d87958cb794181cc065a9ddb676a7a685c251) feat(stream-transform-from): create a new package ([#68](https://www.github.com/sounisi5011/npm-packages/issues/68))
+* [`7230e4e`](https://github.com/sounisi5011/npm-packages/commit/7230e4e19cea6ab922eb306fc0e58d6a8f1be4ff) chore(deps): update eslint packages ([#69](https://github.com/sounisi5011/npm-packages/issues/69))
+* [`d73b305`](https://github.com/sounisi5011/npm-packages/commit/d73b3059afe08a1b2d63cb89eef312e58e53b3f7) chore(deps): pin dependency @types/node to 15.6.0 ([#71](https://github.com/sounisi5011/npm-packages/issues/71))
+* [`2d7d879`](https://github.com/sounisi5011/npm-packages/commit/2d7d87958cb794181cc065a9ddb676a7a685c251) feat(stream-transform-from): create a new package ([#68](https://github.com/sounisi5011/npm-packages/issues/68))
 
 </details>
