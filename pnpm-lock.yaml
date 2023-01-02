@@ -225,7 +225,7 @@ importers:
 
   packages/encrypted-archive:
     specifiers:
-      '@protobuf-ts/protoc': 2.7.0
+      '@protobuf-ts/protoc': 2.8.2
       '@sounisi5011/jest-binary-data-matchers': workspace:^0.0.0 || ^1.0.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/stream-transform-from': workspace:^1.0.0
@@ -274,7 +274,7 @@ importers:
     optionalDependencies:
       argon2: 0.27.2
     devDependencies:
-      '@protobuf-ts/protoc': 2.7.0
+      '@protobuf-ts/protoc': 2.8.2
       '@sounisi5011/jest-binary-data-matchers': link:../jest-matchers/binary-data
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-type-util-has-own-property': link:../ts-type-utils/has-own-property
@@ -1407,8 +1407,8 @@ packages:
     dev: false
     optional: true
 
-  /@protobuf-ts/protoc/2.7.0:
-    resolution: {integrity: sha512-YW61nbX9d3mWF44193S+bmWth5eFHxvrePQMUfdY8eEa3PTmhAUwgVCUBeCXEVUWgz1H/E0CnwdjlJgW4vQtOg==}
+  /@protobuf-ts/protoc/2.8.2:
+    resolution: {integrity: sha512-1e+rOgp22ElyqRWunSc8bhatJcvRe90AGPceVn67IFYzybvfKl17vP1igHddeYkN0dzOucnOrwqn2v1jnDfE2w==}
     hasBin: true
     dev: true
 
