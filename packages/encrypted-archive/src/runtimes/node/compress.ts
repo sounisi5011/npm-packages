@@ -1,6 +1,7 @@
 import type * as stream from 'stream';
 
 import type { CompressAlgorithmName, CreateCompressor, DecompressIterable } from '../../core/types/compress';
+import type { GetOptions } from '../../core/types/utils';
 import { passThroughString } from '../../core/utils';
 import * as brotli from './compress/brotli';
 import * as gzip from './compress/gzip';
@@ -11,8 +12,7 @@ interface CompressorTableEntry {
     createDecompress: () => stream.Transform;
 }
 type GenCompressOptions<T extends Record<CompressAlgorithmName, CompressorTableEntry>> = {
-    [P in keyof T]: T[P] extends CompressorTableEntry
-        ? { algorithm: P } & Exclude<Parameters<T[P]['createCompress']>[0], undefined>
+    [P in keyof T]: T[P] extends CompressorTableEntry ? { algorithm: P } & GetOptions<T[P]['createCompress']>
         : never;
 }[keyof T];
 

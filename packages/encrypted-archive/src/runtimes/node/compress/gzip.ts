@@ -1,10 +1,11 @@
 import { createGunzip, createGzip } from 'zlib';
 
+import type { GetOptions } from '../../../core/types/utils';
 import { validateDisallowedOptions } from './utils';
 
 const gzipDisallowOptionNameList = ['flush', 'finishFlush', 'dictionary', 'info', 'maxOutputLength'] as const;
 type GzipDisallowOptionName = (typeof gzipDisallowOptionNameList)[number];
-type GzipOptions = Exclude<Parameters<typeof createGzip>[0], undefined>;
+type GzipOptions = GetOptions<typeof createGzip>;
 type GzipDisallowedOptions = Omit<GzipOptions, GzipDisallowOptionName>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

@@ -46,6 +46,12 @@ export type objectEntries = <T extends string, U>(o: Record<T, U>) => Array<[T, 
 
 export type objectFromEntries = <K extends PropertyKey, T>(entries: Iterable<readonly [K, T]>) => Record<K, T>;
 
+export type GetOptions<T extends (options: never) => unknown> = (
+    T extends ((options?: infer U) => unknown) ? U
+        : T extends ((options: infer U) => unknown) ? U
+        : never
+);
+
 export type Cond<
     TCond extends Record<'actual' | 'expected', unknown>,
     TResult extends Record<'match' | 'notMatch', unknown>
