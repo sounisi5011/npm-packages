@@ -2,6 +2,12 @@ import { BytesData, bytesEqual, byteSize, isBytesData, padTextColumns, toMessage
 import { ensureBytes, ensureByteSizeOrBytes, printBytesDiff } from './utils/jest';
 import type { MatcherHintOptions } from './utils/jest';
 
+/**
+ * The optional property of matcher context is true if undefined.
+ * @see https://github.com/facebook/jest/blob/v27.0.6/packages/expect/src/matchers.ts#L57-L58
+ */
+const isExpand = (expand: boolean | undefined): boolean => expand !== false;
+
 function createCompareByteSizeMatcher(
     opts: {
         matcherName: string;
@@ -111,7 +117,7 @@ export function toBytesEqual(
         printBytesDiff(this.utils, expected, received, {
             expectedLabel: 'Expected',
             receivedLabel: 'Received',
-            expand: this.expand,
+            expand: isExpand(this.expand),
             pass,
         }),
     ]);

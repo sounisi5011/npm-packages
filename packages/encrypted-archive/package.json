@@ -99,7 +99,7 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
-    "@protobuf-ts/protoc": "2.7.0",
+    "@protobuf-ts/protoc": "2.8.2",
     "@sounisi5011/jest-binary-data-matchers": "workspace:^0.0.0 || ^1.0.0",
     "@sounisi5011/run-if-supported": "1.1.1",
     "@sounisi5011/ts-type-util-has-own-property": "workspace:^1.0.0",
@@ -109,7 +109,7 @@
     "@types/bl": "5.0.2",
     "@types/capitalize": "2.0.0",
     "@types/google-protobuf": "3.15.6",
-    "@types/jest": "28.1.4",
+    "@types/jest": "28.1.8",
     "@types/node": "12.20.55",
     "@types/semver": "7.3.10",
     "@types/varint": "6.0.0",
@@ -122,7 +122,7 @@
     "glob-exec": "0.1.1",
     "grpc_tools_node_protoc_ts": "5.3.2",
     "import-from": "4.0.0",
-    "jest": "28.1.2",
+    "jest": "28.1.3",
     "jest-extended": "3.0.0",
     "multicodec": "3.2.1",
     "semver": "7.3.7",
