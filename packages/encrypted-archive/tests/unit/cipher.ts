@@ -1,7 +1,17 @@
 import { randomBytes } from 'crypto';
 
 import { cryptoAlgorithmNameList } from '../../src/core/types/crypto';
+import { asyncIter2AsyncIterable } from '../../src/core/utils/convert';
 import { getCryptoAlgorithm } from '../../src/runtimes/node/cipher';
+
+function toIter<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
+    const iterator = iterable[Symbol.iterator]();
+    const asyncIter = {
+        next: async () => iterator.next(),
+        [Symbol.asyncIterator]: () => asyncIter,
+    };
+    return asyncIter;
+}
 
 describe.each(cryptoAlgorithmNameList)(
     'getCryptoAlgorithm(%j)',
@@ -26,9 +36,14 @@ describe.each(cryptoAlgorithmNameList)(
             const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
 
             await expect((async () => {
-                const result = algorithm.decrypt({ key, nonce, authTag, ciphertext: [ciphertext] });
+                const result = algorithm.decrypt({
+                    key,
+                    nonce,
+                    authTag,
+                    ciphertextIter: toIter([ciphertext]),
+                });
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                for await (const _ of result);
+                for await (const _ of asyncIter2AsyncIterable(result));
             })()).resolves.not.toThrow();
         });
 
@@ -36,9 +51,16 @@ describe.each(cryptoAlgorithmNameList)(
             const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
 
             const cleartext2 = await (async () => {
-                const result = algorithm.decrypt({ key, nonce, authTag, ciphertext: [ciphertext] });
+                const result = algorithm.decrypt({
+                    key,
+                    nonce,
+                    authTag,
+                    ciphertextIter: toIter([ciphertext]),
+                });
                 const cleartextPartList: Uint8Array[] = [];
-                for await (const cleartextPart of result) cleartextPartList.push(cleartextPart);
+                for await (const cleartextPart of asyncIter2AsyncIterable(result)) {
+                    cleartextPartList.push(cleartextPart);
+                }
                 return Buffer.concat(cleartextPartList);
             })();
 
@@ -52,9 +74,14 @@ describe.each(cryptoAlgorithmNameList)(
                 const key2 = randomBytes(algorithm.keyLength);
 
                 await expect((async () => {
-                    const result = algorithm.decrypt({ key: key2, nonce, authTag, ciphertext: [ciphertext] });
+                    const result = algorithm.decrypt({
+                        key: key2,
+                        nonce,
+                        authTag,
+                        ciphertextIter: toIter([ciphertext]),
+                    });
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    for await (const _ of result);
+                    for await (const _ of asyncIter2AsyncIterable(result));
                 })()).rejects.toThrow(/^Unsupported state or unable to authenticate data$/);
             });
             it('different nonce', async () => {
@@ -62,9 +89,14 @@ describe.each(cryptoAlgorithmNameList)(
                 const nonce2 = randomBytes(algorithm.nonceLength);
 
                 await expect((async () => {
-                    const result = algorithm.decrypt({ key, nonce: nonce2, authTag, ciphertext: [ciphertext] });
+                    const result = algorithm.decrypt({
+                        key,
+                        nonce: nonce2,
+                        authTag,
+                        ciphertextIter: toIter([ciphertext]),
+                    });
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    for await (const _ of result);
+                    for await (const _ of asyncIter2AsyncIterable(result));
                 })()).rejects.toThrow(/^Unsupported state or unable to authenticate data$/);
             });
         });

@@ -24,11 +24,11 @@ export const encrypt: CryptoAlgorithmData['encrypt'] = async ({ key, nonce, clea
     };
 };
 
-export const decrypt: CryptoAlgorithmData['decrypt'] = async function*({ key, nonce, authTag, ciphertext }) {
+export const decrypt: CryptoAlgorithmData['decrypt'] = async function*({ key, nonce, authTag, ciphertextIter }) {
     try {
         const decipher = createDecipheriv(algorithmName, key, nonce);
         decipher.setAuthTag(authTag);
-        for await (const ciphertextChunk of ciphertext) {
+        for await (const ciphertextChunk of ciphertextIter) {
             yield decipher.update(ciphertextChunk);
         }
         yield decipher.final();

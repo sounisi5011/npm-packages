@@ -19,7 +19,7 @@ import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
 import { uint8arrayFrom } from './utils/array-buffer';
-import { convertChunk } from './utils/convert';
+import { asyncIter2AsyncIterable, convertChunk } from './utils/convert';
 import { BufferReader } from './utils/reader';
 
 export interface DecryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
@@ -145,17 +145,19 @@ async function decryptChunk(
      * Read ciphertext
      */
     const { dataByteLength: ciphertextByteLength } = await parseCiphertextLength(reader);
-    const ciphertextDataIterable = parseCiphertextIterable(reader, { ciphertextByteLength });
+    const ciphertextDataIterableIterator = parseCiphertextIterable(reader, { ciphertextByteLength });
 
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartextIterable = decryptorMetadata.algorithm.decrypt({
-        key: decryptorMetadata.key,
-        nonce: decryptorMetadata.nonce,
-        authTag: headerData.crypto.authTag,
-        ciphertext: ciphertextDataIterable,
-    });
+    const compressedCleartextIterable = asyncIter2AsyncIterable(
+        decryptorMetadata.algorithm.decrypt({
+            key: decryptorMetadata.key,
+            nonce: decryptorMetadata.nonce,
+            authTag: headerData.crypto.authTag,
+            ciphertextIter: ciphertextDataIterableIterator,
+        }),
+    );
 
     return {
         compressedCleartextIterable,

@@ -1,6 +1,7 @@
 import { TextEncoder } from 'util';
 
 import type { AsyncIterableReturn } from '../../src/core/types/utils';
+import { isAsyncIterable } from '../../src/core/utils/type-check';
 
 export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
 export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]];
@@ -58,10 +59,6 @@ export function createDummySizeBuffer(size: number): Buffer {
             configurable: true,
         },
     });
-}
-
-function isAsyncIterable(value: object): value is AsyncIterable<unknown> {
-    return Symbol.asyncIterator in value;
 }
 
 export async function iterable2list<T>(iterable: Iterable<T> | Iterable<Promise<T>> | AsyncIterable<T>): Promise<T[]> {

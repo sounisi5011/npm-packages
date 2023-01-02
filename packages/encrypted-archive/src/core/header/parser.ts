@@ -1,5 +1,5 @@
 import { Header, SimpleHeader } from '../../protocol-buffers/header_pb';
-import type { AsyncIterableReturn } from '../types/utils';
+import type { AsyncIterableIteratorReturn } from '../types/utils';
 import type { BufferReaderInterface } from '../utils/reader';
 import { number2hex } from '../utils/template-tag';
 import { cidNumber } from './content-identifier';
@@ -46,7 +46,7 @@ export const parseCiphertextLength = parseDataLength({ name: 'ciphertext', autoS
 export async function* parseCiphertextIterable<T extends Uint8Array>(
     reader: BufferReaderInterface<T>,
     { ciphertextByteLength, offset = 0 }: { ciphertextByteLength: number; offset?: number | undefined },
-): AsyncIterableReturn<T, void> {
+): AsyncIterableIteratorReturn<T, void> {
     for await (const { data, readedSize } of reader.readIterator(ciphertextByteLength, offset)) {
         if (data) {
             yield data;

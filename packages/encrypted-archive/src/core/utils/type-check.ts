@@ -14,6 +14,10 @@ export function isInstance<T extends abstract new (...args: never) => unknown>(i
     return (value: unknown): value is InstanceType<T> => value instanceof instance;
 }
 
+export function isAsyncIterable(value: object): value is AsyncIterable<unknown> {
+    return Symbol.asyncIterator in value;
+}
+
 const isNever = (_: unknown): _ is never => false;
 
 export function isOrType<T1, T2, T3 = never, T4 = never>(
