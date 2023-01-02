@@ -10,7 +10,7 @@ export interface BaseCompressOptions {
 export type CreateCompressor<TOpt extends BaseCompressOptions> = (
     options: TOpt | TOpt['algorithm'] | undefined,
 ) => {
-    compressAlgorithmName: CompressAlgorithmName | undefined;
+    compressAlgorithmName: TOpt['algorithm'] | undefined;
     compressIterable: (source: AsyncIterable<Uint8Array>) => AsyncIterableReturn<Uint8Array, void>;
 };
 export type DecompressIterable = (
