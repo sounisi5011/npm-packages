@@ -1,18 +1,12 @@
 import { BufferReader } from '../../../src/core/utils/reader';
-import { inspect } from '../../../src/runtimes/node/utils';
 import { spyObj, SpyObjCallItem } from '../../helpers/spy';
 
 /* eslint @typescript-eslint/no-unused-vars: ["error", { varsIgnorePattern: "^_+$" }] */
 
-const builtin: ConstructorParameters<typeof BufferReader>[0] = {
-    inspect,
-    encodeString: str => Buffer.from(str, 'utf8'),
-};
-
 describe('class BufferReader', () => {
     describe('read() method', () => {
         it('empty stream', async () => {
-            const reader = new BufferReader(builtin, []);
+            const reader = new BufferReader([]);
             await expect(reader.read(1)).resolves
                 .toBytesEqual(Buffer.from([]));
         });
@@ -31,7 +25,7 @@ describe('class BufferReader', () => {
                 [{ size: 4, offset: 4 }, [4, 5]],
                 [{ size: 4, offset: 999 }, []],
             ])('%p', async (input, expected) => {
-                const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+                const reader = new BufferReader(chunkList.map(chunkData => Buffer.from(chunkData)));
 
                 const expectedBuffer = Buffer.from(expected);
                 if (input.offset === undefined) {
@@ -57,7 +51,7 @@ describe('class BufferReader', () => {
                     yield value;
                 }
             })();
-            const reader = new BufferReader(builtin, bufferSource);
+            const reader = new BufferReader(bufferSource);
 
             expect(readCount).toBe(0);
             // BufferReader should not touch any chunks
@@ -170,7 +164,7 @@ describe('class BufferReader', () => {
                 [4],
                 [5],
             ];
-            const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+            const reader = new BufferReader(chunkList.map(chunkData => Buffer.from(chunkData)));
 
             await expect(reader.read(1, 5)).resolves
                 .toBytesEqual(Buffer.from([5]));
@@ -194,7 +188,7 @@ describe('class BufferReader', () => {
                 0,
                 3,
             ])('offset=%p', async offset => {
-                const reader = new BufferReader(builtin, []);
+                const reader = new BufferReader([]);
 
                 const entryList: ReadEntry[] = [];
 
@@ -219,7 +213,7 @@ describe('class BufferReader', () => {
             });
         });
         it('single chunk stream', async () => {
-            const reader = new BufferReader(builtin, [
+            const reader = new BufferReader([
                 Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
             ]);
 
@@ -294,7 +288,7 @@ describe('class BufferReader', () => {
                 [],
                 [9],
             ].map(data => Buffer.from(data));
-            const reader = new BufferReader(builtin, bufferSource);
+            const reader = new BufferReader(bufferSource);
 
             await expect(reader.read(2)).resolves.toBytesEqual(Buffer.from([0, 1]));
             {
@@ -390,7 +384,7 @@ describe('class BufferReader', () => {
                 spyObj(Buffer.from([3, 2, 1]), ['.then']),
                 spyObj(Buffer.from([0]), ['.then']),
             ] as const;
-            const reader = new BufferReader(builtin, chunkSpyList.map(({ value }) => value));
+            const reader = new BufferReader(chunkSpyList.map(({ value }) => value));
 
             // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
@@ -463,7 +457,7 @@ describe('class BufferReader', () => {
                     ['over seek', 999, []],
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
-                    const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+                    const reader = new BufferReader(chunkList.map(chunkData => Buffer.from(chunkData)));
 
                     await reader.seek(offset);
                     await expect(reader.read(3, 0)).resolves
@@ -478,7 +472,7 @@ describe('class BufferReader', () => {
                     ['over seek', 999, []],
                     ['overlap seek', 3, [6, 5, 4]],
                 ])('%s', async (_, offset, expected) => {
-                    const reader = new BufferReader(builtin, chunkList.map(chunkData => Buffer.from(chunkData)));
+                    const reader = new BufferReader(chunkList.map(chunkData => Buffer.from(chunkData)));
 
                     await expect(reader.read(3, 0)).resolves
                         .toBytesEqual(Buffer.from([9, 8, 7]));
@@ -494,7 +488,7 @@ describe('class BufferReader', () => {
                 spyObj(Buffer.from([4, 3]), ['.then']),
                 spyObj(Buffer.from([2, 1, 0]), ['.then']),
             ] as const;
-            const reader = new BufferReader(builtin, chunkSpyList.map(({ value }) => value));
+            const reader = new BufferReader(chunkSpyList.map(({ value }) => value));
 
             // BufferReader should not touch any chunks
             expect(chunkSpyList[0].newCalls).toStrictEqual([]);
@@ -554,12 +548,12 @@ describe('class BufferReader', () => {
     });
     describe('isEnd() method', () => {
         it('empty stream', async () => {
-            const reader = new BufferReader(builtin, []);
+            const reader = new BufferReader([]);
 
             await expect(reader.isEnd()).resolves.toBeTrue();
         });
         it('non empty stream', async () => {
-            const reader = new BufferReader(builtin, [Buffer.alloc(1)]);
+            const reader = new BufferReader([Buffer.alloc(1)]);
 
             await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -574,7 +568,7 @@ describe('class BufferReader', () => {
                 ['single zero-length chunk', [3, 0, 1]],
                 ['multi zero-length chunks', [3, 0, 0, 0, 0, 1]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -590,7 +584,7 @@ describe('class BufferReader', () => {
                 ['single zero-length chunk at the end', [7, 0]],
                 ['multi zero-length chunks at the end', [7, 0, 0, 0, 0, 0, 0, 0, 0]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeFalse();
 
@@ -601,14 +595,14 @@ describe('class BufferReader', () => {
                 ['single zero-length chunk only', [0]],
                 ['multi zero-length chunks only', [0, 0, 0, 0]],
             ])('%s', async (_, chunkSizeList) => {
-                const reader = new BufferReader(builtin, chunkSizeList.map(size => Buffer.alloc(size)));
+                const reader = new BufferReader(chunkSizeList.map(size => Buffer.alloc(size)));
 
                 await expect(reader.isEnd()).resolves.toBeTrue();
             });
         });
         it('should not copy chunks', async () => {
             const chunkSpy = spyObj(Buffer.from([4, 2, 3, 7, 1, 9]), ['.then']);
-            const reader = new BufferReader(builtin, [chunkSpy.value]);
+            const reader = new BufferReader([chunkSpy.value]);
 
             // BufferReader should not touch any chunks
             expect(chunkSpy.newCalls).toStrictEqual([]);
@@ -664,7 +658,7 @@ describe('class BufferReader', () => {
             )
         );
         it.each(cases)('%p', async (range, expected) => {
-            const reader = new BufferReader(builtin, list);
+            const reader = new BufferReader(list);
             await reader.read(0, 999);
 
             // eslint-disable-next-line @typescript-eslint/dot-notation

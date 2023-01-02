@@ -199,7 +199,7 @@ export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, passwo
     validatePassword(builtin, password);
     return async function* decryptor(source) {
         const passwordBuffer = uint8arrayFrom(builtin.encodeString, password);
-        const reader = new BufferReader(builtin, source, convertChunk(builtin));
+        const reader = new BufferReader(source, convertChunk(builtin));
 
         const {
             compressedCleartextIterable,
