@@ -126,8 +126,8 @@
 
 <details><summary>show 3 commits</summary>
 
-* [`3d30444`](https://www.github.com/sounisi5011/npm-packages/commit/3d30444c7e8ee0b592fd3e52f73bfd2e83410313) chore(deps): update dependency typescript to v4.4.4 ([#234](https://www.github.com/sounisi5011/npm-packages/issues/234))
-* [`1eb7fd1`](https://www.github.com/sounisi5011/npm-packages/commit/1eb7fd187dbcfaff2040233e23d5a5dfccfc65eb) chore(deps): update eslint packages (major) ([#237](https://www.github.com/sounisi5011/npm-packages/issues/237))
-* [`b447d64`](https://www.github.com/sounisi5011/npm-packages/commit/b447d6455ca26b2b49ea9c1548f56153fec43b19) feat(jest-binary-data-matchers): create a new package ([#213](https://www.github.com/sounisi5011/npm-packages/issues/213))
+* [`3d30444`](https://github.com/sounisi5011/npm-packages/commit/3d30444c7e8ee0b592fd3e52f73bfd2e83410313) chore(deps): update dependency typescript to v4.4.4 ([#234](https://github.com/sounisi5011/npm-packages/issues/234))
+* [`1eb7fd1`](https://github.com/sounisi5011/npm-packages/commit/1eb7fd187dbcfaff2040233e23d5a5dfccfc65eb) chore(deps): update eslint packages (major) ([#237](https://github.com/sounisi5011/npm-packages/issues/237))
+* [`b447d64`](https://github.com/sounisi5011/npm-packages/commit/b447d6455ca26b2b49ea9c1548f56153fec43b19) feat(jest-binary-data-matchers): create a new package ([#213](https://github.com/sounisi5011/npm-packages/issues/213))
 
 </details>

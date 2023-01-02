@@ -224,7 +224,7 @@ Require Node.js `>=14.13.1`. This is the smallest version that supports [ESM (EC
 
 <details><summary>show 2 commits</summary>
 
-* [`6039610`](https://www.github.com/sounisi5011/npm-packages/commit/60396108c82d822f3d2419329e98c53409019ef1) chore(deps): pin dependency @types/parse-json to 4.0.0 ([#83](https://www.github.com/sounisi5011/npm-packages/issues/83))
-* [`696bf0f`](https://www.github.com/sounisi5011/npm-packages/commit/696bf0fbb71be4cfb32ac37a20462e2f7132370d) feat(run-if-supported): create a new cli package ([#80](https://www.github.com/sounisi5011/npm-packages/issues/80))
+* [`6039610`](https://github.com/sounisi5011/npm-packages/commit/60396108c82d822f3d2419329e98c53409019ef1) chore(deps): pin dependency @types/parse-json to 4.0.0 ([#83](https://github.com/sounisi5011/npm-packages/issues/83))
+* [`696bf0f`](https://github.com/sounisi5011/npm-packages/commit/696bf0fbb71be4cfb32ac37a20462e2f7132370d) feat(run-if-supported): create a new cli package ([#80](https://github.com/sounisi5011/npm-packages/issues/80))
 
 </details>

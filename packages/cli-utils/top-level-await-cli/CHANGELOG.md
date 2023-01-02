@@ -95,6 +95,6 @@
 
 <details><summary>show 1 commits</summary>
 
-* [`fe38025`](https://www.github.com/sounisi5011/npm-packages/commit/fe380253190165fc5f5e1443b488f9b64926dea8) feat(cli-utils-top-level-await): create a new package ([#126](https://www.github.com/sounisi5011/npm-packages/issues/126))
+* [`fe38025`](https://github.com/sounisi5011/npm-packages/commit/fe380253190165fc5f5e1443b488f9b64926dea8) feat(cli-utils-top-level-await): create a new package ([#126](https://github.com/sounisi5011/npm-packages/issues/126))
 
 </details>

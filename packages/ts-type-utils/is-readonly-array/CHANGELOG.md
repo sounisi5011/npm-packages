@@ -50,6 +50,6 @@
 
 <details><summary>show 1 commits</summary>
 
-* [`dc41544`](https://www.github.com/sounisi5011/npm-packages/commit/dc4154419fc9a5db8cade1d5f01914cf5874a3c7) feat(ts-type-util-is-readonly-array): create a new package  ([#28](https://www.github.com/sounisi5011/npm-packages/issues/28))
+* [`dc41544`](https://github.com/sounisi5011/npm-packages/commit/dc4154419fc9a5db8cade1d5f01914cf5874a3c7) feat(ts-type-util-is-readonly-array): create a new package  ([#28](https://github.com/sounisi5011/npm-packages/issues/28))
 
 </details>

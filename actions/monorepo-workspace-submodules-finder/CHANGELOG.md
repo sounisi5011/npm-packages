@@ -354,6 +354,6 @@
 
 <details><summary>show 1 commits</summary>
 
-* [`b6ffc7c`](https://www.github.com/sounisi5011/npm-packages/commit/b6ffc7c56a7012fc27fe676c52418ecc565723c4) chore(monorepo-workspace-submodules-finder-action): preparing for the release ([#16](https://www.github.com/sounisi5011/npm-packages/issues/16))
+* [`b6ffc7c`](https://github.com/sounisi5011/npm-packages/commit/b6ffc7c56a7012fc27fe676c52418ecc565723c4) chore(monorepo-workspace-submodules-finder-action): preparing for the release ([#16](https://github.com/sounisi5011/npm-packages/issues/16))
 
 </details>

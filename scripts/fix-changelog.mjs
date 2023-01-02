@@ -28,7 +28,9 @@ const VERSION_HEADING_REGEXP = new RegExp(
 );
 const COMMITS_SECTION_REGEXP = /^### *Commits$(?:\n(?!#)[^\n]*)*\n*/m;
 
-const REPO_URL_PREFIX = 'https://www.github.com/sounisi5011/npm-packages';
+const REPO_URL_PREFIX = /^https?:[/]{2}/.test(process.env.GITHUB_SERVER_URL ?? '') && process.env.GITHUB_REPOSITORY
+  ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`
+  : 'https://github.com/sounisi5011/npm-packages';
 
 /**
  * @param {*} value

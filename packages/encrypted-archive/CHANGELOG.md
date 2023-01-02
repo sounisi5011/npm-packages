@@ -125,11 +125,11 @@
 
 <details><summary>show 6 commits</summary>
 
-* [`8786459`](https://www.github.com/sounisi5011/npm-packages/commit/8786459ad377fb52563a8414a1ebfbc2bd297576) chore(deps): update dependency grpc_tools_node_protoc_ts to v5.2.2 ([#58](https://www.github.com/sounisi5011/npm-packages/issues/58))
-* [`9c36128`](https://www.github.com/sounisi5011/npm-packages/commit/9c3612893edb4d3fa3b78fe8d278b3327218c9f8) chore(deps): update dependency combinate to v1.1.4 ([#55](https://www.github.com/sounisi5011/npm-packages/issues/55))
-* [`eebe27a`](https://www.github.com/sounisi5011/npm-packages/commit/eebe27a93ede3f2e42eec590d21e869bddcc6483) chore(deps): update eslint packages ([#42](https://www.github.com/sounisi5011/npm-packages/issues/42))
-* [`df8cbbf`](https://www.github.com/sounisi5011/npm-packages/commit/df8cbbffd5fac3134a9f5782c157258779a2e198) chore: modify the SemVer range of supported Node.js ([#61](https://www.github.com/sounisi5011/npm-packages/issues/61))
-* [`33bf90a`](https://www.github.com/sounisi5011/npm-packages/commit/33bf90aec2298fe821871999714a1c8ab19a3624) chore(node): drop support for Node.js 10 ([#59](https://www.github.com/sounisi5011/npm-packages/issues/59))
-* [`b033bb7`](https://www.github.com/sounisi5011/npm-packages/commit/b033bb7a9671bd025862ffd7888acaeec422d8d3) feat(encrypted-archive): create a new package  ([#44](https://www.github.com/sounisi5011/npm-packages/issues/44))
+* [`8786459`](https://github.com/sounisi5011/npm-packages/commit/8786459ad377fb52563a8414a1ebfbc2bd297576) chore(deps): update dependency grpc_tools_node_protoc_ts to v5.2.2 ([#58](https://github.com/sounisi5011/npm-packages/issues/58))
+* [`9c36128`](https://github.com/sounisi5011/npm-packages/commit/9c3612893edb4d3fa3b78fe8d278b3327218c9f8) chore(deps): update dependency combinate to v1.1.4 ([#55](https://github.com/sounisi5011/npm-packages/issues/55))
+* [`eebe27a`](https://github.com/sounisi5011/npm-packages/commit/eebe27a93ede3f2e42eec590d21e869bddcc6483) chore(deps): update eslint packages ([#42](https://github.com/sounisi5011/npm-packages/issues/42))
+* [`df8cbbf`](https://github.com/sounisi5011/npm-packages/commit/df8cbbffd5fac3134a9f5782c157258779a2e198) chore: modify the SemVer range of supported Node.js ([#61](https://github.com/sounisi5011/npm-packages/issues/61))
+* [`33bf90a`](https://github.com/sounisi5011/npm-packages/commit/33bf90aec2298fe821871999714a1c8ab19a3624) chore(node): drop support for Node.js 10 ([#59](https://github.com/sounisi5011/npm-packages/issues/59))
+* [`b033bb7`](https://github.com/sounisi5011/npm-packages/commit/b033bb7a9671bd025862ffd7888acaeec422d8d3) feat(encrypted-archive): create a new package  ([#44](https://github.com/sounisi5011/npm-packages/issues/44))
 
 </details>
