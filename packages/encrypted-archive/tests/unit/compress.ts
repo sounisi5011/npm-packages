@@ -34,9 +34,9 @@ describe('createCompressor()', () => {
     });
 
     it('unknown algorithm', () => {
-        const algorithm = 'foooooooooooooo';
+        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"gzip" | "brotli"'.
+        const algorithm: CompressOptions['algorithm'] = 'foooooooooooooo';
 
-        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli" | CompressOptions | undefined'.
         expect(() => createCompressor(algorithm)).toThrowWithMessage(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
@@ -185,10 +185,10 @@ describe('decompressIterable()', () => {
     });
 
     it('unknown algorithm', async () => {
-        const algorithm = 'foooooooooooooo';
+        // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type 'CompressAlgorithmName'.
+        const algorithm: Parameters<typeof decompressIterable>[0] = 'foooooooooooooo';
         const emptyIterable = buffer2asyncIterable(Buffer.from(''));
 
-        // @ts-expect-error TS2345: Argument of type '"foooooooooooooo"' is not assignable to parameter of type '"gzip" | "brotli"'.
         await expect(iterable2buffer(decompressIterable(algorithm, emptyIterable))).rejects.toThrowWithMessage(
             TypeError,
             `Unknown compress algorithm was received: ${algorithm}`,
