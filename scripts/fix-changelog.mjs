@@ -23,7 +23,7 @@ import { execa } from 'execa';
 const SEMVER_REGEXP = /[0-9]+(?:\.[0-9]+){2}(?:-[.0-9a-zA-Z-]+)?(?:\+[.0-9a-zA-Z-]+)?/;
 const VERSION_HEADING_REGEXP = new RegExp(
   String.raw
-    `\n+^###? *(?:<(\w+)[^>]*>)?(?<heading_text>(?:${SEMVER_REGEXP.source}|\[${SEMVER_REGEXP.source}\]\([^)]+/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\))(?:</\1>)?$`,
+    `\n+^###? *(?:<(\w+)[^>]*>)?(?<heading_text>(?:${SEMVER_REGEXP.source}|\[${SEMVER_REGEXP.source}\]\((?<repo_url_prefix>[^)]+)/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\))(?:</\1>)?$`,
   'gm',
 );
 const COMMITS_SECTION_REGEXP = /^### *Commits$(?:\n(?!#)[^\n]*)*\n*/m;
@@ -191,6 +191,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
   const headingLine = headingMatch[0];
   const sectionBody = changelogText.substring(sectionRange.start + headingLine.length, sectionRange.end).trim();
   const headingText = headingMatch.groups?.heading_text.trim() ?? '';
+  const repoUrlPrefix = headingMatch.groups?.repo_url_prefix?.trim() ?? REPO_URL_PREFIX;
 
   const newHeadingLine = `## ${headingText}`;
 
@@ -202,8 +203,8 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
     `### Commits\n\n<details><summary>show ${commitList.length} commits</summary>\n\n`
     + commitList
       .map(commit => {
-        const commitURL = `${REPO_URL_PREFIX}/commit/${commit.longHash}`;
-        const commitTitle = commit.title.replace(/#([0-9]+)/g, `[$&](${REPO_URL_PREFIX}/issues/$1)`);
+        const commitURL = `${repoUrlPrefix}/commit/${commit.longHash}`;
+        const commitTitle = commit.title.replace(/#([0-9]+)/g, `[$&](${repoUrlPrefix}/issues/$1)`);
         return `* [\`${commit.shortHash}\`](${commitURL}) ${commitTitle}`;
       })
       .join('\n')

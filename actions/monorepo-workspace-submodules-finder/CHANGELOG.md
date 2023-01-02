@@ -11,7 +11,7 @@
 
 <details><summary>show 1 commits</summary>
 
-* [`3c638e0`](https://www.github.com/sounisi5011/npm-packages/commit/3c638e0f32fe212971dcb7f1ab0a20b533a9a097) fix(deps): update dependencies: @actions/core, @actions/github, @octokit/endpoint, validate-npm-package-name, workspace-tools ([#580](https://www.github.com/sounisi5011/npm-packages/issues/580))
+* [`3c638e0`](https://github.com/sounisi5011/npm-packages/commit/3c638e0f32fe212971dcb7f1ab0a20b533a9a097) fix(deps): update dependencies: @actions/core, @actions/github, @octokit/endpoint, validate-npm-package-name, workspace-tools ([#580](https://github.com/sounisi5011/npm-packages/issues/580))
 
 </details>
 
