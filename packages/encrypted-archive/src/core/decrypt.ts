@@ -1,4 +1,5 @@
 import { CryptoAlgorithmDataWithAlgorithmName, getCryptoAlgorithm } from './cipher';
+import { decompressIterable } from './compress';
 import { validatePassword } from './errors';
 import {
     HeaderData,
@@ -15,7 +16,7 @@ import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
-import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
+import type { CompressAlgorithmName, CompressionAlgorithmBuiltinAPI } from './types/compress';
 import type { CryptoAlgorithmBuiltinAPI } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
@@ -31,7 +32,7 @@ type GetAlgorithmAndKeyBuiltin =
     & BuiltinInspectRecord;
 
 export interface DecryptBuiltinAPIRecord extends GetAlgorithmAndKeyBuiltin, BuiltinEncodeStringRecord {
-    decompressIterable: DecompressIterable;
+    compressionAlgorithm: CompressionAlgorithmBuiltinAPI;
 }
 
 interface DecryptorMetadata {
@@ -215,7 +216,7 @@ export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, passwo
          * Decompress cleartext
          */
         yield* compressAlgorithmName
-            ? builtin.decompressIterable(compressAlgorithmName, compressedCleartextIterable)
+            ? decompressIterable(builtin, compressAlgorithmName, compressedCleartextIterable)
             : compressedCleartextIterable;
     };
 }

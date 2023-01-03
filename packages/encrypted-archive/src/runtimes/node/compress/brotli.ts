@@ -1,21 +1,38 @@
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
+import type { CompressData } from '../../../core/types/compress';
 import type { GetOptions } from '../../../core/types/utils';
-import { validateDisallowedOptions } from './utils';
+import { fixNodePrimordialsErrorStackTrace } from '../utils';
+import { validateDisallowedOptions, writeFromIterableToStream } from './utils';
 
 const brotliDisallowOptionNameList = ['flush', 'finishFlush', 'maxOutputLength'] as const;
 type BrotliDisallowOptionName = (typeof brotliDisallowOptionNameList)[number];
 type BrotliOptions = GetOptions<typeof createBrotliCompress>;
 type BrotliDisallowedOptions = Omit<BrotliOptions, BrotliDisallowOptionName>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function createCompress(options: BrotliDisallowedOptions) {
-    validateDisallowedOptions(
-        options,
-        brotliDisallowOptionNameList,
-        'The following brotli compress options are not allowed: %s',
-    );
-    return () => createBrotliCompress(options);
-}
-
-export { createBrotliDecompress as createDecompress };
+export const brotli: CompressData<BrotliDisallowedOptions> = {
+    createCompress(options) {
+        validateDisallowedOptions(
+            options,
+            brotliDisallowOptionNameList,
+            'The following brotli compress options are not allowed: %s',
+        );
+        return async function*(source) {
+            // Note: To prevent reuse of the Stream object, create it here.
+            const compressStream = createBrotliCompress(options);
+            try {
+                yield* writeFromIterableToStream(source, compressStream);
+            } catch (error) {
+                fixNodePrimordialsErrorStackTrace(error);
+            }
+        };
+    },
+    async *decompress(source) {
+        const decompressStream = createBrotliDecompress();
+        try {
+            yield* writeFromIterableToStream(source, decompressStream);
+        } catch (error) {
+            fixNodePrimordialsErrorStackTrace(error);
+        }
+    },
+};

@@ -1,11 +1,12 @@
 import { CryptoAlgorithmDataWithAlgorithmName, getCryptoAlgorithm } from './cipher';
+import { createCompressor } from './compress';
 import { validatePassword } from './errors';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF } from './key-derivation-function';
 import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
-import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
+import type { BaseCompressOptions, CompressAlgorithmName, CompressionAlgorithmBuiltinAPI } from './types/compress';
 import type { CryptoAlgorithmBuiltinAPI, CryptoAlgorithmName, GetRandomBytesFn } from './types/crypto';
 import type {
     KDFBuiltinAPIRecord,
@@ -22,13 +23,11 @@ export interface EncryptOptions<TCompressOptions extends BaseCompressOptions> {
     compress?: TCompressOptions | TCompressOptions['algorithm'] | undefined;
 }
 
-export interface EncryptBuiltinAPIRecord<TCompressOptions extends BaseCompressOptions>
-    extends BuiltinEncodeStringRecord, BuiltinInspectRecord
-{
+export interface EncryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
     getRandomBytes: GetRandomBytesFn;
     cryptoAlgorithm: CryptoAlgorithmBuiltinAPI;
     kdfBuiltin: KDFBuiltinAPIRecord;
-    createCompressor: CreateCompressor<TCompressOptions>;
+    compressionAlgorithm: CompressionAlgorithmBuiltinAPI;
 }
 
 interface EncryptorState {
@@ -157,14 +156,14 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
 }
 
 export function createEncryptorIterator<TCompressOptions extends BaseCompressOptions>(
-    builtin: EncryptBuiltinAPIRecord<TCompressOptions>,
+    builtin: EncryptBuiltinAPIRecord,
     password: InputDataType,
     options: EncryptOptions<TCompressOptions>,
 ): IteratorConverter {
     validatePassword(builtin, password);
     const algorithm = getCryptoAlgorithm(builtin, options.algorithm);
 
-    const { compressAlgorithmName, compressIterable } = builtin.createCompressor(options.compress);
+    const { compressAlgorithmName, compressIterable } = createCompressor(builtin, options.compress);
 
     return async function* encryptor(source) {
         /**
