@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { cryptoAlgorithmNameList } from '../../src/core/types/crypto';
 import { asyncIter2AsyncIterable } from '../../src/core/utils/convert';
 import { getCryptoAlgorithm } from '../../src/runtimes/node/cipher';
+import { iterable2buffer } from '../helpers';
 
 function toIter<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
     const iterator = iterable[Symbol.iterator]();
@@ -50,19 +51,14 @@ describe.each(cryptoAlgorithmNameList)(
         it('match cleartext and ciphertext', async () => {
             const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
 
-            const cleartext2 = await (async () => {
-                const result = algorithm.decrypt({
+            const cleartext2 = await iterable2buffer(asyncIter2AsyncIterable(
+                algorithm.decrypt({
                     key,
                     nonce,
                     authTag,
                     ciphertextIter: toIter([ciphertext]),
-                });
-                const cleartextPartList: Uint8Array[] = [];
-                for await (const cleartextPart of asyncIter2AsyncIterable(result)) {
-                    cleartextPartList.push(cleartextPart);
-                }
-                return Buffer.concat(cleartextPartList);
-            })();
+                }),
+            ));
 
             expect(cleartext2).toBytesEqual(cleartext);
             expect(cleartext).toBytesEqual(cleartext2);
