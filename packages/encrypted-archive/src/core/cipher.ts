@@ -1,6 +1,6 @@
 import type { BuiltinInspectRecord } from './types/builtin';
-import type { CryptoAlgorithmBuiltinAPIRecord, CryptoAlgorithmData, CryptoAlgorithmName } from './types/crypto';
-import { cryptoAlgorithmNameList, defaultCryptoAlgorithmName } from './types/crypto';
+import type { CryptoAlgorithmBuiltinAPI, CryptoAlgorithmData, CryptoAlgorithmName } from './types/crypto';
+import { cryptoAlgorithmNameList } from './types/crypto';
 import { passThroughString } from './utils';
 
 export type CryptoAlgorithmDataWithAlgorithmName =
@@ -12,22 +12,23 @@ export type CryptoAlgorithmDataWithAlgorithmName =
  * @throws {RangeError}
  */
 export function getCryptoAlgorithm(
-    builtin: { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord } & BuiltinInspectRecord,
+    builtin: { cryptoAlgorithm: CryptoAlgorithmBuiltinAPI } & BuiltinInspectRecord,
     algorithmName: CryptoAlgorithmName | undefined,
 ): CryptoAlgorithmDataWithAlgorithmName {
+    const { algorithmRecord, defaultAlgorithmName } = builtin.cryptoAlgorithm;
+
     if (algorithmName === undefined) {
-        algorithmName = defaultCryptoAlgorithmName;
+        algorithmName = defaultAlgorithmName;
     }
     if (algorithmName !== undefined && !cryptoAlgorithmNameList.includes(algorithmName)) {
         throw new TypeError(`Unknown algorithm was received: ${passThroughString(builtin.inspect, algorithmName)}`);
     }
 
-    const cryptoAlgorithmRecord = builtin.cryptoAlgorithmRecord;
-    const algorithm = cryptoAlgorithmRecord[algorithmName];
+    const algorithm = algorithmRecord[algorithmName];
     if (algorithm) return { algorithmName, ...algorithm };
 
     const supportedAlgorithmMsg = cryptoAlgorithmNameList
-        .filter(algorithmName => Boolean(cryptoAlgorithmRecord[algorithmName]))
+        .filter(algorithmName => Boolean(algorithmRecord[algorithmName]))
         .map(algorithmName => `"${algorithmName}"`)
         .join(', ');
     throw new RangeError(

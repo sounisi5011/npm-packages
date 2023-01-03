@@ -6,7 +6,7 @@ import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
-import type { CryptoAlgorithmBuiltinAPIRecord, CryptoAlgorithmName, GetRandomBytesFn } from './types/crypto';
+import type { CryptoAlgorithmBuiltinAPI, CryptoAlgorithmName, GetRandomBytesFn } from './types/crypto';
 import type {
     KDFBuiltinAPIRecord,
     KeyDerivationOptions,
@@ -26,7 +26,7 @@ export interface EncryptBuiltinAPIRecord<TCompressOptions extends BaseCompressOp
     extends BuiltinEncodeStringRecord, BuiltinInspectRecord
 {
     getRandomBytes: GetRandomBytesFn;
-    cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord;
+    cryptoAlgorithm: CryptoAlgorithmBuiltinAPI;
     kdfBuiltin: KDFBuiltinAPIRecord;
     createCompressor: CreateCompressor<TCompressOptions>;
 }

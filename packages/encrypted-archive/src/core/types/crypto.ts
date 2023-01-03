@@ -39,9 +39,11 @@ export interface CryptoAlgorithmData {
         },
     ) => AsyncIterable<Uint8Array> | AsyncIterator<Uint8Array>;
 }
-export type CryptoAlgorithmBuiltinAPIRecord = RequireAtLeastOne<
-    Readonly<Record<CryptoAlgorithmName, CryptoAlgorithmData>>
->;
+export interface CryptoAlgorithmBuiltinAPI {
+    algorithmRecord: RequireAtLeastOne<
+        Readonly<Record<CryptoAlgorithmName, CryptoAlgorithmData>>
+    >;
+    defaultAlgorithmName: CryptoAlgorithmName;
+}
 
 export const cryptoAlgorithmNameList = ['aes-256-gcm', 'chacha20-poly1305'] as const;
-export const defaultCryptoAlgorithmName: CryptoAlgorithmName = 'chacha20-poly1305';

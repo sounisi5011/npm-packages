@@ -16,16 +16,21 @@ import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
-import type { CryptoAlgorithmBuiltinAPIRecord } from './types/crypto';
+import type { CryptoAlgorithmBuiltinAPI } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
 import { uint8arrayFrom } from './utils/array-buffer';
 import { asyncIter2AsyncIterable, convertChunk } from './utils/convert';
 import { BufferReader } from './utils/reader';
 
-export interface DecryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
-    cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord;
-    kdfBuiltin: KDFBuiltinAPIRecord;
+type GetAlgorithmAndKeyBuiltin =
+    & {
+        cryptoAlgorithm: CryptoAlgorithmBuiltinAPI;
+        kdfBuiltin: KDFBuiltinAPIRecord;
+    }
+    & BuiltinInspectRecord;
+
+export interface DecryptBuiltinAPIRecord extends GetAlgorithmAndKeyBuiltin, BuiltinEncodeStringRecord {
     decompressIterable: DecompressIterable;
 }
 
@@ -37,9 +42,7 @@ interface DecryptorMetadata {
 }
 
 async function getAlgorithmAndKey(
-    builtin:
-        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
-        & BuiltinInspectRecord,
+    builtin: GetAlgorithmAndKeyBuiltin,
     password: Uint8Array,
     headerData: HeaderData,
 ): Promise<{ algorithm: CryptoAlgorithmDataWithAlgorithmName; key: Uint8Array }> {
@@ -77,9 +80,7 @@ function createNonceFromDiff(
 }
 
 async function parseHeader(
-    builtin:
-        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
-        & BuiltinInspectRecord,
+    builtin: GetAlgorithmAndKeyBuiltin,
     password: Uint8Array,
     reader: BufferReader,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
@@ -125,9 +126,7 @@ async function parseHeader(
 }
 
 async function decryptChunk(
-    builtin:
-        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
-        & BuiltinInspectRecord,
+    builtin: GetAlgorithmAndKeyBuiltin,
     password: Uint8Array,
     reader: BufferReader,
     prevDecryptorMetadata?: DecryptorMetadata,
@@ -170,9 +169,7 @@ async function decryptChunk(
 }
 
 async function decryptAllChunks(
-    builtin:
-        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
-        & BuiltinInspectRecord,
+    builtin: GetAlgorithmAndKeyBuiltin,
     password: Uint8Array,
     reader: BufferReader,
 ): Promise<{
