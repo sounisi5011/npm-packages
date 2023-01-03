@@ -12,7 +12,10 @@ export type RequiredExcludeUndefined<T> = {
 
 export type Expand<T> = T extends infer U ? U : never;
 
-export type ExpandObject<T extends object> = Omit<T, never>;
+/**
+ * @see https://stackoverflow.com/a/57683652/4907315
+ */
+export type ExpandObject<T extends object> = T extends infer U ? { [K in keyof U]: U[K] } : never;
 
 /**
  * The built-in `AsyncIterable` type does not have the `TReturn` and `TNext` arguments.
@@ -51,6 +54,18 @@ export type GetOptions<T extends (options: never) => unknown> = (
         : T extends ((options: infer U) => unknown) ? U
         : never
 );
+
+/**
+ * @see https://github.com/sindresorhus/type-fest/blob/v3.5.0/source/require-at-least-one.d.ts
+ * @see https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
+ * @see https://qiita.com/u-sho/items/4d02d722efdaf4feefa6
+ */
+export type RequireAtLeastOne<T> = ExpandObject<
+    {
+        // Putting the `Partial` type first keeps the order of properties
+        [K in keyof T]-?: Partial<T> & Required<Pick<T, K>>;
+    }[keyof T]
+>;
 
 export type Cond<
     TCond extends Record<'actual' | 'expected', unknown>,

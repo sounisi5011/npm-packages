@@ -18,7 +18,7 @@ import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
 import type { Expand, ExpandObject } from './core/types/utils';
 import { convertIterableValue } from './core/utils/convert';
-import { getCryptoAlgorithm } from './runtimes/node/cipher';
+import { cryptoAlgorithmBuiltinRecord } from './runtimes/node/cipher';
 import { CompressOptions, createCompressor, decompressIterable } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
 import { asyncIterable2Buffer, bufferFrom, inspect } from './runtimes/node/utils';
@@ -27,7 +27,7 @@ const builtin: EncryptBuiltinAPIRecord<CompressOptions> & DecryptBuiltinAPIRecor
     encodeString: str => Buffer.from(str, 'utf8'),
     inspect,
     getRandomBytes: async size => randomBytes(size),
-    getCryptoAlgorithm,
+    cryptoAlgorithmRecord: cryptoAlgorithmBuiltinRecord,
     kdfBuiltin,
     createCompressor,
     decompressIterable,

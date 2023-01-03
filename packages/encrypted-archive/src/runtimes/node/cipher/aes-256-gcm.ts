@@ -3,7 +3,7 @@ import { createCipheriv, createDecipheriv } from 'crypto';
 import type { CryptoAlgorithmData } from '../../../core/types/crypto';
 import { fixNodePrimordialsErrorInstance } from '../utils';
 
-export const algorithmName = 'aes-256-gcm' as const;
+const ALGORITHM_NAME = 'aes-256-gcm' as const;
 
 export const keyLength = 256 / 8;
 
@@ -14,7 +14,7 @@ export const keyLength = 256 / 8;
 export const nonceLength = 96 / 8;
 
 export const encrypt: CryptoAlgorithmData['encrypt'] = async ({ key, nonce, cleartext }) => {
-    const cipher = createCipheriv(algorithmName, key, nonce);
+    const cipher = createCipheriv(ALGORITHM_NAME, key, nonce);
     const ciphertextPart1 = cipher.update(cleartext);
     const ciphertextPart2 = cipher.final();
 
@@ -26,7 +26,7 @@ export const encrypt: CryptoAlgorithmData['encrypt'] = async ({ key, nonce, clea
 
 export const decrypt: CryptoAlgorithmData['decrypt'] = async function*({ key, nonce, authTag, ciphertextIter }) {
     try {
-        const decipher = createDecipheriv(algorithmName, key, nonce);
+        const decipher = createDecipheriv(ALGORITHM_NAME, key, nonce);
         decipher.setAuthTag(authTag);
         for await (const ciphertextChunk of ciphertextIter) {
             yield decipher.update(ciphertextChunk);

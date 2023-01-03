@@ -1,8 +1,10 @@
 import { randomBytes } from 'crypto';
 
+import { getCryptoAlgorithm } from '../../src/core/cipher';
 import { cryptoAlgorithmNameList } from '../../src/core/types/crypto';
 import { asyncIter2AsyncIterable } from '../../src/core/utils/convert';
-import { getCryptoAlgorithm } from '../../src/runtimes/node/cipher';
+import { cryptoAlgorithmBuiltinRecord as cryptoAlgorithmRecord } from '../../src/runtimes/node/cipher';
+import { inspect } from '../../src/runtimes/node/utils';
 import { iterable2buffer } from '../helpers';
 
 function toIter<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
@@ -14,16 +16,12 @@ function toIter<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
     return asyncIter;
 }
 
+const builtin = { cryptoAlgorithmRecord, inspect };
+
 describe.each(cryptoAlgorithmNameList)(
     'getCryptoAlgorithm(%j)',
     cryptoAlgorithmName => {
-        const algorithm = getCryptoAlgorithm(cryptoAlgorithmName);
-
-        it('exists algorithm', () => {
-            expect(algorithm).toBeDefined();
-        });
-
-        if (!algorithm) return;
+        const algorithm = getCryptoAlgorithm(builtin, cryptoAlgorithmName);
 
         const key = randomBytes(algorithm.keyLength);
         const nonce = randomBytes(algorithm.nonceLength);

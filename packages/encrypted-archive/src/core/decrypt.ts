@@ -1,3 +1,4 @@
+import { CryptoAlgorithmDataWithAlgorithmName, getCryptoAlgorithm } from './cipher';
 import { validatePassword } from './errors';
 import {
     HeaderData,
@@ -15,7 +16,7 @@ import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { CompressAlgorithmName, DecompressIterable } from './types/compress';
-import type { CryptoAlgorithmData, GetCryptoAlgorithm } from './types/crypto';
+import type { CryptoAlgorithmBuiltinAPIRecord } from './types/crypto';
 import type { KDFBuiltinAPIRecord } from './types/key-derivation-function';
 import type { AsyncIterableReturn } from './types/utils';
 import { uint8arrayFrom } from './utils/array-buffer';
@@ -23,27 +24,26 @@ import { asyncIter2AsyncIterable, convertChunk } from './utils/convert';
 import { BufferReader } from './utils/reader';
 
 export interface DecryptBuiltinAPIRecord extends BuiltinEncodeStringRecord, BuiltinInspectRecord {
-    getCryptoAlgorithm: GetCryptoAlgorithm;
+    cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord;
     kdfBuiltin: KDFBuiltinAPIRecord;
     decompressIterable: DecompressIterable;
 }
 
 interface DecryptorMetadata {
-    algorithm: CryptoAlgorithmData;
+    algorithm: CryptoAlgorithmDataWithAlgorithmName;
     key: Uint8Array;
     nonce: Uint8Array;
     compressAlgorithmName: CompressAlgorithmName | undefined;
 }
 
 async function getAlgorithmAndKey(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
+    builtin:
+        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
+        & BuiltinInspectRecord,
     password: Uint8Array,
     headerData: HeaderData,
-): Promise<{ algorithm: CryptoAlgorithmData; key: Uint8Array }> {
-    const algorithm = builtin.getCryptoAlgorithm(headerData.crypto.algorithmName);
-    if (!algorithm) {
-        throw new TypeError(`Unknown algorithm was received: ${headerData.crypto.algorithmName}`);
-    }
+): Promise<{ algorithm: CryptoAlgorithmDataWithAlgorithmName; key: Uint8Array }> {
+    const algorithm = getCryptoAlgorithm(builtin, headerData.crypto.algorithmName);
 
     /**
      * Generate key
@@ -77,7 +77,9 @@ function createNonceFromDiff(
 }
 
 async function parseHeader(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
+    builtin:
+        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
+        & BuiltinInspectRecord,
     password: Uint8Array,
     reader: BufferReader,
     prevDecryptorMetadata: DecryptorMetadata | undefined,
@@ -123,7 +125,9 @@ async function parseHeader(
 }
 
 async function decryptChunk(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
+    builtin:
+        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
+        & BuiltinInspectRecord,
     password: Uint8Array,
     reader: BufferReader,
     prevDecryptorMetadata?: DecryptorMetadata,
@@ -166,7 +170,9 @@ async function decryptChunk(
 }
 
 async function decryptAllChunks(
-    builtin: { getCryptoAlgorithm: GetCryptoAlgorithm; kdfBuiltin: KDFBuiltinAPIRecord } & BuiltinInspectRecord,
+    builtin:
+        & { cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord; kdfBuiltin: KDFBuiltinAPIRecord }
+        & BuiltinInspectRecord,
     password: Uint8Array,
     reader: BufferReader,
 ): Promise<{

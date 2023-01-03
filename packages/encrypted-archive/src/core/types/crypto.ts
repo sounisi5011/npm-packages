@@ -1,8 +1,9 @@
+import type { RequireAtLeastOne } from './utils';
+
 export type GetRandomBytesFn = (size: number) => Promise<Uint8Array>;
 
 export type CryptoAlgorithmName = (typeof cryptoAlgorithmNameList)[number];
 export interface CryptoAlgorithmData {
-    readonly algorithmName: CryptoAlgorithmName;
     readonly keyLength: number;
     readonly nonceLength: number;
     encrypt: (
@@ -38,7 +39,9 @@ export interface CryptoAlgorithmData {
         },
     ) => AsyncIterable<Uint8Array> | AsyncIterator<Uint8Array>;
 }
-export type GetCryptoAlgorithm = (algorithmName: CryptoAlgorithmName) => CryptoAlgorithmData | undefined;
+export type CryptoAlgorithmBuiltinAPIRecord = RequireAtLeastOne<
+    Readonly<Record<CryptoAlgorithmName, CryptoAlgorithmData>>
+>;
 
 export const cryptoAlgorithmNameList = ['aes-256-gcm', 'chacha20-poly1305'] as const;
 export const defaultCryptoAlgorithmName: CryptoAlgorithmName = 'chacha20-poly1305';

@@ -3,12 +3,10 @@ import { CipherCCMTypes, createCipheriv, createDecipheriv } from 'crypto';
 import type { CryptoAlgorithmData } from '../../../core/types/crypto';
 import { fixNodePrimordialsErrorInstance } from '../utils';
 
-export const algorithmName = 'chacha20-poly1305' as const;
-
 // @ts-expect-error TS2322: Type '"chacha20-poly1305"' is not assignable to type 'CipherCCMTypes'.
 // Note: `@types/node@12.20.37` does not support chacha20-poly1305.
 //       However, Node.js 12 can use chacha20-poly1305.
-const ALGORITHM_NAME: CipherCCMTypes = algorithmName;
+const ALGORITHM_NAME: CipherCCMTypes = 'chacha20-poly1305';
 
 /**
  * @see https://tools.ietf.org/html/rfc8103#section-1.1

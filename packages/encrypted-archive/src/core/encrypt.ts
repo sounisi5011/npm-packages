@@ -1,3 +1,4 @@
+import { CryptoAlgorithmDataWithAlgorithmName, getCryptoAlgorithm } from './cipher';
 import { validatePassword } from './errors';
 import { createHeader, createSimpleHeader } from './header';
 import { getKDF } from './key-derivation-function';
@@ -5,13 +6,7 @@ import { nonceState } from './nonce';
 import type { InputDataType, IteratorConverter } from './types';
 import type { BuiltinEncodeStringRecord, BuiltinInspectRecord } from './types/builtin';
 import type { BaseCompressOptions, CompressAlgorithmName, CreateCompressor } from './types/compress';
-import {
-    CryptoAlgorithmData,
-    CryptoAlgorithmName,
-    defaultCryptoAlgorithmName,
-    GetCryptoAlgorithm,
-    GetRandomBytesFn,
-} from './types/crypto';
+import type { CryptoAlgorithmBuiltinAPIRecord, CryptoAlgorithmName, GetRandomBytesFn } from './types/crypto';
 import type {
     KDFBuiltinAPIRecord,
     KeyDerivationOptions,
@@ -31,7 +26,7 @@ export interface EncryptBuiltinAPIRecord<TCompressOptions extends BaseCompressOp
     extends BuiltinEncodeStringRecord, BuiltinInspectRecord
 {
     getRandomBytes: GetRandomBytesFn;
-    getCryptoAlgorithm: GetCryptoAlgorithm;
+    cryptoAlgorithmRecord: CryptoAlgorithmBuiltinAPIRecord;
     kdfBuiltin: KDFBuiltinAPIRecord;
     createCompressor: CreateCompressor<TCompressOptions>;
 }
@@ -116,7 +111,7 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
     compressAlgorithmName,
     prevState,
 }: {
-    algorithm: CryptoAlgorithmData;
+    algorithm: CryptoAlgorithmDataWithAlgorithmName;
     keyResult: KeyResult;
     compressAlgorithmName: CompressAlgorithmName | undefined;
     prevState: EncryptorState | undefined;
@@ -167,8 +162,7 @@ export function createEncryptorIterator<TCompressOptions extends BaseCompressOpt
     options: EncryptOptions<TCompressOptions>,
 ): IteratorConverter {
     validatePassword(builtin, password);
-    const algorithm = builtin.getCryptoAlgorithm(options.algorithm ?? defaultCryptoAlgorithmName);
-    if (!algorithm) throw new TypeError(`Unknown algorithm was received: ${String(options.algorithm)}`);
+    const algorithm = getCryptoAlgorithm(builtin, options.algorithm);
 
     const { compressAlgorithmName, compressIterable } = builtin.createCompressor(options.compress);
 
