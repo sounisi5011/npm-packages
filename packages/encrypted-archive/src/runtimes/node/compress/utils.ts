@@ -1,6 +1,9 @@
 import { once } from 'events';
 import type * as stream from 'stream';
 
+import type { CompressData } from '../../../core/types/compress';
+import { fixNodePrimordialsErrorStackTrace } from '../utils';
+
 export function validateDisallowedOptions(
     options: Record<PropertyKey, unknown>,
     disallowOptionNameList: readonly PropertyKey[],
@@ -54,4 +57,33 @@ export function writeFromIterableToStream<TStream extends stream.Writable>(
         }
     })();
     return stream;
+}
+
+export function genCompressData<TCompressorOptions>(arg: {
+    validateCompressOptions: (options: TCompressorOptions) => void;
+    createCompress: (options: TCompressorOptions) => stream.Duplex;
+    createDecompress: () => stream.Duplex;
+}): CompressData<TCompressorOptions> {
+    return {
+        createCompress(options) {
+            arg.validateCompressOptions(options);
+            return async function*(source) {
+                // Note: To prevent reuse of the Stream object, create it here.
+                const compressStream = arg.createCompress(options);
+                try {
+                    yield* writeFromIterableToStream(source, compressStream);
+                } catch (error) {
+                    fixNodePrimordialsErrorStackTrace(error);
+                }
+            };
+        },
+        async *decompress(source) {
+            const decompressStream = arg.createDecompress();
+            try {
+                yield* writeFromIterableToStream(source, decompressStream);
+            } catch (error) {
+                fixNodePrimordialsErrorStackTrace(error);
+            }
+        },
+    };
 }
