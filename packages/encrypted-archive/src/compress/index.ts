@@ -1,5 +1,7 @@
 import type * as stream from 'stream';
 
+import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
+
 import { fixNodePrimordialsErrorStackTrace, printObject } from '../utils';
 import { writeFromIterableToStream } from '../utils/stream';
 import type { AsyncIterableReturn, ObjectValue } from '../utils/type';
@@ -39,7 +41,10 @@ export function createCompressor(options: CompressOptions | CompressOptions['alg
 } {
     if (!options) return { compressAlgorithmName: undefined, compressIterable: source => source };
 
-    const { algorithm, ...compressOptions } = typeof options === 'string' ? { algorithm: options } : options;
+    const { algorithm, ...compressOptions } =
+        (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')
+            ? options
+            : { algorithm: options };
 
     const entry = compressorTable[algorithm];
     if (!entry) {
