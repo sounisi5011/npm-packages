@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import { getCryptoAlgorithm } from '../../src/core/cipher';
 import { cryptoAlgorithmNameList } from '../../src/core/types/crypto';
 import { asyncIter2AsyncIterable } from '../../src/core/utils/convert';
-import * as cryptoAlgorithm from '../../src/runtimes/node/cipher';
+import { cryptoAlgorithm } from '../../src/runtimes/node/cipher';
 import { inspect } from '../../src/runtimes/node/utils';
 import { iterable2buffer } from '../helpers';
 

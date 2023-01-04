@@ -18,9 +18,8 @@ import type { CryptoAlgorithmName } from './core/types/crypto';
 import type { KeyDerivationOptions } from './core/types/key-derivation-function';
 import type { Expand, ExpandObject } from './core/types/utils';
 import { convertIterableValue } from './core/utils/convert';
-import * as cryptoAlgorithm from './runtimes/node/cipher';
-import type { CompressOptions as NodejsCompressOptions } from './runtimes/node/compress';
-import * as compressionAlgorithm from './runtimes/node/compress';
+import { cryptoAlgorithm } from './runtimes/node/cipher';
+import { compressionAlgorithm, CompressOptions as NodejsCompressOptions } from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
 import { asyncIterable2Buffer, bufferFrom, inspect } from './runtimes/node/utils';
 

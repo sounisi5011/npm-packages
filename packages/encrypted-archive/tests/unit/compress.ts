@@ -2,7 +2,7 @@ import * as zlib from 'zlib';
 
 import { createCompressor, decompressIterable } from '../../src/core/compress';
 import type { CompressOptions } from '../../src/runtimes/node/compress';
-import * as compressionAlgorithm from '../../src/runtimes/node/compress';
+import { compressionAlgorithm } from '../../src/runtimes/node/compress';
 import { inspect } from '../../src/runtimes/node/utils';
 import { buffer2asyncIterable, iterable2buffer } from '../helpers';
 import { optGen } from '../helpers/combinations';
