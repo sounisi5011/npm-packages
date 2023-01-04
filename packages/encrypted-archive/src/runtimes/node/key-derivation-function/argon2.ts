@@ -37,7 +37,7 @@ export const argon2Hash: Argon2HashFn = (
             })()
         : // For Node.js <18.1.0, use argon2-browser
             (() => {
-                const mod = import('../../browser/key-derivation-function/argon2.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
+                const mod = import('../../web-interoperable/key-derivation-function/argon2.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
                 return async options => await (await mod).argon2Hash(options);
             })()
 );
