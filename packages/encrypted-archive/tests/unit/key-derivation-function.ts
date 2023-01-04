@@ -95,6 +95,10 @@ describe('algorithm: Argon2', () => {
     const ARGON2_MIN_TIME = 1;
     /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L72 */
     const ARGON2_MAX_TIME = 0xFFFFFFFF;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L75 */
+    const ARGON2_MIN_PWD_LENGTH = 0;
+    /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L76 */
+    const ARGON2_MAX_PWD_LENGTH = 0xFFFFFFFF;
     /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L83 */
     const ARGON2_MIN_SALT_LENGTH = 8;
     /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L84 */
@@ -311,6 +315,24 @@ describe('algorithm: Argon2', () => {
             });
         });
         describe('too long', () => {
+            it('password length', async () => {
+                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const salt = Buffer.alloc(saltLength);
+                const passwordLengthBytes = ARGON2_MAX_PWD_LENGTH + 1;
+                const password = createDummySizeBuffer(passwordLengthBytes);
+                await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                    RangeError,
+                    [
+                        `Too long password was received for Argon2's option "password"`,
+                        `${
+                            notBetweenNumberErrorMessage(
+                                `Password length`,
+                                { min: ARGON2_MIN_PWD_LENGTH, max: ARGON2_MAX_PWD_LENGTH },
+                            )
+                        }, but received: ${passwordLengthBytes}`,
+                    ].join('. '),
+                );
+            });
             it('salt length', async () => {
                 const { deriveKey } = getKDF({ algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
