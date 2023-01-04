@@ -78,12 +78,14 @@
     "build:docs": "concurrently 'pnpm:build~docs:*'",
     "build:tsc": "tsc -p ./src/",
     "build~docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
-    "lint:tsc": "pnpm run lint:tsc:src && pnpm run lint:tsc:test",
+    "lint:tsc": "pnpm run lint:tsc:src && pnpm run lint:tsc:test && lint:tsc:test-d",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
+    "lint:tsc:test-d": "pnpm run build-with-cache && tsc -p ./test-d/ --noEmit",
     "test": "run-if-supported --verbose concurrently --max-processes 1 'pnpm:test:*'",
     "test:examples": "pnpm build-with-cache && concurrently 'pnpm:test~examples:*'",
     "test:jest": "jest",
+    "test:tsd": "pnpm run build-with-cache && tsd",
     "test~examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
   },
   "config": {
@@ -126,6 +128,7 @@
     "jest-extended": "3.0.0",
     "multicodec": "3.2.1",
     "semver": "7.3.7",
+    "tsd": "0.22.0",
     "typescript": "4.7.4",
     "ultra-runner": "3.10.5",
     "word-join": "0.0.1"
