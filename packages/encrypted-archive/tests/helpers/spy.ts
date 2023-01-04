@@ -42,6 +42,7 @@ export interface SpyObjCallItem {
 const origObj = new WeakMap<object, object>();
 const getOrig = <T>(value: T): T => {
     if (!isObject(value)) return value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (origObj.get(value) as any) ?? value;
 };
 
@@ -52,6 +53,7 @@ function internalSpyObj<T>(target: T, parentPath: string, callCallback: (callIte
         apply(target, thisArg, argArray) {
             const path = `${parentPath}(${argArray.map(arg => inspect(arg, { breakLength: Infinity })).join(', ')})`;
             callCallback({ type: 'apply', path });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return Reflect.apply(getOrig(target) as any, getOrig(thisArg), argArray);
         },
         construct(target, argArray, newTarget) {
@@ -60,6 +62,7 @@ function internalSpyObj<T>(target: T, parentPath: string, callCallback: (callIte
             })`;
             callCallback({ type: 'construct', path });
             return internalSpyObj(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 Reflect.construct(getOrig(target) as any, argArray, getOrig(newTarget) as any),
                 `(${path})`,
                 callCallback,
