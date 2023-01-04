@@ -499,6 +499,18 @@ describe('should support encryption algorithms', () => {
             );
         });
     });
+    describe('invalid type algorithm', () => {
+        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+            const options: EncryptOptions = {
+                // @ts-expect-error TS2322: Type 'number' is not assignable to type '"aes-256-gcm" | "chacha20-poly1305" | undefined'.
+                algorithm: 42,
+            };
+            await expect(encryptFn({ password: '', options })).rejects.toThrowWithMessage(
+                TypeError,
+                `Unknown algorithm was received: 42`,
+            );
+        });
+    });
 });
 
 describe('should support key derivation functions', () => {
@@ -530,6 +542,32 @@ describe('should support key derivation functions', () => {
             );
         });
     });
+    describe('invalid type', () => {
+        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+            const options: EncryptOptions = {
+                // @ts-expect-error TS2322: Type 'number' is not assignable to type 'Argon2Options'.
+                keyDerivation: 42,
+            };
+            await expect(encryptFn({ password: '', options })).rejects.toThrowWithMessage(
+                TypeError,
+                `Unknown deriveKey options was received: 42`,
+            );
+        });
+    });
+    describe('invalid type algorithm', () => {
+        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+            const options: EncryptOptions = {
+                keyDerivation: {
+                    // @ts-expect-error TS2322: Type 'number' is not assignable to type '"argon2d" | "argon2id"'.
+                    algorithm: 42,
+                },
+            };
+            await expect(encryptFn({ password: '', options })).rejects.toThrowWithMessage(
+                TypeError,
+                `Unknown KDF (Key Derivation Function) algorithm was received: 42`,
+            );
+        });
+    });
 });
 
 describe('should support compression algorithms', () => {
@@ -557,6 +595,18 @@ describe('should support compression algorithms', () => {
             await expect(encryptFn({ password: '', options })).rejects.toThrowWithMessage(
                 TypeError,
                 `Unknown compress algorithm was received: hoge`,
+            );
+        });
+    });
+    describe('invalid type', () => {
+        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+            const options: EncryptOptions = {
+                // @ts-expect-error TS2322: Type 'number' is not assignable to type '"gzip" | "brotli" | CompressOptions | undefined'.
+                compress: 42,
+            };
+            await expect(encryptFn({ password: '', options })).rejects.toThrowWithMessage(
+                TypeError,
+                `Unknown compress algorithm was received: 42`,
             );
         });
     });

@@ -38,6 +38,17 @@ describe('getKDF()', () => {
         );
     });
 
+    it('invalid type algorithm', () => {
+        const algorithm = 42;
+        // @ts-expect-error TS2322: Type 'number' is not assignable to type '"argon2d" | "argon2id"'.
+        const options: KeyDerivationOptions = { algorithm };
+
+        expect(() => getKDF(options)).toThrowWithMessage(
+            TypeError,
+            `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
+        );
+    });
+
     describe('invalid options', () => {
         it.each<unknown>([
             null,
