@@ -19,7 +19,7 @@ import type { KeyDerivationOptions } from './core/types/key-derivation-function'
 import type { Expand, ExpandObject } from './core/types/utils';
 import { convertIterableValue } from './core/utils/convert';
 import * as cryptoAlgorithm from './runtimes/node/cipher';
-import type { CompressOptions } from './runtimes/node/compress';
+import type { CompressOptions as NodejsCompressOptions } from './runtimes/node/compress';
 import * as compressionAlgorithm from './runtimes/node/compress';
 import { kdfBuiltinRecord as kdfBuiltin } from './runtimes/node/key-derivation-function';
 import { asyncIterable2Buffer, bufferFrom, inspect } from './runtimes/node/utils';
@@ -33,18 +33,25 @@ const builtin: EncryptBuiltinAPIRecord & DecryptBuiltinAPIRecord = {
     compressionAlgorithm,
 };
 
-type EncryptOptions = ExpandObject<InternalEncryptOptions<CompressOptions>>;
+type EncryptOptions = ExpandObject<InternalEncryptOptions<NodejsCompressOptions>>;
 type InputDataType = Expand<Buffer | InternalInputDataType>;
 type IteratorConverter = InternalIteratorConverter<InputDataType, Buffer>;
 
-export { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, IteratorConverter, KeyDerivationOptions };
+export {
+    CryptoAlgorithmName,
+    EncryptOptions,
+    InputDataType,
+    IteratorConverter,
+    KeyDerivationOptions,
+    NodejsCompressOptions as CompressOptions,
+};
 
 export async function encrypt(
     cleartext: InputDataType,
     password: InputDataType,
     options: EncryptOptions = {},
 ): Promise<Buffer> {
-    const encryptor = createEncryptorIterator(builtin, password, options);
+    const encryptor = createEncryptorIterator<NodejsCompressOptions>(builtin, password, options);
     const encryptedDataIterable = encryptor([cleartext]);
     return await asyncIterable2Buffer(encryptedDataIterable);
 }
@@ -71,7 +78,7 @@ const createTransformStream = (
     );
 
 export function encryptStream(password: InputDataType, options: EncryptOptions = {}): stream.Transform {
-    const encryptor = createEncryptorIterator(builtin, password, options);
+    const encryptor = createEncryptorIterator<NodejsCompressOptions>(builtin, password, options);
     return createTransformStream(encryptor);
 }
 
@@ -91,9 +98,13 @@ function transformAsyncIterableResult2buffer<T extends unknown[]>(
 }
 
 export function encryptIterator(password: InputDataType, options: EncryptOptions = {}): IteratorConverter {
-    return transformAsyncIterableResult2buffer(createEncryptorIterator(builtin, password, options));
+    return transformAsyncIterableResult2buffer(
+        createEncryptorIterator<NodejsCompressOptions>(builtin, password, options),
+    );
 }
 
 export function decryptIterator(password: InputDataType): IteratorConverter {
-    return transformAsyncIterableResult2buffer(createDecryptorIterator(builtin, password));
+    return transformAsyncIterableResult2buffer(
+        createDecryptorIterator(builtin, password),
+    );
 }
