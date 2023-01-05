@@ -80,7 +80,7 @@
     "@betit/rollup-plugin-rename-extensions": "0.1.0",
     "@rollup/plugin-typescript": "8.3.3",
     "@swc/core": "1.2.212",
-    "@swc/jest": "0.2.21",
+    "@swc/jest": "0.2.24",
     "@types/jest": "28.1.8",
     "glob-exec": "0.1.1",
     "jest": "28.1.3",

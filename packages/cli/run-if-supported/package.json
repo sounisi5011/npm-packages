@@ -70,7 +70,7 @@
   "devDependencies": {
     "@sounisi5011/run-if-supported": "1.1.1",
     "@swc/core": "1.2.212",
-    "@swc/jest": "0.2.21",
+    "@swc/jest": "0.2.24",
     "@types/cross-spawn": "6.0.2",
     "@types/jest": "28.1.8",
     "@types/node": "14.18.21",
