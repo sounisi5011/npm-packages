@@ -242,7 +242,7 @@ importers:
       '@types/varint': 6.0.0
       argon2: 0.27.2
       argon2-browser: ^1.15.4
-      bytefield-svg: 1.6.1
+      bytefield-svg: 1.7.0
       capitalize: ^2.0.3
       combinate: 1.1.11
       concurrently: 7.2.2
@@ -285,7 +285,7 @@ importers:
       '@types/node': 12.20.55
       '@types/semver': 7.3.10
       '@types/varint': 6.0.0
-      bytefield-svg: 1.6.1
+      bytefield-svg: 1.7.0
       combinate: 1.1.11
       concurrently: 7.2.2
       cpy-cli: 3.1.1
@@ -2479,8 +2479,8 @@ packages:
     dependencies:
       semver: 7.3.7
 
-  /bytefield-svg/1.6.1:
-    resolution: {integrity: sha512-i50x6c16OUNJdNFh0VVEntghG1RSde6jA/gXs4rwJ+RDcErghwA0l03SwYHPHTh5MnULf5xriYTccXPQLQayVg==}
+  /bytefield-svg/1.7.0:
+    resolution: {integrity: sha512-YmTBRBFw5A4KN2imJaQQcwk0mv3GxwsFTNI/Asmzs8YBQtc3g50QqQyCl7E+mz4ORbsfnyh0GkjSUgrKQqbCuw==}
     hasBin: true
     dependencies:
       command-line-args: 5.2.1
