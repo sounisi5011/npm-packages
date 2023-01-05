@@ -457,13 +457,13 @@ importers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
       hosted-git-info: ^5.0.0
       strict-uri-encode: ^2.0.0
-      validate-npm-package-name: ^4.0.0
+      validate-npm-package-name: ^5.0.0
       workspace-tools: ^0.21.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
       hosted-git-info: 5.0.0
       strict-uri-encode: 2.0.0
-      validate-npm-package-name: 4.0.0
+      validate-npm-package-name: 5.0.0
       workspace-tools: 0.21.0
 
   scripts/update-readme-badge:
@@ -7900,13 +7900,6 @@ packages:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
     dev: true
-
-  /validate-npm-package-name/4.0.0:
-    resolution: {integrity: sha512-mzR0L8ZDktZjpX4OB46KT+56MAhl4EIazWP/+G/HPGuvfdaqg4YsCdtOm6U9+LOFyYDoh4dpnpxZRB9MQQns5Q==}
-    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
-    dependencies:
-      builtins: 5.0.1
-    dev: false
 
   /validate-npm-package-name/5.0.0:
     resolution: {integrity: sha512-YuKoXDAhBYxY7SfOKxHBDoSyENFeW5VvIIQp2TGQuit8gpK6MnWaQelBKxso72DoxTZfZdcP3W90LqpSkgPzLQ==}
