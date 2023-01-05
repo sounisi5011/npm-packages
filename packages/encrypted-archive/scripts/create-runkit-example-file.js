@@ -3,7 +3,7 @@ const path = require('path');
 
 const getPath = pathname => path.resolve(__dirname, pathname);
 
-const exampleFilepath = getPath('../examples/index.js');
+const exampleFilepath = getPath('../examples/node/index.js');
 const runkitFilepath = getPath('../runkit-example.js');
 
 const exampleFileText = fs.readFileSync(exampleFilepath, 'utf8');

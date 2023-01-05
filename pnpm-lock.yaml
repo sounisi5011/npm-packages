@@ -303,11 +303,11 @@ importers:
       ultra-runner: 3.10.5
       word-join: 0.0.1
 
-  packages/encrypted-archive/examples:
+  packages/encrypted-archive/examples/node:
     specifiers:
-      '@sounisi5011/encrypted-archive': file:..
+      '@sounisi5011/encrypted-archive': file:../..
     dependencies:
-      '@sounisi5011/encrypted-archive': link:..
+      '@sounisi5011/encrypted-archive': link:../..
 
   packages/jest-matchers/binary-data:
     specifiers:

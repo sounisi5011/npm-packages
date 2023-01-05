@@ -9,3 +9,4 @@ packages:
   - scripts
   - scripts/*
   - "**/examples"
+  - "**/examples/*"

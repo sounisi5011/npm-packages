@@ -86,7 +86,7 @@
     "test:examples": "pnpm build-with-cache && concurrently 'pnpm:test~examples:*'",
     "test:jest": "jest",
     "test:tsd": "pnpm run build-with-cache && tsd",
-    "test~examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
+    "test~examples:run": "glob-exec --foreach 'examples/node/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
   },
   "config": {
     "protocVersion": "3.20.1"
