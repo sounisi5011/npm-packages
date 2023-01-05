@@ -455,13 +455,13 @@ importers:
   scripts/update-package-list:
     specifiers:
       '@sounisi5011/cli-utils-top-level-await': workspace:^1.0.0
-      hosted-git-info: ^5.0.0
+      hosted-git-info: ^6.0.0
       strict-uri-encode: ^2.0.0
       validate-npm-package-name: ^4.0.0
       workspace-tools: ^0.21.0
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../packages/cli-utils/top-level-await-cli
-      hosted-git-info: 5.0.0
+      hosted-git-info: 6.1.1
       strict-uri-encode: 2.0.0
       validate-npm-package-name: 4.0.0
       workspace-tools: 0.21.0
@@ -4365,9 +4365,9 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /hosted-git-info/5.0.0:
-    resolution: {integrity: sha512-rRnjWu0Bxj+nIfUOkz0695C0H6tRrN5iYIzYejb0tDEefe2AekHu/U5Kn9pEie5vsJqpNQU02az7TGSH3qpz4Q==}
-    engines: {node: ^12.13.0 || ^14.15.0 || >=16}
+  /hosted-git-info/6.1.1:
+    resolution: {integrity: sha512-r0EI+HBMcXadMrugk0GCQ+6BQV39PiWAZVfq7oIckeGiN7sjRGyQxPdft3nQekFTCQbYxLBH+/axZMeH8UX6+w==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       lru-cache: 7.12.0
     dev: false

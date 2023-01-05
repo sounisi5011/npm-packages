@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
-    "hosted-git-info": "^5.0.0",
+    "hosted-git-info": "^6.0.0",
     "strict-uri-encode": "^2.0.0",
     "validate-npm-package-name": "^4.0.0",
     "workspace-tools": "^0.21.0"
