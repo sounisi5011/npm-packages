@@ -387,7 +387,7 @@ importers:
   packages/ts-utils/is-property-accessible:
     specifiers:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.3.3
+      '@rollup/plugin-typescript': 8.5.0
       '@swc/core': 1.2.212
       '@swc/jest': 0.2.21
       '@types/jest': 28.1.8
@@ -400,7 +400,7 @@ importers:
       ultra-runner: 3.10.5
     devDependencies:
       '@betit/rollup-plugin-rename-extensions': 0.1.0
-      '@rollup/plugin-typescript': 8.3.3_64543142bdddb33d603455d71ae79f2d
+      '@rollup/plugin-typescript': 8.5.0_64543142bdddb33d603455d71ae79f2d
       '@swc/core': 1.2.212
       '@swc/jest': 0.2.21_@swc+core@1.2.212
       '@types/jest': 28.1.8
@@ -1410,8 +1410,8 @@ packages:
     hasBin: true
     dev: true
 
-  /@rollup/plugin-typescript/8.3.3_64543142bdddb33d603455d71ae79f2d:
-    resolution: {integrity: sha512-55L9SyiYu3r/JtqdjhwcwaECXP7JeJ9h1Sg1VWRJKIutla2MdZQodTgcCNybXLMCnqpNLEhS2vGENww98L1npg==}
+  /@rollup/plugin-typescript/8.5.0_64543142bdddb33d603455d71ae79f2d:
+    resolution: {integrity: sha512-wMv1/scv0m/rXx21wD2IsBbJFba8wGF3ErJIr6IKRfRj49S85Lszbxb4DCo8iILpluTjk2GAAu9CoZt4G3ppgQ==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
       rollup: ^2.14.0
