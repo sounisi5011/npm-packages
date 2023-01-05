@@ -95,7 +95,6 @@
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
     "argon2-browser": "^1.15.4",
-    "bl": "^5.0.0",
     "capitalize": "^2.0.3",
     "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
@@ -108,7 +107,6 @@
     "@swc/core": "1.2.212",
     "@swc/jest": "0.2.21",
     "@types/argon2-browser": "1.18.1",
-    "@types/bl": "5.0.2",
     "@types/capitalize": "2.0.0",
     "@types/google-protobuf": "3.15.6",
     "@types/jest": "28.1.8",
