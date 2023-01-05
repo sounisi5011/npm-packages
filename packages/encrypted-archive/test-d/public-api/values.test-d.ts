@@ -2,8 +2,8 @@ import type * as stream from 'stream';
 
 import { expectType } from 'tsd';
 
-import type { EncryptOptions, InputDataType, IteratorConverter } from '../../dist/index.js';
-import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../../dist/index.js';
+import type { EncryptOptions, InputDataType, IteratorConverter } from '../..';
+import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../..';
 import { keyof } from '../utils.js';
 
 // check all exported names
@@ -14,7 +14,7 @@ expectType<
     | 'decryptStream'
     | 'encryptIterator'
     | 'decryptIterator'
->(keyof<typeof import('../../dist/index.js')>());
+>(keyof<typeof import('../..')>());
 
 expectType<
     (

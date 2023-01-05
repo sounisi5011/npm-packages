@@ -1,6 +1,6 @@
 import * as stream from 'stream';
 
-import { decryptStream, encrypt, encryptStream } from '../src';
+import { decryptStream, encrypt, encryptStream } from '../src/index.node.js';
 import { createChunkerStream, createCountStream, createStreamFromBuffer, pipelineAsync } from './helpers/stream';
 
 describe('encryptStream()', () => {

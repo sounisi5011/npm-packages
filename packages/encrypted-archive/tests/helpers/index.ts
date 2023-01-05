@@ -1,6 +1,7 @@
 import { TextEncoder } from 'util';
 
-import type { AsyncIterableReturn } from '../../src/utils/type';
+import type { AsyncIterableReturn } from '../../src/core/types/utils';
+import { isAsyncIterable } from '../../src/core/utils/type-check';
 
 export function isOneOrMoreArray<T>(value: T[]): value is [T, ...T[]];
 export function isOneOrMoreArray<T>(value: readonly T[]): value is readonly [T, ...T[]];
@@ -60,10 +61,6 @@ export function createDummySizeBuffer(size: number): Buffer {
     });
 }
 
-function isAsyncIterable(value: object): value is AsyncIterable<unknown> {
-    return Symbol.asyncIterator in value;
-}
-
 export async function iterable2list<T>(iterable: Iterable<T> | Iterable<Promise<T>> | AsyncIterable<T>): Promise<T[]> {
     const list: T[] = [];
     if (isAsyncIterable(iterable)) {
@@ -74,8 +71,8 @@ export async function iterable2list<T>(iterable: Iterable<T> | Iterable<Promise<
     return list;
 }
 
-export async function iterable2buffer(iterable: Iterable<Buffer> | AsyncIterable<Buffer>): Promise<Buffer> {
-    const bufferList: Buffer[] = [];
+export async function iterable2buffer(iterable: Iterable<Uint8Array> | AsyncIterable<Uint8Array>): Promise<Buffer> {
+    const bufferList: Uint8Array[] = [];
     for await (const buffer of iterable) bufferList.push(buffer);
     return Buffer.concat(bufferList);
 }

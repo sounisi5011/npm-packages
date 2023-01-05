@@ -9,7 +9,7 @@ import type {
     InputDataType,
     IteratorConverter,
     KeyDerivationOptions,
-} from '../../dist/index.js';
+} from '../..';
 import { keyof } from '../utils.js';
 
 type TypedArray =

@@ -1,8 +1,14 @@
 import escapeStringRegexp from 'escape-string-regexp';
 import wordJoin from 'word-join';
 
-import type { CompressOptions, CryptoAlgorithmName, EncryptOptions, InputDataType, KeyDerivationOptions } from '../src';
-import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../src';
+import type {
+    CompressOptions,
+    CryptoAlgorithmName,
+    EncryptOptions,
+    InputDataType,
+    KeyDerivationOptions,
+} from '../src/index.node';
+import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encryptStream } from '../src/index.node';
 import { bufferChunk, genInputTypeCases, genIterableTypeCases, iterable2buffer } from './helpers';
 import { runDuplex } from './helpers/stream';
 

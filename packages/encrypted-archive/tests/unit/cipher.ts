@@ -1,96 +1,97 @@
 import { randomBytes } from 'crypto';
 
-import { cryptoAlgorithmMap } from '../../src/cipher';
+import { getCryptoAlgorithm } from '../../src/core/cipher';
+import { cryptoAlgorithmNameList } from '../../src/core/types/crypto';
+import { asyncIter2AsyncIterable } from '../../src/core/utils/convert';
+import { cryptoAlgorithm } from '../../src/runtimes/node/cipher';
+import { inspect } from '../../src/runtimes/node/utils';
+import { iterable2buffer } from '../helpers';
 
-describe.each([...cryptoAlgorithmMap.values()].map(algorithm => [algorithm.name, algorithm] as const))(
-    '%s',
-    (_, algorithm) => {
+function toIter<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
+    const iterator = iterable[Symbol.iterator]();
+    const asyncIter = {
+        next: async () => iterator.next(),
+        [Symbol.asyncIterator]: () => asyncIter,
+    };
+    return asyncIter;
+}
+
+const builtin = { cryptoAlgorithm, inspect };
+
+describe.each(cryptoAlgorithmNameList)(
+    'getCryptoAlgorithm(%j)',
+    cryptoAlgorithmName => {
+        const algorithm = getCryptoAlgorithm(builtin, cryptoAlgorithmName);
+
         const key = randomBytes(algorithm.keyLength);
         const nonce = randomBytes(algorithm.nonceLength);
         const cleartext = randomBytes(42);
 
-        it('createCipher()', async () => {
-            let cipher: ReturnType<typeof algorithm.createCipher>;
-            expect(() => {
-                cipher = algorithm.createCipher(key, nonce);
-            }).not.toThrow();
-            expect(() => cipher.update(cleartext)).not.toThrow();
-            expect(() => cipher.final()).not.toThrow();
+        it('encrypt()', async () => {
+            await expect(algorithm.encrypt({ key, nonce, cleartext })).resolves.not.toThrow();
         });
 
-        it('createDecipher()', async () => {
-            const cipher = algorithm.createCipher(key, nonce);
-            const ciphertext = Buffer.concat([cipher.update(cleartext), cipher.final()]);
-            const authTag = cipher.getAuthTag();
+        it('decrypt()', async () => {
+            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
 
-            let decipher: ReturnType<typeof algorithm.createDecipher>;
-            expect(() => {
-                decipher = algorithm.createDecipher(key, nonce);
-            }).not.toThrow();
-            expect(() => decipher.setAuthTag(authTag)).not.toThrow();
-            expect(() => decipher.update(ciphertext)).not.toThrow();
-            expect(() => decipher.final()).not.toThrow();
+            await expect((async () => {
+                const result = algorithm.decrypt({
+                    key,
+                    nonce,
+                    authTag,
+                    ciphertextIter: toIter([ciphertext]),
+                });
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                for await (const _ of asyncIter2AsyncIterable(result));
+            })()).resolves.not.toThrow();
         });
 
         it('match cleartext and ciphertext', async () => {
-            const cipher = algorithm.createCipher(key, nonce);
-            const ciphertext = Buffer.concat([cipher.update(cleartext), cipher.final()]);
-            const authTag = cipher.getAuthTag();
+            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
 
-            let decipher: ReturnType<typeof algorithm.createDecipher>;
-            expect(() => {
-                decipher = algorithm.createDecipher(key, nonce);
-            }).not.toThrow();
+            const cleartext2 = await iterable2buffer(asyncIter2AsyncIterable(
+                algorithm.decrypt({
+                    key,
+                    nonce,
+                    authTag,
+                    ciphertextIter: toIter([ciphertext]),
+                }),
+            ));
 
-            expect(() => decipher.setAuthTag(authTag)).not.toThrow();
-
-            const cleartextPartList: Buffer[] = [];
-
-            expect(() => cleartextPartList.push(decipher.update(ciphertext))).not.toThrow();
-
-            expect(() => cleartextPartList.push(decipher.final())).not.toThrow();
-
-            const cleartext2 = Buffer.concat(cleartextPartList);
             expect(cleartext2).toBytesEqual(cleartext);
             expect(cleartext).toBytesEqual(cleartext2);
         });
 
         describe('decryption fail', () => {
             it('different key', async () => {
-                const cipher = algorithm.createCipher(key, nonce);
-                const ciphertext = Buffer.concat([cipher.update(cleartext), cipher.final()]);
-                const authTag = cipher.getAuthTag();
-
+                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
                 const key2 = randomBytes(algorithm.keyLength);
 
-                let decipher: ReturnType<typeof algorithm.createDecipher>;
-                expect(() => {
-                    decipher = algorithm.createDecipher(key2, nonce);
-                }).not.toThrow();
-
-                expect(() => decipher.setAuthTag(authTag)).not.toThrow();
-
-                expect(() => decipher.update(ciphertext)).not.toThrow();
-
-                expect(() => decipher.final()).toThrow(/^Unsupported state or unable to authenticate data$/);
+                await expect((async () => {
+                    const result = algorithm.decrypt({
+                        key: key2,
+                        nonce,
+                        authTag,
+                        ciphertextIter: toIter([ciphertext]),
+                    });
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    for await (const _ of asyncIter2AsyncIterable(result));
+                })()).rejects.toThrow(/^Unsupported state or unable to authenticate data$/);
             });
             it('different nonce', async () => {
-                const cipher = algorithm.createCipher(key, nonce);
-                const ciphertext = Buffer.concat([cipher.update(cleartext), cipher.final()]);
-                const authTag = cipher.getAuthTag();
-
+                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
                 const nonce2 = randomBytes(algorithm.nonceLength);
 
-                let decipher: ReturnType<typeof algorithm.createDecipher>;
-                expect(() => {
-                    decipher = algorithm.createDecipher(key, nonce2);
-                }).not.toThrow();
-
-                expect(() => decipher.setAuthTag(authTag)).not.toThrow();
-
-                expect(() => decipher.update(ciphertext)).not.toThrow();
-
-                expect(() => decipher.final()).toThrow(/^Unsupported state or unable to authenticate data$/);
+                await expect((async () => {
+                    const result = algorithm.decrypt({
+                        key,
+                        nonce: nonce2,
+                        authTag,
+                        ciphertextIter: toIter([ciphertext]),
+                    });
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    for await (const _ of asyncIter2AsyncIterable(result));
+                })()).rejects.toThrow(/^Unsupported state or unable to authenticate data$/);
             });
         });
     },

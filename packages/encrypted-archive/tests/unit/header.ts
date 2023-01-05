@@ -18,13 +18,15 @@ import {
     SimpleHeaderData,
     SimpleHeaderDataWithCiphertextLength,
     validateCID,
-} from '../../src/header';
-import { cidByteList } from '../../src/header/content-identifier';
+} from '../../src/core/header';
+import { cidByteList } from '../../src/core/header/content-identifier';
+import { inspect } from '../../src/runtimes/node/utils';
 import { iterable2buffer, padStartArray } from '../helpers';
-import { DummyStreamReader } from '../helpers/stream';
+import { DummyBufferReader } from '../helpers/stream';
 
 const MAX_UINT64 = BigInt(2) ** BigInt(64) - BigInt(1);
 
+const builtin = { inspect };
 const dummyHeaderData: HeaderDataWithCiphertextLength = {
     crypto: {
         algorithmName: 'aes-256-gcm',
@@ -50,14 +52,14 @@ const cidByte = Buffer.from(cidByteList);
 describe('createHeader()', () => {
     describe('multicodec compliant', () => {
         it('can read', () => {
-            const headerData = createHeader(dummyHeaderData);
+            const headerData = createHeader(builtin, dummyHeaderData);
             expect(() => multicodec.getCodeFromData(headerData)).not.toThrow();
         });
         it('code is within Private Use Area', () => {
             /**
              * @see https://github.com/multiformats/multicodec/blob/909e183da65818ecd1e672904980e53711da8780/README.md#private-use-area
              */
-            const headerData = createHeader(dummyHeaderData);
+            const headerData = createHeader(builtin, dummyHeaderData);
             const code = multicodec.getCodeFromData(headerData);
             expect(code).toBeGreaterThanOrEqual(0x300000);
             expect(code).toBeLessThanOrEqual(0x3FFFFF);
@@ -65,13 +67,13 @@ describe('createHeader()', () => {
     });
     describe('header byte length included', () => {
         it('can read', () => {
-            const headerData = createHeader(dummyHeaderData);
+            const headerData = createHeader(builtin, dummyHeaderData);
             const headerStartOffset = 0 + cidByte.byteLength;
             expect(() => varint.decode(headerData, headerStartOffset)).not.toThrow();
             expect(() => varint.decode(headerData.subarray(headerStartOffset))).not.toThrow();
         });
         it('correct length', () => {
-            const headerData = createHeader(dummyHeaderData);
+            const headerData = createHeader(builtin, dummyHeaderData);
             const headerLenStartOffset = 0 + cidByte.byteLength;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
             {
@@ -92,7 +94,7 @@ describe('createHeader()', () => {
     });
     it('ciphertext byte length included', () => {
         const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
-        const headerData = createHeader(dummyHeaderData);
+        const headerData = createHeader(builtin, dummyHeaderData);
         const headerInCiphertextLenBytes = headerData.subarray(
             headerData.byteLength - ciphertextLengthByte.byteLength,
             headerData.byteLength,
@@ -112,13 +114,13 @@ describe('createSimpleHeader()', () => {
 
     describe('header byte length included', () => {
         it('can read', () => {
-            const headerData = createSimpleHeader(dummyHeaderData);
+            const headerData = createSimpleHeader(builtin, dummyHeaderData);
             const headerStartOffset = 0;
             expect(() => varint.decode(headerData, headerStartOffset)).not.toThrow();
             expect(() => varint.decode(headerData.subarray(headerStartOffset))).not.toThrow();
         });
         it('correct length', () => {
-            const headerData = createSimpleHeader(dummyHeaderData);
+            const headerData = createSimpleHeader(builtin, dummyHeaderData);
             const headerLength = varint.decode(headerData);
             const headerLengthVarintBytes = varint.decode.bytes;
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
@@ -129,7 +131,7 @@ describe('createSimpleHeader()', () => {
     });
     it('ciphertext byte length included', () => {
         const ciphertextLengthByte = Buffer.from(varint.encode(dummyHeaderData.ciphertextLength));
-        const headerData = createSimpleHeader(dummyHeaderData);
+        const headerData = createSimpleHeader(builtin, dummyHeaderData);
         const headerInCiphertextLenBytes = headerData
             .subarray(headerData.byteLength - ciphertextLengthByte.byteLength, headerData.byteLength);
         expect(headerInCiphertextLenBytes).toBytesEqual(ciphertextLengthByte);
@@ -143,7 +145,7 @@ describe('createSimpleHeader()', () => {
                 ['addCounter must be less than 2^64', max, max + BigInt(1)],
             ])('%s', (_, safeValue, outValue) => {
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -152,7 +154,7 @@ describe('createSimpleHeader()', () => {
                     })
                 ).not.toThrow();
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -173,7 +175,7 @@ describe('createSimpleHeader()', () => {
                 ['addFixed must be less than 2^64', max, max + BigInt(1)],
             ])('%s', (_, safeValue, outValue) => {
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -182,7 +184,7 @@ describe('createSimpleHeader()', () => {
                     })
                 ).not.toThrow();
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -203,7 +205,7 @@ describe('createSimpleHeader()', () => {
                 ['resetCounter must be less than 2^64', max, max + BigInt(1)],
             ])('%s', (_, safeValue, outValue) => {
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -212,7 +214,7 @@ describe('createSimpleHeader()', () => {
                     })
                 ).not.toThrow();
                 expect(() =>
-                    createSimpleHeader({
+                    createSimpleHeader(builtin, {
                         ...dummyHeaderData,
                         crypto: {
                             ...dummyHeaderData.crypto,
@@ -234,7 +236,7 @@ describe('validateCID()', () => {
         ['invalid varint', Buffer.from([0xFF])],
         ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
     ])('%s', async (_, data) => {
-        const reader = new DummyStreamReader(data);
+        const reader = new DummyBufferReader(data);
         await expect(validateCID(reader)).rejects.toThrowWithMessage(
             Error,
             `Could not decode identifier. Multicodec compliant identifiers are required.`,
@@ -250,7 +252,7 @@ describe('validateCID()', () => {
         ['100000', 0x100000],
     ])('no match / 0x%s', async (codeStr, codeInt) => {
         const data = Buffer.from(varint.encode(codeInt));
-        const reader = new DummyStreamReader(data);
+        const reader = new DummyBufferReader(data);
         await expect(validateCID(reader)).rejects.toThrowWithMessage(
             Error,
             new RegExp(
@@ -269,7 +271,7 @@ describe('parseHeaderLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, headerLengthBytes) => {
-            const reader = new DummyStreamReader(headerLengthBytes);
+            const reader = new DummyBufferReader(headerLengthBytes);
             await expect(parseHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode header size. The byte length of the header encoded as unsigned varint is required.`,
@@ -277,7 +279,7 @@ describe('parseHeaderLength()', () => {
         });
         it('zero length data', async () => {
             const data = Buffer.from([0x00]);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid header byte length received: 0`,
@@ -306,13 +308,13 @@ describe('parseHeaderData()', () => {
             },
             compressAlgorithmName: 'gzip',
         };
-        const headerDataBuffer = createHeader({ ...headerData, ciphertextLength: 0 });
+        const headerDataBuffer = createHeader(builtin, { ...headerData, ciphertextLength: 0 });
         const headerLengthStartOffset = 0 + cidByte.byteLength;
         const headerByteLength = varint.decode(headerDataBuffer, headerLengthStartOffset);
         const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
 
-        type Opts = Omit<Parameters<typeof parseHeaderData>[1], 'headerByteLength'>;
-        it.each<[string, Opts, Buffer]>([
+        type Opts = Omit<Parameters<typeof parseHeaderData>[2], 'headerByteLength'>;
+        it.each<[string, Opts, Uint8Array]>([
             [
                 'offset=undefined',
                 {},
@@ -329,8 +331,8 @@ describe('parseHeaderData()', () => {
                 headerDataBuffer,
             ],
         ])('%s', async (_, opts, data) => {
-            const reader = new DummyStreamReader(data);
-            const result = await parseHeaderData(reader, {
+            const reader = new DummyBufferReader(data);
+            const result = await parseHeaderData(builtin, reader, {
                 ...opts,
                 headerByteLength,
             });
@@ -352,7 +354,7 @@ describe('parseHeaderData()', () => {
                 ],
             ])('%s', async (_, opts) => {
                 await expect(
-                    parseHeaderData(new DummyStreamReader(headerDataBuffer), {
+                    parseHeaderData(builtin, new DummyBufferReader(headerDataBuffer), {
                         headerByteLength,
                         ...opts,
                     }),
@@ -491,8 +493,8 @@ describe('parseHeaderData()', () => {
         ])('%s', async (filename, expected) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
-            const result = await parseHeaderData(reader, { headerByteLength: data.byteLength });
+            const reader = new DummyBufferReader(data);
+            const result = await parseHeaderData(builtin, reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
     });
@@ -541,8 +543,8 @@ describe('parseHeaderData()', () => {
         ])('%s', async (filename, errorConst, errorMsg) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
-            await expect(parseHeaderData(reader, { headerByteLength: data.byteLength })).rejects
+            const reader = new DummyBufferReader(data);
+            await expect(parseHeaderData(builtin, reader, { headerByteLength: data.byteLength })).rejects
                 .toThrowWithMessage(errorConst, errorMsg);
         });
     });
@@ -555,8 +557,8 @@ describe('parseHeaderData()', () => {
             [300, 259],
         ])('need %i bytes / actual %i bytes', async (needLen, actualLen) => {
             const data = Buffer.alloc(actualLen);
-            const reader = new DummyStreamReader(data);
-            await expect(parseHeaderData(reader, { headerByteLength: needLen })).rejects.toThrowWithMessage(
+            const reader = new DummyBufferReader(data);
+            await expect(parseHeaderData(builtin, reader, { headerByteLength: needLen })).rejects.toThrowWithMessage(
                 Error,
                 `Could not read header data. ${needLen} byte length header is required. Received data: ${actualLen} bytes`,
             );
@@ -571,7 +573,7 @@ describe('parseSimpleHeaderLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, data) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode simple header size. The byte length of the simple header encoded as unsigned varint is required.`,
@@ -579,7 +581,7 @@ describe('parseSimpleHeaderLength()', () => {
         });
         it('zero length data', async () => {
             const data = Buffer.from([0x00]);
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseSimpleHeaderLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid simple header byte length received: 0`,
@@ -638,12 +640,12 @@ describe('parseSimpleHeaderData()', () => {
                 },
             ]),
         ])('%s', (_, headerData) => {
-            const headerDataBuffer = createSimpleHeader({ ...headerData, ciphertextLength: 0 });
+            const headerDataBuffer = createSimpleHeader(builtin, { ...headerData, ciphertextLength: 0 });
             const headerByteLength = varint.decode(headerDataBuffer);
             const headerDataStartOffset = varint.decode.bytes;
 
-            type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[1], 'headerByteLength'>;
-            it.each<[string, Opts, Buffer]>([
+            type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[2], 'headerByteLength'>;
+            it.each<[string, Opts, Uint8Array]>([
                 [
                     'offset=undefined',
                     {},
@@ -660,8 +662,8 @@ describe('parseSimpleHeaderData()', () => {
                     headerDataBuffer,
                 ],
             ])('%s', async (_, opts, data) => {
-                const reader = new DummyStreamReader(data);
-                const result = await parseSimpleHeaderData(reader, {
+                const reader = new DummyBufferReader(data);
+                const result = await parseSimpleHeaderData(builtin, reader, {
                     ...opts,
                     headerByteLength,
                 });
@@ -683,7 +685,7 @@ describe('parseSimpleHeaderData()', () => {
                     ],
                 ])('%s', async (_, opts) => {
                     await expect(
-                        parseSimpleHeaderData(new DummyStreamReader(headerDataBuffer), {
+                        parseSimpleHeaderData(builtin, new DummyBufferReader(headerDataBuffer), {
                             headerByteLength,
                             ...opts,
                         }),
@@ -766,8 +768,8 @@ describe('parseSimpleHeaderData()', () => {
         ])('%s', async (filename, expected) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
-            const result = await parseSimpleHeaderData(reader, { headerByteLength: data.byteLength });
+            const reader = new DummyBufferReader(data);
+            const result = await parseSimpleHeaderData(builtin, reader, { headerByteLength: data.byteLength });
             expect(result.headerData).toStrictEqual(expected);
         });
     });
@@ -818,8 +820,8 @@ describe('parseSimpleHeaderData()', () => {
         ])('%s', async (filename, errorConst, errorMsg) => {
             const filepath = path.resolve(__dirname, 'fixtures', filename);
             const data = await fsAsync.readFile(filepath);
-            const reader = new DummyStreamReader(data);
-            await expect(parseSimpleHeaderData(reader, { headerByteLength: data.byteLength })).rejects
+            const reader = new DummyBufferReader(data);
+            await expect(parseSimpleHeaderData(builtin, reader, { headerByteLength: data.byteLength })).rejects
                 .toThrowWithMessage(errorConst, errorMsg);
         });
     });
@@ -832,11 +834,12 @@ describe('parseSimpleHeaderData()', () => {
             [300, 259],
         ])('need %i bytes / actual %i bytes', async (needLen, actualLen) => {
             const data = Buffer.alloc(actualLen);
-            const reader = new DummyStreamReader(data);
-            await expect(parseSimpleHeaderData(reader, { headerByteLength: needLen })).rejects.toThrowWithMessage(
-                Error,
-                `Could not read simple header data. ${needLen} byte length simple header is required. Received data: ${actualLen} bytes`,
-            );
+            const reader = new DummyBufferReader(data);
+            await expect(parseSimpleHeaderData(builtin, reader, { headerByteLength: needLen })).rejects
+                .toThrowWithMessage(
+                    Error,
+                    `Could not read simple header data. ${needLen} byte length simple header is required. Received data: ${actualLen} bytes`,
+                );
         });
     });
 });
@@ -848,14 +851,14 @@ describe('parseCiphertextLength()', () => {
             ['invalid varint', Buffer.from([0xFF])],
             ['maximum of 9 bytes', Buffer.from(padStartArray([0x00], 9, 0xFF))],
         ])('%s', async (_, data) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             await expect(parseCiphertextLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Could not decode ciphertext size. The byte length of the ciphertext encoded as unsigned varint is required.`,
             );
         });
         it('zero length data', async () => {
-            const reader = new DummyStreamReader(Buffer.from([0x00]));
+            const reader = new DummyBufferReader(Buffer.from([0x00]));
             await expect(parseCiphertextLength(reader)).rejects.toThrowWithMessage(
                 Error,
                 `Invalid ciphertext byte length received: 0`,
@@ -886,7 +889,7 @@ describe('parseCiphertextIterable()', () => {
                 data.subarray(2, ciphertextByteLength + 2),
             ],
         ])('%s', async (_, opts, expected) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, { ciphertextByteLength: 6, ...opts });
             await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
@@ -910,7 +913,7 @@ describe('parseCiphertextIterable()', () => {
                 data.subarray(2, data.byteLength),
             ],
         ])('%s', async (_, opts, expected) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).resolves.toBytesEqual(expected);
         });
@@ -940,7 +943,7 @@ describe('parseCiphertextIterable()', () => {
                 `Could not read ciphertext. 2 byte length ciphertext is required. Received data: 0 bytes`,
             ],
         ])('%s', async (_, opts, expectedErrorMessage) => {
-            const reader = new DummyStreamReader(data);
+            const reader = new DummyBufferReader(data);
             const resultIterable = parseCiphertextIterable(reader, opts);
             await expect(iterable2buffer(resultIterable)).rejects.toThrowWithMessage(
                 Error,

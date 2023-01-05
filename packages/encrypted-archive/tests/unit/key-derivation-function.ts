@@ -3,18 +3,21 @@ import * as util from 'util';
 
 import escapeStringRegexp from 'escape-string-regexp';
 
-import { getKDF, KeyDerivationOptions } from '../../src/key-derivation-function';
-import type { Argon2Options } from '../../src/key-derivation-function/argon2';
+import { getKDF } from '../../src/core/key-derivation-function';
+import type { Argon2Options } from '../../src/core/types/key-derivation-function/argon2';
+import { kdfBuiltinRecord as kdfBuiltin } from '../../src/runtimes/node/key-derivation-function';
+import { inspect } from '../../src/runtimes/node/utils';
 import { addNegativeNumber, createDummySizeBuffer, rangeArray } from '../helpers';
 
 /** @see https://github.com/P-H-C/phc-winner-argon2/blob/16d3df698db2486dde480b09a732bf9bf48599f9/include/argon2.h#L57 */
 const ARGON2_MIN_OUTLEN = 4;
 
-const password = 'Hoge Fuga';
+const builtin = { kdfBuiltin, inspect };
+const password = Buffer.from('Hoge Fuga');
 
 describe('getKDF()', () => {
     describe('generate key', () => {
-        const { deriveKey, saltLength } = getKDF(undefined);
+        const { deriveKey, saltLength } = getKDF(builtin, undefined);
         const salt = randomBytes(saltLength);
 
         it.each(rangeArray(ARGON2_MIN_OUTLEN, 20))('keyLengthBytes: %i', async keyLengthBytes => {
@@ -30,9 +33,9 @@ describe('getKDF()', () => {
     it('unknown algorithm', () => {
         const algorithm = 'foooooooooooooo';
         // @ts-expect-error TS2322: Type '"foooooooooooooo"' is not assignable to type '"argon2d" | "argon2id"'.
-        const options: KeyDerivationOptions = { algorithm };
+        const options: Parameters<typeof getKDF>[1] = { algorithm };
 
-        expect(() => getKDF(options)).toThrowWithMessage(
+        expect(() => getKDF(builtin, options)).toThrowWithMessage(
             TypeError,
             `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
         );
@@ -41,9 +44,9 @@ describe('getKDF()', () => {
     it('invalid type algorithm', () => {
         const algorithm = 42;
         // @ts-expect-error TS2322: Type 'number' is not assignable to type '"argon2d" | "argon2id"'.
-        const options: KeyDerivationOptions = { algorithm };
+        const options: Parameters<typeof getKDF>[1] = { algorithm };
 
-        expect(() => getKDF(options)).toThrowWithMessage(
+        expect(() => getKDF(builtin, options)).toThrowWithMessage(
             TypeError,
             `Unknown KDF (Key Derivation Function) algorithm was received: ${algorithm}`,
         );
@@ -67,8 +70,9 @@ describe('getKDF()', () => {
             [],
             {},
         ])('%p', value => {
-            // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Readonly<Argon2Options> | undefined'.
-            expect(() => getKDF(value)).toThrowWithMessage(
+            // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'Readonly<Argon2Options> | undefined'.
+            const options: Parameters<typeof getKDF>[1] = value;
+            expect(() => getKDF(builtin, options)).toThrowWithMessage(
                 TypeError,
                 /^Unknown deriveKey options was received: /,
             );
@@ -122,7 +126,7 @@ describe('algorithm: Argon2', () => {
             'argon2d',
             'argon2id',
         ])('%s', algorithm => {
-            const { deriveKey, saltLength } = getKDF({ algorithm });
+            const { deriveKey, saltLength } = getKDF(builtin, { algorithm });
             const salt = randomBytes(saltLength);
 
             it.each(
@@ -146,7 +150,7 @@ describe('algorithm: Argon2', () => {
             ]),
         ])('%p', opts => {
             const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-            const { normalizedOptions } = getKDF(options);
+            const { normalizedOptions } = getKDF(builtin, options);
             expect(normalizedOptions.iterations).toBeNumber();
             expect(normalizedOptions.memory).toBeNumber();
             expect(normalizedOptions.parallelism).toBeNumber();
@@ -194,7 +198,7 @@ describe('algorithm: Argon2', () => {
                     optionName,
                 ]))('%p', (opts, optionName) => {
                     const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                    expect(() => getKDF(options)).toThrowWithMessage(
+                    expect(() => getKDF(builtin, options)).toThrowWithMessage(
                         TypeError,
                         new RegExp(`^${
                             escapeStringRegexp([
@@ -219,7 +223,7 @@ describe('algorithm: Argon2', () => {
                     optionName,
                 ]))('%p', (opts, optionName) => {
                     const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                    expect(() => getKDF(options)).toThrowWithMessage(
+                    expect(() => getKDF(builtin, options)).toThrowWithMessage(
                         RangeError,
                         new RegExp(`^${
                             escapeStringRegexp([
@@ -277,7 +281,7 @@ describe('algorithm: Argon2', () => {
             ).filter(([, { value }]) => value >= 1);
             it.each(table)('%s', (_, { opts, optionName, value, min, max }) => {
                 const options: Argon2Options = { algorithm: 'argon2d', ...opts };
-                expect(() => getKDF(options)).toThrowWithMessage(
+                expect(() => getKDF(builtin, options)).toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${value}" is too ${mode} for Argon2's option "${optionName}"`,
@@ -296,10 +300,10 @@ describe('algorithm: Argon2', () => {
         });
         describe('too short', () => {
             it('salt length', async () => {
-                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey } = getKDF(builtin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MIN_SALT_LENGTH - 1;
                 const salt = Buffer.alloc(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too short salt was received for Argon2's option "salt"`,
@@ -313,10 +317,10 @@ describe('algorithm: Argon2', () => {
                 );
             });
             it('key length', async () => {
-                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey, saltLength } = getKDF(builtin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MIN_OUTLEN - 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too short for Argon2's option "keyLengthBytes"`,
@@ -327,7 +331,7 @@ describe('algorithm: Argon2', () => {
         });
         describe('too long', () => {
             it('password length', async () => {
-                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey, saltLength } = getKDF(builtin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const passwordLengthBytes = ARGON2_MAX_PWD_LENGTH + 1;
                 const password = createDummySizeBuffer(passwordLengthBytes);
@@ -345,10 +349,10 @@ describe('algorithm: Argon2', () => {
                 );
             });
             it('salt length', async () => {
-                const { deriveKey } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey } = getKDF(builtin, { algorithm: 'argon2d' });
                 const saltLength = ARGON2_MAX_SALT_LENGTH + 1;
                 const salt = createDummySizeBuffer(saltLength);
-                await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `Too long salt was received for Argon2's option "salt"`,
@@ -362,10 +366,10 @@ describe('algorithm: Argon2', () => {
                 );
             });
             it('key length', async () => {
-                const { deriveKey, saltLength } = getKDF({ algorithm: 'argon2d' });
+                const { deriveKey, saltLength } = getKDF(builtin, { algorithm: 'argon2d' });
                 const salt = Buffer.alloc(saltLength);
                 const keyLengthBytes = ARGON2_MAX_OUTLEN + 1;
-                await expect(deriveKey('', salt, keyLengthBytes)).rejects.toThrowWithMessage(
+                await expect(deriveKey(password, salt, keyLengthBytes)).rejects.toThrowWithMessage(
                     RangeError,
                     [
                         `The value "${keyLengthBytes}" is too long for Argon2's option "keyLengthBytes"`,
@@ -383,7 +387,7 @@ describe('algorithm: Argon2', () => {
          * At least it works properly on Ubuntu 20.04 on GitHub Actions.
          */
         it('internal error', async () => {
-            const { deriveKey, saltLength } = getKDF({
+            const { deriveKey, saltLength } = getKDF(builtin, {
                 algorithm: 'argon2d',
                 iterations: ARGON2_MIN_TIME,
                 parallelism: ARGON2_MIN_THREADS,
@@ -395,7 +399,7 @@ describe('algorithm: Argon2', () => {
                 memory: 2 ** 40 / 2 ** 10,
             });
             const salt = Buffer.alloc(saltLength);
-            await expect(deriveKey('', salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
+            await expect(deriveKey(password, salt, safeKeyLengthBytes)).rejects.toThrowWithMessage(
                 Error,
                 /^Internal error from Argon2: /,
             );

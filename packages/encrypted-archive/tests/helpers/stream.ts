@@ -2,8 +2,8 @@ import * as stream from 'stream';
 import { promisify } from 'util';
 
 import { iterable2list } from '.';
-import type { StreamReaderInterface } from '../../src/utils/stream';
-import type { AsyncIterableIteratorReturn } from '../../src/utils/type';
+import type { AsyncIterableIteratorReturn } from '../../src/core/types/utils';
+import type { BufferReaderInterface } from '../../src/core/utils/reader';
 
 export const waitStreamFinished = promisify(stream.finished);
 export const pipelineAsync = promisify(stream.pipeline);
@@ -77,10 +77,10 @@ export function createStreamFromBuffer(buf: Buffer, highWaterMark = Infinity): s
     })());
 }
 
-export class DummyStreamReader implements StreamReaderInterface<Buffer> {
-    constructor(private data: Buffer) {}
+export class DummyBufferReader implements BufferReaderInterface<Uint8Array> {
+    constructor(private data: Uint8Array) {}
 
-    async read(size: number, offset = 0): Promise<Buffer> {
+    async read(size: number, offset = 0): Promise<Uint8Array> {
         const needByteLength = offset + size;
         return this.data.subarray(offset, needByteLength);
     }
@@ -89,7 +89,7 @@ export class DummyStreamReader implements StreamReaderInterface<Buffer> {
         size: number,
         offset = 0,
     ): AsyncIterableIteratorReturn<
-        { data?: Buffer; requestedSize: number; offset: number; readedSize: number },
+        { data?: Uint8Array; requestedSize: number; offset: number; readedSize: number },
         void
     > {
         const data = await this.read(size, offset);

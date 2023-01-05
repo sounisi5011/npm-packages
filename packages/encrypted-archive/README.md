@@ -347,7 +347,7 @@ Type: `CryptoAlgorithmName`
 An encryption algorithm name string. Specify one of the following:
 
 * `"aes-256-gcm"`
-* `"chacha20-poly1305"` (default)
+* `"chacha20-poly1305"` (default on [Node.js](./src/runtimes/node/cipher.ts#L10))
 
 <h4 id="type-encrypt-options--key-derivation"><code>keyDerivation</code></h4>
 

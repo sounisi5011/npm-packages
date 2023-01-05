@@ -50,11 +50,11 @@
   "author": "sounisi5011",
   "type": "commonjs",
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/index.node.js",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.node.js",
+  "types": "./dist/index.node.d.ts",
   "directories": {
     "lib": "./src/",
     "example": "./examples/",
@@ -69,10 +69,10 @@
   "scripts": {
     "build": "concurrently 'pnpm:build:*'",
     "build-protobuf": "concurrently 'pnpm:build-protobuf:*'",
-    "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/header/protocol-buffers/ --ts_out=./src/header/protocol-buffers/ --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto",
+    "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/protocol-buffers/ --ts_out=./src/protocol-buffers/ --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto",
     "build-protobuf:test": "concurrently 'pnpm:build-protobuf~test:*'",
-    "build-protobuf~test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "build-protobuf~test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/header/protocol-buffers/ ./src/header/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf~test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
+    "build-protobuf~test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-with-cache": "ultra build",
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "concurrently 'pnpm:build~docs:*'",
@@ -86,7 +86,7 @@
     "test:examples": "pnpm build-with-cache && concurrently 'pnpm:test~examples:*'",
     "test:jest": "jest",
     "test:tsd": "pnpm run build-with-cache && tsd",
-    "test~examples:run": "glob-exec --foreach 'examples/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
+    "test~examples:run": "glob-exec --foreach 'examples/node/*.js' -- 'echo \"$\" node {{file}}; node {{file}}; echo'"
   },
   "config": {
     "protocVersion": "3.20.1"
@@ -95,7 +95,6 @@
     "@sounisi5011/stream-transform-from": "workspace:^1.0.0",
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
     "argon2-browser": "^1.15.4",
-    "bl": "^5.0.0",
     "capitalize": "^2.0.3",
     "google-protobuf": "^3.15.8",
     "varint": "^6.0.0"
@@ -108,7 +107,6 @@
     "@swc/core": "1.2.212",
     "@swc/jest": "0.2.21",
     "@types/argon2-browser": "1.18.1",
-    "@types/bl": "5.0.2",
     "@types/capitalize": "2.0.0",
     "@types/google-protobuf": "3.15.6",
     "@types/jest": "28.1.8",
