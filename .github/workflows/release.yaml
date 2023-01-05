@@ -73,6 +73,29 @@ jobs:
             # The "token" parameter is optional.
             # However, it may cause an error due to the rate limit of GitHub API.
             # Therefore, it should be specified explicitly.
+      - name: Check release-please-action outputs
+        if: ${{ always() }}
+        env:
+          # see https://obel.hatenablog.jp/entry/20220115/1642186800
+          STEPS_RELEASE_OUTPUTS_JSON: ${{ toJson(steps.release.outputs) }}
+        run: |
+          echo '::group::JSON value of "steps.release.outputs"'
+          echo "${STEPS_RELEASE_OUTPUTS_JSON}"
+          echo '::endgroup::'
+      - name: Check GitHub API rate limit
+        if: ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RATE_LIMIT_JSON="$(gh api 'rate_limit')"
+          readonly RATE_LIMIT_JSON
+
+          echo '::group::RATE_LIMIT_JSON'
+          echo "${RATE_LIMIT_JSON}" | jq
+          echo '::endgroup::'
+          echo '::group::core and graphql'
+          echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]'
+          echo '::endgroup::'
 
         #
         # Commit to PR
