@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
-    "workspace-tools": "^0.21.0"
+    "workspace-tools": "^0.29.0"
   },
   "engines": {
     "node": ">=14.13.1"
