@@ -193,10 +193,10 @@ function validateBetweenByteLength(
         optionName,
         value.byteLength,
         {
-            startPrefix: options =>
+            startPrefix: opts =>
                 (Object.fromEntries as objectFromEntries)((['min', 'max'] as const).map(mode => [
                     mode,
-                    `Too ${options.tooX[mode]} salt was received`,
+                    `Too ${opts.tooX[mode]} ${options.shortName ?? optionName} was received`,
                 ])),
             ...options,
             suffix: { suffix: ({ value }) => `but received: ${value}`, ...options.suffix },

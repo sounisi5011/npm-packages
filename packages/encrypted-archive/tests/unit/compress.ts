@@ -48,6 +48,20 @@ describe('createCompressor()', () => {
         );
     });
 
+    describe('invalid type options', () => {
+        it.each<[unknown]>([
+            [42],
+            [{ algorithm: 42 }],
+        ])('%o', invalidAlgorithm => {
+            // @ts-expect-error TS2322: Type 'unknown' is not assignable to type '"gzip" | "brotli" | BaseCompressOptions | undefined'.
+            const algorithm: Parameters<typeof createCompressor>[1] = invalidAlgorithm;
+            expect(() => createCompressor(builtin, algorithm)).toThrowWithMessage(
+                TypeError,
+                `Unknown compress algorithm was received: 42`,
+            );
+        });
+    });
+
     describe('not allowed options', () => {
         describe('gzip', () => {
             const algorithm = 'gzip';

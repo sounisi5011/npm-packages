@@ -1,3 +1,5 @@
+import type { hasOwnProperty } from '@sounisi5011/ts-type-util-has-own-property';
+
 import type { BuiltinInspectRecord } from './types/builtin';
 import {
     BaseCompressOptions,
@@ -47,7 +49,9 @@ export function createCompressor<
             compressIterable: source => source,
         };
     }
-    const compressOptions = typeof options === 'string' ? { algorithm: options } : options;
+    const compressOptions = (Object.prototype.hasOwnProperty.call as hasOwnProperty)(options, 'algorithm')
+        ? options
+        : { algorithm: options };
     const { algorithm } = compressOptions;
     validateAlgorithmName(builtin, algorithm);
 
