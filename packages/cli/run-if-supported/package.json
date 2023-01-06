@@ -62,7 +62,7 @@
     "@sounisi5011/ts-utils-is-property-accessible": "workspace:^1.0.0",
     "command-join": "^3.0.0",
     "cross-spawn": "^7.0.3",
-    "npm-install-checks": "^5.0.0",
+    "npm-install-checks": "^6.0.0",
     "ow": "^1.0.0",
     "parse-json": "^6.0.0",
     "pkg-up": "^4.0.0"
