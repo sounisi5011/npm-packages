@@ -13,13 +13,7 @@ async function fixNodePrimordialsError<T>(promise: Promise<T>): Promise<T> {
 
         const newError = new Error(oldError.message);
         const { message: _1, stack: _2, ...oldErrorProperties } = Object.getOwnPropertyDescriptors(oldError);
-        // @ts-expect-error TS2322: Type '{ [x: string]: PropertyDescriptor; name: TypedPropertyDescriptor<string>; }' is not assignable to type 'PropertyDescriptorMap'.
-        // Note: TypeScript 4.7.2 reports this type error.
-        //       However, we should be able to assign this type to the type PropertyDescriptorMap.
-        //       Probably a TypeScript bug, so disable this error.
-        //       https://github.com/microsoft/TypeScript/issues/49235
-        const newErrorProperties: PropertyDescriptorMap = oldErrorProperties;
-        Object.defineProperties(newError, newErrorProperties);
+        Object.defineProperties(newError, oldErrorProperties);
         throw newError;
     });
 }
