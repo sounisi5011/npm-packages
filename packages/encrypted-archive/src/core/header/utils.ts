@@ -1,4 +1,4 @@
-import { decode as varintDecode } from 'varint';
+import { decode as varintDecode, encodingLength as varintEncodingLength } from 'varint';
 
 import type { BuiltinInspectRecord } from '../types/builtin';
 import type { BufferReaderInterface } from '../utils/reader';
@@ -12,7 +12,7 @@ export async function readVarint(
     const data = await reader.read(9, offset);
     try {
         const value = varintDecode(data);
-        const byteLength = varintDecode.bytes;
+        const byteLength = varintEncodingLength(value);
         const endOffset = offset + byteLength;
         if (autoSeek) await reader.seek(endOffset);
         return { value, byteLength, endOffset };
