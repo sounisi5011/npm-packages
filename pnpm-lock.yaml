@@ -239,7 +239,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/node': 12.20.55
       '@types/semver': 7.3.13
-      '@types/varint': 6.0.0
+      '@types/varint': 6.0.1
       argon2: 0.27.2
       argon2-browser: ^1.15.4
       bytefield-svg: 1.7.0
@@ -284,7 +284,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/node': 12.20.55
       '@types/semver': 7.3.13
-      '@types/varint': 6.0.0
+      '@types/varint': 6.0.1
       bytefield-svg: 1.7.0
       combinate: 1.1.11
       concurrently: 7.6.0
@@ -1921,7 +1921,7 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 12.20.55
+      '@types/node': 18.11.18
     dev: true
 
   /@types/google-protobuf/3.15.6:
@@ -2034,10 +2034,10 @@ packages:
     resolution: {integrity: sha512-RpO62vB2lkjEkyLbwTheA2+uwYmtVMWTr/kWRI++UAgVdZqNqdAuIQl/SxBCGeMKfdjWaXPbyhZbiCc4PAj+KA==}
     dev: true
 
-  /@types/varint/6.0.0:
-    resolution: {integrity: sha512-2jBazyxGl4644tvu3VAez8UA/AtrcEetT9HOeAbqZ/vAcRVL/ZDFQjSS7rkWusU5cyONQVUz+nwwrNZdMva4ow==}
+  /@types/varint/6.0.1:
+    resolution: {integrity: sha512-fQdOiZpDMBvaEdl12P1x7xlTPRAtd7qUUtVaWgkCy8DC//wCv19nqFFtrnR3y/ac6VFY0UUvYuQqfKzZTSE26w==}
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 18.11.18
     dev: true
 
   /@types/write-file-atomic/4.0.0:
