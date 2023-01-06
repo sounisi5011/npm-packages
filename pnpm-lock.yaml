@@ -1921,7 +1921,7 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.11.18
+      '@types/node': 16.18.11
     dev: true
 
   /@types/google-protobuf/3.15.6:
@@ -2033,7 +2033,7 @@ packages:
   /@types/varint/6.0.1:
     resolution: {integrity: sha512-fQdOiZpDMBvaEdl12P1x7xlTPRAtd7qUUtVaWgkCy8DC//wCv19nqFFtrnR3y/ac6VFY0UUvYuQqfKzZTSE26w==}
     dependencies:
-      '@types/node': 18.11.18
+      '@types/node': 16.18.11
     dev: true
 
   /@types/write-file-atomic/4.0.0:
