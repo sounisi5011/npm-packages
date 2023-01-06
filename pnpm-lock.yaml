@@ -131,11 +131,11 @@ importers:
       signal-exit: ^3.0.3
       typescript: 4.9.4
       ultra-runner: 3.10.5
-      write-file-atomic: ^4.0.0
+      write-file-atomic: ^5.0.0
     dependencies:
       find-process: 1.4.7
       signal-exit: 3.0.7
-      write-file-atomic: 4.0.2
+      write-file-atomic: 5.0.0
     devDependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../cli-utils/top-level-await-cli
       '@sounisi5011/run-if-supported': 1.1.1
@@ -8580,6 +8580,15 @@ packages:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
+    dev: true
+
+  /write-file-atomic/5.0.0:
+    resolution: {integrity: sha512-R7NYMnHSlV42K54lwY9lvW6MnSm1HSJqZL3xiSgi9E7//FYaI74r2G0rd+/X6VAMkHEdzxQaU5HUOXWUz5kA/w==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+    dependencies:
+      imurmurhash: 0.1.4
+      signal-exit: 3.0.7
+    dev: false
 
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
