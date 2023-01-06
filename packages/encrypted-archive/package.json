@@ -68,9 +68,9 @@
   ],
   "scripts": {
     "build": "concurrently 'pnpm:build:*'",
-    "build-protobuf": "concurrently 'pnpm:build-protobuf:*'",
+    "build-protobuf": "protoc --version && concurrently 'pnpm:build-protobuf:*'",
     "build-protobuf:src": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/protocol-buffers/ --ts_out=./src/protocol-buffers/ --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto",
-    "build-protobuf:test": "concurrently 'pnpm:build-protobuf~test:*'",
+    "build-protobuf:test": "protoc --version && concurrently 'pnpm:build-protobuf~test:*'",
     "build-protobuf~test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-protobuf~test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-with-cache": "ultra build",
