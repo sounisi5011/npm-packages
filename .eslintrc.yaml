@@ -39,6 +39,9 @@ rules:
       alphabetize:
         order: asc
         caseInsensitive: true
+  promise/always-return:
+    - error
+    - ignoreLastCallback: true
 overrides:
   - files: "*.cjs"
   - files:
