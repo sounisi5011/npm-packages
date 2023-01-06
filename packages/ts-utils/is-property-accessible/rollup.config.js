@@ -1,7 +1,16 @@
 // @ts-check
 
-import renameExtensions from '@betit/rollup-plugin-rename-extensions';
+import _renameExtensions from '@betit/rollup-plugin-rename-extensions';
 import typescript from '@rollup/plugin-typescript';
+
+/* eslint-disable dot-notation */
+/** @type {typeof _renameExtensions} */
+const renameExtensions = typeof _renameExtensions !== 'function' && typeof _renameExtensions['default'] === 'function'
+  // The default export from the CommonJS package will not work if the native Node ES modules are used.
+  // To get the default export, the "default" property must be used.
+  ? _renameExtensions['default']
+  : _renameExtensions;
+/* eslint-enable */
 
 // The "@betit/rollup-plugin-rename-extensions" ignores the TypeScript sourceMap and generates an incorrect sourceMap.
 // Therefore, disable the generation of the sourceMap.
