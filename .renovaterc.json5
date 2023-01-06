@@ -6,7 +6,12 @@
     "helpers:disableTypesNodeMajor"
   ],
   "ignorePresets": ["group:monorepos"],
-  "ignoreDeps": ["argon2"],
+  "ignoreDeps": [
+    "argon2",
+    // `jest-extended@>=3.1.0` does not work with Node.js v12
+    // see https://github.com/sounisi5011/npm-packages/pull/626/commits/de18896e0f1881c8a59956c023189584fba73400
+    "jest-extended"
+  ],
   "packageRules": [
     {
       "matchPaths": ["actions/**"],
