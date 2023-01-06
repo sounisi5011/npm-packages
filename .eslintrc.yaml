@@ -128,11 +128,6 @@ overrides:
       promise/no-callback-in-promise: off
       # The "@typescript-eslint/strict-boolean-expressions" rule is very strict and stressful.
       "@typescript-eslint/strict-boolean-expressions": off
-
-      # With the updated dependencies, new rules are now enabled.
-      # These rules fix existing code so we will now disable them.
-      # TODO: Remove these lines later and refactor the code in this project
-      "@typescript-eslint/no-confusing-void-expression": off # Added in eslint-config-standard-with-typescript@26.0.0
   - files: "*.d.{ts,cts,mts}"
     rules:
       # The "no-redeclare" rule does not support namespace and function declarations of the same name.

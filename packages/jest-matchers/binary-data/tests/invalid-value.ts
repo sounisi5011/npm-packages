@@ -70,38 +70,38 @@ describe.each(matcherNameList)('.%s()', matcherName => {
     describe('invalid type expected', () => {
         const actualValue = new Uint8Array();
         it.each(invalidValueList)(`expect(…).${matcherName}(expected = %p)`, expected => {
-            expect(() =>
+            expect(() => {
                 expect(actualValue)[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
-                )
-            ).toThrowErrorMatchingSnapshot();
+                );
+            }).toThrowErrorMatchingSnapshot();
         });
         it.each(invalidValueList)(`expect(…).not.${matcherName}(expected = %p)`, expected => {
-            expect(() =>
+            expect(() => {
                 expect(actualValue).not[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
-                )
-            ).toThrowErrorMatchingSnapshot();
+                );
+            }).toThrowErrorMatchingSnapshot();
         });
     });
     describe('invalid type actual & expected', () => {
         it.each(invalidValuePairList)(`expect(actual = %p).${matcherName}(expected = %p)`, (actual, expected) => {
-            expect(() =>
+            expect(() => {
                 expect(actual)[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
-                )
-            ).toThrowErrorMatchingSnapshot();
+                );
+            }).toThrowErrorMatchingSnapshot();
         });
         it.each(invalidValuePairList)(`expect(actual = %p).not.${matcherName}(expected = %p)`, (actual, expected) => {
-            expect(() =>
+            expect(() => {
                 expect(actual).not[matcherName](
                     // @ts-expect-error TS2345: Argument of type '{} | null | undefined' is not assignable to parameter of type 'BytesData'.
                     expected,
-                )
-            ).toThrowErrorMatchingSnapshot();
+                );
+            }).toThrowErrorMatchingSnapshot();
         });
     });
 });

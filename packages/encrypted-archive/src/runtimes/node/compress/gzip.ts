@@ -9,12 +9,13 @@ type GzipOptions = GetOptions<typeof createGzip>;
 type GzipDisallowedOptions = Omit<GzipOptions, GzipDisallowOptionName>;
 
 export const gzip = genCompressData<GzipDisallowedOptions>({
-    validateCompressOptions: options =>
+    validateCompressOptions: options => {
         validateDisallowedOptions(
             options,
             gzipDisallowOptionNameList,
             'The following gzip compress options are not allowed: %s',
-        ),
+        );
+    },
     createCompress: createGzip,
     createDecompress: createGunzip,
 });

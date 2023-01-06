@@ -102,8 +102,12 @@ export class TransformFromAsyncIterable<
                 this.push(chunk);
             }
         })()
-            .then(() => this.finish())
-            .catch(error => this.finish(error));
+            .then(() => {
+                this.finish();
+            })
+            .catch(error => {
+                this.finish(error);
+            });
     }
 
     override _transform(

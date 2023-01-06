@@ -78,7 +78,9 @@ function getGithub(
         options.log(`Request:`);
         options.log(`  ${method} ${url}`);
     });
-    github.hook.after('request', response => printOctokitResponse(response, options));
+    github.hook.after('request', response => {
+        printOctokitResponse(response, options);
+    });
     github.hook.error('request', error => {
         if ('response' in error && error.response) printOctokitResponse(error.response, { ...options, isError: true });
         throw error;
