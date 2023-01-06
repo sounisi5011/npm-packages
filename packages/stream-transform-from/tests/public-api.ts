@@ -548,7 +548,9 @@ describe('throw error from Transform', () => {
                 () =>
                     new stream.Transform({
                         transform(_chunk, _encoding, done) {
-                            setImmediate(() => done(new Error('bar')));
+                            setImmediate(() => {
+                                done(new Error('bar'));
+                            });
                         },
                     }),
             ],
@@ -613,7 +615,9 @@ describe('throw error from Transform', () => {
                                 done();
                             },
                             flush(done) {
-                                setImmediate(() => done(new Error('baz')));
+                                setImmediate(() => {
+                                    done(new Error('baz'));
+                                });
                             },
                         }),
                     hasBug: !isBugFixed,

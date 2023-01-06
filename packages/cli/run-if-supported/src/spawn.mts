@@ -10,8 +10,14 @@ export async function spawnAsync(
 }> {
     const child = spawn(command, args, { ...options, stdio: 'inherit' });
     return await new Promise((resolve, reject) => {
-        child.on('exit', (exitCode, signal) => resolve({ exitCode, signal }));
-        child.on('close', (exitCode, signal) => resolve({ exitCode, signal }));
-        child.on('error', error => reject(error));
+        child.on('exit', (exitCode, signal) => {
+            resolve({ exitCode, signal });
+        });
+        child.on('close', (exitCode, signal) => {
+            resolve({ exitCode, signal });
+        });
+        child.on('error', error => {
+            reject(error);
+        });
     });
 }

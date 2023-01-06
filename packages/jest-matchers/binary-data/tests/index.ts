@@ -47,13 +47,17 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
             it.each(unshiftInspect(byteSizeSameCases))(
                 'expect(actual = %s).not.toBeByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).not.toBeByteSize(expected)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(actual).not.toBeByteSize(expected);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(byteSizeDiffCases))(
                 'expect(actual = %s).toBeByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).toBeByteSize(expected)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(actual).toBeByteSize(expected);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
         });
@@ -105,19 +109,25 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
             it.each(unshiftInspect(byteSizeSameCases))(
                 'expect(actual = %s).toBeGreaterThanByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).toBeGreaterThanByteSize(expected)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(actual).toBeGreaterThanByteSize(expected);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(bigAndSmallCases))(
                 'expect(big = %s).not.toBeGreaterThanByteSize(small = %s)',
                 (_1, _2, big, small) => {
-                    expect(() => expect(big).not.toBeGreaterThanByteSize(small)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(big).not.toBeGreaterThanByteSize(small);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(smallAndBigCases))(
                 'expect(small = %s).toBeGreaterThanByteSize(big = %s)',
                 (_1, _2, small, big) => {
-                    expect(() => expect(small).toBeGreaterThanByteSize(big)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(small).toBeGreaterThanByteSize(big);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
         });
@@ -149,20 +159,26 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
             it.each(unshiftInspect(byteSizeSameCases))(
                 'expect(actual = %s).not.toBeGreaterThanOrEqualByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).not.toBeGreaterThanOrEqualByteSize(expected))
+                    expect(() => {
+                        expect(actual).not.toBeGreaterThanOrEqualByteSize(expected);
+                    })
                         .toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(bigAndSmallCases))(
                 'expect(big = %s).not.toBeGreaterThanOrEqualByteSize(small = %s)',
                 (_1, _2, big, small) => {
-                    expect(() => expect(big).not.toBeGreaterThanOrEqualByteSize(small)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(big).not.toBeGreaterThanOrEqualByteSize(small);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(smallAndBigCases))(
                 'expect(small = %s).toBeGreaterThanOrEqualByteSize(big = %s)',
                 (_1, _2, small, big) => {
-                    expect(() => expect(small).toBeGreaterThanOrEqualByteSize(big)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(small).toBeGreaterThanOrEqualByteSize(big);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
         });
@@ -194,19 +210,25 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
             it.each(unshiftInspect(byteSizeSameCases))(
                 'expect(actual = %s).toBeLessThanByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).toBeLessThanByteSize(expected)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(actual).toBeLessThanByteSize(expected);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(smallAndBigCases))(
                 'expect(small = %s).not.toBeLessThanByteSize(big = %s)',
                 (_1, _2, small, big) => {
-                    expect(() => expect(small).not.toBeLessThanByteSize(big)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(small).not.toBeLessThanByteSize(big);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(bigAndSmallCases))(
                 'expect(big = %s).toBeLessThanByteSize(small = %s)',
                 (_1, _2, big, small) => {
-                    expect(() => expect(big).toBeLessThanByteSize(small)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(big).toBeLessThanByteSize(small);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
         });
@@ -238,20 +260,26 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
             it.each(unshiftInspect(byteSizeSameCases))(
                 'expect(actual = %s).not.toBeLessThanOrEqualByteSize(expected = %s)',
                 (_1, _2, actual, expected) => {
-                    expect(() => expect(actual).not.toBeLessThanOrEqualByteSize(expected))
+                    expect(() => {
+                        expect(actual).not.toBeLessThanOrEqualByteSize(expected);
+                    })
                         .toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(smallAndBigCases))(
                 'expect(small = %s).not.toBeLessThanOrEqualByteSize(big = %s)',
                 (_1, _2, small, big) => {
-                    expect(() => expect(small).not.toBeLessThanOrEqualByteSize(big)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(small).not.toBeLessThanOrEqualByteSize(big);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
             it.each(unshiftInspect(bigAndSmallCases))(
                 'expect(big = %s).toBeLessThanOrEqualByteSize(small = %s)',
                 (_1, _2, big, small) => {
-                    expect(() => expect(big).toBeLessThanOrEqualByteSize(small)).toThrowErrorMatchingSnapshot();
+                    expect(() => {
+                        expect(big).toBeLessThanOrEqualByteSize(small);
+                    }).toThrowErrorMatchingSnapshot();
                 },
             );
         });
@@ -259,8 +287,12 @@ expect.addSnapshotSerializer(ansiEscapesSerializer);
 }
 
 describe('.toBytesEqual()', () => {
-    const cases1 = getBytesDataList(16, dataView => dataView.setFloat64(0, 0.01));
-    const cases2 = getBytesDataList(16, dataView => dataView.setFloat64(1, 0.02));
+    const cases1 = getBytesDataList(16, dataView => {
+        dataView.setFloat64(0, 0.01);
+    });
+    const cases2 = getBytesDataList(16, dataView => {
+        dataView.setFloat64(1, 0.02);
+    });
 
     const sameCases = unshiftInspect(
         cases1.flatMap(actual =>
@@ -286,10 +318,14 @@ describe('.toBytesEqual()', () => {
 
     describe('fail', () => {
         it.each(sameCases)('expect(actual = %s).not.toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
-            expect(() => expect(actual).not.toBytesEqual(expected)).toThrowErrorMatchingSnapshot();
+            expect(() => {
+                expect(actual).not.toBytesEqual(expected);
+            }).toThrowErrorMatchingSnapshot();
         });
         it.each(diffCases)('expect(actual = %s).toBytesEqual(expected = %s)', (_1, _2, actual, expected) => {
-            expect(() => expect(actual).toBytesEqual(expected)).toThrowErrorMatchingSnapshot();
+            expect(() => {
+                expect(actual).toBytesEqual(expected);
+            }).toThrowErrorMatchingSnapshot();
         });
     });
 });

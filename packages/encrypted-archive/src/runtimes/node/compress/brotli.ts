@@ -9,12 +9,13 @@ type BrotliOptions = GetOptions<typeof createBrotliCompress>;
 type BrotliDisallowedOptions = Omit<BrotliOptions, BrotliDisallowOptionName>;
 
 export const brotli = genCompressData<BrotliDisallowedOptions>({
-    validateCompressOptions: options =>
+    validateCompressOptions: options => {
         validateDisallowedOptions(
             options,
             brotliDisallowOptionNameList,
             'The following brotli compress options are not allowed: %s',
-        ),
+        );
+    },
     createCompress: createBrotliCompress,
     createDecompress: createBrotliDecompress,
 });
