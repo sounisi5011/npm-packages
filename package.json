@@ -41,7 +41,10 @@
     "prepare": "husky install",
     "test": "run-s lint test-only",
     "test:unit-test": "ultra --recursive --serial test",
-    "test-only": "run-s test:unit-test"
+    "test-only": "run-s test:unit-test",
+    "util:clean": "git clean -fdx -- ':(top)' ':(top,exclude,glob)**/.node-version'",
+    "util:rebuild": "pnpm run util:reinstall && pnpm run build-all",
+    "util:reinstall": "pnpm run util:clean && pnpm install"
   },
   "devDependencies": {
     "@sounisi5011/actionlint": "link:scripts/actionlint",
