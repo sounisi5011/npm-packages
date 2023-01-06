@@ -191,7 +191,7 @@ importers:
       execa: 6.1.0
       is-plain-obj: 4.1.0
       jest: 28.1.3
-      npm-install-checks: ^5.0.0
+      npm-install-checks: ^6.0.0
       ow: ^1.0.0
       parse-json: ^6.0.0
       pkg-up: ^4.0.0
@@ -203,7 +203,7 @@ importers:
       '@sounisi5011/ts-utils-is-property-accessible': link:../../ts-utils/is-property-accessible
       command-join: 3.0.0
       cross-spawn: 7.0.3
-      npm-install-checks: 5.0.0
+      npm-install-checks: 6.0.0
       ow: 1.1.0
       parse-json: 6.0.2
       pkg-up: 4.0.0
@@ -6131,9 +6131,9 @@ packages:
       semver: 7.3.8
     dev: true
 
-  /npm-install-checks/5.0.0:
-    resolution: {integrity: sha512-65lUsMI8ztHCxFz5ckCEC44DRvEGdZX5usQFriauxHEwt7upv1FKaQEmAtU0YnOAdwuNWCmk64xYiQABNrEyLA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
+  /npm-install-checks/6.0.0:
+    resolution: {integrity: sha512-SBU9oFglRVZnfElwAtF14NivyulDqF1VKqqwNsFW9HDcbHMAPHpRSsVFgKuwFGq/hVvWZExz62Th0kvxn/XE7Q==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       semver: 7.3.8
     dev: false
