@@ -78,14 +78,14 @@ describe('createHeader()', () => {
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
             {
                 const headerLength = varint.decode(headerData, headerLenStartOffset);
-                const headerLengthVarintBytes = varint.decode.bytes;
+                const headerLengthVarintBytes = varint.encodingLength(headerLength);
                 expect(headerData).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
             }
             {
                 const headerLength = varint.decode(headerData.subarray(headerLenStartOffset));
-                const headerLengthVarintBytes = varint.decode.bytes;
+                const headerLengthVarintBytes = varint.encodingLength(headerLength);
                 expect(headerData).toBeByteSize(
                     cidByte.byteLength + headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
                 );
@@ -122,7 +122,7 @@ describe('createSimpleHeader()', () => {
         it('correct length', () => {
             const headerData = createSimpleHeader(builtin, dummyHeaderData);
             const headerLength = varint.decode(headerData);
-            const headerLengthVarintBytes = varint.decode.bytes;
+            const headerLengthVarintBytes = varint.encodingLength(headerLength);
             const ciphertextLengthByteLen = varint.encode(dummyHeaderData.ciphertextLength).length;
             expect(headerData).toBeByteSize(
                 headerLengthVarintBytes + headerLength + ciphertextLengthByteLen,
@@ -311,7 +311,7 @@ describe('parseHeaderData()', () => {
         const headerDataBuffer = createHeader(builtin, { ...headerData, ciphertextLength: 0 });
         const headerLengthStartOffset = 0 + cidByte.byteLength;
         const headerByteLength = varint.decode(headerDataBuffer, headerLengthStartOffset);
-        const headerDataStartOffset = headerLengthStartOffset + varint.decode.bytes;
+        const headerDataStartOffset = headerLengthStartOffset + varint.encodingLength(headerByteLength);
 
         type Opts = Omit<Parameters<typeof parseHeaderData>[2], 'headerByteLength'>;
         it.each<[string, Opts, Uint8Array]>([
@@ -642,7 +642,7 @@ describe('parseSimpleHeaderData()', () => {
         ])('%s', (_, headerData) => {
             const headerDataBuffer = createSimpleHeader(builtin, { ...headerData, ciphertextLength: 0 });
             const headerByteLength = varint.decode(headerDataBuffer);
-            const headerDataStartOffset = varint.decode.bytes;
+            const headerDataStartOffset = varint.encodingLength(headerByteLength);
 
             type Opts = Omit<Parameters<typeof parseSimpleHeaderData>[2], 'headerByteLength'>;
             it.each<[string, Opts, Uint8Array]>([
