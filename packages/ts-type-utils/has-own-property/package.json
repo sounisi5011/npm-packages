@@ -23,6 +23,12 @@
   },
   "license": "MIT",
   "author": "sounisi5011",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "types": "./index.d.ts",
   "files": [
     "/CHANGELOG.md",
