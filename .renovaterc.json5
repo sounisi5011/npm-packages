@@ -1,57 +1,57 @@
 {
-  "extends": [
+  extends: [
     "config:js-lib",
     ":semanticCommits",
     ":maintainLockFilesWeekly",
-    "helpers:disableTypesNodeMajor"
+    "helpers:disableTypesNodeMajor",
   ],
-  "ignorePresets": ["group:monorepos"],
-  "ignoreDeps": [
+  ignorePresets: ["group:monorepos"],
+  ignoreDeps: [
     "argon2",
     // `jest-extended@>=3.1.0` does not work with Node.js v12
     // see https://github.com/sounisi5011/npm-packages/pull/626/commits/de18896e0f1881c8a59956c023189584fba73400
-    "jest-extended"
+    "jest-extended",
   ],
-  "packageRules": [
+  packageRules: [
     {
-      "matchPaths": ["actions/**"],
-      "extends": [":pinDependencies"]
+      matchPaths: ["actions/**"],
+      extends: [":pinDependencies"],
     },
     {
-      "packageNames": ["eslint"],
-      "packagePatterns": [
+      packageNames: ["eslint"],
+      packagePatterns: [
         "^@typescript-eslint/",
         "^eslint-config-",
-        "^eslint-plugin-"
+        "^eslint-plugin-",
       ],
-      "groupName": "eslint packages",
-      "groupSlug": "eslint-packages"
+      groupName: "eslint packages",
+      groupSlug: "eslint-packages",
     },
     {
-      "packageNames": ["commitizen", "cz-conventional-changelog"],
-      "groupName": "commitizen packages",
-      "groupSlug": "commitizen-packages"
+      packageNames: ["commitizen", "cz-conventional-changelog"],
+      groupName: "commitizen packages",
+      groupSlug: "commitizen-packages",
     },
     {
-      "packageNames": [
+      packageNames: [
         "dprint",
         "husky",
         "lint-staged",
         "prettier",
         "prettier-package-json",
-        "sort-package-json"
+        "sort-package-json",
       ],
-      "groupName": "code formatter packages",
-      "groupSlug": "code-formatter-packages"
+      groupName: "code formatter packages",
+      groupSlug: "code-formatter-packages",
     },
     {
-      "packageNames": ["jest", "@types/jest", "ts-jest"],
-      "groupName": "test packages",
-      "groupSlug": "tester-packages"
+      packageNames: ["jest", "@types/jest", "ts-jest"],
+      groupName: "test packages",
+      groupSlug: "tester-packages",
     },
     {
-      "matchPackageNames": ["@sounisi5011/run-if-supported"],
-      "extends": [":disableMajorUpdates"]
-    }
-  ]
+      matchPackageNames: ["@sounisi5011/run-if-supported"],
+      extends: [":disableMajorUpdates"],
+    },
+  ],
 }
