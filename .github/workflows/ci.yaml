@@ -306,16 +306,17 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 12.17.0 # smallest version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
-          - 12.20.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
+          - 12.17.0 # minimum version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
+          - 12.20.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
           - 12.x
           - 14.1.0
             # When trying install dependencies via pnpm in Node.js 14.0.0, pnpm throws the following error:
             #   Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close
             # This problem started occurring around 2022-06-27.
             # It is probably an issue with the npm registry, as it also started occurring with older pnpm.
-          - 14.13.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
-          - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
+          - 14.13.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
+          - 14.13.1 # minimum version that supports "node:" import - https://nodejs.org/api/esm.html#node-imports
+          - 14.18.0 # minimum version where the "require()" function supports "node:" import - https://nodejs.org/api/modules.html#core-modules
           - 14.x
           - 15.0.0
           - 15.x
