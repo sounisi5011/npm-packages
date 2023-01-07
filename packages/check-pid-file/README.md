@@ -6,7 +6,7 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Minified Bundle Size Details](https://img.shields.io/bundlephobia/min/@sounisi5011/check-pid-file)](https://bundlephobia.com/result?p=%40sounisi5011%2Fcheck-pid-file)
 [![Install Size Details](https://packagephobia.com/badge?p=%40sounisi5011%2Fcheck-pid-file)](https://packagephobia.com/result?p=%40sounisi5011%2Fcheck-pid-file)
-[![Dependencies Status](https://status.david-dm.org/gh/sounisi5011/npm-packages.svg?path=packages%2Fcheck-pid-file)](https://david-dm.org/sounisi5011/npm-packages?path=packages%2Fcheck-pid-file)
+![Dependencies Status](https://img.shields.io/librariesio/release/npm/@sounisi5011/check-pid-file)
 [![Build Status](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml/badge.svg)](https://github.com/sounisi5011/npm-packages/actions/workflows/ci.yaml)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/26495b68302f7ff963c3/maintainability)](https://codeclimate.com/github/sounisi5011/npm-packages/maintainability)
 

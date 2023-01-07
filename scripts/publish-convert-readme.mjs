@@ -47,7 +47,12 @@ function reportError(message) {
  */
 function replaceURL(urlStr, { pkg, rootURL }) {
   if (pkg.version) {
-    if (urlStr.startsWith('https://img.shields.io/bundlephobia/') && !/\/\d+(?:\.\d+){2}$/.test(urlStr)) {
+    if (
+      (
+        urlStr.startsWith('https://img.shields.io/bundlephobia/')
+        || urlStr.startsWith('https://img.shields.io/librariesio/release/npm/')
+      ) && !/\/\d+(?:\.\d+){2}$/.test(urlStr)
+    ) {
       return `${urlStr}/${pkg.version}`;
     }
     if (

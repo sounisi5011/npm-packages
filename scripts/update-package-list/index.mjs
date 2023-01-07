@@ -14,8 +14,11 @@ import { getWorkspaceRoot, getWorkspaces } from 'workspace-tools';
  *
  * @typedef {Object} HeaderData
  * @property {string} header
- * @property {function(PackageInfo, UtilFuncs): string} getVersionLink
- * @property {function(PackageInfo, UtilFuncs): string} getDependenciesLink
+ * @property {GetVersionLinkFn} getVersionLink
+ * @property {GetDependenciesLinkFn} [getDependenciesLink]
+ *
+ * @typedef {function(PackageInfo, UtilFuncs): string} GetVersionLinkFn
+ * @typedef {function(PackageInfo, UtilFuncs): (string | undefined)} GetDependenciesLinkFn
  *
  * @typedef {Object} PackageInfo
  * @property {import('workspace-tools').WorkspaceInfo[number]['name']} name
@@ -29,7 +32,7 @@ import { getWorkspaceRoot, getWorkspaces } from 'workspace-tools';
  * @property {string} packagePathURL
  * @property {string} headerText
  * @property {string} headerText
- * @property {string} depsLink
+ * @property {string | undefined} depsLink
  *
  * @typedef {Object} UtilFuncs
  * @property {typeof strictUriEncode} strictUriEncode
@@ -117,16 +120,6 @@ function getHeaderData(headerTable, relativePackagePath) {
       const releaseTag = `${data.noScopeName}-v${data.version}`;
       return `[\`v${data.version}\`](${data.repoData.browse(data.packagePathURL, { committish: releaseTag })})`;
     },
-    getDependenciesLink(data) {
-      const repoName = `${data.repoData.user}/${data.repoData.project}`;
-      const davidDmBadge = `![Dependency Status](https://status.david-dm.org/gh/${repoName}.svg?path=${
-        strictUriEncode(data.packagePathURL)
-      })`;
-      const davidDmLink = `[${davidDmBadge}](https://david-dm.org/${repoName}?path=${
-        strictUriEncode(data.packagePathURL)
-      })`;
-      return davidDmLink;
-    },
   };
   do {
     const headerData = headerTable[path2url(relativePackagePath)];
@@ -182,7 +175,10 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
         packagePathURL: path2url(relativePackagePath),
         headerText,
         get depsLink() {
-          return getDependenciesLink(this, { strictUriEncode });
+          if (typeof getDependenciesLink === 'function') {
+            return getDependenciesLink(this, { strictUriEncode });
+          }
+          return undefined;
         },
       };
       return packageInfo;
@@ -205,15 +201,49 @@ async function updateMarkdown(filepath, rootPackageList, packageRoot) {
     .join('\n');
   const listText = [...packageMap.entries()]
     .map(([headerText, dataList]) => {
+      const rowDataList = dataList
+        .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+        .map(data => {
+          return {
+            'Package': `[\`${data.name}\`](./${data.localURL})`,
+            'Version': data.versionLink,
+            'Dependencies': data.depsLink,
+          };
+        });
+      const isExistColumn = rowDataList.reduce(
+        /**
+         * @param {Object<string, boolean>} isExistColumn
+         */
+        (isExistColumn, rowData) => {
+          for (const [columnName, columnValue] of Object.entries(rowData)) {
+            isExistColumn[columnName] = isExistColumn[columnName] || Boolean(columnValue);
+          }
+          return isExistColumn;
+        },
+        {},
+      );
+      /**
+       * @typedef {string[]} ColumnTextList
+       * @type {ColumnTextList}
+       */
+      const columnNameList = Object.entries(isExistColumn)
+        .filter(([, isExist]) => isExist)
+        .map(([columnName]) => columnName);
+      /** @type {ColumnTextList[]} */
+      const rowList = [
+        columnNameList.map(columnName => ` ${columnName} `),
+        columnNameList.map(() => '-'),
+        ...rowDataList.map(rowData => {
+          const columnList = Object.entries(rowData)
+            .filter(([columnName]) => isExistColumn[columnName])
+            .map(([, columnValue]) => columnValue ? ` ${columnValue} ` : '');
+          return columnList;
+        }),
+      ];
       return [
         `### ${headerText}`,
         '',
-        '| Package | Version | Dependencies |',
-        '|-|-|-|',
-        ...dataList.sort(({ name: a }, { name: b }) => a.localeCompare(b)).map(data => {
-          const packageLink = `[\`${data.name}\`](./${data.localURL})`;
-          return `| ${packageLink} | ${data.versionLink} | ${data.depsLink} |`;
-        }),
+        ...rowList.map(columnList => `|${columnList.join('|')}|`),
       ].join('\n');
     })
     .join('\n\n');
