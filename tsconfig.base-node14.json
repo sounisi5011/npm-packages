@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base-node12.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Language and Environment */
+    "target": "ES2020",
+    "lib": ["ES2020"]
+  }
+}
