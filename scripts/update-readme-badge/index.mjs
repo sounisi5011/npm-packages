@@ -125,6 +125,20 @@ function replacePackagephobia(pkg) {
   };
 }
 
+const LIBRARIES_IO_BADGE =
+  /!\[Dependenc(?:y|ies) Status\]\(https:\/\/img\.shields\.io\/librariesio\/release\/npm\/[^)]+\)/g;
+
+/**
+ * @param {*} pkg
+ * @returns {function(string): string}
+ */
+function replaceLibrariesIo(pkg) {
+  const pkgName = pkg.name;
+  return pkgName
+    ? () => `![Dependencies Status](https://img.shields.io/librariesio/release/npm/${pkgName})`
+    : origText => origText;
+}
+
 const DAVID_DM_BADGE =
   /\[!\[Dependencies Status\]\(https:\/\/status\.david-dm\.org\/gh\/(?:(?!\.svg\))[^?#)])+\.svg(?:[?#][^)]*)?\)\]\(https:\/\/david-dm\.org\/[^)]+\)/g;
 
@@ -170,6 +184,7 @@ async function main() {
         .replace(NODE_VERSION_BADGE, replaceNodeVersion(pkg))
         .replace(BUNDLEPHOBIA_BADGE, replaceBundlephobia(pkg))
         .replace(PACKAGEPHOBIA_BADGE, replacePackagephobia(pkg))
+        .replace(LIBRARIES_IO_BADGE, replaceLibrariesIo(pkg))
         .replace(DAVID_DM_BADGE, replaceDavidDM(pkg, path.relative(repoRootpath, path.dirname(filepath))));
 
       if (readmeText !== updatedReadmeText) {
