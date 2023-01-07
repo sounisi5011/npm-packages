@@ -52,7 +52,10 @@
   "author": "sounisi5011",
   "type": "commonjs",
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
