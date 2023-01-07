@@ -316,6 +316,7 @@ jobs:
             # It is probably an issue with the npm registry, as it also started occurring with older pnpm.
           - 14.13.0 # smallest version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
           - 14.13.1 # smallest version that supports "node:" imports - https://nodejs.org/api/esm.html#node-imports
+          - 14.18.0 # minimum version where the "require()" function supports "node:" import - https://nodejs.org/api/modules.html#core-modules
           - 14.x
           - 15.0.0
           - 15.x
