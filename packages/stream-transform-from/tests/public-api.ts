@@ -1005,8 +1005,6 @@ describe('can not return non-buffer value', () => {
     describe.each(
         [
             {},
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            {} as { objectMode: true },
             {
                 objectMode: false,
                 readableObjectMode: false,
