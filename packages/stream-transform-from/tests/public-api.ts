@@ -906,7 +906,7 @@ describe('source iterator contains more than just Buffer objects', () => {
                 transformFrom(
                     // eslint-disable-next-line require-yield
                     async function*(source) {
-                        for await (const chunk of source) {
+                        for await (const { chunk } of source) {
                             // @ts-expect-error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Buffer'.
                             assertType<Buffer>(chunk);
                             expect(chunk).not.toBeInstanceOf(Buffer);
