@@ -2,7 +2,14 @@ import events from 'events';
 import * as stream from 'stream';
 import { promisify } from 'util';
 
+import _combinate from 'combinate';
+
 import { transformFrom } from '../src';
+
+const combinate: typeof _combinate = typeof _combinate === 'function'
+    ? _combinate
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    : _combinate['default'];
 
 function assertType<T>(_: T): void {
     //
@@ -28,6 +35,65 @@ function createOutputWritable(
             done();
         },
     });
+}
+
+/**
+ * If the value of a property contains `undefined`, it also generates combinations where the property does not exist
+ * ```ts
+ * const combinations = combinateWithOmitProps({
+ *   req: ['foo'],
+ *   opt: [42, undefined],
+ * })
+ * // [
+ * //   { req: 'foo' },
+ * //   { req: 'foo', opt: 42 },
+ * //   { req: 'foo', opt: undefined }
+ * // ]
+ * ```
+ */
+function combinateWithOmitProps<
+    TCombinations extends Record<string | number, unknown[]>
+>(combinations: TCombinations): Array<
+    {
+        // Make properties with `undefined` values into optional properties
+        [
+            prop in keyof (
+                // First, make all properties optional
+                // This keeps the order of properties
+                & Partial<Record<keyof TCombinations, 0>>
+                // Next, make all properties that do _not contain_ `undefined` values required
+                // Override optional properties with required properties
+                & Required<
+                    Record<
+                        (
+                            // Get tuple type containing property names whose values do not contain `undefined`
+                            {
+                                [k in keyof TCombinations]: undefined extends TCombinations[k][number] ? never : k;
+                            }[keyof TCombinations]
+                        ),
+                        0
+                    >
+                >
+            )
+        ]: TCombinations[prop][number];
+    }
+> {
+    const omitProp = Symbol('omit prop');
+    for (const [, values] of Object.entries(combinations)) {
+        if (values.includes(undefined)) {
+            values.unshift(omitProp);
+        }
+    }
+    const combinationsList = combinate(combinations);
+    for (const combinationItem of combinationsList) {
+        for (const [prop, value] of Object.entries(combinationItem)) {
+            if (value === omitProp) {
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete combinationItem[prop];
+            }
+        }
+    }
+    return combinationsList;
 }
 
 describe('passes though chunks', () => {
@@ -794,21 +860,30 @@ describe('options that affect functionality should be ignored', () => {
     });
 });
 
+/**
+ * @see https://twitter.com/sounisi5011Prog/status/1612245295223701505
+ */
+type AssignableValue<T, K extends keyof T> = undefined extends Required<{ p?: [] | undefined }>['p']
+    // When exactOptionalPropertyTypes is enabled
+    ? Required<T>[K]
+    // When exactOptionalPropertyTypes is disabled
+    : T[K];
+type TransformOptionsCombinations = {
+    [k in keyof stream.TransformOptions]: Array<AssignableValue<stream.TransformOptions, k>>;
+};
 describe('source iterator contains only Buffer objects', () => {
     describe.each(
-        [
-            {},
+        /**
+         * If the `objectMode` and `writableObjectMode` options are not `true`,
+         * the chunk value is always an instance of Buffer.
+         */
+        combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: false,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: false,
-                readableObjectMode: true,
-                writableObjectMode: false,
-            },
-        ] as const,
+                objectMode: [undefined, false],
+                readableObjectMode: [undefined, true, false],
+                writableObjectMode: [undefined, false],
+            } satisfies TransformOptionsCombinations,
+        ),
     )('options: %p', options => {
         const data = ['first', 'second', 'third'];
 
@@ -848,40 +923,26 @@ describe('source iterator contains only Buffer objects', () => {
 });
 
 describe('source iterator contains more than just Buffer objects', () => {
-    describe.each(
-        [
+    describe.each([
+        /**
+         * If the `objectMode` or `writableObjectMode` option is `true`,
+         * the chunk value may be a value other than an instance of Buffer
+         */
+        ...combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: false,
-                writableObjectMode: true,
-            },
+                objectMode: [true],
+                readableObjectMode: [undefined, true, false],
+                writableObjectMode: [undefined, false],
+            } satisfies TransformOptionsCombinations,
+        ),
+        ...combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: true,
-                writableObjectMode: true,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: false,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: true,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: false,
-                writableObjectMode: true,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: true,
-                writableObjectMode: true,
-            },
-        ] as const,
-    )('options: %p', options => {
+                objectMode: [undefined, true, false],
+                readableObjectMode: [undefined, true, false],
+                writableObjectMode: [true],
+            } satisfies TransformOptionsCombinations,
+        ),
+    ])('options: %p', options => {
         const data = ['first', 'second', 'third'];
 
         it('builtin Transform', async () => {
@@ -921,40 +982,26 @@ describe('source iterator contains more than just Buffer objects', () => {
 });
 
 describe('can return non-buffer value', () => {
-    describe.each(
-        [
+    describe.each([
+        /**
+         * If the `objectMode` or `readableObjectMode` option is `true`,
+         * the returned chunk value is allowed to be of any type except `null`.
+         */
+        ...combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: true,
-                writableObjectMode: false,
-            },
+                objectMode: [true],
+                readableObjectMode: [undefined, false],
+                writableObjectMode: [undefined, true, false],
+            } satisfies TransformOptionsCombinations,
+        ),
+        ...combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: true,
-                writableObjectMode: true,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: false,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: true,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: false,
-                writableObjectMode: true,
-            },
-            {
-                objectMode: true,
-                readableObjectMode: true,
-                writableObjectMode: true,
-            },
-        ] as const,
-    )('options: %p', options => {
+                objectMode: [undefined, true, false],
+                readableObjectMode: [true],
+                writableObjectMode: [undefined, true, false],
+            } satisfies TransformOptionsCombinations,
+        ),
+    ])('options: %p', options => {
         describe.each<[string, () => stream.Transform]>([
             [
                 'builtin Transform',
@@ -1003,19 +1050,17 @@ describe('can return non-buffer value', () => {
 
 describe('can not return non-buffer value', () => {
     describe.each(
-        [
-            {},
+        /**
+         * If the `objectMode` and `readableObjectMode` options are not `true`,
+         * the returned chunk value must be of type string or an instance of Buffer or Uint8Array.
+         */
+        combinateWithOmitProps(
             {
-                objectMode: false,
-                readableObjectMode: false,
-                writableObjectMode: false,
-            },
-            {
-                objectMode: false,
-                readableObjectMode: false,
-                writableObjectMode: true,
-            },
-        ] as const,
+                objectMode: [undefined, false],
+                readableObjectMode: [undefined, false],
+                writableObjectMode: [undefined, true, false],
+            } satisfies TransformOptionsCombinations,
+        ),
     )('options: %p', options => {
         describe.each<[string, () => stream.Transform]>([
             [
