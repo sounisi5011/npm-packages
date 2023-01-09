@@ -10,34 +10,32 @@ const nodeVersionMatch = /^v(\d+)\.(\d+)\./.exec(nodeVersion);
  * Because argon2-browser fails in Node.js 18.1.0 or later.
  * @see https://github.com/antelle/argon2-browser/issues/81
  */
-export const argon2Hash: Argon2HashFn = (
-    (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
-        ? // In Node.js >=18.1.0, use node-argon2
-            (() => {
-                const argon2Mod = import('argon2'); // eslint-disable-line node/no-unsupported-features/es-syntax
-                return async options => {
-                    const argon2 = await argon2Mod;
-                    const typeRecord = {
-                        argon2d: argon2.argon2d,
-                        argon2id: argon2.argon2id,
-                    } as const;
-                    const password = typeof options.password === 'string'
-                        ? options.password
-                        : bufferFrom(options.password);
-                    return await argon2.hash(password, {
-                        salt: Buffer.from(options.salt),
-                        timeCost: options.iterations,
-                        memoryCost: options.memory,
-                        hashLength: options.hashLength,
-                        parallelism: options.parallelism,
-                        type: typeRecord[options.algorithm],
-                        raw: true,
-                    });
-                };
-            })()
-        : // For Node.js <18.1.0, use argon2-browser
-            (() => {
-                const mod = import('../../web-interoperable/key-derivation-function/argon2.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
-                return async options => await (await mod).argon2Hash(options);
-            })()
-);
+export const argon2Hash: Argon2HashFn = (Number(nodeVersionMatch?.[1]) >= 18 && Number(nodeVersionMatch?.[2]) >= 1)
+    // In Node.js >=18.1.0, use node-argon2
+    ? (() => {
+        const argon2Mod = import('argon2'); // eslint-disable-line node/no-unsupported-features/es-syntax
+        return async options => {
+            const argon2 = await argon2Mod;
+            const typeRecord = {
+                argon2d: argon2.argon2d,
+                argon2id: argon2.argon2id,
+            } as const;
+            const password = typeof options.password === 'string'
+                ? options.password
+                : bufferFrom(options.password);
+            return await argon2.hash(password, {
+                salt: Buffer.from(options.salt),
+                timeCost: options.iterations,
+                memoryCost: options.memory,
+                hashLength: options.hashLength,
+                parallelism: options.parallelism,
+                type: typeRecord[options.algorithm],
+                raw: true,
+            });
+        };
+    })()
+    // For Node.js <18.1.0, use argon2-browser
+    : (() => {
+        const mod = import('../../web-interoperable/key-derivation-function/argon2.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
+        return async options => await (await mod).argon2Hash(options);
+    })();

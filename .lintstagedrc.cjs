@@ -140,9 +140,9 @@ module.exports = async filenames => {
     // ESLint will find the configuration files based on cwd.
     // If inside submodule directories, ESLint will fail because cwd is not the project root.
     // To avoid this, run ESLint using the "pnpm exec" command with the "--workspace-root" option.
-    const eslintCommand = (
-      `pnpm --workspace-root exec eslint --cache --report-unused-disable-directives --fix ${tsOrJsFiles.join(' ')}`
-    );
+    const eslintCommand = `pnpm --workspace-root exec eslint --cache --report-unused-disable-directives --fix ${
+      tsOrJsFiles.join(' ')
+    }`;
     const dprintCommand = (
       await Promise.all([
         dprintCommandList(tsFiles, './.dprint.json'),
