@@ -10,9 +10,8 @@ type IfNeverThenUnknown<T> = [T] extends [never] ? unknown : T;
  * If the `objectMode` and `writableObjectMode` options is not `true`,
  * the chunk value is always an instance of Buffer.
  */
-export type InputChunkType<T extends stream.TransformOptions> = (
-    true extends GetPropValue<T, 'objectMode' | 'writableObjectMode'> ? unknown : Buffer
-);
+export type InputChunkType<T extends stream.TransformOptions> = true extends
+    GetPropValue<T, 'objectMode' | 'writableObjectMode'> ? unknown : Buffer;
 
 /**
  * If the `objectMode` and `readableObjectMode` options is not `true`,
@@ -24,18 +23,14 @@ export type OutputChunkType<T extends stream.TransformOptions> = IfNeverThenUnkn
         : string | Buffer | Uint8Array
 >;
 
-export type SourceIterator<TOpts extends stream.TransformOptions> = (
-    AsyncIterableIterator<{
-        chunk: InputChunkType<TOpts>;
-        encoding: BufferEncoding;
-    }>
-);
+export type SourceIterator<TOpts extends stream.TransformOptions> = AsyncIterableIterator<{
+    chunk: InputChunkType<TOpts>;
+    encoding: BufferEncoding;
+}>;
 
-export type TransformFunction<TOpts extends stream.TransformOptions> = (
-    (source: SourceIterator<TOpts>) =>
-        | Iterable<OutputChunkType<TOpts>>
-        | AsyncIterable<OutputChunkType<TOpts>>
-);
+export type TransformFunction<TOpts extends stream.TransformOptions> = (source: SourceIterator<TOpts>) =>
+    | Iterable<OutputChunkType<TOpts>>
+    | AsyncIterable<OutputChunkType<TOpts>>;
 
 type ReceivedData<TOpts extends stream.TransformOptions> =
     | { chunk: InputChunkType<TOpts>; encoding: BufferEncoding; done?: false }
@@ -160,13 +155,11 @@ export class TransformFromAsyncIterable<
 
     private async *createSource(): SourceIterator<TOpts> {
         while (true) {
-            const data: ReceivedData<TOpts> = (
-                this.receivedDataList.shift()
-                    ?? await new Promise(resolve => {
-                        this.receiveData = resolve;
-                        this.callTransformCallback();
-                    })
-            );
+            const data: ReceivedData<TOpts> = this.receivedDataList.shift()
+                ?? await new Promise(resolve => {
+                    this.receiveData = resolve;
+                    this.callTransformCallback();
+                });
             if (data.done) break;
             const { done: _, ...chunkData } = data;
             yield chunkData;

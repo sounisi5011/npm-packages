@@ -22,8 +22,8 @@ import { execa } from 'execa';
  */
 const SEMVER_REGEXP = /[0-9]+(?:\.[0-9]+){2}(?:-[.0-9a-zA-Z-]+)?(?:\+[.0-9a-zA-Z-]+)?/;
 const VERSION_HEADING_REGEXP = new RegExp(
-  String.raw
-    `\n+^###? *(?:<(\w+)[^>]*>)?(?<heading_text>(?:${SEMVER_REGEXP.source}|\[${SEMVER_REGEXP.source}\]\((?<repo_url_prefix>[^)]+)/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\))(?:</\1>)?$`,
+  String
+    .raw`\n+^###? *(?:<(\w+)[^>]*>)?(?<heading_text>(?:${SEMVER_REGEXP.source}|\[${SEMVER_REGEXP.source}\]\((?<repo_url_prefix>[^)]+)/compare/(?<base_ref>[^\s)]+?)\.{2,3}(?<head_ref>[^\s)]+?)\)) \([0-9]{4,}(?:-[0-9]{1,2}){2}\))(?:</\1>)?$`,
   'gm',
 );
 const COMMITS_SECTION_REGEXP = /^### *Commits$(?:\n(?!#)[^\n]*)*\n*/m;
@@ -201,8 +201,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
     .replace(COMMITS_SECTION_REGEXP, '')
     .replace(/\n{3,}#/g, '\n\n#')
     .trim();
-  const commitsSectionText = (
-    `### Commits\n\n<details><summary>show ${commitList.length} commits</summary>\n\n`
+  const commitsSectionText = `### Commits\n\n<details><summary>show ${commitList.length} commits</summary>\n\n`
     + commitList
       .map(commit => {
         const commitURL = `${repoUrlPrefix}/commit/${commit.longHash}`;
@@ -210,8 +209,7 @@ async function fixChangelogSection(headingMatch, commitList, sectionRange) {
         return `* [\`${commit.shortHash}\`](${commitURL}) ${commitTitle}`;
       })
       .join('\n')
-    + '\n\n</details>'
-  );
+    + '\n\n</details>';
   const newSectionBody = [
     formattedSectionBody,
     commitsSectionText,

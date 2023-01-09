@@ -9,5 +9,5 @@
     "taggedTemplate.spaceBeforeLiteral": false,
     "typeAssertion.spaceBeforeExpression": false
   },
-  "plugins": ["https://plugins.dprint.dev/typescript-0.69.0.wasm"]
+  "plugins": ["https://plugins.dprint.dev/typescript-0.80.2.wasm"]
 }

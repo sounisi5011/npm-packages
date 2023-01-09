@@ -49,11 +49,9 @@ export type objectEntries = <T extends string, U>(o: Record<T, U>) => Array<[T, 
 
 export type objectFromEntries = <K extends PropertyKey, T>(entries: Iterable<readonly [K, T]>) => Record<K, T>;
 
-export type GetOptions<T extends (options: never) => unknown> = (
-    T extends ((options?: infer U) => unknown) ? U
-        : T extends ((options: infer U) => unknown) ? U
-        : never
-);
+export type GetOptions<T extends (options: never) => unknown> = T extends ((options?: infer U) => unknown) ? U
+    : T extends ((options: infer U) => unknown) ? U
+    : never;
 
 /**
  * @see https://github.com/sindresorhus/type-fest/blob/v3.5.0/source/require-at-least-one.d.ts

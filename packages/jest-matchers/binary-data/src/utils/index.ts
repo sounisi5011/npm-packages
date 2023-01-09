@@ -99,7 +99,7 @@ export function padTextColumns(
         .join('\n');
 }
 
-export function toMessageFn(func: () => (string | ReadonlyArray<string | null>)): jest.CustomMatcherResult['message'] {
+export function toMessageFn(func: () => string | ReadonlyArray<string | null>): jest.CustomMatcherResult['message'] {
     return () => {
         const lines: string[] = toArray(func()).filter(isNotNull);
         return lines.join('\n');

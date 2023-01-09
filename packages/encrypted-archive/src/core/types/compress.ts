@@ -24,11 +24,9 @@ export interface CreateCompressorResult<TCompressOptions extends BaseCompressOpt
     compressAlgorithmName: TCompressOptions['algorithm'] | undefined;
     compressIterable: CompressIteratorConverter;
 }
-export type TryCreateCompressor = (
-    <TCompressOptions extends BaseCompressOptions>(
-        options: TCompressOptions | Pick<TCompressOptions, 'algorithm'>,
-    ) => CreateCompressorResult<TCompressOptions> | undefined
-);
+export type TryCreateCompressor = <TCompressOptions extends BaseCompressOptions>(
+    options: TCompressOptions | Pick<TCompressOptions, 'algorithm'>,
+) => CreateCompressorResult<TCompressOptions> | undefined;
 export interface CompressionAlgorithmBuiltinAPI {
     algorithmRecord: BaseCompressorRecord;
     tryCreateCompressor: TryCreateCompressor;

@@ -98,9 +98,9 @@ export function isArgon2Options<T>(options: T): options is T extends Argon2Optio
 }
 
 function validatePositiveInteger(builtin: BuiltinInspectRecord, optionName: string, value: unknown): asserts value {
-    const messageSuffix = (
-        `The "${optionName}" option must be of positive integers without 0, but received: ${builtin.inspect(value)}`
-    );
+    const messageSuffix = `The "${optionName}" option must be of positive integers without 0, but received: ${
+        builtin.inspect(value)
+    }`;
     if (!(Number.isInteger as isInteger)(value)) {
         throw new TypeError(`Invalid type value received for Argon2's option "${optionName}". ${messageSuffix}`);
     }
@@ -256,27 +256,27 @@ const createDeriveKeyFunc = (
     builtin: { argon2Hash: Argon2HashFn } & BuiltinInspectRecord,
     options: NormalizedArgon2Options,
 ): GetArgon2KDFResult['deriveKey'] =>
-    async (password, salt, keyLengthBytes) => {
-        validateBetweenByteLength(
-            'password',
-            password,
-            { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
-        );
-        validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
-        validateBetweenLength(
-            'keyLengthBytes',
-            keyLengthBytes,
-            { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
-        );
+async (password, salt, keyLengthBytes) => {
+    validateBetweenByteLength(
+        'password',
+        password,
+        { min: ARGON2_PASSWORD.MIN, max: ARGON2_PASSWORD.MAX },
+    );
+    validateBetweenByteLength('salt', salt, { min: ARGON2_SALT.MIN, max: ARGON2_SALT.MAX });
+    validateBetweenLength(
+        'keyLengthBytes',
+        keyLengthBytes,
+        { shortName: 'key', min: ARGON2_OUTPUT.MIN, max: ARGON2_OUTPUT.MAX },
+    );
 
-        return await builtin.argon2Hash({
-            ...options,
-            password,
-            salt,
-            hashLength: keyLengthBytes,
-        })
-            .catch(normalizeInternalError(builtin));
-    };
+    return await builtin.argon2Hash({
+        ...options,
+        password,
+        salt,
+        hashLength: keyLengthBytes,
+    })
+        .catch(normalizeInternalError(builtin));
+};
 
 export function getArgon2KDF(builtin: { argon2Hash: Argon2HashFn } & BuiltinInspectRecord) {
     return (options: Readonly<Argon2Options>): GetArgon2KDFResult => {
