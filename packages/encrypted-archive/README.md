@@ -187,7 +187,6 @@ stream.pipeline(
 
 ```js
 const fs = require('fs');
-const stream = require('stream');
 const { encryptIterator, decryptIterator } = require('@sounisi5011/encrypted-archive');
 
 const password = '1234';
