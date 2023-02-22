@@ -92,11 +92,11 @@ jobs:
         shell: bash
         run: |
           echo '::group::' Archive installed dependencies
-          git ls-files --modified --others --directory -z -- ':(glob)**/node_modules/' | xargs -0 tar -c --file ./node_modules--${{ runner.os }}.tar.gz --gzip
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob)**/node_modules/' | xargs -0 tar -c --file ./node_modules--${{ runner.os }}.tar.gz --gzip
           echo '::endgroup::'
 
           echo '::group::' Archive build results
-          git ls-files --modified --others --directory -z -- ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.gz --gzip --verbose
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.gz --gzip --verbose
           echo '::endgroup::'
         # Note: Convert the node_modules directory and the build result into a single archive file. This is for the following reasons:
         #       + Maintaining file permissions and case sensitive files
