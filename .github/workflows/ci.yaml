@@ -131,14 +131,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Download build results
         uses: actions/download-artifact@v3
         with:
           name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ./build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -168,14 +170,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Download build results
         uses: actions/download-artifact@v3
         with:
           name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ./build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -285,14 +289,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Download build results
         uses: actions/download-artifact@v3
         with:
           name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ./build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -401,19 +407,21 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Download build results
         uses: actions/download-artifact@v3
         with:
           name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         id: restore-deps-and-build
         shell: bash
         run: |
-          if [ -e ./node_modules--${{ runner.os }}.tar.gz ]; then
-            tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
+          if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz ]; then
+            tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
             echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
           fi
-          tar -x --file ./build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Git Setting
         run: |
           git config --global user.name  CI
