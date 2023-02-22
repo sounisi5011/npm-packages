@@ -145,15 +145,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Cache actionlint
         uses: actions/cache@v3
         with:
@@ -165,9 +156,6 @@ jobs:
           key: actionlint-${{ runner.os }}
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
-      - run: pnpm run build-only-packages
       - run: pnpm run lint
   format:
     needs: pre-build
@@ -196,19 +184,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
         # This only happens on CI, and in some cases no error occurs.
@@ -288,7 +265,6 @@ jobs:
             }
           }
           echo '::endgroup::'
-      - run: pnpm run build-only-packages
       - # In rare cases, the "fmt" script may fail.
         # In that case, it will try formatting again after 5 seconds.
         shell: bash
@@ -327,19 +303,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
         run: |
@@ -454,6 +419,7 @@ jobs:
         run: |
           if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz ]; then
             tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+            echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
           fi
           tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Git Setting
@@ -473,11 +439,12 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
+        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run build-only-packages
+        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
