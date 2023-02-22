@@ -50,7 +50,17 @@ jobs:
           elif [ "${core_remaining}" -lt 10 ]; then
             echo "::warning::The rate limit is approaching: core.remaining=${core_remaining}"
           fi
-  lint:
+  pre-build:
+    # There is no need to install dependencies and build every time within each job.
+    # Also, the contents of the node_modules directory and the build results are not dependent on the Node.js version.
+    # Therefore, "build-only-packages" are performed in advance and the build results are shared with subsequent jobs.
+    # This provides the following advantages:
+    #
+    # + Reduced execution time for each job
+    #
+    # + Build process does not need to support older Node.js
+    #   Note: Some unit tests build while the test is running.
+    #         In such cases, the build process must support older Node.js.
     needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
@@ -72,6 +82,69 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Build packages
+        run: pnpm run build-only-packages
+      - name: Create archive files
+        shell: bash
+        run: |
+          echo '::group::' Archive installed dependencies
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob)**/node_modules/' | xargs -0 tar -c --file ./node_modules--${{ runner.os }}.tar.gz --gzip
+          echo '::endgroup::'
+
+          echo '::group::' Archive build results
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.gz --gzip --verbose
+          echo '::endgroup::'
+        # Note: Convert the node_modules directory and the build result into a single archive file. This is for the following reasons:
+        #       + Maintaining file permissions and case sensitive files
+        #         see https://github.com/actions/upload-artifact/blob/v3.1.2/README.md#maintaining-file-permissions-and-case-sensitive-files
+        #       + Reduce the number of API calls
+        #         see https://github.com/actions/upload-artifact/blob/v3.1.2/README.md#too-many-uploads-resulting-in-429-responses
+      - name: Upload installed dependencies
+        uses: actions/upload-artifact@v3
+        with:
+          name: node_modules@${{ github.sha }}
+          path: node_modules--${{ runner.os }}.tar.gz
+          retention-days: 1
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: build_results.tar.gz
+          retention-days:
+            1
+            # The resulting artifact of the build is intended to be used in the next job.
+            # There is no need to store them for long periods of time.
+  lint:
+    needs: pre-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 16.x
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download installed dependencies
+        uses: actions/download-artifact@v3
+        with:
+          name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Restore installed dependencies and build results
+        run: |
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Cache actionlint
         uses: actions/cache@v3
         with:
@@ -83,12 +156,9 @@ jobs:
           key: actionlint-${{ runner.os }}
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
-      - run: pnpm run build-only-packages
       - run: pnpm run lint
   format:
-    needs: if-run-ci
+    needs: pre-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -96,23 +166,26 @@ jobs:
           - 16.x
     steps:
       - uses: actions/checkout@v3
+      - name: Download installed dependencies
+        uses: actions/download-artifact@v3
+        with:
+          name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Restore installed dependencies and build results
+        run: |
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
         # This only happens on CI, and in some cases no error occurs.
@@ -192,7 +265,6 @@ jobs:
             }
           }
           echo '::endgroup::'
-      - run: pnpm run build-only-packages
       - # In rare cases, the "fmt" script may fail.
         # In that case, it will try formatting again after 5 seconds.
         shell: bash
@@ -205,7 +277,7 @@ jobs:
         if: ${{ always() }}
         run: git diff --name-only --exit-code
   build:
-    needs: if-run-ci
+    needs: pre-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -213,23 +285,26 @@ jobs:
           - 16.x
     steps:
       - uses: actions/checkout@v3
+      - name: Download installed dependencies
+        uses: actions/download-artifact@v3
+        with:
+          name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Restore installed dependencies and build results
+        run: |
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
-      - name: Install Dependencies
-        run: pnpm install
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
         run: |
@@ -300,7 +375,7 @@ jobs:
             echo '::notice::No uncommitted changes by build'
           fi
   unit-test:
-    needs: if-run-ci
+    needs: pre-build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -328,6 +403,25 @@ jobs:
           - 18.x
     steps:
       - uses: actions/checkout@v3
+      - name: Download installed dependencies
+        uses: actions/download-artifact@v3
+        with:
+          name: node_modules@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: ~/pre-build-artifact
+      - name: Restore installed dependencies and build results
+        id: restore-deps-and-build
+        shell: bash
+        run: |
+          if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz ]; then
+            tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+            echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
+          fi
+          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
       - name: Git Setting
         run: |
           git config --global user.name  CI
@@ -345,11 +439,12 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
+        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
       - name: Setup pnpm
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run build-only-packages
+        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
