@@ -50,7 +50,17 @@ jobs:
           elif [ "${core_remaining}" -lt 10 ]; then
             echo "::warning::The rate limit is approaching: core.remaining=${core_remaining}"
           fi
-  lint:
+  pre-build:
+    # It is not necessary to build every time within each job.
+    # Also, the build result is not dependent on either OS type or Node.js version.
+    # Therefore, "build-only-packages" are performed in advance and the build results are shared with subsequent jobs.
+    # This provides the following advantages:
+    #
+    # + Reduces build time
+    #
+    # + Build process does not need to support older Node.js
+    #   Note: Some unit tests build while the test is running.
+    #         In such cases, the build process must support older Node.js.
     needs: if-run-ci
     runs-on: ubuntu-latest
     strategy:
@@ -59,6 +69,62 @@ jobs:
           - 16.x
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: ./actions/setup-pnpm
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Build packages
+        shell: bash
+        run: |
+          echo '::group::' '$' pnpm run build-only-packages
+          pnpm run build-only-packages
+          echo '::endgroup::'
+
+          echo '::group::' Archive build results
+          git ls-files --modified --others --exclude='node_modules/' -z | xargs -0 tar -cvjf ./build_results.tar.bz2
+          echo '::endgroup::'
+        # Note: Convert the build result into a single archive file. This is for the following reasons:
+        #       + Maintaining file permissions and case sensitive files
+        #         see https://github.com/actions/upload-artifact/blob/v3.1.2/README.md#maintaining-file-permissions-and-case-sensitive-files
+        #       + Reduce the number of API calls
+        #         see https://github.com/actions/upload-artifact/blob/v3.1.2/README.md#too-many-uploads-resulting-in-429-responses
+      - name: Upload build results
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+          path: build_results.tar.bz2
+          retention-days:
+            1
+            # The resulting artifact of the build is intended to be used in the next job.
+            # There is no need to store them for long periods of time.
+  lint:
+    needs: pre-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 16.x
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+      - name: Restore build results
+        run: tar -xvjf ./build_results.tar.bz2
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -85,10 +151,9 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run build-only-packages
       - run: pnpm run lint
   format:
-    needs: if-run-ci
+    needs: pre-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -96,6 +161,12 @@ jobs:
           - 16.x
     steps:
       - uses: actions/checkout@v3
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+      - name: Restore build results
+        run: tar -xvjf ./build_results.tar.bz2
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -192,7 +263,6 @@ jobs:
             }
           }
           echo '::endgroup::'
-      - run: pnpm run build-only-packages
       - # In rare cases, the "fmt" script may fail.
         # In that case, it will try formatting again after 5 seconds.
         shell: bash
@@ -300,7 +370,7 @@ jobs:
             echo '::notice::No uncommitted changes by build'
           fi
   unit-test:
-    needs: if-run-ci
+    needs: pre-build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -328,6 +398,12 @@ jobs:
           - 18.x
     steps:
       - uses: actions/checkout@v3
+      - name: Download build results
+        uses: actions/download-artifact@v3
+        with:
+          name: build-results@${{ github.sha }}
+      - name: Restore build results
+        run: tar -xvjf ./build_results.tar.bz2
       - name: Git Setting
         run: |
           git config --global user.name  CI
@@ -349,7 +425,6 @@ jobs:
         uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
-      - run: pnpm run build-only-packages
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
