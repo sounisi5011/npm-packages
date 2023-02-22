@@ -96,7 +96,7 @@ jobs:
           echo '::endgroup::'
 
           echo '::group::' Archive build results
-          git ls-files --modified --others --exclude='node_modules/' -z | xargs -0 tar -cvjf ./build_results.tar.bz2
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.gz --gzip --verbose
           echo '::endgroup::'
         # Note: Convert the node_modules directory and the build result into a single archive file. This is for the following reasons:
         #       + Maintaining file permissions and case sensitive files
@@ -113,7 +113,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-results@${{ github.sha }}
-          path: build_results.tar.bz2
+          path: build_results.tar.gz
           retention-days:
             1
             # The resulting artifact of the build is intended to be used in the next job.
@@ -138,7 +138,7 @@ jobs:
       - name: Restore installed dependencies and build results
         run: |
           tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -xvjf ./build_results.tar.bz2
+          tar -x --file ./build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -175,7 +175,7 @@ jobs:
       - name: Restore installed dependencies and build results
         run: |
           tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -xvjf ./build_results.tar.bz2
+          tar -x --file ./build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -292,7 +292,7 @@ jobs:
       - name: Restore installed dependencies and build results
         run: |
           tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -xvjf ./build_results.tar.bz2
+          tar -x --file ./build_results.tar.gz --gzip
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -413,7 +413,7 @@ jobs:
             tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
             echo 'node_modules=1' >> $GITHUB_OUTPUT
           fi
-          tar -xvjf ./build_results.tar.bz2
+          tar -x --file ./build_results.tar.gz --gzip
       - name: Git Setting
         run: |
           git config --global user.name  CI
