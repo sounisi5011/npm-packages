@@ -14,10 +14,11 @@ jobs:
         run: |
           delimiter="ghadelimiter_$(openssl rand -hex 32)"
           readonly delimiter
-
-          echo "files<<${delimiter}" >> "${GITHUB_OUTPUT}"
-          git ls-files ':(glob)**/LICENSE' >> "${GITHUB_OUTPUT}"
-          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "files<<${delimiter}"
+            git ls-files ':(glob)**/LICENSE'
+            echo "${delimiter}"
+          } >> "${GITHUB_OUTPUT}"
         # see https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
         # see https://gotohayato.com/content/558/
       - uses: FantasticFiasco/action-update-license-year@v2
