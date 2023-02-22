@@ -411,7 +411,7 @@ jobs:
         run: |
           if [ -e ./node_modules--${{ runner.os }}.tar.gz ]; then
             tar -x --file ./node_modules--${{ runner.os }}.tar.gz --gzip
-            echo 'node_modules=1' >> $GITHUB_OUTPUT
+            echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
           fi
           tar -x --file ./build_results.tar.gz --gzip
       - name: Git Setting
