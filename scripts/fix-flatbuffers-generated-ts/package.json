@@ -7,7 +7,7 @@
     "fix-flatbuffers-generated-ts": "index.mjs"
   },
   "scripts": {
-    "postinstall": "pnpm exec ultra --recursive --filter '@sounisi5011/cli-utils-top-level-await' build"
+    "postinstall": "../fixed-turbo-run.sh build --output-logs=errors-only"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0"

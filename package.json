@@ -13,11 +13,11 @@
   "scripts": {
     "build:dprint-config": "globby-exec node ./scripts/sync-eslintignore-to-dprint-excludes.mjs ./.eslintignore '{{./{dprint,.dprint}{,-*}.json}}' && globby-exec prettier --write '{{./{dprint,.dprint}{,-*}.json}}'",
     "build:package-list": "node ./scripts/update-package-list/index.mjs ./README.md",
-    "build:submodule": "ultra --recursive build",
+    "build:submodule": "turbo run build",
     "build-all": "npm-run-all --parallel 'build:!(submodule)' --sequential build:submodule",
-    "build-flatbuffers": "pnpm recursive run build-flatbuffers --filter '*'",
-    "build-only-packages": "ultra --recursive --filter 'packages/**' build",
-    "build-protobuf": "pnpm recursive run build-protobuf --filter '*'",
+    "build-flatbuffers": "turbo run build-flatbuffers",
+    "build-only-packages": "turbo run build --filter './packages/**'",
+    "build-protobuf": "turbo run build-protobuf",
     "fmt": "run-p 'fmt:!(ts|js)'",
     "fmt:config": "prettier --write .",
     "fmt:js": "run-s fmt:js:eslint fmt:js:dprint fmt:js:eslint",
@@ -73,6 +73,7 @@
     "prettier": "2.8.2",
     "prettier-package-json": "2.8.0",
     "sort-package-json": "2.1.0",
+    "turbo": "1.8.2",
     "typescript": "4.9.4",
     "ultra-runner": "3.10.5"
   },

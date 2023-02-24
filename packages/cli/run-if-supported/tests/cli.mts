@@ -7,7 +7,7 @@ import { getFixturesPath, PACKAGE_ROOT } from './helpers/index.cjs';
 
 describe('cli', () => {
     beforeAll(async () => {
-        await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
+        await execa('pnpm', ['run', 'build-with-cache', '--', '--output-logs=errors-only'], { cwd: PACKAGE_ROOT });
     }, 60 * 1000);
 
     const CLI_PATH = path.resolve(PACKAGE_ROOT, typeof pkg.bin === 'string' ? pkg.bin : pkg.bin['run-if-supported']);

@@ -34,7 +34,7 @@ const createPidfilePath = (() => {
 
 describe('isProcessExist()', () => {
     beforeAll(async () => {
-        await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
+        await execa('pnpm', ['run', 'build-with-cache', '--', '--output-logs=errors-only'], { cwd: PACKAGE_ROOT });
         await execa('git', ['clean', '-fX', FIXTURES_DIR]);
     }, 60 * 1000);
 

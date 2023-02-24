@@ -6,7 +6,7 @@ const PACKAGE_ROOT = path.resolve(__dirname, '..');
 
 describe('awaitMainFn()', () => {
     beforeAll(async () => {
-        await execa('pnpm', ['exec', 'ultra', 'build'], { cwd: PACKAGE_ROOT });
+        await execa('pnpm', ['run', 'build-with-cache', '--', '--output-logs=errors-only'], { cwd: PACKAGE_ROOT });
     }, 60 * 1000);
 
     const execaOptions: execa.Options = { cwd: PACKAGE_ROOT, reject: false };

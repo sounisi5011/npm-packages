@@ -1,4 +1,5 @@
 {
+  "name": "example-code--stream-transform-from",
   "private": true,
   "dependencies": {
     "@sounisi5011/stream-transform-from": "link:.."
