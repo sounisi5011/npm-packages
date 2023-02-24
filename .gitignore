@@ -111,3 +111,6 @@ dist
 
 # rollup.js cache
 .rollup.cache
+
+# Turborepo logs
+.turbo
