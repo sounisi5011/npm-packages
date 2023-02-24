@@ -27,8 +27,6 @@
         "**/protocol-buffers/*_pb.js",
         "**/protocol-buffers/*_pb.d.ts"
       ]
-    },
-    "lint:tsc": {},
-    "test": {}
+    }
   }
 }
