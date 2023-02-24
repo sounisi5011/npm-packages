@@ -16,7 +16,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/index.ts --minify --transpile-only --out ./dist/",
-    "build-with-cache": "turbo run build",
+    "build-with-cache": "../../scripts/fixed-turbo-run.sh build",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",

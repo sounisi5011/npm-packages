@@ -38,7 +38,7 @@
   ],
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
-    "build-with-cache": "turbo run build",
+    "build-with-cache": "../../../scripts/fixed-turbo-run.sh build",
     "lint:tsc": "tsc --noEmit",
     "test": "run-s build-with-cache test:tsd",
     "test:tsd": "tsd"

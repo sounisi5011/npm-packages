@@ -73,7 +73,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build-with-cache": "turbo run build",
+    "build-with-cache": "../../scripts/fixed-turbo-run.sh build",
     "lint:tsc": "run-p lint:tsc:*",
     "lint:tsc:src": "tsc --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",

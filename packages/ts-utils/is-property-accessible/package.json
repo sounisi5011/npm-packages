@@ -62,7 +62,7 @@
   ],
   "scripts": {
     "build": "run-p build:*",
-    "build-with-cache": "turbo run build",
+    "build-with-cache": "../../../scripts/fixed-turbo-run.sh build",
     "build:cjs": "rollup --config",
     "build:mjs": "tsc -p ./src/",
     "lint:tsc": "run-p lint:tsc:*",

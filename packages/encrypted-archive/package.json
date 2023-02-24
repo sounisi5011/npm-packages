@@ -76,7 +76,7 @@
     "build-protobuf:test": "protoc --version && concurrently 'pnpm:build-protobuf~test:*'",
     "build-protobuf~test:header": "       glob-exec --foreach 'tests/unit/fixtures/header-message.*.prototxt'        -- 'protoc --encode=Header       --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
     "build-protobuf~test:simple-header": "glob-exec --foreach 'tests/unit/fixtures/simple-header-message.*.prototxt' -- 'protoc --encode=SimpleHeader --proto_path ./src/protocol-buffers/ ./src/protocol-buffers/header.proto < {{file}} > {{file.path.replace(/\\.prototxt$/, `.bin`)}}'",
-    "build-with-cache": "turbo run build",
+    "build-with-cache": "../../scripts/fixed-turbo-run.sh build",
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "concurrently 'pnpm:build~docs:*'",
     "build:tsc": "tsc -p ./src/",

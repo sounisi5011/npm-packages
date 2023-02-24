@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "turbo run build --output-logs=errors-only"
+    "postinstall": "../fixed-turbo-run.sh build --output-logs=errors-only"
   },
   "dependencies": {
     "@sounisi5011/cli-utils-top-level-await": "workspace:^1.0.0",
