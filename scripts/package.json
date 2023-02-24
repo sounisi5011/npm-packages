@@ -1,4 +1,5 @@
 {
+  "name": "@sounisi5011/scripts--_",
   "private": true,
   "scripts": {
     "postinstall": "pnpm exec ultra --recursive --filter '@sounisi5011/cli-utils-top-level-await' build"
