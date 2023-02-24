@@ -92,11 +92,11 @@ jobs:
         shell: bash
         run: |
           echo '::group::' Archive installed dependencies
-          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob)**/node_modules/' | xargs -0 tar -c --file ./node_modules--${{ runner.os }}.tar.gz --gzip
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.zst' ':(glob)**/node_modules/' | xargs -0 tar -c --file ./node_modules--${{ runner.os }}.tar.zst --zstd
           echo '::endgroup::'
 
           echo '::group::' Archive build results
-          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.gz' ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.gz --gzip --verbose
+          git ls-files --modified --others --directory -z -- ':(glob,exclude)*.tar.zst' ':(glob,exclude)**/node_modules/' | xargs -0 tar -c --file ./build_results.tar.zst --zstd --verbose
           echo '::endgroup::'
         # Note: Convert the node_modules directory and the build result into a single archive file. This is for the following reasons:
         #       + Maintaining file permissions and case sensitive files
@@ -107,13 +107,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: node_modules@${{ github.sha }}
-          path: node_modules--${{ runner.os }}.tar.gz
+          path: node_modules--${{ runner.os }}.tar.zst
           retention-days: 1
       - name: Upload build results
         uses: actions/upload-artifact@v3
         with:
           name: build-results@${{ github.sha }}
-          path: build_results.tar.gz
+          path: build_results.tar.zst
           retention-days:
             1
             # The resulting artifact of the build is intended to be used in the next job.
@@ -139,8 +139,8 @@ jobs:
           path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
+          tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -178,8 +178,8 @@ jobs:
           path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
+          tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -297,8 +297,8 @@ jobs:
           path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
         run: |
-          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
-          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
+          tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -417,11 +417,11 @@ jobs:
         id: restore-deps-and-build
         shell: bash
         run: |
-          if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz ]; then
-            tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.gz --gzip
+          if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst ]; then
+            tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
             echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
           fi
-          tar -x --file ~/pre-build-artifact/build_results.tar.gz --gzip
+          tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Git Setting
         run: |
           git config --global user.name  CI
