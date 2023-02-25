@@ -2,3 +2,12 @@
 # see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/docs/overrides.md
 tsconfig.*.json linguist-language=JSON-with-Comments
 turbo.json linguist-language=JSON-with-Comments
+# The dprint configuration file is parsed as jsonc.
+# see https://github.com/dprint/dprint/blob/0.34.1/crates/dprint/src/configuration/deserialize_config.rs#L14
+# see https://github.com/dprint/jsonc-parser
+# Not JSON5.
+# dprint implementation can use features not available in jsonc (e.g., trailing commas),
+# but not some JSON5 features (e.g., multi-line strings and `Infinity` values).
+dprint.json linguist-language=JSON-with-Comments
+.dprint.json linguist-language=JSON-with-Comments
+.dprint[.-]*.json linguist-language=JSON-with-Comments
