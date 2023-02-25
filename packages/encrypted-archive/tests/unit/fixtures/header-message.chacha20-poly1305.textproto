@@ -1,3 +1,6 @@
+# proto-file: ../../../src/protocol-buffers/header.proto
+# proto-message: Header
+
 crypto_algorithm: ChaCha20_Poly1305
 crypto_nonce: "\x03\x04"
 crypto_auth_tag: "\x05\x06\x07\x08"
