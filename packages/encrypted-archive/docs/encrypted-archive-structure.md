@@ -12,7 +12,7 @@ By being divided into multiple chunks, encryption and decryption can be performe
 
 The "first chunk" is at the beginning of the data. This chunk contains the following 5 fields.
 
-![](./first-chunk.svg)
+![](./first-chunk.bytefield.svg)
 
 1. Content Identifier
 
@@ -48,7 +48,7 @@ The "first chunk" is at the beginning of the data. This chunk contains the follo
 
 The "subsequent chunk" exists after the "first chunk". This chunk contains the following 4 fields.
 
-![](./subsequent-chunk.svg)
+![](./subsequent-chunk.bytefield.svg)
 
 1. SimpleHeader Length
 
