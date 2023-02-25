@@ -1,5 +1,6 @@
 # Change syntax highlighting on GitHub
 # see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/docs/overrides.md
+.ultraignore linguist-language=Ignore-List
 tsconfig.*.json linguist-language=JSON-with-Comments
 turbo.json linguist-language=JSON-with-Comments
 /.vscode/**/*.json linguist-language=JSON-with-Comments
