@@ -52,7 +52,7 @@ describe('encryptStream()', () => {
 });
 
 describe('decryptStream()', () => {
-    const cleartext = Buffer.from('123456789');
+    const plaintext = Buffer.from('123456789');
     const password = 'HK6715263GHA';
 
     describe('can decrypt', () => {
@@ -60,36 +60,36 @@ describe('decryptStream()', () => {
             [
                 'full data',
                 async () => {
-                    const encryptedData = await encrypt(cleartext, password);
+                    const encryptedData = await encrypt(plaintext, password);
                     return createStreamFromBuffer(encryptedData);
                 },
             ],
             [
                 'full data [torn]',
                 async () => {
-                    const encryptedData = await encrypt(cleartext, password);
+                    const encryptedData = await encrypt(plaintext, password);
                     return createStreamFromBuffer(encryptedData, 2);
                 },
             ],
             [
                 'single chunk',
-                createStreamFromBuffer(cleartext)
+                createStreamFromBuffer(plaintext)
                     .pipe(encryptStream(password)),
             ],
             [
                 'single chunk [torn]',
-                createStreamFromBuffer(cleartext)
+                createStreamFromBuffer(plaintext)
                     .pipe(encryptStream(password))
                     .pipe(createChunkerStream({ chunkSize: 2 })),
             ],
             [
                 'multi chunk',
-                createStreamFromBuffer(cleartext, 2)
+                createStreamFromBuffer(plaintext, 2)
                     .pipe(encryptStream(password)),
             ],
             [
                 'multi chunk [torn]',
-                createStreamFromBuffer(cleartext, 2)
+                createStreamFromBuffer(plaintext, 2)
                     .pipe(encryptStream(password))
                     .pipe(createChunkerStream({ chunkSize: 2 })),
             ],
@@ -106,7 +106,7 @@ describe('decryptStream()', () => {
             }
 
             const decryptedData = Buffer.concat(chunkList);
-            expect(decryptedData).toBytesEqual(cleartext);
+            expect(decryptedData).toBytesEqual(plaintext);
         });
     });
     it('decryptor should throw an error even if not piped to WritableStream', async () => {

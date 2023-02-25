@@ -18,7 +18,7 @@ expectType<
 
 expectType<
     (
-        cleartext: InputDataType,
+        plaintext: InputDataType,
         password: InputDataType,
         options?: EncryptOptions,
     ) => Promise<Buffer>
