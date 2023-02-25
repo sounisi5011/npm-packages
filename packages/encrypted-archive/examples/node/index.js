@@ -3,10 +3,10 @@ const util = require('util');
 (async () => {
   const { encrypt, decrypt } = require('@sounisi5011/encrypted-archive');
 
-  const cleartext = 'Hello World!';
+  const plaintext = 'Hello World!';
   const password = '123456';
 
-  const encryptedData = await encrypt(cleartext, password, {
+  const encryptedData = await encrypt(plaintext, password, {
     // These options are optional, but it is recommended that you specify the appropriate options for your application.
     algorithm: 'chacha20-poly1305',
     keyDerivation: {

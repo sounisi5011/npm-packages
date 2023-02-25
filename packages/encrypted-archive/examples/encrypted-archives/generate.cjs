@@ -23,13 +23,13 @@ const { version: encryptedArchiveVersion } = require('@sounisi5011/encrypted-arc
       if (error.code !== 'EEXIST') throw error;
     });
 
-  const cleartextFilepath = path.resolve(__dirname, 'cleartext.txt');
-  const cleartext = await fsAsync.readFile(cleartextFilepath);
-  const cleartextChunks = [...(function*() {
+  const plaintextFilepath = path.resolve(__dirname, 'plaintext.txt');
+  const plaintext = await fsAsync.readFile(plaintextFilepath);
+  const plaintextChunks = [...(function*() {
     const chunkSize = 173;
     let pos = 0;
-    while (pos < cleartext.length) {
-      yield cleartext.subarray(pos, pos += chunkSize);
+    while (pos < plaintext.length) {
+      yield plaintext.subarray(pos, pos += chunkSize);
     }
   })()];
   const password = await fsAsync.readFile(path.resolve(__dirname, 'password.txt'));
@@ -41,8 +41,8 @@ const { version: encryptedArchiveVersion } = require('@sounisi5011/encrypted-arc
   /** @type {Array<CompressOptions['algorithm'] | undefined>} */
   const compressAlgorithmList = [undefined, 'gzip', 'brotli'];
   const inputChunkTypeRecord = {
-    single: [cleartext],
-    multi: cleartextChunks,
+    single: [plaintext],
+    multi: plaintextChunks,
   };
 
   for (const encryptAlgorithm of encryptAlgorithmList) {
@@ -55,7 +55,7 @@ const { version: encryptedArchiveVersion } = require('@sounisi5011/encrypted-arc
           },
           compress: compressAlgorithm,
         });
-        for (const [inputChunkType, cleartextChunks] of Object.entries(inputChunkTypeRecord)) {
+        for (const [inputChunkType, plaintextChunks] of Object.entries(inputChunkTypeRecord)) {
           const outputFilename = [
             `algorithm=${encryptAlgorithm || 'default'}`,
             `keyDerivation=${keyDerivationAlgorithm || 'default'}`,
@@ -65,7 +65,7 @@ const { version: encryptedArchiveVersion } = require('@sounisi5011/encrypted-arc
           ].join('.');
           await fsAsync.writeFile(
             path.resolve(outputDirpath, outputFilename),
-            encryptor(cleartextChunks),
+            encryptor(plaintextChunks),
             { mode: 0o444, flag: 'wx' },
           );
         }

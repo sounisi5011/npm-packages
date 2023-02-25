@@ -46,12 +46,12 @@ export {
 };
 
 export async function encrypt(
-    cleartext: InputDataType,
+    plaintext: InputDataType,
     password: InputDataType,
     options: EncryptOptions = {},
 ): Promise<Buffer> {
     const encryptor = createEncryptorIterator<NodejsCompressOptions>(builtin, password, options);
-    const encryptedDataIterable = encryptor([cleartext]);
+    const encryptedDataIterable = encryptor([plaintext]);
     return await asyncIterable2Buffer(encryptedDataIterable);
 }
 

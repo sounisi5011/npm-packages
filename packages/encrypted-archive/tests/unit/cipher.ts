@@ -25,14 +25,14 @@ describe.each(cryptoAlgorithmNameList)(
 
         const key = randomBytes(algorithm.keyLength);
         const nonce = randomBytes(algorithm.nonceLength);
-        const cleartext = randomBytes(42);
+        const plaintext = randomBytes(42);
 
         it('encrypt()', async () => {
-            await expect(algorithm.encrypt({ key, nonce, cleartext })).resolves.not.toThrow();
+            await expect(algorithm.encrypt({ key, nonce, plaintext })).resolves.not.toThrow();
         });
 
         it('decrypt()', async () => {
-            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
+            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, plaintext });
 
             await expect((async () => {
                 const result = algorithm.decrypt({
@@ -46,10 +46,10 @@ describe.each(cryptoAlgorithmNameList)(
             })()).resolves.not.toThrow();
         });
 
-        it('match cleartext and ciphertext', async () => {
-            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
+        it('match plaintext and ciphertext', async () => {
+            const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, plaintext });
 
-            const cleartext2 = await iterable2buffer(asyncIter2AsyncIterable(
+            const plaintext2 = await iterable2buffer(asyncIter2AsyncIterable(
                 algorithm.decrypt({
                     key,
                     nonce,
@@ -58,13 +58,13 @@ describe.each(cryptoAlgorithmNameList)(
                 }),
             ));
 
-            expect(cleartext2).toBytesEqual(cleartext);
-            expect(cleartext).toBytesEqual(cleartext2);
+            expect(plaintext2).toBytesEqual(plaintext);
+            expect(plaintext).toBytesEqual(plaintext2);
         });
 
         describe('decryption fail', () => {
             it('different key', async () => {
-                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
+                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, plaintext });
                 const key2 = randomBytes(algorithm.keyLength);
 
                 await expect((async () => {
@@ -79,7 +79,7 @@ describe.each(cryptoAlgorithmNameList)(
                 })()).rejects.toThrow(/^Unsupported state or unable to authenticate data$/);
             });
             it('different nonce', async () => {
-                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, cleartext });
+                const { ciphertext, authTag } = await algorithm.encrypt({ key, nonce, plaintext });
                 const nonce2 = randomBytes(algorithm.nonceLength);
 
                 await expect((async () => {

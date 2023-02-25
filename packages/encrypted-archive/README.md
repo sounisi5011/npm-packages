@@ -89,10 +89,10 @@ If you have a short string or a small file of data to encrypt, you can use a sim
 ```js
 const { encrypt, decrypt } = require('@sounisi5011/encrypted-archive');
 
-const cleartext = 'Hello World!';
+const plaintext = 'Hello World!';
 const password = '1234';
 
-encrypt(cleartext, password, {
+encrypt(plaintext, password, {
     // These options are optional, but it is recommended that you specify the appropriate options for your application.
     algorithm: 'chacha20-poly1305',
     keyDerivation: {
@@ -248,11 +248,11 @@ const decryptor = decryptIterator(password);
 [`EncryptOptions`]: #type-encrypt-options
 [`IteratorConverter` function]: #type-iterator-converter
 
-### `encrypt(cleartext, password, options?)`
+### `encrypt(plaintext, password, options?)`
 
 Returns a Promise giving a [`Buffer` object].
 
-* `cleartext`
+* `plaintext`
 
     Type: `string | Buffer | TypedArray | DataView | ArrayBuffer | SharedArrayBuffer`
 

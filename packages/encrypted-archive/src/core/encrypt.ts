@@ -104,7 +104,7 @@ function createHeaderData(
     });
 }
 
-async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext: Uint8Array, {
+async function* encryptChunk(builtin: BuiltinInspectRecord, compressedPlaintext: Uint8Array, {
     algorithm,
     keyResult,
     compressAlgorithmName,
@@ -121,12 +121,12 @@ async function* encryptChunk(builtin: BuiltinInspectRecord, compressedCleartext:
     const nonce = nonceState.create(algorithm.nonceLength);
 
     /**
-     * Encrypt cleartext
+     * Encrypt plaintext
      */
     const { ciphertext, authTag } = await algorithm.encrypt({
         key: keyResult.key,
         nonce,
-        cleartext: compressedCleartext,
+        plaintext: compressedPlaintext,
     });
 
     /**
@@ -178,13 +178,13 @@ export function createEncryptorIterator<TCompressOptions extends BaseCompressOpt
         const bufferSourceIterable = convertIterableValue(source, convertChunk(builtin));
 
         /**
-         * Compress cleartext
+         * Compress plaintext
          */
         const compressedSourceIterable = compressIterable(bufferSourceIterable);
 
         let prevState: EncryptorState | undefined;
-        for await (const compressedCleartext of compressedSourceIterable) {
-            prevState = yield* encryptChunk(builtin, compressedCleartext, {
+        for await (const compressedPlaintext of compressedSourceIterable) {
+            prevState = yield* encryptChunk(builtin, compressedPlaintext, {
                 algorithm,
                 keyResult,
                 compressAlgorithmName,

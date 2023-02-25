@@ -14,9 +14,9 @@ export const ase256gcm: CryptoAlgorithmData = {
      */
     nonceLength: 96 / 8,
 
-    async encrypt({ key, nonce, cleartext }) {
+    async encrypt({ key, nonce, plaintext }) {
         const cipher = createCipheriv(ALGORITHM_NAME, key, nonce);
-        const ciphertextPart1 = cipher.update(cleartext);
+        const ciphertextPart1 = cipher.update(plaintext);
         const ciphertextPart2 = cipher.final();
 
         return {
