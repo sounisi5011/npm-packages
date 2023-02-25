@@ -7,13 +7,13 @@
         // `build:copy-js-and-dts` and `build:tsc`
         "src/**",
         // `build:docs`
-        "docs/**/*.edn"
+        "docs/**/*.bytefield-svg.edn"
       ],
       "outputs": [
         // `build:copy-js-and-dts` and `build:tsc`
         "dist/**",
         // `build:docs`
-        "docs/**/*.svg"
+        "docs/**/*.bytefield-svg.svg"
       ]
     },
     "build-protobuf": {

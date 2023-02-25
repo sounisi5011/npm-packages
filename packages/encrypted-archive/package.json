@@ -80,7 +80,7 @@
     "build:copy-js-and-dts": "cpy '**/*.{js,d.ts}' ../dist/ --cwd=./src/ --parents",
     "build:docs": "concurrently 'pnpm:build~docs:*'",
     "build:tsc": "tsc -p ./src/",
-    "build~docs:bytefield": "glob-exec --foreach 'docs/**/*.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
+    "build~docs:bytefield": "glob-exec --foreach 'docs/**/*.bytefield-svg.edn' -- 'bytefield-svg --source {{file}} --output {{file.path.replace(/\\.\\w+$/, `.svg`)}}'",
     "lint:tsc": "pnpm run lint:tsc:src && pnpm run lint:tsc:test && pnpm run lint:tsc:test-d",
     "lint:tsc:src": "tsc -p ./src/ --noEmit",
     "lint:tsc:test": "tsc -p ./tests/ --noEmit",
