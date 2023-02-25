@@ -20,7 +20,7 @@
       "inputs": [
         "package.json", // Depends on the `config.protocVersion` field that defines the version of the protoc command
         "src/protocol-buffers/*.proto",
-        "tests/unit/fixtures/*.prototxt"
+        "tests/unit/fixtures/*.textproto"
       ],
       "outputs": [
         "src/protocol-buffers/*_pb.js",
