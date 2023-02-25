@@ -1,8 +1,7 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "files.associations": {
-    ".prettierignore": "ignore",
-    ".ultraignore": "ignore",
+    ".{prettier,ultra}ignore": "ignore",
     "turbo.json": "jsonc",
     /**
      * The dprint configuration file is parsed as jsonc.
