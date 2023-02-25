@@ -1,2 +1,0 @@
-crypto_auth_tag: "\x00\x01\x00"
-crypto_nonce_counter_add_or_reset: 0xFFFFFFFFFFFFFFFF

@@ -54,11 +54,11 @@ module.exports = async filenames => {
   if (
     filenames
       .filter(dirnameFilter([__dirname, 'tests/unit/fixtures']))
-      .some(endsWithFilter('.prototxt', '.bin'))
+      .some(endsWithFilter('.textproto', '.bin'))
   ) {
     parallelScriptsList.push('build-protobuf:test');
     updatePathspecList.push(
-      ...['tests/unit/fixtures/*.prototxt', 'tests/unit/fixtures/*.bin'].map(p),
+      ...['tests/unit/fixtures/*.textproto', 'tests/unit/fixtures/*.bin'].map(p),
     );
   }
 

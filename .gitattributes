@@ -20,11 +20,3 @@ tsconfig[.-]*.json linguist-language=JSON-with-Comments
 dprint.json linguist-language=JSON-with-Comments
 .dprint.json linguist-language=JSON-with-Comments
 .dprint[.-]*.json linguist-language=JSON-with-Comments
-
-# Note: Rather than using the file extension ".prototxt",
-#       it is better to use other extensions that are default supported by GitHub.
-#       E.g., ".textproto", ".pbt", ".pbtxt"
-#       see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/lib/linguist/languages.yml#L5276-L5287
-#       ".textproto" is recommended. because this is the canonical file extension.
-#       see https://protobuf.dev/reference/protobuf/textformat-spec/#text-format-files
-*.prototxt linguist-language=Protocol-Buffer-Text-Format

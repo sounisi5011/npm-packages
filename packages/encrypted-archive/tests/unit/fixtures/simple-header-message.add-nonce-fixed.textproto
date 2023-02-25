@@ -1,3 +1,6 @@
+# proto-file: ../../../src/protocol-buffers/header.proto
+# proto-message: SimpleHeader
+
 crypto_auth_tag: "\x01\x03\x02"
 crypto_nonce_counter_add_or_reset: 0 # It means resetting to 0
 crypto_nonce_fixed_add: 1
