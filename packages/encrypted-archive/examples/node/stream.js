@@ -11,12 +11,12 @@ const streamPipelineAsync = util.promisify(stream.pipeline);
 const password = '123456';
 
 (async () => {
-  const cleartextFilepath = path.resolve(__dirname, 'cleartext.txt');
-  const encryptedDataFilepath = `${cleartextFilepath}.enc`;
+  const plaintextFilepath = path.resolve(__dirname, 'plaintext.txt');
+  const encryptedDataFilepath = `${plaintextFilepath}.enc`;
   const decryptedDataFilepath = `${encryptedDataFilepath}.dec.txt`;
 
   await streamPipelineAsync(
-    fs.createReadStream(cleartextFilepath, {
+    fs.createReadStream(plaintextFilepath, {
       // If you want to convert every chunk of a specific length,
       // specify the "highWaterMark" option when creating the ReadableStream.
       // see https://nodejs.org/docs/latest-v12.x/api/stream.html#stream_buffering

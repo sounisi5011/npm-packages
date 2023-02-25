@@ -10,7 +10,7 @@ export interface CryptoAlgorithmData {
         arg: {
             key: Uint8Array;
             nonce: Uint8Array;
-            cleartext: Uint8Array;
+            plaintext: Uint8Array;
         },
     ) => Promise<{
         ciphertext: Uint8Array;

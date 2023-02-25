@@ -132,7 +132,7 @@ async function decryptChunk(
     reader: BufferReader,
     prevDecryptorMetadata?: DecryptorMetadata,
 ): Promise<{
-    compressedCleartextIterable: AsyncIterableReturn<Uint8Array, void>;
+    compressedPlaintextIterable: AsyncIterableReturn<Uint8Array, void>;
     decryptorMetadata: DecryptorMetadata;
 }> {
     /**
@@ -154,7 +154,7 @@ async function decryptChunk(
     /**
      * Decrypt ciphertext
      */
-    const compressedCleartextIterable = asyncIter2AsyncIterable(
+    const compressedPlaintextIterable = asyncIter2AsyncIterable(
         decryptorMetadata.algorithm.decrypt({
             key: decryptorMetadata.key,
             nonce: decryptorMetadata.nonce,
@@ -164,7 +164,7 @@ async function decryptChunk(
     );
 
     return {
-        compressedCleartextIterable,
+        compressedPlaintextIterable,
         decryptorMetadata,
     };
 }
@@ -174,29 +174,29 @@ async function decryptAllChunks(
     password: Uint8Array,
     reader: BufferReader,
 ): Promise<{
-    compressedCleartextIterable: AsyncIterable<Uint8Array>;
+    compressedPlaintextIterable: AsyncIterable<Uint8Array>;
     compressAlgorithmName: DecryptorMetadata['compressAlgorithmName'];
 }> {
     const {
-        compressedCleartextIterable: firstChunkCompressedCleartextIterable,
+        compressedPlaintextIterable: firstChunkCompressedPlaintextIterable,
         decryptorMetadata,
     } = await decryptChunk(builtin, password, reader);
-    const compressedCleartextIterable = async function*() {
-        yield* firstChunkCompressedCleartextIterable;
+    const compressedPlaintextIterable = async function*() {
+        yield* firstChunkCompressedPlaintextIterable;
         let prevDecryptorMetadata = decryptorMetadata;
         while (!(await reader.isEnd())) {
-            const { compressedCleartextIterable, decryptorMetadata: newDecryptorMetadata } = await decryptChunk(
+            const { compressedPlaintextIterable, decryptorMetadata: newDecryptorMetadata } = await decryptChunk(
                 builtin,
                 password,
                 reader,
                 prevDecryptorMetadata,
             );
-            yield* compressedCleartextIterable;
+            yield* compressedPlaintextIterable;
             prevDecryptorMetadata = newDecryptorMetadata;
         }
     }();
     return {
-        compressedCleartextIterable,
+        compressedPlaintextIterable,
         compressAlgorithmName: decryptorMetadata.compressAlgorithmName,
     };
 }
@@ -208,15 +208,15 @@ export function createDecryptorIterator(builtin: DecryptBuiltinAPIRecord, passwo
         const reader = new BufferReader(source, convertChunk(builtin));
 
         const {
-            compressedCleartextIterable,
+            compressedPlaintextIterable,
             compressAlgorithmName,
         } = await decryptAllChunks(builtin, passwordBuffer, reader);
 
         /**
-         * Decompress cleartext
+         * Decompress plaintext
          */
         yield* compressAlgorithmName
-            ? decompressIterable(builtin, compressAlgorithmName, compressedCleartextIterable)
-            : compressedCleartextIterable;
+            ? decompressIterable(builtin, compressAlgorithmName, compressedPlaintextIterable)
+            : compressedPlaintextIterable;
     };
 }

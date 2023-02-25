@@ -12,14 +12,14 @@ import { decrypt, decryptIterator, decryptStream, encrypt, encryptIterator, encr
 import { bufferChunk, genInputTypeCases, genIterableTypeCases, iterable2buffer } from './helpers';
 import { runDuplex } from './helpers/stream';
 
-type EncryptCase<TCleartext = InputDataType, TReturn = Promise<Buffer>> = [
+type EncryptCase<TPlaintext = InputDataType, TReturn = Promise<Buffer>> = [
     string,
-    (arg: { cleartext: TCleartext; password: InputDataType; options?: EncryptOptions }) => TReturn,
+    (arg: { plaintext: TPlaintext; password: InputDataType; options?: EncryptOptions }) => TReturn,
 ];
 
 const testValue = (() => {
-    const cleartextBuf = Buffer.from('123456789'.repeat(20));
-    const multiChunkList = bufferChunk(cleartextBuf, 7);
+    const plaintextBuf = Buffer.from('123456789'.repeat(20));
+    const multiChunkList = bufferChunk(plaintextBuf, 7);
     const encryptedData = Object.assign(
         Buffer.from(
             'kaDBAT4IARIMbPZU2oEBAD4AAAAAGhCe4H1n0Pyq9RSnQ9WiavW0ICAqECh1CdqWFCcpvBBpTG9BfaR6BhADGAwgAQQ33rvp',
@@ -28,18 +28,18 @@ const testValue = (() => {
         { password: 'dragon' },
     );
     const encryptedDataChunkIterCases: Array<EncryptCase<Buffer, Promise<Iterable<Buffer>> | AsyncIterable<Buffer>>> = [
-        ['single chunk', async ({ cleartext, password, options }) => [await encrypt(cleartext, password, options)]],
+        ['single chunk', async ({ plaintext, password, options }) => [await encrypt(plaintext, password, options)]],
         [
             'multi chunk',
-            ({ cleartext, password, options }) => encryptIterator(password, options)(bufferChunk(cleartext, 7)),
+            ({ plaintext, password, options }) => encryptIterator(password, options)(bufferChunk(plaintext, 7)),
         ],
     ];
 
     return {
-        cleartext: Object.assign(cleartextBuf, {
+        plaintext: Object.assign(plaintextBuf, {
             multiChunkList,
             chunkCases: [
-                ['single chunk', [cleartextBuf]],
+                ['single chunk', [plaintextBuf]],
                 ['multi chunk', multiChunkList],
             ] as const,
         }),
@@ -80,44 +80,44 @@ const apiCases = (() => {
     const encryptCasesAllowIterInput: Array<EncryptCase<Iterable<InputDataType> | AsyncIterable<InputDataType>>> = [
         [
             'encryptIterator()',
-            async ({ cleartext, password, options }) =>
-                await iterable2buffer(encryptIterator(password, options)(cleartext)),
+            async ({ plaintext, password, options }) =>
+                await iterable2buffer(encryptIterator(password, options)(plaintext)),
         ],
         [
             'encryptStream()',
-            async ({ cleartext, password, options }) =>
-                Buffer.concat(await runDuplex(cleartext, encryptStream(password, options))),
+            async ({ plaintext, password, options }) =>
+                Buffer.concat(await runDuplex(plaintext, encryptStream(password, options))),
         ],
     ];
     const encryptCasesOnlyRawInput: EncryptCase[] = [
         [
             'encrypt()',
-            async ({ cleartext, password, options }) => await encrypt(cleartext, password, options),
+            async ({ plaintext, password, options }) => await encrypt(plaintext, password, options),
         ],
     ];
     const encryptCases = [
         ...encryptCasesOnlyRawInput,
         ...encryptCasesAllowIterInput
-            .map<EncryptCase>(([label, fn]) => [label, async arg => await fn({ ...arg, cleartext: [arg.cleartext] })]),
+            .map<EncryptCase>(([label, fn]) => [label, async arg => await fn({ ...arg, plaintext: [arg.plaintext] })]),
     ];
 
-    type EncryptCaseWithoutCleartextType = [
+    type EncryptCaseWithoutPlaintextType = [
         string,
         (arg: { password: InputDataType; options?: EncryptOptions }) => Promise<Buffer>,
-        { expectedCleartext: Buffer },
+        { expectedPlaintext: Buffer },
     ];
-    const expectedCleartext = testValue.cleartext;
-    const encryptCasesWithCleartextChunk = [
-        ...encryptCasesOnlyRawInput.map<EncryptCaseWithoutCleartextType>(([label, fn]) => [
+    const expectedPlaintext = testValue.plaintext;
+    const encryptCasesWithPlaintextChunk = [
+        ...encryptCasesOnlyRawInput.map<EncryptCaseWithoutPlaintextType>(([label, fn]) => [
             label,
-            async arg => await fn({ ...arg, cleartext: expectedCleartext }),
-            { expectedCleartext },
+            async arg => await fn({ ...arg, plaintext: expectedPlaintext }),
+            { expectedPlaintext },
         ]),
-        ...expectedCleartext.chunkCases.flatMap(([cleartextLabel, cleartextChunkList]) =>
-            encryptCasesAllowIterInput.map<EncryptCaseWithoutCleartextType>(([apiLabel, fn]) => [
-                `${apiLabel} [input: ${cleartextLabel}]`,
-                async arg => await fn({ ...arg, cleartext: cleartextChunkList }),
-                { expectedCleartext },
+        ...expectedPlaintext.chunkCases.flatMap(([plaintextLabel, plaintextChunkList]) =>
+            encryptCasesAllowIterInput.map<EncryptCaseWithoutPlaintextType>(([apiLabel, fn]) => [
+                `${apiLabel} [input: ${plaintextLabel}]`,
+                async arg => await fn({ ...arg, plaintext: plaintextChunkList }),
+                { expectedPlaintext },
             ])
         ),
     ];
@@ -150,7 +150,7 @@ const apiCases = (() => {
 
     return {
         encrypt: Object.assign(encryptCases, {
-            withCleartextChunk: encryptCasesWithCleartextChunk,
+            withPlaintextChunk: encryptCasesWithPlaintextChunk,
         }),
         decrypt: Object.assign(decryptCases, {
             allowIterInput: decryptCasesAllowIterInput,
@@ -161,39 +161,39 @@ const apiCases = (() => {
 describe('input should allow the types described in documentation', () => {
     type Input = string | Buffer | NodeJS.TypedArray | DataView | ArrayBuffer | SharedArrayBuffer;
 
-    describe('cleartext', () => {
-        const cleartextInput = '12345678';
+    describe('plaintext', () => {
+        const plaintextInput = '12345678';
         const password = 'foo';
-        const expectedCleartext = Buffer.from(cleartextInput);
-        const cleartextCases = genInputTypeCases(cleartextInput);
+        const expectedPlaintext = Buffer.from(plaintextInput);
+        const plaintextCases = genInputTypeCases(plaintextInput);
 
         describe('encrypt()', () => {
-            it.each<[string, Input]>(cleartextCases)('%s', async (_, cleartext) => {
-                const encryptedDataAsync = encrypt(cleartext, password);
+            it.each<[string, Input]>(plaintextCases)('%s', async (_, plaintext) => {
+                const encryptedDataAsync = encrypt(plaintext, password);
                 await expect(encryptedDataAsync).resolves.not.toThrow();
                 const decryptedData = await decrypt(await encryptedDataAsync, password);
-                expect(decryptedData.equals(expectedCleartext)).toBeTrue();
+                expect(decryptedData.equals(expectedPlaintext)).toBeTrue();
             });
         });
         describe('encryptIterator()', () => {
-            it.each<[string, Iterable<Input> | AsyncIterable<Input>]>(genIterableTypeCases(cleartextCases))(
+            it.each<[string, Iterable<Input> | AsyncIterable<Input>]>(genIterableTypeCases(plaintextCases))(
                 '%s',
-                async (_, cleartextIterable) => {
-                    const encryptedDataAsync = iterable2buffer(encryptIterator(password)(cleartextIterable));
+                async (_, plaintextIterable) => {
+                    const encryptedDataAsync = iterable2buffer(encryptIterator(password)(plaintextIterable));
                     await expect(encryptedDataAsync).resolves.not.toThrow();
                     const decryptedData = await decrypt(await encryptedDataAsync, password);
-                    expect(decryptedData.equals(expectedCleartext)).toBeTrue();
+                    expect(decryptedData.equals(expectedPlaintext)).toBeTrue();
                 },
             );
         });
         describe('encryptStream()', () => {
-            it.each<[string, Input]>(cleartextCases)('%s', async (_, cleartext) => {
-                const encryptedDataListAsync = runDuplex([cleartext], encryptStream(password));
+            it.each<[string, Input]>(plaintextCases)('%s', async (_, plaintext) => {
+                const encryptedDataListAsync = runDuplex([plaintext], encryptStream(password));
                 await expect(encryptedDataListAsync).resolves.not.toThrow();
 
                 const encryptedData = Buffer.concat(await encryptedDataListAsync);
                 const decryptedData = await decrypt(encryptedData, password);
-                expect(decryptedData.equals(expectedCleartext)).toBeTrue();
+                expect(decryptedData.equals(expectedPlaintext)).toBeTrue();
             });
         });
     });
@@ -224,14 +224,14 @@ describe('input should allow the types described in documentation', () => {
         });
     });
     describe('password', () => {
-        const { cleartext } = testValue;
+        const { plaintext } = testValue;
         const originalPassword = '12345678';
         const passwordCases = genInputTypeCases(originalPassword);
-        const encryptedDataAsync = encrypt(cleartext, originalPassword);
+        const encryptedDataAsync = encrypt(plaintext, originalPassword);
 
         describe.each(apiCases.encrypt)('%s', (_, encryptFn) => {
             it.each<[string, Input]>(passwordCases)('%s', async (_, passwordValue) => {
-                const encryptedDataAsync = encryptFn({ cleartext, password: passwordValue });
+                const encryptedDataAsync = encryptFn({ plaintext, password: passwordValue });
                 await expect(encryptedDataAsync).resolves.not.toThrow();
                 await expect(decrypt(await encryptedDataAsync, originalPassword)).resolves.not.toThrow();
             });
@@ -258,16 +258,16 @@ describe('should throw an error if a value of an invalid type is specified as in
     const genInvalidInputCases = (fnName: string): typeof invalidInputCases =>
         invalidInputCases
             .filter(value => !(value === null && fnName.endsWith('Stream()')));
-    const cleartext = '';
+    const plaintext = '';
     const encryptedData = '';
     const password = '';
 
-    describe('cleartext', () => {
+    describe('plaintext', () => {
         describe.each(apiCases.encrypt)('%s', (encryptFnName, encryptFn) => {
             it.each(genInvalidInputCases(encryptFnName))('%o', async invalidInput => {
                 // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'InputDataType'.
-                const cleartext: InputDataType = invalidInput;
-                const waitFinish = encryptFn({ cleartext, password });
+                const plaintext: InputDataType = invalidInput;
+                const waitFinish = encryptFn({ plaintext, password });
                 await expect(waitFinish).rejects.toThrowWithMessage(
                     TypeError,
                     errorMessageRegExp.chunkType,
@@ -293,7 +293,7 @@ describe('should throw an error if a value of an invalid type is specified as in
             it.each(genInvalidInputCases(fnName))('%o', async invalidInput => {
                 // @ts-expect-error TS2322: Type 'unknown' is not assignable to type 'InputDataType'.
                 const password: InputDataType = invalidInput;
-                const waitFinish = encryptOrDecryptFn({ cleartext, encryptedData, password });
+                const waitFinish = encryptOrDecryptFn({ plaintext, encryptedData, password });
                 await expect(waitFinish).rejects.toThrowWithMessage(
                     TypeError,
                     errorMessageRegExp.passwordType,
@@ -343,8 +343,8 @@ describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
     };
 
     describe('encryptIterator()', () => {
-        describe.each(testValue.cleartext.chunkCases)('%s', (_, cleartextChunkList) => {
-            implementsAsyncIterableIteratorTest(() => encryptIterator('')(cleartextChunkList));
+        describe.each(testValue.plaintext.chunkCases)('%s', (_, plaintextChunkList) => {
+            implementsAsyncIterableIteratorTest(() => encryptIterator('')(plaintextChunkList));
         });
     });
     describe('decryptIterator()', () => {
@@ -352,7 +352,7 @@ describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
             implementsAsyncIterableIteratorTest(async () => {
                 const password = 'bar';
                 const encryptedDataChunkIter = await genEncryptedDataChunkIter({
-                    cleartext: testValue.cleartext,
+                    plaintext: testValue.plaintext,
                     password,
                 });
                 return decryptIterator(password)(encryptedDataChunkIter);
@@ -363,10 +363,10 @@ describe('output value must be an `AsyncIterableIterator<Buffer>`', () => {
 
 describe('output Stream must return `Buffer` when read', () => {
     describe('encryptStream()', () => {
-        it.each(testValue.cleartext.chunkCases)('%s', async (_, cleartextChunkList) => {
+        it.each(testValue.plaintext.chunkCases)('%s', async (_, plaintextChunkList) => {
             expect.hasAssertions();
 
-            const chunkList = await runDuplex(cleartextChunkList, encryptStream(''));
+            const chunkList = await runDuplex(plaintextChunkList, encryptStream(''));
             for (const chunk of chunkList) {
                 expect(chunk).toBeInstanceOf(Buffer);
             }
@@ -378,7 +378,7 @@ describe('output Stream must return `Buffer` when read', () => {
 
             const password = 'baz';
             const encryptedDataChunkIter = await genEncryptedDataChunkIter({
-                cleartext: testValue.cleartext,
+                plaintext: testValue.plaintext,
                 password,
             });
             const chunkList = await runDuplex(encryptedDataChunkIter, decryptStream(password));
@@ -390,14 +390,14 @@ describe('output Stream must return `Buffer` when read', () => {
 });
 
 describe('input and output must not be the same', () => {
-    it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn, { expectedCleartext }) => {
+    it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn, { expectedPlaintext }) => {
         const encryptedData = await encryptFn({ password: '' });
-        expect(expectedCleartext.equals(encryptedData)).toBeFalse();
+        expect(expectedPlaintext.equals(encryptedData)).toBeFalse();
     });
 });
 
 describe('never generate same data', () => {
-    it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+    it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
         const encryptedData1 = await encryptFn({ password: '' });
         const encryptedData2 = await encryptFn({ password: '' });
         const encryptedData3 = await encryptFn({ password: '' });
@@ -410,41 +410,41 @@ describe('never generate same data', () => {
 const shouldBeDecryptableTest = (options: EncryptOptions): void => {
     type TestCase<TArgs extends unknown[] = []> = [string, (...args: TArgs) => Promise<Buffer>];
     describe('should be decryptable', () => {
-        const cleartext = testValue.cleartext;
+        const plaintext = testValue.plaintext;
         const password = 'qux';
         it.each<TestCase>(
             apiCases.decrypt.map<TestCase>(([decryptLabel, decryptFn]) => [
                 `encrypt() |> ${decryptLabel}`,
                 async () => {
-                    const encryptedData = await encrypt(cleartext, password, options);
+                    const encryptedData = await encrypt(plaintext, password, options);
                     return await decryptFn({ encryptedData, password });
                 },
             ]),
         )('%s', async (_, decryptFn) => {
             const decryptedData = await decryptFn();
-            expect(decryptedData.equals(cleartext)).toBeTrue();
+            expect(decryptedData.equals(plaintext)).toBeTrue();
         });
-        describe.each<TestCase<[cleartextChunkList: readonly Buffer[]]>>([
+        describe.each<TestCase<[plaintextChunkList: readonly Buffer[]]>>([
             [
                 `encryptIterator() |> decrypt()`,
-                async cleartextChunkList => {
-                    const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
+                async plaintextChunkList => {
+                    const encryptedDataChunkIter = encryptIterator(password, options)(plaintextChunkList);
                     const encryptedData = await iterable2buffer(encryptedDataChunkIter);
                     return await decrypt(encryptedData, password);
                 },
             ],
             ...apiCases.decrypt.allowIterInput.map<TestCase<[readonly Buffer[]]>>(([decryptLabel, decryptFn]) => [
                 `encryptIterator() |> ${decryptLabel}`,
-                async cleartextChunkList => {
-                    const encryptedDataChunkIter = encryptIterator(password, options)(cleartextChunkList);
+                async plaintextChunkList => {
+                    const encryptedDataChunkIter = encryptIterator(password, options)(plaintextChunkList);
                     return await decryptFn({ encryptedData: encryptedDataChunkIter, password });
                 },
             ]),
             [
                 `encryptStream() |> decrypt()`,
-                async cleartextChunkList => {
+                async plaintextChunkList => {
                     const encryptedDataChunkIter = await runDuplex(
-                        cleartextChunkList,
+                        plaintextChunkList,
                         encryptStream(password, options),
                     );
                     const encryptedData = await iterable2buffer(encryptedDataChunkIter);
@@ -453,9 +453,9 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
             ],
             [
                 `encryptStream() |> decryptIterator()`,
-                async cleartextChunkList => {
+                async plaintextChunkList => {
                     const encryptedDataChunkIter = await runDuplex(
-                        cleartextChunkList,
+                        plaintextChunkList,
                         encryptStream(password, options),
                     );
                     return await iterable2buffer(decryptIterator(password)(encryptedDataChunkIter));
@@ -463,10 +463,10 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
             ],
             [
                 `encryptStream() |> decryptStream()`,
-                async cleartextChunkList => {
+                async plaintextChunkList => {
                     return Buffer.concat(
                         await runDuplex(
-                            cleartextChunkList,
+                            plaintextChunkList,
                             encryptStream(password, options),
                             decryptStream(password),
                         ),
@@ -474,9 +474,9 @@ const shouldBeDecryptableTest = (options: EncryptOptions): void => {
                 },
             ],
         ])('%s', (_, decryptFn) => {
-            it.each(cleartext.chunkCases)('input: %s', async (_, cleartextChunkList) => {
-                const decryptedData = await decryptFn(cleartextChunkList);
-                expect(decryptedData.equals(cleartext)).toBeTrue();
+            it.each(plaintext.chunkCases)('input: %s', async (_, plaintextChunkList) => {
+                const decryptedData = await decryptFn(plaintextChunkList);
+                expect(decryptedData.equals(plaintext)).toBeTrue();
             });
         });
     });
@@ -487,14 +487,14 @@ describe('should support encryption algorithms', () => {
         'aes-256-gcm',
         'chacha20-poly1305',
     ])('%s', algorithm => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = { algorithm };
             await expect(encryptFn({ password: '', options })).resolves.not.toThrow();
         });
         shouldBeDecryptableTest({ algorithm });
     });
     describe('unknown algorithm', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 // @ts-expect-error TS2322
                 algorithm: 'foo',
@@ -506,7 +506,7 @@ describe('should support encryption algorithms', () => {
         });
     });
     describe('invalid type algorithm', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 // @ts-expect-error TS2322: Type 'number' is not assignable to type '"aes-256-gcm" | "chacha20-poly1305" | undefined'.
                 algorithm: 42,
@@ -524,7 +524,7 @@ describe('should support key derivation functions', () => {
         'argon2d',
         'argon2id',
     ])('%s', keyDerivationAlgorithm => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 keyDerivation: {
                     algorithm: keyDerivationAlgorithm,
@@ -535,7 +535,7 @@ describe('should support key derivation functions', () => {
         shouldBeDecryptableTest({ keyDerivation: { algorithm: keyDerivationAlgorithm } });
     });
     describe('unknown algorithm', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 keyDerivation: {
                     // @ts-expect-error TS2322
@@ -549,7 +549,7 @@ describe('should support key derivation functions', () => {
         });
     });
     describe('invalid type', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 // @ts-expect-error TS2322: Type 'number' is not assignable to type 'Argon2Options'.
                 keyDerivation: 42,
@@ -561,7 +561,7 @@ describe('should support key derivation functions', () => {
         });
     });
     describe('invalid type algorithm', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 keyDerivation: {
                     // @ts-expect-error TS2322: Type 'number' is not assignable to type '"argon2d" | "argon2id"'.
@@ -582,7 +582,7 @@ describe('should support compression algorithms', () => {
         'brotli',
     ])('%s', compressAlgorithm => {
         const password = 'quux';
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = { compress: compressAlgorithm };
             const compressedEncryptedDataAsync = encryptFn({ password, options });
             await expect(compressedEncryptedDataAsync).resolves.not.toThrow();
@@ -593,7 +593,7 @@ describe('should support compression algorithms', () => {
         shouldBeDecryptableTest({ compress: compressAlgorithm });
     });
     describe('unknown algorithm', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 // @ts-expect-error TS2322
                 compress: 'hoge',
@@ -605,7 +605,7 @@ describe('should support compression algorithms', () => {
         });
     });
     describe('invalid type', () => {
-        it.each(apiCases.encrypt.withCleartextChunk)('%s', async (_, encryptFn) => {
+        it.each(apiCases.encrypt.withPlaintextChunk)('%s', async (_, encryptFn) => {
             const options: EncryptOptions = {
                 // @ts-expect-error TS2322: Type 'number' is not assignable to type '"gzip" | "brotli" | CompressOptions | undefined'.
                 compress: 42,

@@ -27,7 +27,7 @@ const dataDirList = fs.readdirSync(dataDirpath, { withFileTypes: true })
         dirname,
         dirpath: path.resolve(dataDirpath, dirname),
     }));
-const cleartextPromise = fsAsync.readFile(path.resolve(dataDirpath, 'cleartext.txt'));
+const plaintextPromise = fsAsync.readFile(path.resolve(dataDirpath, 'plaintext.txt'));
 const passwordPromise = fsAsync.readFile(path.resolve(dataDirpath, 'password.txt'));
 
 describe('backward compatibility (decrypt)', () => {
@@ -49,15 +49,15 @@ describe('backward compatibility (decrypt)', () => {
         it.each([...versionsMap])('%s', async (_, filepath) => {
             const encryptedData = await fsAsync.readFile(filepath);
             const decryptedData = await decrypt(encryptedData, await passwordPromise);
-            expect(decryptedData.equals(await cleartextPromise)).toBeTrue();
+            expect(decryptedData.equals(await plaintextPromise)).toBeTrue();
         });
     });
 });
 
 describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () => {
     const inputChunkTypeRecord = {
-        single: cleartextPromise.then(cleartext => [cleartext]),
-        multi: cleartextPromise.then(buffer2chunkArray),
+        single: plaintextPromise.then(plaintext => [plaintext]),
+        multi: plaintextPromise.then(buffer2chunkArray),
     };
     const packageVersionList = dataDirList
         .map(({ dirname }) => dirname.replace(/^v/, ''));
@@ -207,8 +207,8 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
             }
 
             it(`v${packageVersion}`, async () => {
-                const cleartext = await cleartextPromise;
-                const cleartextChunkList = await inputChunkTypeRecord[inputChunkType];
+                const plaintext = await plaintextPromise;
+                const plaintextChunkList = await inputChunkTypeRecord[inputChunkType];
                 const password = await passwordPromise;
                 const oldEncryptedArchive: Omit<typeof import('../src/index.node.js'), `encrypt${string}`> = importFrom(
                     oldVersionsStoreDirpath,
@@ -216,10 +216,10 @@ describe('forward compatibility (encrypt(latest) -> decrypt(old versions))', () 
                 ) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
                 const encryptedData = await asyncIterable2Buffer(
-                    encryptIterator(password, options)(cleartextChunkList),
+                    encryptIterator(password, options)(plaintextChunkList),
                 );
                 const decryptedData = await oldEncryptedArchive.decrypt(encryptedData, password);
-                expect(decryptedData.equals(cleartext)).toBeTrue();
+                expect(decryptedData.equals(plaintext)).toBeTrue();
             });
         }
     });
