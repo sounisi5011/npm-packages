@@ -2,8 +2,14 @@
 # see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/docs/overrides.md
 
 .ultraignore linguist-language=Ignore-List
-tsconfig.*.json linguist-language=JSON-with-Comments
 turbo.json linguist-language=JSON-with-Comments
+
+# GitHub detects only `tsconfig.json` files as jsonc by default.
+# see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/lib/linguist/languages.yml#L3123
+# However, VSCode also detects `tsconfig.*.json` and `tsconfig-*.json` as jsonc.
+# see https://github.com/microsoft/vscode/blob/1.75.1/extensions/typescript-language-features/package.json#L79-L106
+# We will also use the latter filename, so we will tell GitHub that these are jsonc.
+tsconfig[.-]*.json linguist-language=JSON-with-Comments
 
 # The dprint configuration file is parsed as jsonc.
 # see https://github.com/dprint/dprint/blob/0.34.1/crates/dprint/src/configuration/deserialize_config.rs#L14
