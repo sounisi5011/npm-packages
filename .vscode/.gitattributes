@@ -1,0 +1,3 @@
+# Change syntax highlighting on GitHub
+# see https://github.com/github/linguist/blob/1345d0122a82119ae01abc366346fc9b022cc444/docs/overrides.md
+*.json linguist-language=JSON-with-Comments
