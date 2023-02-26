@@ -459,7 +459,7 @@ jobs:
             else
               echo '::group::Install' "${corepack_package_spec}"
             fi
-            npm install -g "${corepack_package_spec}"
+            npm install --global "${corepack_package_spec}"
             echo '::endgroup::'
           fi
           echo '::group::$' corepack enable
