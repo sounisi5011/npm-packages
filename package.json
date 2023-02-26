@@ -33,7 +33,7 @@
     "fmt:ts:eslint": "eslint --cache --report-unused-disable-directives --fix --ext .ts,.cts,.mts ./",
     "fmt:xs": "npm-run-all fmt:xs:eslint --parallel fmt:{ts,js}:dprint fmt:xs:eslint",
     "fmt:xs:eslint": "run-s 'lint:eslint -- --fix'",
-    "preinstall": "npx only-allow pnpm",
+    "preinstall": "npx --yes only-allow pnpm",
     "lint": "run-p lint:*",
     "lint:actions": "actionlint",
     "lint:eslint": "eslint --cache --report-unused-disable-directives ./",
@@ -79,6 +79,8 @@
   },
   "engines": {
     "node": "^12.17.x || 14.x || 15.x || 16.x || 17.x || >=18.x",
-    "pnpm": "6.x"
+    "npm": "use pnpm please!",
+    "pnpm": "6.x",
+    "yarn": "use pnpm please!"
   }
 }
