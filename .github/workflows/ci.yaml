@@ -73,6 +73,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup Corepack
+        run: corepack enable
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -82,8 +84,6 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
       - name: Build packages
@@ -145,6 +145,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup Corepack
+        run: corepack enable
       - name: Cache actionlint
         uses: actions/cache@v3
         with:
@@ -154,8 +156,6 @@ jobs:
             ./scripts/actionlint/download-actionlint.bash
             ./scripts/actionlint/download-actionlint.bash.http-cache-metadata.json
           key: actionlint-${{ runner.os }}
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
       - run: pnpm run lint
   format:
     needs: pre-build
@@ -184,8 +184,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
+      - name: Setup Corepack
+        run: corepack enable
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
         # This only happens on CI, and in some cases no error occurs.
@@ -303,8 +303,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
+      - name: Setup Corepack
+        run: corepack enable
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
         run: |
@@ -430,6 +430,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup Corepack
+        shell: bash
+        run: |
+          if type corepack >/dev/null 2>&1; then
+            :
+          else
+            echo '::group::Install Corepack'
+            npm install -g corepack
+            echo '::endgroup::'
+          fi
+          corepack enable
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -440,8 +451,6 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
         if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
-      - name: Setup pnpm
-        uses: ./actions/setup-pnpm
       - name: Install Dependencies
         run: pnpm install
         if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
