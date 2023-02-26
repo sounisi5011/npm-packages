@@ -124,6 +124,9 @@ jobs:
         with:
           node-version: 16.x
         if: ${{ steps.release-pr.outputs.ref }}
+      - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
+        run: corepack enable
+        if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -133,9 +136,6 @@ jobs:
             ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release-pr.outputs.ref }}
-      - name: Commit to Release PR / Setup pnpm
-        uses: ./actions/setup-pnpm
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
@@ -215,6 +215,9 @@ jobs:
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.releases_created }}
+      - name: Publish / Enable Corepack (Automatically setup a package manager for Node.js)
+        run: corepack enable
+        if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -224,9 +227,6 @@ jobs:
             ${{ runner.os }}-node-16.x-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release.outputs.releases_created }}
-      - name: Publish / Setup pnpm
-        uses: ./actions/setup-pnpm
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Install Dependencies
         run: pnpm install
