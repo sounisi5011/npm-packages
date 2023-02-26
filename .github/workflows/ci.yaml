@@ -145,8 +145,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Setup Corepack
-      #   run: corepack enable
+      - name: Setup Corepack
+        run: corepack enable
       - name: Cache actionlint
         uses: actions/cache@v3
         with:
@@ -184,8 +184,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Setup Corepack
-      #   run: corepack enable
+      - name: Setup Corepack
+        run: corepack enable
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
         # This only happens on CI, and in some cases no error occurs.
@@ -303,8 +303,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Setup Corepack
-      #   run: corepack enable
+      - name: Setup Corepack
+        run: corepack enable
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
         run: |
@@ -445,26 +445,26 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Setup Corepack
-      #   shell: bash
-      #   # If Corepack does not exist or a Corepack version range is specified, install Corepack
-      #   run: |
-      #     readonly COREPACK_VERSION_RANGE='${{ matrix.corepack-version-range }}'
-      #     if { type corepack >/dev/null 2>&1; } && [ -z "${COREPACK_VERSION_RANGE}" ]; then
-      #       echo Corepack "$(corepack --version)" is already installed
-      #     else
-      #       readonly corepack_package_spec="corepack${COREPACK_VERSION_RANGE:+"@${COREPACK_VERSION_RANGE}"}"
-      #       if type corepack >/dev/null 2>&1; then
-      #         echo '::group::Override corepack' "(install ${corepack_package_spec})"
-      #       else
-      #         echo '::group::Install' "${corepack_package_spec}"
-      #       fi
-      #       npm install --global "${corepack_package_spec}"
-      #       echo '::endgroup::'
-      #     fi
-      #     echo '::group::$' corepack enable
-      #     corepack enable
-      #     echo '::endgroup::'
+      - name: Setup Corepack
+        shell: bash
+        # If Corepack does not exist or a Corepack version range is specified, install Corepack
+        run: |
+          readonly COREPACK_VERSION_RANGE='${{ matrix.corepack-version-range }}'
+          if { type corepack >/dev/null 2>&1; } && [ -z "${COREPACK_VERSION_RANGE}" ]; then
+            echo Corepack "$(corepack --version)" is already installed
+          else
+            readonly corepack_package_spec="corepack${COREPACK_VERSION_RANGE:+"@${COREPACK_VERSION_RANGE}"}"
+            if type corepack >/dev/null 2>&1; then
+              echo '::group::Override corepack' "(install ${corepack_package_spec})"
+            else
+              echo '::group::Install' "${corepack_package_spec}"
+            fi
+            npm install --global "${corepack_package_spec}"
+            echo '::endgroup::'
+          fi
+          echo '::group::$' corepack enable
+          corepack enable
+          echo '::endgroup::'
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
