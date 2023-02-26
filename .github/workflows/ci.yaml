@@ -451,7 +451,7 @@ jobs:
         run: |
           readonly COREPACK_VERSION_RANGE='${{ matrix.corepack-version-range }}'
           if { type corepack >/dev/null 2>&1; } && [ -z "${COREPACK_VERSION_RANGE}" ]; then
-            :
+            echo Corepack "$(corepack --version)" is already installed
           else
             readonly corepack_package_spec="corepack${COREPACK_VERSION_RANGE:+"@${COREPACK_VERSION_RANGE}"}"
             if type corepack >/dev/null 2>&1; then
