@@ -73,7 +73,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Corepack
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Cache .pnpm-store
         uses: actions/cache@v3
@@ -145,7 +145,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Corepack
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Cache actionlint
         uses: actions/cache@v3
@@ -184,7 +184,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Corepack
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
@@ -303,7 +303,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Corepack
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
@@ -445,7 +445,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Corepack
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
         shell: bash
         # If Corepack does not exist or a Corepack version range is specified, install Corepack
         run: |

@@ -124,7 +124,7 @@ jobs:
         with:
           node-version: 16.x
         if: ${{ steps.release-pr.outputs.ref }}
-      - name: Commit to Release PR / Setup Corepack
+      - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Cache .pnpm-store
@@ -215,7 +215,7 @@ jobs:
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.releases_created }}
-      - name: Publish / Setup Corepack
+      - name: Publish / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Cache .pnpm-store
