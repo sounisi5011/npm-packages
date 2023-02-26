@@ -401,6 +401,21 @@ jobs:
           - 17.x
           - 18.0.0
           - 18.x
+        include:
+          # Corepack 0.11.0 and later only supports Node.js 14.14.0 and later
+          # see https://github.com/nodejs/corepack/pull/227
+          - node-version: 12.17.0
+            corepack-version-range: "<0.11"
+          - node-version: 12.20.0
+            corepack-version-range: "<0.11"
+          - node-version: 12.x
+            corepack-version-range: "<0.11"
+          - node-version: 14.1.0
+            corepack-version-range: "<0.11"
+          - node-version: 14.13.0
+            corepack-version-range: "<0.11"
+          - node-version: 14.13.1
+            corepack-version-range: "<0.11"
     steps:
       - uses: actions/checkout@v3
       - name: Download installed dependencies
@@ -437,10 +452,12 @@ jobs:
             :
           else
             echo '::group::Install Corepack'
-            npm install -g corepack
+            npm install -g 'corepack@${{ matrix.corepack-version-range || '*' }}'
             echo '::endgroup::'
           fi
+          echo '::group::$' corepack enable
           corepack enable
+          echo '::endgroup::'
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
