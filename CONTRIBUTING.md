@@ -25,9 +25,18 @@ We use [Semantic Versioning](https://semver.org/).
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/)
-- [pnpm](https://pnpm.js.org/)
+- [pnpm](https://pnpm.js.org/) (If [Corepack] is available, you do not need to install pnpm)
+
+[Corepack]: https://nodejs.org/api/corepack.html
 
 ### Setup
+
+> **Note**
+> If [Corepack] is available in your development environment, do not forget to [enable Corepack](https://nodejs.org/docs/latest-v16.x/api/corepack.html#enabling-the-feature) before running the `pnpm` command.
+>
+> ```sh
+> $ corepack enable
+> ```
 
 ```sh
 $ git clone https://github.com/sounisi5011/npm-packages.git
