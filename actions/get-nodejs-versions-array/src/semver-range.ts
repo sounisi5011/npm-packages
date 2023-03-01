@@ -1,6 +1,6 @@
 import type SemverComparator from 'semver/classes/comparator.js';
 import SemverRange from 'semver/classes/range.js';
-import SemVer from 'semver/classes/semver.js';
+import type SemVer from 'semver/classes/semver.js';
 import semverLt from 'semver/functions/lt.js';
 import semverMinVersion from 'semver/ranges/min-version.js';
 
