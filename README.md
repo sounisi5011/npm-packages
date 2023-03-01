@@ -56,4 +56,5 @@
 
 | Package | Version |
 |-|-|
+| [`get-nodejs-versions-array-action`](./actions/get-nodejs-versions-array) | [`v0.0.1`](https://github.com/sounisi5011/npm-packages/tree/get-nodejs-versions-array-action-v0.0.1/actions/get-nodejs-versions-array) |
 | [`monorepo-workspace-submodules-finder-action`](./actions/monorepo-workspace-submodules-finder) | [`v1.3.2`](https://github.com/sounisi5011/npm-packages/tree/monorepo-workspace-submodules-finder-action-v1.3.2/actions/monorepo-workspace-submodules-finder) |

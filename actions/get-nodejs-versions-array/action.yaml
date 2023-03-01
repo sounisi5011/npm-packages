@@ -1,0 +1,11 @@
+name: Get Node.js versions array
+author: sounisi5011
+description: |
+  Get an array of Node.js versions supported by your repository
+outputs:
+  versions-json:
+    description: |
+      A JSON string. This value is an array of semver strings, meaning Node.js version.
+runs:
+  using: node16
+  main: dist/index.js
