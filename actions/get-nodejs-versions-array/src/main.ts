@@ -34,7 +34,7 @@ async function run(): Promise<void> {
     core.info(`Detected Node.js version range: "${supportedNodeVersionRange.raw}"`);
 
     const supportedMinVersionMap = minVersionMap(supportedNodeVersionRange);
-    const supportedMinMajorVersion = [...supportedMinVersionMap.keys()].reduce((a, b) => Math.min(a, b));
+    const supportedMinMajorVersion = Math.min(...supportedMinVersionMap.keys());
     const supportedMaxMajorVersion = specifiedMaxMajorVersion(supportedNodeVersionRange);
     if (typeof supportedMaxMajorVersion !== 'number') {
         core.setFailed([
@@ -42,6 +42,23 @@ async function run(): Promise<void> {
             `This version range includes all versions: "${supportedNodeVersionRange.raw}"`,
             'However, you should include in the version range the maximum version that your repository explicitly supports.',
             'For example, use the following version range: ">= 0.x"',
+        ].join('\n'));
+        return;
+    }
+    if (supportedMaxMajorVersion === Infinity) {
+        core.setFailed([
+            'The Node.js version range does not include an explicitly specified major version.',
+            `This version range includes only newer versions: "${supportedNodeVersionRange.raw}"`,
+            'However, you should include in the version range the maximum version that your repository explicitly supports.',
+            'For example, specify a version range like this: ">=18.x"',
+        ].join('\n'));
+        return;
+    }
+    if (supportedMaxMajorVersion === -Infinity) {
+        core.setFailed([
+            `This version range excludes all versions: "${supportedNodeVersionRange.raw}"`,
+            'You should specify a valid version range for the "engines.node" field in `package.json` file.',
+            'For example, specify a version range like this: "16.x || >=18.x"',
         ].join('\n'));
         return;
     }
