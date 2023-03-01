@@ -14,6 +14,13 @@
     /* Emit */
     "declaration": false,
     "declarationMap": false,
-    "noEmit": true
-  }
+    "noEmit": true,
+
+    /* Completeness */
+    // The following error occurs from the type declaration included in `vitest@0.29.2`:
+    //     Relative import paths need explicit file extensions in EcmaScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+    // So, enable the `skipLibCheck` option to avoid this error
+    "skipLibCheck": true
+  },
+  "include": ["./src/**/*"]
 }
