@@ -1,3 +1,4 @@
+import type SemverComparator from 'semver/classes/comparator.js';
 import SemverRange from 'semver/classes/range.js';
 import SemVer from 'semver/classes/semver.js';
 import semverLt from 'semver/functions/lt.js';
@@ -28,6 +29,13 @@ export function minVersionMap(semverRange: string | SemverRange): Map<number, Se
 }
 
 const SEMVER_MAJOR_VERSION_REGEXP = /(?<!(?:[-.+][0-9a-z]*?))\d+/ig;
+
+const isExcludeAllComparator = (comparator: SemverComparator): boolean => (
+    comparator.operator === '<'
+    && comparator.semver.major === 0
+    && comparator.semver.minor === 0
+    && comparator.semver.patch === 0
+);
 
 /**
  * Get the maximum major version that is explicitly included in the passed semver range.
@@ -77,12 +85,7 @@ export function specifiedMaxMajorVersion(semverRange: string | SemverRange): num
         range.set.every(comparatorsList => (
             // Check if comparatorsList include `< 0.0.0`
             // These comparators are logical-and, so if even one `< 0.0.0` is included, this is the "range to exclude all versions"
-            comparatorsList.some(comparator => (
-                comparator.operator === '<'
-                && comparator.semver.major === 0
-                && comparator.semver.minor === 0
-                && comparator.semver.patch === 0
-            ))
+            comparatorsList.some(isExcludeAllComparator)
         ))
     ) return -Infinity;
 
