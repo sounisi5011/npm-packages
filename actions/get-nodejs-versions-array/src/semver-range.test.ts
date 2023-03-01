@@ -151,6 +151,12 @@ describe('specifiedMaxMajorVersion()', () => {
             { range: 'x.0', expected: undefined },
             { range: '*.1.2', expected: undefined },
             { range: '*.1.2', expected: undefined },
+            /**
+             * Check that this function is getting the correct major version
+             */
+            { range: '>=1.2.3-4.a5.v6+7.890', expected: 1 },
+            { range: '>=v1.2.3-4.a5.v6+7.890', expected: 1 },
+            { range: '>= v1.2.3-4.a5.v6+7.890', expected: 1 },
         ])('specifiedMaxMajorVersion($range) -> $expected', ({ range, expected }) => {
             expect(specifiedMaxMajorVersion(range)).toStrictEqual(expected);
         });
