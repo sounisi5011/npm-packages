@@ -40,8 +40,8 @@ async function run(): Promise<void> {
         core.setFailed([
             'The Node.js version range is not including an explicitly specified major version.',
             `This version range includes all versions: "${supportedNodeVersionRange.raw}"`,
-            'However, you should include in the version range the maximum version that your repository explicitly supports.',
-            'For example, use the following version range: ">= 0.x"',
+            'However, you should include the maximum version that your repository explicitly supports into Node.js version range.',
+            'For example, use the following version range: ">=0.x"',
         ].join('\n'));
         return;
     }
@@ -49,8 +49,8 @@ async function run(): Promise<void> {
         core.setFailed([
             'The Node.js version range does not include an explicitly specified major version.',
             `This version range includes only newer versions: "${supportedNodeVersionRange.raw}"`,
-            'However, you should include in the version range the maximum version that your repository explicitly supports.',
-            'For example, specify a version range like this: ">=18.x"',
+            'However, you should include the maximum version that your repository explicitly supports into Node.js version range.',
+            'For example, use the following version range: ">=18.x"',
         ].join('\n'));
         return;
     }
