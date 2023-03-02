@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises';
+import { constants as fsConst, promises as fs } from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { promisify } from 'node:util';
@@ -67,7 +67,7 @@ export async function createTempFile<T>(
                         // see https://github.com/nodejs/node/issues/1592#issuecomment-223819785
                         // see https://github.com/nodejs/node/blob/v16.0.0/lib/internal/fs/utils.js#L554-L594
                         // see https://github.com/nodejs/node/blob/v16.19.1/lib/internal/fs/utils.js#L558-L598
-                        fs.constants.O_RDONLY | fs.constants.O_CREAT | fs.constants.O_EXCL,
+                        fsConst.O_RDONLY | fsConst.O_CREAT | fsConst.O_EXCL,
                         0o600,
                     ),
                 };
