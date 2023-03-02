@@ -10,6 +10,7 @@
     /* Modules */
     "module": "Node16",
     "types": ["node"],
+    "resolveJsonModule": true,
 
     /* Emit */
     "declaration": false,
@@ -22,5 +23,5 @@
     // So, enable the `skipLibCheck` option to avoid this error
     "skipLibCheck": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "./tests/**/*"]
 }

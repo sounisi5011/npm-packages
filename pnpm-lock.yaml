@@ -70,11 +70,13 @@ importers:
     specifiers:
       '@actions/core': 1.10.0
       '@sounisi5011/run-if-supported': 1.1.1
+      '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/node': 16.18.13
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
       '@vercel/ncc': 0.36.1
       cross-env: 7.0.3
+      execa: 7.0.0
       parse-json: 6.0.2
       semver: 7.3.8
       typescript: 4.9.5
@@ -89,11 +91,13 @@ importers:
       zod-validation-error: 0.3.2_zod@3.20.6
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
+      '@sounisi5011/ts-utils-is-property-accessible': link:../../packages/ts-utils/is-property-accessible
       '@types/node': 16.18.13
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
       '@vercel/ncc': 0.36.1
       cross-env: 7.0.3
+      execa: 7.0.0
       typescript: 4.9.5
       vitest: 0.29.2
 
@@ -4393,6 +4397,21 @@ packages:
       signal-exit: 3.0.7
       strip-final-newline: 3.0.0
 
+  /execa/7.0.0:
+    resolution: {integrity: sha512-tQbH0pH/8LHTnwTrsKWideqi6rFB/QNUawEwrn+WHyz7PX1Tuz2u7wfTvbaNBdP5JD5LVWxNo8/A8CHNZ3bV6g==}
+    engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
+    dependencies:
+      cross-spawn: 7.0.3
+      get-stream: 6.0.1
+      human-signals: 4.3.0
+      is-stream: 3.0.0
+      merge-stream: 2.0.0
+      npm-run-path: 5.1.0
+      onetime: 6.0.0
+      signal-exit: 3.0.7
+      strip-final-newline: 3.0.0
+    dev: true
+
   /exit/0.1.2:
     resolution: {integrity: sha512-Zk/eNKV2zbjpKzrsQ+n1G6poVbErQxJ0LBOJXaKZ1EViLzH+hrLu9cdXI4zw9dBQJslwBEpbQ2P1oS7nDxs6jQ==}
     engines: {node: '>= 0.8.0'}
@@ -5137,6 +5156,11 @@ packages:
   /human-signals/3.0.1:
     resolution: {integrity: sha512-rQLskxnM/5OCldHo+wNXbpVgDn5A17CUoKX+7Sokwaknlq7CdSnphy0W39GU8dw59XiCXmFXDg4fRuckQRKewQ==}
     engines: {node: '>=12.20.0'}
+
+  /human-signals/4.3.0:
+    resolution: {integrity: sha512-zyzVyMjpGBX2+6cDVZeFPCdtOtdsxOeseRhB9tkQ6xXmGUNrcnBzdEKPy3VPNYz+4gy1oukVOXcrJCunSyc6QQ==}
+    engines: {node: '>=14.18.0'}
+    dev: true
 
   /husky/8.0.3:
     resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
