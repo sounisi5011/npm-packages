@@ -16,7 +16,18 @@ beforeAll(async () => {
 }, 60 * 1000);
 
 // Cache the results of command execution
-const execMain = cachedPromise((opt: ExecaOptions = {}) => execaNode(MAIN_FILE_PATH, opt));
+const execMain = cachedPromise((opt: ExecaOptions = {}) =>
+    execaNode(
+        MAIN_FILE_PATH,
+        // When running unit tests on GitHub Actions, the tests fail due to passed environment variables.
+        // So, disallow inheritance of environment variables.
+        Object.assign(opt, {
+            extendEnv: false,
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            env: opt.env || {}, // see https://github.com/sindresorhus/execa/issues/527
+        }),
+    )
+);
 
 /**
  * A regular expression that matches the contents of `GITHUB_OUTPUT` file.
@@ -100,7 +111,6 @@ test('print readable info', async () => {
         [
             `Reading "\${GITHUB_WORKSPACE}${path.sep}package.json"`,
             `Parsing "\${GITHUB_WORKSPACE}${path.sep}package.json"`,
-
             `Detected Node.js version range: "${pkg.engines.node}"`,
             '::group::Got these Node.js versions',
         ],
