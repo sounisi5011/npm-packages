@@ -4,6 +4,7 @@ import process from 'node:process';
 import util from 'node:util';
 
 import * as core from '@actions/core';
+import type * as semver from 'semver';
 import semverRangeSubset from 'semver/ranges/subset.js';
 import { isValidationErrorLike } from 'zod-validation-error';
 
@@ -11,11 +12,20 @@ import { isJSONErrorLike, parsePackageJson } from './package-json-parser.js';
 import { minVersionMap, specifiedMaxMajorVersion, toSemverRange } from './semver-range.js';
 import { tryReplaceAbsolutePathPrefix } from './utils.js';
 
-async function run(): Promise<void> {
-    const githubWorkspacePath = process.env['GITHUB_WORKSPACE']
-        ? path.resolve(process.env['GITHUB_WORKSPACE'])
+class FailedError extends Error {
+    constructor(message: string | readonly string[]) {
+        super(([] as string[]).concat(message).join('\n'));
+    }
+}
+
+async function getSupportedNodeVersionRange(arg: {
+    cwd: string;
+    env: Record<string, string | undefined>;
+}): Promise<semver.Range> {
+    const githubWorkspacePath = arg.env['GITHUB_WORKSPACE']
+        ? path.resolve(arg.env['GITHUB_WORKSPACE'])
         : null;
-    const pkgJsonFilepath = path.resolve(process.cwd(), 'package.json');
+    const pkgJsonFilepath = path.resolve(arg.cwd, 'package.json');
     const pkgJsonReadableFilepath = tryReplaceAbsolutePathPrefix(
         pkgJsonFilepath,
         githubWorkspacePath,
@@ -26,42 +36,54 @@ async function run(): Promise<void> {
     const pkgJsonText = await fs.readFile(pkgJsonFilepath, 'utf8');
     core.info(`Parsing "${pkgJsonReadableFilepath}"`);
     const pkgJson = parsePackageJson({ pkgJsonText, pkgJsonFilename: pkgJsonReadableFilepath });
+
     const supportedNodeVersionRange = toSemverRange(pkgJson.engines.node);
     if (!supportedNodeVersionRange) {
-        core.setFailed(`Invalid Node.js version range detected: "${pkgJson.engines.node}"`);
-        return;
+        throw new FailedError(`Invalid Node.js version range detected: "${pkgJson.engines.node}"`);
     }
     core.info(`Detected Node.js version range: "${supportedNodeVersionRange.raw}"`);
 
-    const supportedMinVersionMap = minVersionMap(supportedNodeVersionRange);
-    const supportedMinMajorVersion = Math.min(...supportedMinVersionMap.keys());
+    return supportedNodeVersionRange;
+}
+
+function getSupportedMaxMajorVersion(
+    { supportedNodeVersionRange }: { supportedNodeVersionRange: semver.Range },
+): number {
     const supportedMaxMajorVersion = specifiedMaxMajorVersion(supportedNodeVersionRange);
     if (typeof supportedMaxMajorVersion !== 'number') {
-        core.setFailed([
+        throw new FailedError([
             'The Node.js version range is not including an explicitly specified major version.',
             `This version range includes all versions: "${supportedNodeVersionRange.raw}"`,
             'However, you should include the maximum version that your repository explicitly supports into Node.js version range.',
             'For example, use the following version range: ">=0.x"',
-        ].join('\n'));
-        return;
+        ]);
     }
     if (supportedMaxMajorVersion === Infinity) {
-        core.setFailed([
+        throw new FailedError([
             'The Node.js version range does not include an explicitly specified major version.',
             `This version range includes only newer versions: "${supportedNodeVersionRange.raw}"`,
             'However, you should include the maximum version that your repository explicitly supports into Node.js version range.',
             'For example, use the following version range: ">=18.x"',
-        ].join('\n'));
-        return;
+        ]);
     }
     if (supportedMaxMajorVersion === -Infinity) {
-        core.setFailed([
+        throw new FailedError([
             `This version range excludes all versions: "${supportedNodeVersionRange.raw}"`,
             'You should specify a valid version range for the "engines.node" field in `package.json` file.',
             'For example, specify a version range like this: "16.x || >=18.x"',
-        ].join('\n'));
-        return;
+        ]);
     }
+    return supportedMaxMajorVersion;
+}
+
+function getVersionSpecList(
+    { supportedNodeVersionRange }: {
+        supportedNodeVersionRange: semver.Range;
+    },
+): string[] {
+    const supportedMaxMajorVersion = getSupportedMaxMajorVersion({ supportedNodeVersionRange });
+    const supportedMinVersionMap = minVersionMap(supportedNodeVersionRange);
+    const supportedMinMajorVersion = Math.min(...supportedMinVersionMap.keys());
 
     const versionSpecList: string[] = [];
     for (let majorVersion = supportedMinMajorVersion; majorVersion <= supportedMaxMajorVersion; majorVersion++) {
@@ -79,6 +101,18 @@ async function run(): Promise<void> {
             versionSpecList.push(maxVersionSpec);
         }
     }
+    return versionSpecList;
+}
+
+async function run(): Promise<void> {
+    const supportedNodeVersionRange = await getSupportedNodeVersionRange({
+        cwd: process.cwd(),
+        env: process.env,
+    });
+
+    const versionSpecList = getVersionSpecList({
+        supportedNodeVersionRange,
+    });
 
     await core.group('Got these Node.js versions', async () => {
         core.info(versionSpecList.map(v => `- ${v}`).join('\n'));
@@ -92,7 +126,7 @@ function handleError(error: unknown): void {
 
 process.on('unhandledRejection', handleError);
 run().catch((error: unknown) => {
-    if (isJSONErrorLike(error) || isValidationErrorLike(error)) {
+    if (error instanceof FailedError || isJSONErrorLike(error) || isValidationErrorLike(error)) {
         core.setFailed(error.message);
         return;
     }
