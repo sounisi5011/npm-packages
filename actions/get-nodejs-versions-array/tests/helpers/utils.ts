@@ -37,7 +37,7 @@ export function cachedPromise<TArgs extends unknown[], TRet>(
     };
 }
 
-const tempDirpath = getDirpath(import.meta, '../tmp');
+const tempDirpath = getDirpath(import.meta, '../.temp');
 
 export async function createTempFile<T>(
     fn: (args: {
