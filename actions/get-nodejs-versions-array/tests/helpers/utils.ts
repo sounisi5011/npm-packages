@@ -5,6 +5,7 @@ import { promisify } from 'node:util';
 import v8 from 'node:v8';
 
 import { isPropertyAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
+import filenamify from 'filenamify';
 
 const setImmediateAsync = promisify(setImmediate);
 
@@ -37,7 +38,7 @@ export function cachedPromise<TArgs extends unknown[], TRet>(
     };
 }
 
-const tempDirpath = getDirpath(import.meta, '../.temp');
+const tempFileRootpath = getDirpath(import.meta, '../.temp');
 
 export async function createTempFile<T>(
     fn: (args: {
@@ -52,7 +53,7 @@ export async function createTempFile<T>(
          */
         while (true) {
             try {
-                const filepath = path.resolve(tempDirpath, Math.random().toString(36).substring(2));
+                const filepath = path.resolve(tempFileRootpath, Math.random().toString(36).substring(2));
                 tempFile = {
                     filepath,
                     fileHandle: await fs.open(
@@ -88,6 +89,69 @@ export async function createTempFile<T>(
         if (tempFile) {
             await tempFile.fileHandle.close();
             await fs.unlink(tempFile.filepath);
+        }
+    }
+}
+
+export async function createTempDir<T>(
+    fn: (args: {
+        readonly tempDirpath: string;
+        readonly writeFile: (filename: string, data: Parameters<typeof fs.writeFile>[1]) => Promise<void>;
+    }) => T,
+    options?: {
+        /**
+         * Name to use for temporary directories
+         * If this option is omitted, the directory name is randomly determined by the `fs.mkdtemp()` function
+         * The string specified in this option is converted to a safe directory name by `filenamify`
+         */
+        readonly tempDirname?: string;
+        /**
+         * This option works only if the `tempDirname` option is specified
+         */
+        readonly allowDuplicateDir?: boolean;
+        /**
+         * @default {true}
+         */
+        readonly autoClean?: boolean;
+    },
+): Promise<Awaited<T>> {
+    const tempDirpathPrefix = options?.tempDirname
+        ? path.resolve(tempFileRootpath, filenamify(options?.tempDirname))
+        : tempFileRootpath;
+    let tempDirpath: string | undefined;
+    try {
+        if (tempDirpathPrefix !== tempFileRootpath && options?.allowDuplicateDir) {
+            tempDirpath = tempDirpathPrefix;
+            await fs.mkdir(tempDirpath, { recursive: true });
+        } else {
+            tempDirpath = await fs.mkdtemp(
+                tempDirpathPrefix !== tempFileRootpath
+                    ? `${tempDirpathPrefix}--`
+                    : `${tempFileRootpath}${path.sep}`,
+            );
+        }
+
+        const createTempDirpath = tempDirpath;
+        const writeFile = async (
+            filename: string,
+            data: Parameters<typeof fs.writeFile>[1],
+        ): Promise<void> => {
+            filename = path.normalize(filename);
+            if (filename.startsWith(`..${path.sep}`)) {
+                throw new RangeError(`Paths outside the directory are not allowed: ${filename}`);
+            }
+            const filepath = path.resolve(createTempDirpath, filename);
+            await fs.mkdir(path.dirname(filepath), { recursive: true });
+            await fs.writeFile(filepath, data);
+        };
+
+        await writeFile('.gitignore', '*');
+
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await fn({ tempDirpath, writeFile });
+    } finally {
+        if (tempDirpath && (options?.autoClean === undefined || options?.autoClean)) {
+            await fs.rm(tempDirpath, { recursive: true, force: true });
         }
     }
 }
