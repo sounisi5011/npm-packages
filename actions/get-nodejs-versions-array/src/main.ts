@@ -85,22 +85,26 @@ function getVersionSpecList(
     const supportedMinVersionMap = minVersionMap(supportedNodeVersionRange);
     const supportedMinMajorVersion = Math.min(...supportedMinVersionMap.keys());
 
-    const versionSpecList: string[] = [];
-    for (let majorVersion = supportedMinMajorVersion; majorVersion <= supportedMaxMajorVersion; majorVersion++) {
-        const minVersion = supportedMinVersionMap.get(majorVersion)?.version ?? `${majorVersion}.0.0`;
-        if (supportedNodeVersionRange.test(minVersion)) {
-            versionSpecList.push(minVersion);
-        }
-        // Note: The "maximum supported version" cannot be determined using only the major versions.
-        //       For example, in the range "<= 18.0", the maximum version is "18.0.x".
-        //       However, this logic does not distinguish it from "18.x".
-        //       We thought such a version range was an edge case, so now it is still not exact logic.
-        // TODO: Fix this bug
-        const maxVersionSpec = `${majorVersion}.x`;
-        if (semverRangeSubset(`${minVersion} - ${maxVersionSpec}`, supportedNodeVersionRange)) {
-            versionSpecList.push(maxVersionSpec);
-        }
-    }
+    const versionSpecList = [...Array(supportedMaxMajorVersion - supportedMinMajorVersion + 1).keys()]
+        .flatMap(i => {
+            const majorVersion = supportedMinMajorVersion + i;
+            const minVersion = supportedMinVersionMap.get(majorVersion)?.version ?? `${majorVersion}.0.0`;
+            // Note: The "maximum supported version" cannot be determined using only the major versions.
+            //       For example, in the range "<= 18.0", the maximum version is "18.0.x".
+            //       However, this logic does not distinguish it from "18.x".
+            //       We thought such a version range was an edge case, so now it is still not exact logic.
+            // TODO: Fix this bug
+            const maxVersionSpec = `${majorVersion}.x`;
+
+            return ([] as string[]).concat(
+                supportedNodeVersionRange.test(minVersion)
+                    ? minVersion
+                    : [],
+                semverRangeSubset(`${minVersion} - ${maxVersionSpec}`, supportedNodeVersionRange)
+                    ? maxVersionSpec
+                    : [],
+            );
+        });
     return versionSpecList;
 }
 
