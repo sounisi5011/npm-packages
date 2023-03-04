@@ -48,6 +48,8 @@ export async function createTempFile<T>(
 ): Promise<Awaited<T>> {
     let tempFile: { filepath: string; fileHandle: fs.FileHandle } | undefined;
     try {
+        await fs.mkdir(tempFileRootpath, { recursive: true });
+
         /**
          * Open a file with a non-duplicate name
          */
@@ -144,8 +146,6 @@ export async function createTempDir<T>(
             await fs.mkdir(path.dirname(filepath), { recursive: true });
             await fs.writeFile(filepath, data);
         };
-
-        await writeFile('.gitignore', '*');
 
         // eslint-disable-next-line @typescript-eslint/return-await
         return await fn({ tempDirpath, writeFile });
