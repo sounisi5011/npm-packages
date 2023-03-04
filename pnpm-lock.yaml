@@ -70,7 +70,6 @@ importers:
     specifiers:
       '@actions/core': 1.10.0
       '@sounisi5011/run-if-supported': 1.1.1
-      '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/graceful-fs': 4.1.6
       '@types/node': 16.18.14
       '@types/parse-json': 4.0.0
@@ -96,7 +95,6 @@ importers:
       zod-validation-error: 1.0.1_zod@3.21.0
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
-      '@sounisi5011/ts-utils-is-property-accessible': link:../../packages/ts-utils/is-property-accessible
       '@types/graceful-fs': 4.1.6
       '@types/node': 16.18.14
       '@types/parse-json': 4.0.0

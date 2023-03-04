@@ -4,7 +4,6 @@ import url from 'node:url';
 import { promisify } from 'node:util';
 import v8 from 'node:v8';
 
-import { isPropertyAccessible } from '@sounisi5011/ts-utils-is-property-accessible';
 import filenamify from 'filenamify';
 
 const setImmediateAsync = promisify(setImmediate);
@@ -76,7 +75,7 @@ export async function createTempFile<T>(
                 };
                 break;
             } catch (error) {
-                if (!isPropertyAccessible(error) || error['code'] !== 'EEXIST') throw error;
+                if ((error as Record<PropertyKey, unknown> | null | undefined)?.['code'] !== 'EEXIST') throw error;
                 await setImmediateAsync();
             }
         }
