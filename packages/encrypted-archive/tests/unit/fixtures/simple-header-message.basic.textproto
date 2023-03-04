@@ -1,4 +1,0 @@
-# proto-file: ../../../src/protocol-buffers/header.proto
-# proto-message: SimpleHeader
-
-crypto_auth_tag: "\x04\x05\x06"
