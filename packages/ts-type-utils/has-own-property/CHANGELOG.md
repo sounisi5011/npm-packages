@@ -1,12 +1,33 @@
 # Changelog
 
 
-### [1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.3...ts-type-util-has-own-property-v1.0.4) (2023-03-04)
-
+## [1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.3...ts-type-util-has-own-property-v1.0.4) (2023-03-04)
 
 ### Bug Fixes
 
 * **package.json:** add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644)) ([6fb0689](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16))
+
+### Commits
+
+<details><summary>show 14 commits</summary>
+
+* [`85191ca`](https://www.github.com/sounisi5011/npm-packages/commit/85191ca52c0898cf6ba72bc4b80599a3f515fdf7) build(npm-scripts): introduce Turborepo ([#666](https://www.github.com/sounisi5011/npm-packages/issues/666))
+* [`6fb0689`](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16) fix(package.json): add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644))
+* [`631a50f`](https://www.github.com/sounisi5011/npm-packages/commit/631a50ff6aa637281c03099ab8ba4838944a14e9) chore(deps): update dev dependencies ([#626](https://www.github.com/sounisi5011/npm-packages/issues/626))
+* [`44a1eab`](https://www.github.com/sounisi5011/npm-packages/commit/44a1eab4ef5bb7052a376b14803e023b419b227a) chore(./scripts/fix-changelog.mjs): change the repository URL in the commit list ([#591](https://www.github.com/sounisi5011/npm-packages/issues/591))
+* [`158c865`](https://www.github.com/sounisi5011/npm-packages/commit/158c865805c5e873cfdfcd83ccd96962de77830b) chore(deps): update dependency tsd to v0.22.0 ([#534](https://www.github.com/sounisi5011/npm-packages/issues/534))
+* [`6e1ca6d`](https://www.github.com/sounisi5011/npm-packages/commit/6e1ca6d71973256a35c35ad3b84868e29c6963c2) chore: fix `scripts/fix-changelog.mjs` ([#514](https://www.github.com/sounisi5011/npm-packages/issues/514))
+* [`996e8b8`](https://www.github.com/sounisi5011/npm-packages/commit/996e8b812a5cd95da32f908c94991276e1029017) ci(release): auto-fix `CHANGELOG.md` before release ([#513](https://www.github.com/sounisi5011/npm-packages/issues/513))
+* [`233dff6`](https://www.github.com/sounisi5011/npm-packages/commit/233dff684d4c37ec9bc97cb3058ac881b21d07da) chore(deps): update dependency typescript to v4.7.4 ([#497](https://www.github.com/sounisi5011/npm-packages/issues/497))
+* [`3f9ef6a`](https://www.github.com/sounisi5011/npm-packages/commit/3f9ef6ae64ec714aa2267f2b2ba0cbd2ba91c15f) chore(deps): update dependency tsd to v0.21.0 ([#487](https://www.github.com/sounisi5011/npm-packages/issues/487))
+* [`8acee49`](https://www.github.com/sounisi5011/npm-packages/commit/8acee49cc87994fc89e70c69a1e3597fa16d32f6) chore(deps): update dependency typescript to v4.7.3 ([#466](https://www.github.com/sounisi5011/npm-packages/issues/466))
+* [`ad31b57`](https://www.github.com/sounisi5011/npm-packages/commit/ad31b578c35135d4ce27339e5508b0c348e0ad65) chore(deps): update dependency tsd to v0.20.0 ([#391](https://www.github.com/sounisi5011/npm-packages/issues/391))
+* [`36f404d`](https://www.github.com/sounisi5011/npm-packages/commit/36f404d3cbc95a5f185b9bd950d3cd9bec43b4f1) chore(deps): update dependency typescript to v4.7.2 ([#394](https://www.github.com/sounisi5011/npm-packages/issues/394))
+* [`534a5ca`](https://www.github.com/sounisi5011/npm-packages/commit/534a5cac91c8080b2fa757c44e40396159ae48bb) chore(deps): update dependency tsd to v0.19.1 ([#343](https://www.github.com/sounisi5011/npm-packages/issues/343))
+* [`a3864e0`](https://www.github.com/sounisi5011/npm-packages/commit/a3864e00b975f1e7a33bc4e3f125b2686bb6f81e) chore(deps): update dependency typescript to v4.5.4 ([#324](https://www.github.com/sounisi5011/npm-packages/issues/324))
+
+</details>
+
 
 ## [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.2...ts-type-util-has-own-property-v1.0.3) (2021-12-09)
 
