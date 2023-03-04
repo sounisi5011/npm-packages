@@ -3,17 +3,14 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    /* Projects */
-    "incremental": false, // If the `incremental` option is `true`, the build by `@vercel/ncc@0.27.0` will fail
-    "composite": false, // If the `composite` option is `true`, the `incremental` option cannot be `false`
-
     /* Modules */
     "module": "Node16",
     "types": ["node"],
     "resolveJsonModule": true,
 
     /* Emit */
-    "declaration": false,
+    // If the `declaration` option is `false`, the build using `@vercel/ncc@0.36.1` will fail
+    //"declaration": false,
     "declarationMap": false,
     "noEmit": true,
 
