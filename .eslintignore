@@ -5,6 +5,7 @@
 **/protocol-buffers/*_pb.js
 **/protocol-buffers/*_pb.d.ts
 **/runkit-example.js
+.temp/
 coverage/
 node_modules/
 dist/
