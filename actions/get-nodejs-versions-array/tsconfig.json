@@ -20,5 +20,5 @@
     // So, enable the `skipLibCheck` option to avoid this error
     "skipLibCheck": true
   },
-  "include": ["./src/**/*", "./tests/**/*"]
+  "include": ["./src/**/*", "./tests/**/*", "./package.json"]
 }
