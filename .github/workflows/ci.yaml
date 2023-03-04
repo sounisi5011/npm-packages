@@ -411,12 +411,11 @@ jobs:
           name: build-results@${{ github.sha }}
           path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
-        id: restore-deps-and-build
         shell: bash
         run: |
           if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst ]; then
             tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
-            echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
+            echo 'restore_deps_node_modules=1' >> "${GITHUB_ENV}"
           fi
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Git Setting
@@ -456,10 +455,10 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
+        if: ${{ ! env.restore_deps_node_modules }}
       - name: Install Dependencies
         run: pnpm install
-        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
+        if: ${{ ! env.restore_deps_node_modules }}
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7
