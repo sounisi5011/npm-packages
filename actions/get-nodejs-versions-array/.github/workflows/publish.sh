@@ -59,6 +59,12 @@ mv "${GIT_ROOT_PATH}/${PKG_ROOT_DIRNAME}"/* "${GIT_ROOT_PATH}/"
 ls -lhpa
 echo '::endgroup::'
 
+echo '::group::Create package.json file'
+# This JavaScript action is written in ECMAScript modules, so this file is required.
+echo '{"type":"module"}' > "${GIT_ROOT_PATH}/package.json"
+cat "${GIT_ROOT_PATH}/package.json"
+echo '::endgroup::'
+
 echo '::group::Create README.md file'
 {
   echo '> **Note**'
