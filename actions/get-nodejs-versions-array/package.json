@@ -1,7 +1,7 @@
 {
   "name": "get-nodejs-versions-array-action",
   "version": "0.0.1",
-  "description": "Get the path and package name of a node submodules in npm/yarn/pnpm workspaces",
+  "description": "Get an array of Node.js versions supported by your repository",
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/get-nodejs-versions-array#readme",
   "bugs": {
     "url": "https://github.com/sounisi5011/npm-packages/issues"
