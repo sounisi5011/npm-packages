@@ -69,13 +69,15 @@ jobs:
           - 16.x
     steps:
       - uses: actions/checkout@v3
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
+        # Note: We need to enable pnpm before running `actions/setup-node`.
+        #       Because the `cache: pnpm` option executes pnpm.
+        run: corepack enable
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-      - name: Enable Corepack (Automatically setup a package manager for Node.js)
-        run: corepack enable
       - name: Install Dependencies
         run: pnpm install
       - name: Build packages
@@ -133,12 +135,14 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
+        # Note: We need to enable pnpm before running `actions/setup-node`.
+        #       Because the `cache: pnpm` option executes pnpm.
+        run: corepack enable
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Enable Corepack (Automatically setup a package manager for Node.js)
-        run: corepack enable
       - name: Cache actionlint
         uses: actions/cache@v3
         with:
@@ -172,12 +176,14 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
+        # Note: We need to enable pnpm before running `actions/setup-node`.
+        #       Because the `cache: pnpm` option executes pnpm.
+        run: corepack enable
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Enable Corepack (Automatically setup a package manager for Node.js)
-        run: corepack enable
       - name: Setup dprint
         # The dprint command may fail to deserialize the wasm module.
         # This only happens on CI, and in some cases no error occurs.
@@ -291,12 +297,14 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
+        # Note: We need to enable pnpm before running `actions/setup-node`.
+        #       Because the `cache: pnpm` option executes pnpm.
+        run: corepack enable
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Enable Corepack (Automatically setup a package manager for Node.js)
-        run: corepack enable
       - name: Install flatbuffers
         # https://snapcraft.io/flatbuffers
         run: |
@@ -429,6 +437,10 @@ jobs:
         run: |
           git config --global user.name  CI
           git config --global user.email dummy@example.com
+      - name: Enable Corepack (Automatically setup a package manager for Node.js)
+        # Note: We need to enable pnpm before running `actions/setup-node`.
+        #       Because the `cache: pnpm` option executes pnpm.
+        run: corepack enable
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
