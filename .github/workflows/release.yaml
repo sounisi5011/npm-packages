@@ -123,19 +123,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: pnpm
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ steps.release-pr.outputs.ref }}
-      - name: Commit to Release PR / Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-16.x-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
         if: ${{ steps.release-pr.outputs.ref }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
@@ -211,22 +202,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: pnpm
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ steps.release.outputs.releases_created }}
-      - name: Publish / Cache .pnpm-store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-16.x-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
         if: ${{ steps.release.outputs.releases_created }}
       - name: Publish / Install Dependencies
         run: pnpm install
