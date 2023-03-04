@@ -8,6 +8,7 @@
 # Ultra Runner cache
 .ultra.cache.json
 
+.temp/
 coverage/
 node_modules/
 dist/

@@ -26,6 +26,7 @@ rules:
     - devDependencies:
         - "*"
         - ".*"
+        - "**/*.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
         - "**/*.test-d.{ts,cts,mts}"
         - "**/tests/**"
   import/order:
@@ -160,6 +161,13 @@ overrides:
       jest/prefer-todo: error
       jest/require-top-level-describe: error
       jest/valid-title: error
+  - files:
+      - "**/*.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
+    extends:
+      - plugin:vitest/all
+    rules:
+      # We do not think we need to limit the number of `expect()`
+      vitest/max-expects: off
   - files: "**/examples/**"
     rules:
       node/no-missing-require: off

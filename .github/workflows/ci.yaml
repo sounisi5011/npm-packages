@@ -374,48 +374,44 @@ jobs:
           else
             echo '::notice::No uncommitted changes by build'
           fi
+  detect-supported-node:
+    needs: if-run-ci
+    runs-on: ubuntu-latest
+    outputs:
+      versions-json: ${{ steps.detector.outputs.versions-json }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: detector
+        uses: ./actions/get-nodejs-versions-array
   unit-test:
-    needs: pre-build
+    needs: [detect-supported-node, pre-build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-          - 12.17.0 # minimum version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
-          - 12.20.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
-          - 12.x
-          - 14.1.0
+        node-version: ${{ fromJson(needs.detect-supported-node.outputs.versions-json) }}
+        exclude:
+          - node-version: 14.0.0
             # When trying install dependencies via pnpm in Node.js 14.0.0, pnpm throws the following error:
             #   Error [ERR_STREAM_PREMATURE_CLOSE]: Premature close
             # This problem started occurring around 2022-06-27.
             # It is probably an issue with the npm registry, as it also started occurring with older pnpm.
-          - 14.13.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
-          - 14.13.1 # minimum version that supports "node:" import - https://nodejs.org/api/esm.html#node-imports
-          - 14.18.0 # minimum version where the "require()" function supports "node:" import - https://nodejs.org/api/modules.html#core-modules
-          - 14.x
-          - 15.0.0
-          - 15.x
-          - 16.0.0
-          - 16.x
-          - 17.0.0
-          - 17.x
-          - 18.0.0
-          - 18.x
         include:
           # Corepack 0.11.0 and later only supports Node.js 14.14.0 and later
           # see https://github.com/nodejs/corepack/pull/227
-          - node-version: 12.17.0
+          - node-version: 12.17.0 # minimum version supported by pnpm v6 - https://github.com/pnpm/pnpm/releases/tag/v6.0.0
             corepack-version-range: "<0.11"
-          - node-version: 12.20.0
+          - node-version: 12.20.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
             corepack-version-range: "<0.11"
           - node-version: 12.x
             corepack-version-range: "<0.11"
-          - node-version: 14.1.0
+          - node-version: 14.1.0 # 14.0.0 excluded, so add the next version 14.1.0
             corepack-version-range: "<0.11"
-          - node-version: 14.13.0
+          - node-version: 14.13.0 # minimum version that supports ECMAScript modules - https://nodejs.org/api/esm.html#modules-ecmascript-modules
             corepack-version-range: "<0.11"
-          - node-version: 14.13.1
+          - node-version: 14.13.1 # minimum version that supports "node:" import - https://nodejs.org/api/esm.html#node-imports
             corepack-version-range: "<0.11"
+          - node-version: 14.18.0 # minimum version where the "require()" function supports "node:" import - https://nodejs.org/api/modules.html#core-modules
     steps:
       - uses: actions/checkout@v3
       - name: Download installed dependencies
