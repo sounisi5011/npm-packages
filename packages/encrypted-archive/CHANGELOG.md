@@ -1,6 +1,19 @@
 # Changelog
 
 
+### [0.1.1](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.1.0...encrypted-archive-v0.1.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* **@sounisi5011/encrypted-archive:** fix incorrect error messages ([#594](https://www.github.com/sounisi5011/npm-packages/issues/594)) ([d8f3edc](https://www.github.com/sounisi5011/npm-packages/commit/d8f3edc761fb832a3b71350297be3af3ca2d0547))
+* **@sounisi5011/encrypted-archive:** replace "cleartext" with "plaintext" in the source code ([#671](https://www.github.com/sounisi5011/npm-packages/issues/671)) ([b34ccb5](https://www.github.com/sounisi5011/npm-packages/commit/b34ccb5c4fabfd848031dd2e3cf02aeee6a82b3c))
+* **@sounisi5011/encrypted-archive:** use protoc commands published in npm ([#545](https://www.github.com/sounisi5011/npm-packages/issues/545)) ([95f3346](https://www.github.com/sounisi5011/npm-packages/commit/95f334650dfb51ea214b74943177b67f0e91ad5b))
+* **@sounisi5011/encrypted-archive:** validate password type ([#557](https://www.github.com/sounisi5011/npm-packages/issues/557)) ([e3f4a0c](https://www.github.com/sounisi5011/npm-packages/commit/e3f4a0c38ddcc1713c5f41b4bc76edba60a4f2e3))
+* **encrypted-archive:** support Node.js v18+ ([#433](https://www.github.com/sounisi5011/npm-packages/issues/433)) ([61952dd](https://www.github.com/sounisi5011/npm-packages/commit/61952dd4acacf24d3eb8990b033c220786727624))
+* **package.json:** add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644)) ([6fb0689](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16))
+* **protocol buffers:** update protoc to v3.19.4 ([#544](https://www.github.com/sounisi5011/npm-packages/issues/544)) ([48cd775](https://www.github.com/sounisi5011/npm-packages/commit/48cd7759f880f073534a5a3799073f5830e35eb5))
+
 ## [0.1.0](https://www.github.com/sounisi5011/npm-packages/compare/encrypted-archive-v0.0.4...encrypted-archive-v0.1.0) (2021-12-09)
 
 ### Features
