@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [2.0.0](https://www.github.com/sounisi5011/npm-packages/compare/check-pid-file-v1.1.2...check-pid-file-v2.0.0) (2023-03-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* **check-pid-file:** `@sounisi5011/check-pid-file` now supports the following semver ranges of node: `^14.13.1 || 16.x || >=18.x`
+
+### Bug Fixes
+
+* **check-pid-file:** drop support for Node.js 12, Node.js 15, and Node.js 17 ([#634](https://www.github.com/sounisi5011/npm-packages/issues/634)) ([5a893e7](https://www.github.com/sounisi5011/npm-packages/commit/5a893e71fc582ce91ebf4c12427532b310d0a8fb))
+* **deps:** update dependency write-file-atomic to v5 ([#624](https://www.github.com/sounisi5011/npm-packages/issues/624)) ([d142677](https://www.github.com/sounisi5011/npm-packages/commit/d142677874d2530cde0be718c32054cbf58bda00))
+* **package.json:** add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644)) ([6fb0689](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16))
+
 ## [1.1.2](https://www.github.com/sounisi5011/npm-packages/compare/check-pid-file-v1.1.1...check-pid-file-v1.1.2) (2022-05-28)
 
 ### Bug Fixes
