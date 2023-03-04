@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [1.0.4](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.3...ts-type-util-has-own-property-v1.0.4) (2023-03-04)
+
+
+### Bug Fixes
+
+* **package.json:** add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644)) ([6fb0689](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16))
+
 ## [1.0.3](https://www.github.com/sounisi5011/npm-packages/compare/ts-type-util-has-own-property-v1.0.2...ts-type-util-has-own-property-v1.0.3) (2021-12-09)
 
 ### Bug Fixes
