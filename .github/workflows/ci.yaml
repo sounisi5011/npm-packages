@@ -492,28 +492,3 @@ jobs:
             || contains(needs.*.result, 'skipped')
           }}
         run: exit 1
-
-  debug-env-context:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set test_flag env
-        shell: bash
-        run: |
-          echo "test_flag=true" >> "${GITHUB_ENV}"
-
-      - name: Should be skipped
-        run: echo ok
-        if: ${{ ! env.test_flag }}
-      - name: Should be skipped 2
-        run: echo ok
-        if: ${{ ! env.test_flag }}
-
-      - name: Should not be skipped
-        run: echo good
-        if: ${{ env.test_flag }}
-      - name: Should not be skipped 2
-        run: echo good
-        if: ${{ env.test_flag }}
-
-      - name: Check environment variables
-        run: node -p 'Object.fromEntries(Object.entries(process.env).filter(([k]) => /^test_?flag$/i.test(k)))'
