@@ -72,7 +72,7 @@ importers:
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
       '@types/graceful-fs': 4.1.6
-      '@types/node': 16.18.13
+      '@types/node': 16.18.14
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
       '@vercel/ncc': 0.36.1
@@ -85,20 +85,20 @@ importers:
       shx: 0.3.4
       typescript: 4.9.5
       vitest: 0.29.2
-      zod: 3.20.6
-      zod-validation-error: 0.3.2
+      zod: 3.21.0
+      zod-validation-error: 1.0.1
     dependencies:
       '@actions/core': 1.10.0
       graceful-fs: 4.2.10
       parse-json: 6.0.2
       semver: 7.3.8
-      zod: 3.20.6
-      zod-validation-error: 0.3.2_zod@3.20.6
+      zod: 3.21.0
+      zod-validation-error: 1.0.1_zod@3.21.0
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-utils-is-property-accessible': link:../../packages/ts-utils/is-property-accessible
       '@types/graceful-fs': 4.1.6
-      '@types/node': 16.18.13
+      '@types/node': 16.18.14
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
       '@vercel/ncc': 0.36.1
@@ -2193,7 +2193,7 @@ packages:
   /@types/graceful-fs/4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
-      '@types/node': 16.18.13
+      '@types/node': 16.18.14
     dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
@@ -2254,8 +2254,8 @@ packages:
     resolution: {integrity: sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==}
     dev: true
 
-  /@types/node/16.18.13:
-    resolution: {integrity: sha512-l0/3XZ153UTlNOnZK8xSNoJlQda9/WnYgiTdcKKPJSZjdjI9MU+A9oMXOesAWLSnqAaaJhj3qfQsU07Dr8OUwg==}
+  /@types/node/16.18.14:
+    resolution: {integrity: sha512-wvzClDGQXOCVNU4APPopC2KtMYukaF1MN/W3xAmslx22Z4/IF1/izDMekuyoUlwfnDHYCIZGaj7jMwnJKBTxKw==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -9286,7 +9286,7 @@ packages:
   /varint/6.0.0:
     resolution: {integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==}
 
-  /vite-node/0.29.2_@types+node@16.18.13:
+  /vite-node/0.29.2_@types+node@16.18.14:
     resolution: {integrity: sha512-5oe1z6wzI3gkvc4yOBbDBbgpiWiApvuN4P55E8OI131JGrSuo4X3SOZrNmZYo4R8Zkze/dhi572blX0zc+6SdA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -9296,7 +9296,7 @@ packages:
       mlly: 1.1.1
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.1.4_@types+node@16.18.13
+      vite: 4.1.4_@types+node@16.18.14
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -9307,7 +9307,7 @@ packages:
       - terser
     dev: true
 
-  /vite/4.1.4_@types+node@16.18.13:
+  /vite/4.1.4_@types+node@16.18.14:
     resolution: {integrity: sha512-3knk/HsbSTKEin43zHu7jTwYWv81f8kgAL99G5NWBcA1LKvtvcVAC4JjBH1arBunO9kQka+1oGbrMKOjk4ZrBg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -9332,7 +9332,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 16.18.13
+      '@types/node': 16.18.14
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1
@@ -9365,7 +9365,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
-      '@types/node': 16.18.13
+      '@types/node': 16.18.14
       '@vitest/expect': 0.29.2
       '@vitest/runner': 0.29.2
       '@vitest/spy': 0.29.2
@@ -9384,8 +9384,8 @@ packages:
       tinybench: 2.4.0
       tinypool: 0.3.1
       tinyspy: 1.1.1
-      vite: 4.1.4_@types+node@16.18.13
-      vite-node: 0.29.2_@types+node@16.18.13
+      vite: 4.1.4_@types+node@16.18.14
+      vite-node: 0.29.2_@types+node@16.18.14
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
@@ -9641,15 +9641,15 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
 
-  /zod-validation-error/0.3.2_zod@3.20.6:
-    resolution: {integrity: sha512-pBXItXNDup6KF54fdnA+cmB/eEt65HlN5pmahfBTUhufWEnXs4ouU8lLXh01GoAksIR9K7iF7BxXxkKvct+r+A==}
+  /zod-validation-error/1.0.1_zod@3.21.0:
+    resolution: {integrity: sha512-QRk2AtHLJg8sCZAbEjXSs7E0n4/mSdX5caoh6eOUvDSdcIQz03i0xoNN1Qx6UZT+ADVHRK6+ZXRtldzW6nnltA==}
     engines: {node: ^14.17 || >=16.0.0}
     peerDependencies:
       zod: ^3.18.0
     dependencies:
-      zod: 3.20.6
+      zod: 3.21.0
     dev: false
 
-  /zod/3.20.6:
-    resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
+  /zod/3.21.0:
+    resolution: {integrity: sha512-UYdykTcVxB6lfdyLzAqLyyYAlOcpoluECvjsdoaqfQmz9p+3LRaIqYcNiL/J2kFYp66fBM8wwBvIGVEjq7KtZw==}
     dev: false
