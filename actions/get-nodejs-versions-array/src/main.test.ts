@@ -186,37 +186,26 @@ describe('if the GITHUB_WORKSPACE environment variable is exists, display readab
 
 describe('show errors', () => {
     interface ErrorTestCase {
-        pkgJson: unknown;
+        pkgJson?: unknown;
         expected: {
             stdoutAndStderr: ReadonlyArray<string | AsymmetricMatcherInterface>;
             error: string | AsymmetricMatcherInterface | ReadonlyArray<string | AsymmetricMatcherInterface>;
         };
     }
 
-    it('package.json file does not exist', async () => {
-        const { githubWorkspace, result } = await createTempDir(async ({ tempDirpath }) => {
-            const result = execaNode(MAIN_FILE_PATH, {
-                cwd: tempDirpath,
-                env: { GITHUB_WORKSPACE: tempDirpath },
-                all: true,
-                // When running unit tests on GitHub Actions, the tests fail due to passed environment variables.
-                // So, disallow inheritance of environment variables.
-                extendEnv: false,
-            });
-            await result.catch(() => null);
-            return { githubWorkspace: tempDirpath, result };
-        });
-        await expect(result)
-            .rejects.toMatchObject({
-                all: [
-                    `Reading "\${GITHUB_WORKSPACE}${path.sep}package.json"`,
-                    `::error::Unhandled error: Error: ENOENT: no such file or directory, open '${githubWorkspace}${path.sep}package.json'`,
-                ].join(os.EOL),
-            });
-    });
-
     it.each(
         Object.entries<ErrorTestCase>({
+            'package.json file does not exist': {
+                expected: {
+                    stdoutAndStderr: [
+                        `Reading "\${GITHUB_WORKSPACE}${path.sep}package.json"`,
+                        expect.stringMatching(/^::error::/),
+                    ],
+                    error: [
+                        `"\${GITHUB_WORKSPACE}${path.sep}package.json" file does not exist`,
+                    ],
+                },
+            },
             'package.json file with invalid JSON': {
                 pkgJson: '{\n  "foo": 42,\r  "bar": \r\n}',
                 expected: {
@@ -372,11 +361,13 @@ describe('show errors', () => {
                 /**
                  * Create `package.json` files in the temporary directory.
                  */
-                await writeFile(
-                    'package.json',
-                    // eslint-disable-next-line vitest/no-conditional-in-test
-                    typeof pkgJson === 'string' ? pkgJson : JSON.stringify(pkgJson),
-                );
+                if (pkgJson !== undefined) { // eslint-disable-line vitest/no-conditional-in-test
+                    await writeFile(
+                        'package.json',
+                        // eslint-disable-next-line vitest/no-conditional-in-test
+                        typeof pkgJson === 'string' ? pkgJson : JSON.stringify(pkgJson),
+                    );
+                }
                 /**
                  * Execute `dist/index.js`.
                  * This should detect `package.json` files in the temporary directory.

@@ -12,6 +12,8 @@ import { isJSONErrorLike, parsePackageJson } from './package-json-parser.js';
 import { minVersionMap, specifiedMaxMajorVersion, toSemverRange } from './semver-range.js';
 import { tryReplaceAbsolutePathPrefix } from './utils.js';
 
+type IndexAccessibleUnknown = Record<PropertyKey, unknown> | null | undefined;
+
 class FailedError extends Error {
     constructor(message: string | readonly string[]) {
         super(([] as string[]).concat(message).join('\n'));
@@ -33,7 +35,14 @@ async function getSupportedNodeVersionRange(arg: {
     );
 
     core.info(`Reading "${pkgJsonReadableFilepath}"`);
-    const pkgJsonText = await fs.readFile(pkgJsonFilepath, 'utf8');
+    const pkgJsonText = await fs.readFile(pkgJsonFilepath, 'utf8')
+        .catch((error: IndexAccessibleUnknown) => {
+            if (error?.['code'] !== 'ENOENT') {
+                // eslint-disable-next-line @typescript-eslint/no-throw-literal
+                throw error;
+            }
+            throw new FailedError(`"${pkgJsonReadableFilepath}" file does not exist`);
+        });
     core.info(`Parsing "${pkgJsonReadableFilepath}"`);
     const pkgJson = parsePackageJson({ pkgJsonText, pkgJsonFilename: pkgJsonReadableFilepath });
 
