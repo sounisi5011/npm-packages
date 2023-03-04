@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [2.0.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v2.0.0...run-if-supported-v2.0.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-install-checks to v6 ([#622](https://www.github.com/sounisi5011/npm-packages/issues/622)) ([8e29276](https://www.github.com/sounisi5011/npm-packages/commit/8e2927643397249dd81ccb71d4511d8f4259e4d7))
+
 ## [2.0.0](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.1...run-if-supported-v2.0.0) (2022-06-27)
 
 ### ⚠ BREAKING CHANGES
