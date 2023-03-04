@@ -24,7 +24,7 @@ importers:
       eslint-plugin-n: 15.6.0
       eslint-plugin-node: 11.1.0
       eslint-plugin-promise: 6.1.1
-      eslint-plugin-vitest: 0.0.53
+      eslint-plugin-vitest: 0.0.54
       husky: 8.0.3
       lint-staged: 13.1.0
       npm-run-all: 4.1.5
@@ -55,7 +55,7 @@ importers:
       eslint-plugin-n: 15.6.0_eslint@8.31.0
       eslint-plugin-node: 11.1.0_eslint@8.31.0
       eslint-plugin-promise: 6.1.1_eslint@8.31.0
-      eslint-plugin-vitest: 0.0.53_eslint@8.31.0+typescript@4.9.4
+      eslint-plugin-vitest: 0.0.54_eslint@8.31.0+typescript@4.9.4
       husky: 8.0.3
       lint-staged: 13.1.0
       npm-run-all: 4.1.5
@@ -4263,8 +4263,8 @@ packages:
       eslint: 8.31.0
     dev: true
 
-  /eslint-plugin-vitest/0.0.53_eslint@8.31.0+typescript@4.9.4:
-    resolution: {integrity: sha512-OvPAPp7P9xr+3VLM8eHcenYOT3rdyWQb0naZ+ZeAjpDwYcyQWfOofS6Foq1Hh+ilEM94GegxuduJLLEEM94nQg==}
+  /eslint-plugin-vitest/0.0.54_eslint@8.31.0+typescript@4.9.4:
+    resolution: {integrity: sha512-6ZR52LJ2pNe3aVaWkDBR7Cg8FlpEe9XDWnvtHU0kbl01IgijPRL3tVSfjiBSfpYUF8kzC0W9XjhzHttElOsXiQ==}
     engines: {node: 14.x || >= 16}
     peerDependencies:
       eslint: '>=8.0.0'
