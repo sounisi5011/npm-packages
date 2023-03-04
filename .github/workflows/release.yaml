@@ -122,7 +122,6 @@ jobs:
         # Commit to PR
         #
       - name: Commit to Release PR / Get PR ref
-        id: release-pr
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -130,24 +129,24 @@ jobs:
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "ref=${ref}" >> "${GITHUB_OUTPUT}"
+          echo "release_pr_ref=${ref}" >> "${GITHUB_ENV}"
         if: ${{ ! env.release_created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.release-pr.outputs.ref }}
+          ref: ${{ env.release_pr_ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
           # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
           fetch-depth: 0
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
       - name: Commit to Release PR / Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.default-node-version }}
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
       - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -157,10 +156,10 @@ jobs:
             ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
       - name: Commit to Release PR / Push to PR
         shell: bash
         # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
@@ -220,7 +219,7 @@ jobs:
           echo '::group::$' git push
                             git push
           echo '::endgroup::'
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release_pr_ref }}
 
         #
         # Publish
