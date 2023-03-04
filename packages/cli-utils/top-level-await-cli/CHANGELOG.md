@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [1.1.4](https://www.github.com/sounisi5011/npm-packages/compare/cli-utils-top-level-await-v1.1.3...cli-utils-top-level-await-v1.1.4) (2023-03-04)
+
+
+### Bug Fixes
+
+* **package.json:** add "types" import condition to the `exports` field in `package.json` ([#644](https://www.github.com/sounisi5011/npm-packages/issues/644)) ([6fb0689](https://www.github.com/sounisi5011/npm-packages/commit/6fb0689f8640957f627df7ffccb155abfd593f16))
+
 ## [1.1.3](https://www.github.com/sounisi5011/npm-packages/compare/cli-utils-top-level-await-v1.1.2...cli-utils-top-level-await-v1.1.3) (2022-05-28)
 
 ### Bug Fixes
