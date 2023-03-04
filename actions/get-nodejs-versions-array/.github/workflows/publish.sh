@@ -13,8 +13,12 @@ update_git_tag() {
   git push origin "${tag_name}"
 }
 
-update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}"                  "Release ${matrix_package_name_with_scope}@${outputs_major}.x"
-update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}.${outputs_minor}" "Release ${matrix_package_name_with_scope}@${outputs_major}.${outputs_minor}.x"
+# shellcheck disable=SC2154
+readonly tagMessage="Release ${matrix_package_name_with_scope}@${outputs_major}.${outputs_minor}.${outputs_patch}"
+
+# shellcheck disable=SC2154
+update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}" "${tagMessage}"
+update_git_tag "${matrix_package_name_without_scope}-v${outputs_major}.${outputs_minor}" "${tagMessage}"
 
 # Try to create a commit having an action directly under the repository.
 # This allows users to use this action without having to specify a directory name.
@@ -26,12 +30,15 @@ readonly GITHUB_URL_PREFIX='https://github.com/sounisi5011/npm-packages'
 readonly TAG_NAME_PREFIX='actions/get-nodejs-versions-array'
 readonly latestTagName="${TAG_NAME_PREFIX}-latest"
 
-cd "${GIT_ROOT_PATH}"
+cd "${GIT_ROOT_PATH}" || ! echo "[!] Move to '${GIT_ROOT_PATH}' failed"
 echo '::group::$' git checkout "refs/tags/${latestTagName}"
 if git checkout "refs/tags/${latestTagName}"; then
   echo '::endgroup::'
 
   echo '::group::$' git merge --no-commit "${GIT_RELEASE_COMMIT_REF}"
+  # Tries to merge in order to keep a Git history.
+  # However, the merge content is not used here.
+  # Therefore, we disable automatic commit.
   git merge --no-commit "${GIT_RELEASE_COMMIT_REF}" || true
   echo '::endgroup::'
 else
@@ -55,13 +62,14 @@ echo '::endgroup::'
 echo '::group::Create README.md file'
 {
   echo '> **Note**'
-  echo '> This place is a copy of [`'"${outputs_tag_name}"'` tag].'
+  echo '> This place is a copy in [the `'"${PKG_ROOT_DIRNAME}"'` directory] of [the commit specified by the '"${outputs_tag_name}"' tag]'
   # shellcheck disable=SC2016
   echo '> If you want to contribute, please move to [the `main` branch]!'
   echo
   # shellcheck disable=SC2016
   echo '[the `main` branch]:' "${GITHUB_URL_PREFIX}/tree/main/${PKG_ROOT_DIRNAME}"
-  echo '[`'"${outputs_tag_name}"'` tag]:' "${GITHUB_URL_PREFIX}/tree/${outputs_tag_name}/${PKG_ROOT_DIRNAME}"
+  echo '[the commit specified by the '"${outputs_tag_name}"' tag]:' "${GITHUB_URL_PREFIX}/tree/${outputs_tag_name}"
+  echo '[the `'"${PKG_ROOT_DIRNAME}"'` directory]:' "${GITHUB_URL_PREFIX}/tree/${outputs_tag_name}/${PKG_ROOT_DIRNAME}"
 } > "${GIT_ROOT_PATH}/README.md"
 cat "${GIT_ROOT_PATH}/README.md"
 echo '::endgroup::'
@@ -100,8 +108,6 @@ git commit --reuse-message="${GIT_RELEASE_COMMIT_REF}" --no-verify
 echo '::endgroup::'
 
 echo '::group::Add Git Tags'
-# shellcheck disable=SC2154
-readonly tagMessage="Release ${matrix_package_name_with_scope}@${outputs_major}.${outputs_minor}.${outputs_patch}"
 update_git_tag "${latestTagName}" "${tagMessage}"
 update_git_tag "${TAG_NAME_PREFIX}-v${outputs_major}" "${tagMessage}"
 update_git_tag "${TAG_NAME_PREFIX}-v${outputs_major}.${outputs_minor}" "${tagMessage}"
