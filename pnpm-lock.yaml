@@ -71,6 +71,7 @@ importers:
       '@actions/core': 1.10.0
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-utils-is-property-accessible': workspace:^1.0.0
+      '@types/graceful-fs': 4.1.6
       '@types/node': 16.18.13
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
@@ -78,6 +79,7 @@ importers:
       cross-env: 7.0.3
       execa: 7.0.0
       filenamify: 5.1.1
+      graceful-fs: 4.2.10
       parse-json: 6.0.2
       semver: 7.3.8
       typescript: 4.9.5
@@ -86,6 +88,7 @@ importers:
       zod-validation-error: 0.3.2
     dependencies:
       '@actions/core': 1.10.0
+      graceful-fs: 4.2.10
       parse-json: 6.0.2
       semver: 7.3.8
       zod: 3.20.6
@@ -93,6 +96,7 @@ importers:
     devDependencies:
       '@sounisi5011/run-if-supported': 1.1.1
       '@sounisi5011/ts-utils-is-property-accessible': link:../../packages/ts-utils/is-property-accessible
+      '@types/graceful-fs': 4.1.6
       '@types/node': 16.18.13
       '@types/parse-json': 4.0.0
       '@types/semver': 7.3.13
@@ -2180,7 +2184,7 @@ packages:
   /@types/graceful-fs/4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 16.18.13
     dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
@@ -5014,7 +5018,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}

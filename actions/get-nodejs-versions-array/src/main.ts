@@ -1,9 +1,9 @@
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import util from 'node:util';
 
 import * as core from '@actions/core';
+import fs from 'graceful-fs';
 import type * as semver from 'semver';
 import semverRangeSubset from 'semver/ranges/subset.js';
 import { isValidationErrorLike } from 'zod-validation-error';
@@ -11,6 +11,8 @@ import { isValidationErrorLike } from 'zod-validation-error';
 import { isJSONErrorLike, parsePackageJson } from './package-json-parser.js';
 import { minVersionMap, specifiedMaxMajorVersion, toSemverRange } from './semver-range.js';
 import { tryReplaceAbsolutePathPrefix } from './utils.js';
+
+const readFileAsync = util.promisify(fs.readFile);
 
 type IndexAccessibleUnknown = Record<PropertyKey, unknown> | null | undefined;
 
@@ -35,7 +37,7 @@ async function getSupportedNodeVersionRange(arg: {
     );
 
     core.info(`Reading "${pkgJsonReadableFilepath}"`);
-    const pkgJsonText = await fs.readFile(pkgJsonFilepath, 'utf8')
+    const pkgJsonText = await readFileAsync(pkgJsonFilepath, 'utf8')
         .catch((error: IndexAccessibleUnknown) => {
             if (error?.['code'] !== 'ENOENT') {
                 // eslint-disable-next-line @typescript-eslint/no-throw-literal
