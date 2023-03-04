@@ -165,6 +165,9 @@ overrides:
       - "**/*.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
     extends:
       - plugin:vitest/all
+    rules:
+      # We do not think we need to limit the number of `expect()`
+      vitest/max-expects: off
   - files: "**/examples/**"
     rules:
       node/no-missing-require: off
