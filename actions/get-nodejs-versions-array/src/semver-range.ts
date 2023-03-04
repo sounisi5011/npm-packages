@@ -21,10 +21,9 @@ export function minVersionMap(semverRange: string | SemverRange): Map<number, Se
         .flatMap(singleRange => semverMinVersion(singleRange) ?? [])
         .reduce<Map<number, SemVer>>((map, newSemver) => {
             const existedSemver = map.get(newSemver.major);
-            if (!existedSemver || semverLt(newSemver, existedSemver)) {
-                map.set(newSemver.major, newSemver);
-            }
-            return map;
+            return (!existedSemver || semverLt(newSemver, existedSemver))
+                ? map.set(newSemver.major, newSemver)
+                : map;
         }, new Map());
 }
 

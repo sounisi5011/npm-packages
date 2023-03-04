@@ -1,9 +1,8 @@
-import path from 'node:path';
-import process from 'node:process';
-import util from 'node:util';
+import { resolve as resolvePath } from 'node:path';
+import { inspect as inspectValue, promisify } from 'node:util';
 
-import * as core from '@actions/core';
-import fs from 'graceful-fs';
+import { group, info, setFailed, setOutput } from '@actions/core';
+import { readFile } from 'graceful-fs';
 import type * as semver from 'semver';
 import semverRangeSubset from 'semver/ranges/subset.js';
 import { isValidationErrorLike } from 'zod-validation-error';
@@ -11,8 +10,6 @@ import { isValidationErrorLike } from 'zod-validation-error';
 import { isJSONErrorLike, parsePackageJson } from './package-json-parser.js';
 import { minVersionMap, specifiedMaxMajorVersion, toSemverRange } from './semver-range.js';
 import { tryReplaceAbsolutePathPrefix } from './utils.js';
-
-const readFileAsync = util.promisify(fs.readFile);
 
 type IndexAccessibleUnknown = Record<PropertyKey, unknown> | null | undefined;
 
@@ -22,44 +19,42 @@ class FailedError extends Error {
     }
 }
 
-async function getSupportedNodeVersionRange(arg: {
-    cwd: string;
-    env: Record<string, string | undefined>;
-}): Promise<semver.Range> {
-    const githubWorkspacePath = arg.env['GITHUB_WORKSPACE']
-        ? path.resolve(arg.env['GITHUB_WORKSPACE'])
+const ghWorkspaceEnvName = 'GITHUB_WORKSPACE';
+
+async function getSupportedNodeVersionRange(
+    cwd: string,
+    env: Record<string, string | undefined>,
+): Promise<semver.Range> {
+    const githubWorkspacePath = env[ghWorkspaceEnvName]
+        ? resolvePath(env[ghWorkspaceEnvName])
         : null;
-    const pkgJsonFilepath = path.resolve(arg.cwd, 'package.json');
+    const pkgJsonFilepath = resolvePath(cwd, 'package.json');
     const pkgJsonReadableFilepath = tryReplaceAbsolutePathPrefix(
         pkgJsonFilepath,
         githubWorkspacePath,
-        `\${GITHUB_WORKSPACE}`,
+        `\${${ghWorkspaceEnvName}}`,
     );
 
-    core.info(`Reading "${pkgJsonReadableFilepath}"`);
-    const pkgJsonText = await readFileAsync(pkgJsonFilepath, 'utf8')
+    info(`Reading "${pkgJsonReadableFilepath}"`);
+    const pkgJsonText = await promisify(readFile)(pkgJsonFilepath, 'utf8')
         .catch((error: IndexAccessibleUnknown) => {
-            if (error?.['code'] !== 'ENOENT') {
-                // eslint-disable-next-line @typescript-eslint/no-throw-literal
-                throw error;
-            }
+            // eslint-disable-next-line @typescript-eslint/no-throw-literal
+            if (error?.['code'] !== 'ENOENT') throw error;
             throw new FailedError(`"${pkgJsonReadableFilepath}" file does not exist`);
         });
-    core.info(`Parsing "${pkgJsonReadableFilepath}"`);
-    const pkgJson = parsePackageJson({ pkgJsonText, pkgJsonFilename: pkgJsonReadableFilepath });
 
-    const supportedNodeVersionRange = toSemverRange(pkgJson.engines.node);
-    if (!supportedNodeVersionRange) {
-        throw new FailedError(`Invalid Node.js version range detected: "${pkgJson.engines.node}"`);
-    }
-    core.info(`Detected Node.js version range: "${supportedNodeVersionRange.raw}"`);
+    info(`Parsing "${pkgJsonReadableFilepath}"`);
+    const pkgJson = parsePackageJson(pkgJsonText, pkgJsonReadableFilepath)
+        .engines.node;
+
+    const supportedNodeVersionRange = toSemverRange(pkgJson);
+    if (!supportedNodeVersionRange) throw new FailedError(`Invalid Node.js version range detected: "${pkgJson}"`);
+    info(`Detected Node.js version range: "${supportedNodeVersionRange.raw}"`);
 
     return supportedNodeVersionRange;
 }
 
-function getSupportedMaxMajorVersion(
-    { supportedNodeVersionRange }: { supportedNodeVersionRange: semver.Range },
-): number {
+function getSupportedMaxMajorVersion(supportedNodeVersionRange: semver.Range): number {
     const supportedMaxMajorVersion = specifiedMaxMajorVersion(supportedNodeVersionRange);
     if (typeof supportedMaxMajorVersion !== 'number') {
         throw new FailedError([
@@ -87,12 +82,8 @@ function getSupportedMaxMajorVersion(
     return supportedMaxMajorVersion;
 }
 
-function getVersionSpecList(
-    { supportedNodeVersionRange }: {
-        supportedNodeVersionRange: semver.Range;
-    },
-): string[] {
-    const supportedMaxMajorVersion = getSupportedMaxMajorVersion({ supportedNodeVersionRange });
+function getVersionSpecList(supportedNodeVersionRange: semver.Range): string[] {
+    const supportedMaxMajorVersion = getSupportedMaxMajorVersion(supportedNodeVersionRange);
     const supportedMinVersionMap = minVersionMap(supportedNodeVersionRange);
     const supportedMinMajorVersion = Math.min(...supportedMinVersionMap.keys());
 
@@ -120,29 +111,27 @@ function getVersionSpecList(
 }
 
 async function run(): Promise<void> {
-    const supportedNodeVersionRange = await getSupportedNodeVersionRange({
-        cwd: process.cwd(),
-        env: process.env,
-    });
+    const supportedNodeVersionRange = await getSupportedNodeVersionRange(
+        process.cwd(),
+        process.env,
+    );
 
-    const versionSpecList = getVersionSpecList({
-        supportedNodeVersionRange,
-    });
+    const versionSpecList = getVersionSpecList(supportedNodeVersionRange);
 
-    await core.group('Got these Node.js versions', async () => {
-        core.info(versionSpecList.map(v => `- ${v}`).join('\n'));
+    await group('Got these Node.js versions', async () => {
+        info(versionSpecList.map(v => `- ${v}`).join('\n'));
     });
-    core.setOutput('versions-json', versionSpecList);
+    setOutput('versions-json', versionSpecList);
 }
 
 function handleError(error: unknown): void {
-    core.setFailed(`Unhandled error: ${error instanceof Error ? String(error) : util.inspect(error)}`);
+    setFailed(`Unhandled error: ${error instanceof Error ? String(error) : inspectValue(error)}`);
 }
 
 process.on('unhandledRejection', handleError);
 run().catch((error: unknown) => {
     if (error instanceof FailedError || isJSONErrorLike(error) || isValidationErrorLike(error)) {
-        core.setFailed(error.message);
+        setFailed(error.message);
         return;
     }
     handleError(error);

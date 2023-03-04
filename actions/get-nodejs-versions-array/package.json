@@ -16,7 +16,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/main.ts --out ./dist/ --minify --transpile-only",
+    "build": "cross-env TS_NODE_PROJECT=./src/tsconfig.json ncc build src/main.ts --out ./dist/ --minify --transpile-only && minify ./dist/index.js > ./dist/index.min.js && shx mv ./dist/index.min.js ./dist/index.js",
     "build-with-cache": "../../scripts/fixed-turbo-run.sh build",
     "lint:tsc": "tsc --noEmit",
     "test": "run-if-supported --verbose vitest"
@@ -40,6 +40,8 @@
     "cross-env": "7.0.3",
     "execa": "7.0.0",
     "filenamify": "5.1.1",
+    "minify": "9.2.0",
+    "shx": "0.3.4",
     "typescript": "4.9.5",
     "vitest": "0.29.2"
   },
