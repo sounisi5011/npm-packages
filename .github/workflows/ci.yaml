@@ -415,7 +415,7 @@ jobs:
         run: |
           if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst ]; then
             tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
-            echo 'restore_deps_node_modules=1' >> "${GITHUB_ENV}"
+            echo 'restore-deps-node-modules=1' >> "${GITHUB_ENV}"
           fi
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Git Setting
@@ -455,10 +455,10 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ ! env.restore_deps_node_modules }}
+        if: ${{ ! env.restore-deps-node-modules }}
       - name: Install Dependencies
         run: pnpm install
-        if: ${{ ! env.restore_deps_node_modules }}
+        if: ${{ ! env.restore-deps-node-modules }}
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7

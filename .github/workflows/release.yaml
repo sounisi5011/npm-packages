@@ -98,10 +98,10 @@ jobs:
           echo '::group::core and graphql'
           echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]'
           echo '::endgroup::'
-      - name: Set release_created env
+      - name: Set release-created env
         shell: bash
         run: |
-          echo "release_created=true" >> "${GITHUB_ENV}"
+          echo "release-created=true" >> "${GITHUB_ENV}"
         if: ${{ steps.release.outputs.tag_name }}
         # Do not use "steps.release.outputs.releases_created" to check if a release has been created.
         # The output "releases_created" is not set if:
@@ -129,24 +129,24 @@ jobs:
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "release_pr_ref=${ref}" >> "${GITHUB_ENV}"
-        if: ${{ ! env.release_created && steps.release.outputs.pr }}
+          echo "release-pr-ref=${ref}" >> "${GITHUB_ENV}"
+        if: ${{ ! env.release-created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ env.release_pr_ref }}
+          ref: ${{ env.release-pr-ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
           # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
           fetch-depth: 0
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.default-node-version }}
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -156,10 +156,10 @@ jobs:
             ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Push to PR
         shell: bash
         # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
@@ -219,14 +219,14 @@ jobs:
           echo '::group::$' git push
                             git push
           echo '::endgroup::'
-        if: ${{ env.release_pr_ref }}
+        if: ${{ env.release-pr-ref }}
 
         #
         # Publish
         #
       - name: Publish / Checkout
         uses: actions/checkout@v3
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -234,10 +234,10 @@ jobs:
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -247,19 +247,19 @@ jobs:
             ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Install Dependencies
         run: pnpm install
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Build
         run: pnpm exec turbo run build --filter='./${{ matrix.path-git-relative }}'
         # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
         # Therefore, build only the submodules included in the required dependencies.
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Update README
         run: |
           node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -287,4 +287,4 @@ jobs:
             pnpm publish --access=public --no-git-checks
           fi
         shell: bash
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
