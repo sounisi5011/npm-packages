@@ -8,6 +8,8 @@ on:
   pull_request:
     branches:
       - "**"
+env:
+  default-node-version: 16.x
 jobs:
   if-run-ci:
     # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#needs-context
@@ -63,25 +65,21 @@ jobs:
     #         In such cases, the build process must support older Node.js.
     needs: if-run-ci
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 16.x
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ env.default-node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.default-node-version }}
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-${{ env.default-node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
       - name: Install Dependencies
@@ -121,10 +119,6 @@ jobs:
   lint:
     needs: pre-build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 16.x
     steps:
       - uses: actions/checkout@v3
       - name: Download installed dependencies
@@ -141,10 +135,10 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ env.default-node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.default-node-version }}
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Cache actionlint
@@ -160,10 +154,6 @@ jobs:
   format:
     needs: pre-build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 16.x
     steps:
       - uses: actions/checkout@v3
       - name: Download installed dependencies
@@ -180,10 +170,10 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ env.default-node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.default-node-version }}
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Setup dprint
@@ -279,10 +269,6 @@ jobs:
   build:
     needs: pre-build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 16.x
     steps:
       - uses: actions/checkout@v3
       - name: Download installed dependencies
@@ -299,10 +285,10 @@ jobs:
         run: |
           tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ env.default-node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.default-node-version }}
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
       - name: Install flatbuffers
@@ -425,12 +411,11 @@ jobs:
           name: build-results@${{ github.sha }}
           path: ~/pre-build-artifact
       - name: Restore installed dependencies and build results
-        id: restore-deps-and-build
         shell: bash
         run: |
           if [ -e ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst ]; then
             tar -x --file ~/pre-build-artifact/node_modules--${{ runner.os }}.tar.zst --zstd
-            echo 'node_modules=1' >> "${GITHUB_OUTPUT}"
+            echo 'restore-deps-node-modules=1' >> "${GITHUB_ENV}"
           fi
           tar -x --file ~/pre-build-artifact/build_results.tar.zst --zstd
       - name: Git Setting
@@ -470,10 +455,10 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
+        if: ${{ ! env.restore-deps-node-modules }}
       - name: Install Dependencies
         run: pnpm install
-        if: ${{ ! steps.restore-deps-and-build.outputs.node_modules }}
+        if: ${{ ! env.restore-deps-node-modules }}
       - run: pnpm run test-only
   complete:
     # see https://github.community/t/status-check-for-a-matrix-jobs/127354/7

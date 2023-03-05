@@ -5,6 +5,8 @@ on:
       - main
     tags-ignore:
       - "**"
+env:
+  default-node-version: 16.x
 jobs:
   submodules-finder:
     runs-on: ubuntu-latest
@@ -96,10 +98,10 @@ jobs:
           echo '::group::core and graphql'
           echo "${RATE_LIMIT_JSON}" | jq -r '.resources | [.core, .graphql]'
           echo '::endgroup::'
-      - name: Set release_created env
+      - name: Set release-created env
         shell: bash
         run: |
-          echo "release_created=true" >> "${GITHUB_ENV}"
+          echo "release-created=true" >> "${GITHUB_ENV}"
         if: ${{ steps.release.outputs.tag_name }}
         # Do not use "steps.release.outputs.releases_created" to check if a release has been created.
         # The output "releases_created" is not set if:
@@ -120,7 +122,6 @@ jobs:
         # Commit to PR
         #
       - name: Commit to Release PR / Get PR ref
-        id: release-pr
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,37 +129,37 @@ jobs:
         run: |
           PULL_REQUEST="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${{ steps.release.outputs.pr }}")"
           ref="$(echo "${PULL_REQUEST}" | jq -r '.head.ref')"
-          echo "ref=${ref}" >> "${GITHUB_OUTPUT}"
-        if: ${{ ! env.release_created && steps.release.outputs.pr }}
+          echo "release-pr-ref=${ref}" >> "${GITHUB_ENV}"
+        if: ${{ ! env.release-created && steps.release.outputs.pr }}
       - name: Commit to Release PR / Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.release-pr.outputs.ref }}
+          ref: ${{ env.release-pr-ref }}
           token: ${{ secrets.TRIGGER_TEST_GITHUB_TOKEN }}
           # All commit logs are required to update CHANGELOG.md by scripts/fix-changelog.mjs
           fetch-depth: 0
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-        if: ${{ steps.release-pr.outputs.ref }}
+          node-version: ${{ env.default-node-version }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Cache .pnpm-store
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-${{ env.default-node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-16.x-
+            ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Install Dependencies
         run: pnpm install
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release-pr-ref }}
       - name: Commit to Release PR / Push to PR
         shell: bash
         # https://qiita.com/kawaz/items/1b61ee2dd4d1acc7cc94
@@ -218,47 +219,47 @@ jobs:
           echo '::group::$' git push
                             git push
           echo '::endgroup::'
-        if: ${{ steps.release-pr.outputs.ref }}
+        if: ${{ env.release-pr-ref }}
 
         #
         # Publish
         #
       - name: Publish / Checkout
         uses: actions/checkout@v3
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: ${{ env.default-node-version }}
           registry-url: https://registry.npmjs.org
           # Note: The `registry-url` option is required.
           #       If this option is not set, the "npm publish" command will not detect the environment variable NODE_AUTH_TOKEN.
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Enable Corepack (Automatically setup a package manager for Node.js)
         run: corepack enable
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Cache .pnpm-store
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-16.x-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-${{ env.default-node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-16.x-
+            ${{ runner.os }}-node-${{ env.default-node-version }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Install Dependencies
         run: pnpm install
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Build
         run: pnpm exec turbo run build --filter='./${{ matrix.path-git-relative }}'
         # If there are other submodules in the dependency, it may be necessary to build the dependent submodule.
         # Therefore, build only the submodules included in the required dependencies.
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish / Update README
         run: |
           node ./scripts/publish-convert-readme.mjs '${{ steps.release.outputs.tag_name }}' '${{ matrix.path-git-relative }}/README.md'
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -286,4 +287,4 @@ jobs:
             pnpm publish --access=public --no-git-checks
           fi
         shell: bash
-        if: ${{ env.release_created }}
+        if: ${{ env.release-created }}
