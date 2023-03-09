@@ -132,16 +132,14 @@ cat "${GIT_ROOT_PATH}/CHANGELOG.md"
 echo '::endgroup::'
 
 echo '::group::Create LICENSE file'
-licenseFilename="${PKG_ROOT_DIRNAME}/LICENSE"
-# see https://stackoverflow.com/a/444317
-# see https://stackoverflow.com/a/4709925
-if exec_with_debug git ls-tree -r --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF "${licenseFilename}"; then
-  :
-elif exec_with_debug git ls-tree --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF 'LICENSE'; then
-  licenseFilename='LICENSE'
-else
-  licenseFilename=''
-fi
+licenseFilename=''
+for filename in "${PKG_ROOT_DIRNAME}/LICENSE" 'LICENSE'; do
+  # see https://stackoverflow.com/a/444317
+  if [ -n "$(exec_with_debug git ls-tree --name-only "${GIT_RELEASE_COMMIT_REF}" ":(top)${filename}")" ]; then
+    licenseFilename="${filename}"
+    break
+  fi
+done
 if [ -z "${licenseFilename}" ]; then
   echo "::warning::LICENSE file not found in release commit ( ${GIT_RELEASE_COMMIT_REF} )"
 else
