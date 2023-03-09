@@ -441,7 +441,7 @@ jobs:
           else
             readonly corepack_package_spec="corepack${COREPACK_VERSION_RANGE:+"@${COREPACK_VERSION_RANGE}"}"
             if type corepack >/dev/null 2>&1; then
-              echo '::group::Overwrite' install "corepack@$(corepack --version)" with "${corepack_package_spec}"
+              echo '::group::Overwrite' install "corepack@$(corepack --version || echo '[Execution failed; Version is unknown]')" with "${corepack_package_spec}"
             else
               echo '::group::Install' "${corepack_package_spec}"
             fi
