@@ -85,7 +85,7 @@ if exec_with_debug git checkout "refs/tags/${latestTagName}"; then
   # Tries to merge in order to keep a Git history.
   # However, the merge content is not used here.
   # Therefore, we disable automatic commit.
-  exec_with_debug git merge --no-commit "${GIT_RELEASE_COMMIT_REF}" || true
+  exec_with_debug git merge --no-commit --allow-unrelated-histories "${GIT_RELEASE_COMMIT_REF}" || true
 else
   echo '[!] This action has not yet been published'
   # shellcheck disable=SC2154
