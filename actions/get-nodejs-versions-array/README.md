@@ -53,6 +53,11 @@ jobs:
         uses: actions/checkout@v3
       - id: detector
         uses: sounisi5011/npm-packages/actions/get-nodejs-versions-array@get-nodejs-versions-array-action-v0
+        # Alternatively, you can use short references
+        # uses: sounisi5011/npm-packages@actions/get-nodejs-versions-array-v0
+        # uses: sounisi5011/npm-packages@actions/get-nodejs-versions-array-v0.0
+        # uses: sounisi5011/npm-packages@actions/get-nodejs-versions-array-v0.0.2
+        # uses: sounisi5011/npm-packages@actions/get-nodejs-versions-array-latest
   unit-test:
     needs: detect-supported-node
     runs-on: ubuntu-latest
