@@ -427,11 +427,14 @@ jobs:
           # Corepack 0.11.0 and later only supports Node.js 14.14.0 and later
           # see https://github.com/nodejs/corepack/pull/227
           satisfies: <14.14.0
+      - name: Set COREPACK_VERSION_RANGE
+        if: steps.use-old-corepack.outputs.satisfies
+        shell: bash
+        run: echo 'COREPACK_VERSION_RANGE=<0.11' >> $GITHUB_ENV
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
         shell: bash
         # If Corepack does not exist or old Corepack is required, install Corepack
         run: |
-          readonly COREPACK_VERSION_RANGE='${{ steps.use-old-corepack.outputs.satisfies && '<0.11' || '' }}'
           if { type corepack >/dev/null 2>&1; } && [ -z "${COREPACK_VERSION_RANGE}" ]; then
             echo Corepack "$(corepack --version)" is already installed
           else
