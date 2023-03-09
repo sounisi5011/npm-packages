@@ -1,5 +1,45 @@
 #!/bin/bash
 
+exec_with_debug() {
+  local quoted_args=() apos="'" quot='"'
+
+  for arg in "$@"; do
+    # If the argument is an empty string or contains spaces or special characters, wrap it in quotes.
+    case "${arg}" in
+      '' | *[' !$&()*;<>?[\]`{|}~'"${apos}${quot}"]* )
+        case "${arg}" in
+          # These characters cannot be wrapped in double quotes:
+          # - !
+          # - $
+          # - \
+          # - `
+          # - "
+          *['!$\`'"${quot}"]* )
+            # see https://qiita.com/kawaz/items/f8d68f11d31aa3ea3d1c
+            quoted_args+=("${apos}${arg//${apos}/${apos}${quot}${apos}${quot}${apos}}${apos}")
+            ;;
+          # Other characters can be wrapped in double quotes,
+          # so arguments containing single quotes should be wrapped in double quotes.
+          *"${apos}"* )
+            quoted_args+=("${quot}${arg}${quot}")
+            ;;
+          # Arguments not containing single quotes are wrapped in single quotes.
+          # Single-quote escaping is not required under this condition.
+          * )
+            quoted_args+=("${apos}${arg}${apos}")
+            ;;
+        esac
+        ;;
+      * )
+        quoted_args+=("${arg}")
+        ;;
+    esac
+  done
+
+  echo '$' "${quoted_args[*]}" >&2
+  "$@"
+}
+
 git config user.name  'github-actions[bot]'
 git config user.email 'github-actions[bot]@users.noreply.github.com'
 git remote add gh-token "https://${GITHUB_TOKEN}@github.com/sounisi5011/npm-packages.git"
@@ -7,10 +47,10 @@ git remote add gh-token "https://${GITHUB_TOKEN}@github.com/sounisi5011/npm-pack
 update_git_tag() {
   local tag_name="$1"
   local tag_message="$2"
-  git tag -d "${tag_name}" || true
-  git push origin :"${tag_name}" || true
-  git tag -a "${tag_name}" -m "${tag_message}"
-  git push origin "${tag_name}"
+  exec_with_debug git tag -d "${tag_name}" || true
+  exec_with_debug git push origin :"${tag_name}" || true
+  exec_with_debug git tag -a "${tag_name}" -m "${tag_message}"
+  exec_with_debug git push origin "${tag_name}"
 }
 
 # shellcheck disable=SC2154
@@ -30,38 +70,36 @@ readonly GITHUB_URL_PREFIX='https://github.com/sounisi5011/npm-packages'
 readonly TAG_NAME_PREFIX='actions/get-nodejs-versions-array'
 readonly latestTagName="${TAG_NAME_PREFIX}-latest"
 
-cd "${GIT_ROOT_PATH}" || ! echo "[!] Move to '${GIT_ROOT_PATH}' failed"
-
-# see https://stackoverflow.com/a/54635270
-echo '::group::$' git fetch --no-tags origin tag "${latestTagName}"
-git fetch --no-tags origin tag "${latestTagName}" || true
+echo '::group::Show vars'
+echo "GIT_ROOT_PATH: '${GIT_ROOT_PATH}'"
+echo "GIT_RELEASE_COMMIT_REF: '${GIT_RELEASE_COMMIT_REF}'"
+echo "PKG_ROOT_DIRNAME: '${PKG_ROOT_DIRNAME}'"
 echo '::endgroup::'
 
-echo '::group::$' git checkout "refs/tags/${latestTagName}"
-if git checkout "refs/tags/${latestTagName}"; then
-  echo '::endgroup::'
+exec_with_debug cd "${GIT_ROOT_PATH}" || ! echo "[!] Move to '${GIT_ROOT_PATH}' failed"
 
-  echo '::group::$' git merge --no-commit "${GIT_RELEASE_COMMIT_REF}"
+# see https://stackoverflow.com/a/54635270
+exec_with_debug git fetch --no-tags origin tag "${latestTagName}" || true
+
+if exec_with_debug git checkout "refs/tags/${latestTagName}"; then
   # Tries to merge in order to keep a Git history.
   # However, the merge content is not used here.
   # Therefore, we disable automatic commit.
-  git merge --no-commit "${GIT_RELEASE_COMMIT_REF}" || true
-  echo '::endgroup::'
+  exec_with_debug git merge --no-commit "${GIT_RELEASE_COMMIT_REF}" || true
 else
-  echo '::endgroup::'
   echo '[!] This action has not yet been published'
   # shellcheck disable=SC2154
-  git switch -c "action-only--${outputs_tag_name}"
+  exec_with_debug git switch -c "action-only--${outputs_tag_name}"
 fi
 
 echo '::group::Delete everything except the ".git" directory'
-find "${GIT_ROOT_PATH}" -maxdepth 1 -mindepth 1 -type d -name '.git' -prune -o -print0 | xargs -0 rm -rf
+exec_with_debug find "${GIT_ROOT_PATH}" -maxdepth 1 -mindepth 1 -type d -name '.git' -prune -o -print0 | xargs -0 rm -rf
 ls -lhpa
 echo '::endgroup::'
 
 echo '::group::Restore only files required for custom actions'
-git restore --source="${GIT_RELEASE_COMMIT_REF}" "${PKG_ROOT_DIRNAME}"/{action.yaml,dist}
-mv "${GIT_ROOT_PATH}/${PKG_ROOT_DIRNAME}"/* "${GIT_ROOT_PATH}/"
+exec_with_debug git restore --source="${GIT_RELEASE_COMMIT_REF}" "${PKG_ROOT_DIRNAME}"/{action.yaml,dist}
+exec_with_debug mv "${GIT_ROOT_PATH}/${PKG_ROOT_DIRNAME}"/* "${GIT_ROOT_PATH}/"
 ls -lhpa
 echo '::endgroup::'
 
@@ -97,9 +135,9 @@ echo '::group::Create LICENSE file'
 licenseFilename="${PKG_ROOT_DIRNAME}/LICENSE"
 # see https://stackoverflow.com/a/444317
 # see https://stackoverflow.com/a/4709925
-if git ls-tree -r --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF "${licenseFilename}"; then
+if exec_with_debug git ls-tree -r --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF "${licenseFilename}"; then
   :
-elif git ls-tree --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF 'LICENSE'; then
+elif exec_with_debug git ls-tree --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" | grep -qxF 'LICENSE'; then
   licenseFilename='LICENSE'
 else
   licenseFilename=''
@@ -115,8 +153,8 @@ fi
 echo '::endgroup::'
 
 echo '::group::Add commit'
-git add --all
-git commit --reuse-message="${GIT_RELEASE_COMMIT_REF}" --no-verify
+exec_with_debug git add --all
+exec_with_debug git commit --reuse-message="${GIT_RELEASE_COMMIT_REF}" --no-verify
 echo '::endgroup::'
 
 echo '::group::Add Git Tags'
