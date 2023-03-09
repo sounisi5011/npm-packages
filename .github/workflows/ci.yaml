@@ -498,8 +498,8 @@ jobs:
           readonly latestTagName="${TAG_NAME_PREFIX}-latest"
 
           # see https://stackoverflow.com/a/54635270
-          echo '::group::$' git fetch origin tag "${latestTagName}"
-          git fetch origin tag "${latestTagName}"
+          echo '::group::$' git fetch --no-tags origin tag "${latestTagName}"
+          git fetch --no-tags origin tag "${latestTagName}"
           echo '::endgroup::'
 
           echo '::group::$' git checkout "refs/tags/${latestTagName}"
