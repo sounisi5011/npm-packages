@@ -428,7 +428,8 @@ jobs:
           # see https://github.com/nodejs/corepack/pull/227
           satisfies: <14.14.0
       - name: Set COREPACK_VERSION_RANGE
-        if: steps.use-old-corepack.outputs.satisfies == 'true'
+        # see https://github.com/actions/toolkit/issues/1368
+        if: steps.use-old-corepack.outputs.satisfies && steps.use-old-corepack.outputs.satisfies != 'false'
         shell: bash
         run: echo 'COREPACK_VERSION_RANGE=<0.11' >> "${GITHUB_ENV}"
       - name: Enable Corepack (Automatically setup a package manager for Node.js)
