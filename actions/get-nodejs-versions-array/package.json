@@ -1,6 +1,6 @@
 {
   "name": "get-nodejs-versions-array-action",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Get an array of Node.js versions supported by your repository",
   "homepage": "https://github.com/sounisi5011/npm-packages/tree/main/actions/get-nodejs-versions-array#readme",
   "bugs": {
