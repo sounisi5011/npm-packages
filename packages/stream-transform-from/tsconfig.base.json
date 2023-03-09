@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.base-node12.json",
-  "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
-    /* Emit */
-    "declarationMap": false
-  }
-}

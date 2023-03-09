@@ -1,7 +1,0 @@
-{
-  "name": "example-code--ts-utils-is-property-accessible",
-  "private": true,
-  "dependencies": {
-    "@sounisi5011/ts-utils-is-property-accessible": "link:.."
-  }
-}
