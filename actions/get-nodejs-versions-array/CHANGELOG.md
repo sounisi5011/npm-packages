@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.0.4](https://www.github.com/sounisi5011/npm-packages/compare/get-nodejs-versions-array-action-v0.0.3...get-nodejs-versions-array-action-v0.0.4) (2023-03-09)
+
+
+### Bug Fixes
+
+* **get-nodejs-versions-array-action:** force merge using the `--allow-unrelated-histories` option within `.github/workflows/publish.sh` ([#689](https://www.github.com/sounisi5011/npm-packages/issues/689)) ([7840613](https://www.github.com/sounisi5011/npm-packages/commit/78406130ddde7d410e60e59f8cf3150e93d59a30))
+
 ## [0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/get-nodejs-versions-array-action-v0.0.2...get-nodejs-versions-array-action-v0.0.3) (2023-03-09)
 
 ### Bug Fixes
