@@ -132,6 +132,7 @@ exec_with_debug cat "${GIT_ROOT_PATH}/CHANGELOG.md"
 echo '::endgroup::'
 
 echo '::group::Create LICENSE file'
+exec_with_debug git ls-tree -r --name-only --full-name "${GIT_RELEASE_COMMIT_REF}" ':(top)' | grep -F LICENSE
 licenseFilename=''
 for filename in "${PKG_ROOT_DIRNAME}/LICENSE" 'LICENSE'; do
   # see https://stackoverflow.com/a/444317
