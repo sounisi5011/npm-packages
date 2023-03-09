@@ -482,34 +482,3 @@ jobs:
             || contains(needs.*.result, 'skipped')
           }}
         run: exit 1
-
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - shell: bash
-        run: |
-          GIT_ROOT_PATH="$(git rev-parse --show-toplevel)"
-          GIT_RELEASE_COMMIT_REF="$(git rev-parse HEAD)"
-          PKG_ROOT_DIRNAME="$(realpath --relative-to="${GIT_ROOT_PATH}" "${PWD}")"
-          readonly GIT_ROOT_PATH GIT_RELEASE_COMMIT_REF PKG_ROOT_DIRNAME
-          readonly GITHUB_URL_PREFIX='https://github.com/sounisi5011/npm-packages'
-          readonly TAG_NAME_PREFIX='actions/get-nodejs-versions-array'
-          readonly latestTagName="${TAG_NAME_PREFIX}-latest"
-
-          # see https://stackoverflow.com/a/54635270
-          echo '::group::$' git fetch --no-tags origin tag "${latestTagName}"
-          git fetch --no-tags origin tag "${latestTagName}"
-          echo '::endgroup::'
-
-          echo '::group::$' git checkout "refs/tags/${latestTagName}"
-          if git checkout "refs/tags/${latestTagName}"; then
-            echo '::endgroup::'
-          else
-            echo '::endgroup::'
-            echo '[!] This action has not yet been published'
-          fi
-
-          echo '::group::$' git tag --list
-          git tag --list
-          echo '::endgroup::'
