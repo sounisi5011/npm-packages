@@ -36,7 +36,7 @@ exec_with_debug() {
     esac
   done
 
-  echo '$' "${quoted_args[*]}" >&2
+  echo '[command]' "${quoted_args[*]}" >&2
   "$@"
 }
 
