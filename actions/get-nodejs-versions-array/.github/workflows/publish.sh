@@ -67,8 +67,8 @@ echo '::endgroup::'
 
 echo '::group::Create README.md file'
 {
-  echo '> **Note**'
-  echo '> This place is a copy in [the `'"${PKG_ROOT_DIRNAME}"'` directory] of [the commit specified by the '"${outputs_tag_name}"' tag]'
+  echo '> **Note**  '
+  echo '> This place is a copy in [the `'"${PKG_ROOT_DIRNAME}"'` directory] of [the commit specified by the '"${outputs_tag_name}"' tag].  '
   # shellcheck disable=SC2016
   echo '> If you want to contribute, please move to [the `main` branch]!'
   echo
