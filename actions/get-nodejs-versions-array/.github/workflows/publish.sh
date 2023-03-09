@@ -106,7 +106,7 @@ echo '::endgroup::'
 echo '::group::Create package.json file'
 # This JavaScript action is written in ECMAScript modules, so this file is required.
 echo '{"type":"module"}' > "${GIT_ROOT_PATH}/package.json"
-cat "${GIT_ROOT_PATH}/package.json"
+exec_with_debug cat "${GIT_ROOT_PATH}/package.json"
 echo '::endgroup::'
 
 echo '::group::Create README.md file'
@@ -121,14 +121,14 @@ echo '::group::Create README.md file'
   echo '[the commit specified by the '"${outputs_tag_name}"' tag]:' "${GITHUB_URL_PREFIX}/tree/${outputs_tag_name}"
   echo '[the `'"${PKG_ROOT_DIRNAME}"'` directory]:' "${GITHUB_URL_PREFIX}/tree/${outputs_tag_name}/${PKG_ROOT_DIRNAME}"
 } > "${GIT_ROOT_PATH}/README.md"
-cat "${GIT_ROOT_PATH}/README.md"
+exec_with_debug cat "${GIT_ROOT_PATH}/README.md"
 echo '::endgroup::'
 
 echo '::group::Create CHANGELOG.md file'
 {
   echo "Please see ${GITHUB_URL_PREFIX}/blob/${outputs_tag_name}/${PKG_ROOT_DIRNAME}/CHANGELOG.md"
 } > "${GIT_ROOT_PATH}/CHANGELOG.md"
-cat "${GIT_ROOT_PATH}/CHANGELOG.md"
+exec_with_debug cat "${GIT_ROOT_PATH}/CHANGELOG.md"
 echo '::endgroup::'
 
 echo '::group::Create LICENSE file'
@@ -146,7 +146,7 @@ else
   {
     echo "Please see ${GITHUB_URL_PREFIX}/blob/${outputs_tag_name}/${licenseFilename}"
   } > "${GIT_ROOT_PATH}/LICENSE"
-  cat "${GIT_ROOT_PATH}/LICENSE"
+  exec_with_debug cat "${GIT_ROOT_PATH}/LICENSE"
 fi
 echo '::endgroup::'
 
