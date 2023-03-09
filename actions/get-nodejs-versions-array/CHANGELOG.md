@@ -1,6 +1,14 @@
 # Changelog
 
 
+### [0.0.3](https://www.github.com/sounisi5011/npm-packages/compare/get-nodejs-versions-array-action-v0.0.2...get-nodejs-versions-array-action-v0.0.3) (2023-03-09)
+
+
+### Bug Fixes
+
+* **get-nodejs-versions-array-action:** fix `.github/workflows/publish.sh` to correctly detect tags that already exist ([#686](https://www.github.com/sounisi5011/npm-packages/issues/686)) ([69d63fd](https://www.github.com/sounisi5011/npm-packages/commit/69d63fde04473f8e5449fb292b0e6e0db9ffe403))
+* **get-nodejs-versions-array-action:** fix `.github/workflows/publish.sh` to detect `LICENSE` files using a loop ([#688](https://www.github.com/sounisi5011/npm-packages/issues/688)) ([b2f2457](https://www.github.com/sounisi5011/npm-packages/commit/b2f24573c5d3829dfa1a329146130b3d96ebd0cb))
+
 ## [0.0.2](https://www.github.com/sounisi5011/npm-packages/compare/get-nodejs-versions-array-action-v0.0.1...get-nodejs-versions-array-action-v0.0.2) (2023-03-09)
 
 ### Bug Fixes
