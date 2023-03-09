@@ -31,6 +31,12 @@ readonly TAG_NAME_PREFIX='actions/get-nodejs-versions-array'
 readonly latestTagName="${TAG_NAME_PREFIX}-latest"
 
 cd "${GIT_ROOT_PATH}" || ! echo "[!] Move to '${GIT_ROOT_PATH}' failed"
+
+# see https://stackoverflow.com/a/54635270
+echo '::group::$' git fetch --no-tags origin tag "${latestTagName}"
+git fetch --no-tags origin tag "${latestTagName}" || true
+echo '::endgroup::'
+
 echo '::group::$' git checkout "refs/tags/${latestTagName}"
 if git checkout "refs/tags/${latestTagName}"; then
   echo '::endgroup::'
