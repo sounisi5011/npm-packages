@@ -497,6 +497,11 @@ jobs:
           readonly TAG_NAME_PREFIX='actions/get-nodejs-versions-array'
           readonly latestTagName="${TAG_NAME_PREFIX}-latest"
 
+          # see https://stackoverflow.com/a/54635270
+          echo '::group::$' git fetch origin tag "${latestTagName}"
+          git fetch origin tag "${latestTagName}"
+          echo '::endgroup::'
+
           echo '::group::$' git checkout "refs/tags/${latestTagName}"
           if git checkout "refs/tags/${latestTagName}"; then
             echo '::endgroup::'
