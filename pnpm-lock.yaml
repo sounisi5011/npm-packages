@@ -241,7 +241,7 @@ importers:
       parse-json: ^6.0.0
       pkg-up: ^4.0.0
       turbo: 1.8.2
-      type-fest: 3.5.1
+      type-fest: 3.13.1
       typescript: 4.9.4
     dependencies:
       '@sounisi5011/cli-utils-top-level-await': link:../../cli-utils/top-level-await-cli
@@ -265,7 +265,7 @@ importers:
       is-plain-obj: 4.1.0
       jest: 29.3.1_@types+node@14.18.36
       turbo: 1.8.2
-      type-fest: 3.5.1
+      type-fest: 3.13.1
       typescript: 4.9.4
 
   packages/encrypted-archive:
@@ -9100,8 +9100,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest/3.5.1:
-    resolution: {integrity: sha512-70T99cpILFk2fzwuljwWxmazSphFrdOe3gRHbp6bqs71pxFBbJwFqnmkLO2lQL6aLHxHmYAnP/sL+AJWpT70jA==}
+  /type-fest/3.13.1:
+    resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
     dev: true
 
