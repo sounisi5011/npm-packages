@@ -1,6 +1,6 @@
 {
   "name": "@sounisi5011/ts-type-util-is-readonly-array",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fix the type definition of `Array.isArray()` method to accept readonly arrays",
   "keywords": [
     "ReadonlyArray",
