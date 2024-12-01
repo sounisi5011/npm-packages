@@ -1,6 +1,35 @@
 # Changelog
 
 
+## [2.0.1](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v2.0.0...run-if-supported-v2.0.1) (2023-03-04)
+
+### Bug Fixes
+
+* **deps:** update dependency npm-install-checks to v6 ([#622](https://www.github.com/sounisi5011/npm-packages/issues/622)) ([8e29276](https://www.github.com/sounisi5011/npm-packages/commit/8e2927643397249dd81ccb71d4511d8f4259e4d7))
+
+### Commits
+
+<details><summary>show 15 commits</summary>
+
+* [`85191ca`](https://www.github.com/sounisi5011/npm-packages/commit/85191ca52c0898cf6ba72bc4b80599a3f515fdf7) build(npm-scripts): introduce Turborepo ([#666](https://www.github.com/sounisi5011/npm-packages/issues/666))
+* [`0024629`](https://www.github.com/sounisi5011/npm-packages/commit/0024629d84faec2ac7b5f581a118ce3d830bbb02) docs(readme): replace David DM badges with Libraries.io badges ([#649](https://www.github.com/sounisi5011/npm-packages/issues/649))
+* [`f78b526`](https://www.github.com/sounisi5011/npm-packages/commit/f78b5266711ac5f8070c003ce537da1257e125bc) build(typescript): add `tsconfig.base-node14.json` - `tsconfig.json` file for Node.js 14 ([#642](https://www.github.com/sounisi5011/npm-packages/issues/642))
+* [`91a2431`](https://www.github.com/sounisi5011/npm-packages/commit/91a2431882fa41033093dc4bb461bf7d7ddfd77c) chore(deps): update dependency jest to v29 ([#630](https://www.github.com/sounisi5011/npm-packages/issues/630))
+* [`8e29276`](https://www.github.com/sounisi5011/npm-packages/commit/8e2927643397249dd81ccb71d4511d8f4259e4d7) fix(deps): update dependency npm-install-checks to v6 ([#622](https://www.github.com/sounisi5011/npm-packages/issues/622))
+* [`079b825`](https://www.github.com/sounisi5011/npm-packages/commit/079b8254d88d0f7af273025ea9b1b2ee06e9811d) style(eslint): fix code format according to ESLint's `@typescript-eslint/no-confusing-void-expression` rules ([#627](https://www.github.com/sounisi5011/npm-packages/issues/627))
+* [`631a50f`](https://www.github.com/sounisi5011/npm-packages/commit/631a50ff6aa637281c03099ab8ba4838944a14e9) chore(deps): update dev dependencies ([#626](https://www.github.com/sounisi5011/npm-packages/issues/626))
+* [`44a1eab`](https://www.github.com/sounisi5011/npm-packages/commit/44a1eab4ef5bb7052a376b14803e023b419b227a) chore(./scripts/fix-changelog.mjs): change the repository URL in the commit list ([#591](https://www.github.com/sounisi5011/npm-packages/issues/591))
+* [`1d26592`](https://www.github.com/sounisi5011/npm-packages/commit/1d265929217127f0dd21f09d5a2a3eb7967c1b13) chore(deps): update test packages ([#564](https://www.github.com/sounisi5011/npm-packages/issues/564))
+* [`8d39bdd`](https://www.github.com/sounisi5011/npm-packages/commit/8d39bdd7c8df1d4acf2c9652f7a95c0052246b7b) chore(deps): update dependency @swc/core to v1.2.212 ([#562](https://www.github.com/sounisi5011/npm-packages/issues/562))
+* [`d5d065c`](https://www.github.com/sounisi5011/npm-packages/commit/d5d065c82c186d63ecdf357e6e6b18dba0e46000) chore(deps): update dependency type-fest to v2.16.0 ([#549](https://www.github.com/sounisi5011/npm-packages/issues/549))
+* [`9e9b917`](https://www.github.com/sounisi5011/npm-packages/commit/9e9b9170b512a83bbcf9c4de57359319ba72f4c6) chore(deps): update dependency @swc/core to v1.2.211 ([#551](https://www.github.com/sounisi5011/npm-packages/issues/551))
+* [`4bfbfb9`](https://www.github.com/sounisi5011/npm-packages/commit/4bfbfb996bb1acefe66aa5a652230c4d49de2efe) chore(deps): update dependency @swc/core to v1.2.208 ([#524](https://www.github.com/sounisi5011/npm-packages/issues/524))
+* [`07acbfc`](https://www.github.com/sounisi5011/npm-packages/commit/07acbfcddc8e6da61c91f674e176e42938685bb4) chore(deps): update dependency type-fest to v2.15.1 ([#531](https://www.github.com/sounisi5011/npm-packages/issues/531))
+* [`77ee60f`](https://www.github.com/sounisi5011/npm-packages/commit/77ee60fbba23429fcdf3996a8c1b5f11b4fbd54f) chore(deps): update test packages ([#526](https://www.github.com/sounisi5011/npm-packages/issues/526))
+
+</details>
+
+
 ## [2.0.0](https://www.github.com/sounisi5011/npm-packages/compare/run-if-supported-v1.1.1...run-if-supported-v2.0.0) (2022-06-27)
 
 ### ⚠ BREAKING CHANGES
